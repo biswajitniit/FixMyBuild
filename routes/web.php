@@ -1,6 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AdminloginController;
+use App\Http\Controllers\Admin\Dashboard\DashboardController;
+use App\Http\Controllers\Admin\LogoutController;
+
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Dashboard\UserdashboardController;
+use App\Http\Controllers\Dashboard\UserlogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +24,43 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/clear-cache', function() {
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
+});
+
+Route::group(['middleware' => ['admin']], function () {
+    Route::get('/admin', [AdminloginController::class, 'index'])->name('admin.login');
+    Route::post('/admin/login', [AdminloginController::class, 'postlogin'])->name('adminLoginPost');
+});
+Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
+Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
+
+
+
+
+ /**
+ *
+ * Frontend section start
+ *
+ */
+Route::get('/', function () {
+    return view('welcome');
+});
+
+//user section
+Route::get('/login', [LoginController::class,'login'])->name('login');
+Route::post('/user/loginpost', [LoginController::class,'loginpost'])->name('user.loginpost');
+Route::get('/user/logout', [UserlogoutController::class,'userlogout'])->name('user.logout');
+
+
+Route::get('/user/registration', [HomeController::class,'registration'])->name('user.registration');
+Route::post('/user/save-user', [HomeController::class,'save_user'])->name('user.save-user');
+
+Route::get('/user/dashboard', [UserdashboardController::class,'user_dashboard'])->name('user.dashboard');
+
+

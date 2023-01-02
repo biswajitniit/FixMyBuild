@@ -1,0 +1,52 @@
+:root{
+    --primary_color:#061A48;/* Primary Brand color #00526b-----------------------*/
+    --secondary_color:#EE5719;/* Secondary Brand color #0091bd -------------------*/
+    --color_light:#ffffff;/* Brand light background color ----------------*/
+
+    /* Black and White colors ----------------------*/
+    --color_black:#000000;
+    --color_gray:#606060;    
+    --color_gray_light:#6D717A;
+    --color_gray_lighter:#cacaca;
+    --color_gray_more_lighter:#ebeff1;
+    --color_white:#ffffff;
+
+    /* Special brand colors ----------------------*/
+    --color_red:#ff0000;  
+    --color_peach:#a9a0bf;/* WHY CHOSE US Secure Audio/Video Platform colors ----------------------*/
+    --color_green:#90d6c3;/* WHY CHOSE US Secure Multilingual colors ----------------------*/
+    --color_sky_blue:#9ec5db;/* WHY CHOSE US Secure Free Career Counseling colors ----------------------*/
+    --color_orange:#b3c97f;/* WHY CHOSE US Secure Free Demo colors ----------------------*/
+    --color_yellow:#FFCB15;/* Rating colors ----------------------*/
+    --color_light_sky_blue:#061A48;/* Color use in form element ----------------------*/ 
+    --color_deep_green:#071f26;/* Inner page banner gradient deep color ----------------------*/ 
+    --color_bottle_green:#006c8e;/* Inner page banner gradient light color ----------------------*/ 
+    --color_btn:#061A48;
+    
+     
+
+    
+  /* Veriable for actual use, don't touch for branding ----------------------*/
+    --main_font_color:var(--color_gray);
+    --secondary_font_color:var(--secondary_color);
+    --deep_font_color:var(--primary_color);
+    --light_font_color:var(--color_white);
+    --light_gray_font_color:var(--color_gray_light);
+    --light_gray_border_color:var(--color_gray_light);
+    --main_bg_color:var(--color_light);
+    --footer_bg_color:var(--primary_color);
+    --header_bg_color:var(--secondary_color);
+    --header_search_placeholder_color:var(--color_sky_blue);
+    --secondary_bg_color:var(--secondary_color);
+    --light_bg_color:var(--color_white);
+    --lighter_bg_color:var(--color_gray_lighter);
+    --light_gray_bg_color:var(--color_gray_light);
+    --rating_color:var(--color_yellow);
+    --form_element_focus_color:var(--color_gray_light);
+    --form_element_placeholder_color:var(--color_gray_lighter);
+    --form_element_border_color:var(--color_gray);
+    --account_menu_light_color:var(--color_gray_more_lighter);
+    --mini_cart_search_border_color:var(--color_gray_lighter);
+    --login_btn_bgcolor:var(--secondary_color);
+    --login_btn_bgcolor_hover:var(--primary_color);
+  }
