@@ -3,12 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminloginController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
-use App\Http\Controllers\Admin\LogoutController;
-
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\Dashboard\UserdashboardController;
 use App\Http\Controllers\Dashboard\UserlogoutController;
+
+use Laravel\Socialite\Facades\Socialite;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -64,3 +67,18 @@ Route::post('/user/save-user', [HomeController::class,'save_user'])->name('user.
 Route::get('/user/dashboard', [UserdashboardController::class,'user_dashboard'])->name('user.dashboard');
 
 
+Route::get('/auth/google', [GoogleController::class,'loginwithgoogle'])->name('login');
+Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
+
+Route::get('/dashboard', function () {
+    return view('Dashboard/dashboard');
+})->name('dashboard');
+
+
+// Route::get('/auth/redirect', function () {
+//     return Socialite::driver('google')->redirect();
+// });
+
+// Route::get('/auth/callback', function () {
+//     $user = Socialite::driver('google')->user();
+// });
