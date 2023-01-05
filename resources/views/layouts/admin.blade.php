@@ -142,6 +142,14 @@
           </li>
 
           <li class="nav-item">
+            <a class="nav-link" href="{{ url('/admin/users') }}">
+              <i class="mdi mdi-account-multiple-outline menu-icon"></i>
+              <span class="menu-title">Users</span>
+            </a>
+          </li>
+
+
+          <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#cmspage" aria-expanded="false" aria-controls="apps">
               <i class="mdi mdi-menu menu-icon"></i>
               <span class="menu-title">CMS Pages</span>

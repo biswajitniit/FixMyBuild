@@ -18,7 +18,7 @@
     <!--slick min css-->
     <link rel="stylesheet" href="{{ asset('frontend/css/slick.css') }}">
     <!--magnific popup min css-->
-    <link rel="stylesheet" href="{{ asset('frontend/css/magnific-popup.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('frontend/css/magnific-popup.css') }}"> --}}
     <!--font awesome css-->
     <link rel="stylesheet" href="{{ asset('frontend/css/font.awesome.css') }}">
     <!--ionicons min css-->
@@ -38,7 +38,25 @@
     <!-- Custom styles for this template -->
     <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
 
+    <style>
+        #password-strength-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
 
+        .medium-password {
+            background-color: #fd0;
+        }
+
+        .weak-password {
+            background-color: #FBE1E1;
+        }
+
+        .strong-password {
+            background-color: #D5F9D5;
+        }
+        </style>
 </head>
 <body>
   <div class="main-contain">
@@ -104,16 +122,17 @@
 
             <div class="row">
               <div class="form-group col-md-12 mt-4 pw_">
-                 <input type="password" name="password" class="form-control" placeholder="Password*">
-                 <em><a href="#"><i class="fa fa-eye-slash"></i></a></em>
+                 <input type="password" name="password" id="password" class="form-control" placeholder="Password*" onkeyup="checkPasswordStrength();">
+                 <em onclick="tooglepassword()"><a href="#"><i class="fa fa-eye-slash" id="eye"></i></a></em>
               </div>
            </div>
-           <div class="row">
-            <div class="form-group col-md-12 mt-4 pw_">
-               <input type="password" name="password_confirmation" class="form-control"  placeholder="Confirm Password*">
-               <em><a href="#"><i class="fa fa-eye"></i></a></em>
+           <div id="password-strength-status"></div>
+            <div class="row">
+                <div class="form-group col-md-12 mt-4 pw_">
+                <input type="password" name="password_confirmation" id="password_confirmation"  class="form-control"  placeholder="Confirm Password*">
+                <em onclick="tooglepasswordconfirm()"><a href="#"><i class="fa fa-eye-slash" id="eyeconfirm"></i></a></em>
+                </div>
             </div>
-         </div>
 
 
               <div class="form-group  col-md-12 mt-4">
@@ -156,9 +175,60 @@
   </div>
   <!-- Bootstrap core JavaScript -->
   <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
-  <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
+  {{-- <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('frontend/js/particles.js') }}"></script>
-  <script src="{{ asset('frontend/js/app.js') }}"></script>
+  <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
+  <script type="text/javascript">
+    function tooglepassword(){
+        var x = document.getElementById("password");
+        if (x.type === "password") {
+            x.type = "text";
+            $("#eye").removeClass("fa fa-eye-slash");
+            $("#eye").addClass("fa fa-eye");
+        } else {
+            x.type = "password";
+            $("#eye").removeClass("fa fa-eye");
+            $("#eye").addClass("fa fa-eye-slash");
+        }
+    }
+    function tooglepasswordconfirm(){
+        var x = document.getElementById("password_confirmation");
+        if (x.type === "password") {
+            x.type = "text";
+            $("#eyeconfirm").removeClass("fa fa-eye-slash");
+            $("#eyeconfirm").addClass("fa fa-eye");
+        } else {
+            x.type = "password";
+            $("#eyeconfirm").removeClass("fa fa-eye");
+            $("#eyeconfirm").addClass("fa fa-eye-slash");
+        }
+    }
+
+    function checkPasswordStrength() {
+        var number = /([0-9])/;
+        var alphabets = /([a-zA-Z])/;
+        var special_characters = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+        var password = $('#password').val().trim();
+        if(password.length<6) {
+            $('#password-strength-status').removeClass();
+            $('#password-strength-status').addClass('weak-password');
+            $('#password-strength-status').html("Weak (should be atleast 6 characters.)");
+        } else {
+            if(password.match(number) && password.match(alphabets) && password.match(special_characters)) {
+                $('#password-strength-status').removeClass();
+                $('#password-strength-status').addClass('strong-password');
+                $('#password-strength-status').html("Strong");
+            }
+            else {
+                $('#password-strength-status').removeClass();
+                $('#password-strength-status').addClass('medium-password');
+                $('#password-strength-status').html("Medium (should include alphabets, numbers and special characters.)");
+            }
+        }
+    }
+
+  </script>
+
 
 </body>
 </html>

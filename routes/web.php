@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\Dashboard\UserdashboardController;
 use App\Http\Controllers\Dashboard\UserlogoutController;
+use App\Http\Controllers\Admin\User\UserController;
 
 use Laravel\Socialite\Facades\Socialite;
 
@@ -42,6 +43,9 @@ Route::group(['middleware' => ['admin']], function () {
 });
 Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
 Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
+
+Route::get('/admin/users', [UserController::class, 'users'])->name('admin/users');
+Route::any('/admin/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
 
 
 
