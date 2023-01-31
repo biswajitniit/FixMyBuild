@@ -175,6 +175,7 @@ that is currently Firefox-only */
 	color: #6D717A;
 	padding: 5px 0;
 	height: auto;
+	appearance: auto;
 }
 
 .auth-content {
@@ -616,8 +617,9 @@ label.form-check-label {
 	color: var(--color_white);
 }
 
-svg:hover path {
-	fill: #FFF;
+.header_wishlist a.alert svg path, .header_wishlist a svg circle {
+    stroke: none;
+    margin-right: 5px;
 }
 
 .form-check-input:checked {
@@ -656,18 +658,80 @@ svg:hover path {
 	border-radius: 20px;
 }
 
-.auth-content .fget_ .input-group-text:hover {
-	background: #BDBDBD;
-}
-
 .input-group-text {
 	border: 0px;
 	background: #D9D9D9;
 }
 
+.auth-content .fget_ .input-group-text:hover {
+	background: #BDBDBD;
+}
 .fwrap label {
 	font-weight: 700;
 	font-size: 20px;
 	line-height: 23px;
 	color: #061A48;
 }
+.auth-content h6{
+	font-weight: 400;
+	font-size: 15px;
+	line-height: 23px;
+	color: #6D717A;
+}
+.fa-check{
+	color: #29B313;
+}
+.fa-times{
+	color: #EB2326;
+}
+.fa-circle{
+	color: #6D717A;
+	font-size: 13px;
+}
+.auth-content h5{
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 23px;
+	color: #EE5719;
+}
+.sms_v input{
+	background: #F8F7F7;
+	border: 1px solid #D9D9D9;
+	border-radius: 5px;
+	width: 48px;
+	height: 48px;
+	margin-right: 25px;
+	margin-left: 5px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+@media handheld, only screen and (max-width: 767px) {
+.sms_v input{
+    width: 38px;
+    height: 38px;
+	margin-right: 20px;
+	margin-left: 5px;
+  }
+  .heading1 {
+    font-size: 26px;
+}
+.heading2 {
+    font-size: 16px;
+  }
+}
+@media handheld, only screen and (max-width: 390px){
+.sms_v input {
+    width: 34px;
+    height: 38px;
+    margin-right: 15px;
+    margin-left: 5px;
+}
+}
+@media handheld, only screen and (max-width: 375px) {
+	.sms_v input{
+		width: 34px;
+		height: 38px;
+		margin-right: 10px;
+		margin-left: 5px;
+	  }
+	}
