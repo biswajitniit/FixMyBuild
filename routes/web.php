@@ -7,9 +7,10 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\LogoutController;
-use App\Http\Controllers\Dashboard\UserdashboardController;
-use App\Http\Controllers\Dashboard\UserlogoutController;
+//use App\Http\Controllers\Dashboard\UserdashboardController;
+//use App\Http\Controllers\Dashboard\UserlogoutController;
 use App\Http\Controllers\Admin\User\UserController;
+use App\Http\Controllers\CustomerController;
 
 use Laravel\Socialite\Facades\Socialite;
 
@@ -68,15 +69,25 @@ Route::get('/user/logout', [UserlogoutController::class,'userlogout'])->name('us
 Route::get('/user/registration', [HomeController::class,'registration'])->name('user.registration');
 Route::post('/user/save-user', [HomeController::class,'save_user'])->name('user.save-user');
 
-Route::get('/user/dashboard', [UserdashboardController::class,'user_dashboard'])->name('user.dashboard');
 
 
-Route::get('/auth/google', [GoogleController::class,'loginwithgoogle'])->name('login');
-Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
+Route::prefix('customer')->namespace('App\Http\Controllers')->group(static function() {
 
-Route::get('/dashboard', function () {
-    return view('Dashboard/dashboard');
-})->name('dashboard');
+    //Route::get('/dashboard', [UserdashboardController::class,'customer_dashboard'])->name('customer.dashboard');
+    Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
+
+
+});
+
+
+
+
+// Route::get('/auth/google', [GoogleController::class,'loginwithgoogle'])->name('login');
+// Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
+
+// Route::get('/dashboard', function () {
+//     return view('Dashboard/dashboard');
+// })->name('dashboard');
 
 
 // Route::get('/auth/redirect', function () {

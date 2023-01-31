@@ -406,20 +406,6 @@
     })
        
     /*--- Magnific Popup Video---*/
-    // $('.video_popup').magnificPopup({
-    //     type: 'iframe',
-    //     removalDelay: 300,
-    //     mainClass: 'mfp-fade'
-    // });
-    
-    /*--- new vidio play Video---*/
-    // $('.new_vidio_play').magnificPopup({
-    //     type: 'iframe',
-    //     removalDelay: 300,
-    //     mainClass: 'mfp-fade'
-    // });
-    
-    /*--- Magnific Popup Video---*/
     // $('.port_popup').magnificPopup({
     //     type: 'image',
     //     gallery: {
@@ -444,12 +430,12 @@
    
 
     /*---  ScrollUp Active ---*/
-    // $.scrollUp({
-    //     scrollText: '<i class="fa fa-angle-double-up"></i>',
-    //     easingType: 'linear',
-    //     scrollSpeed: 900,
-    //     animation: 'fade'
-    // });   
+    $.scrollUp({
+        scrollText: '<i class="fa fa-angle-double-up"></i>',
+        easingType: 'linear',
+        scrollSpeed: 900,
+        animation: 'fade'
+    });   
     
     /*---countdown activation---*/
 		

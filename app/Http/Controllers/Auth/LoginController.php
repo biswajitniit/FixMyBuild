@@ -49,18 +49,22 @@ class LoginController extends Controller
 
     public function loginpost(Request $request)
     {
+
         $this->validate($request, [
             'email'   => 'required|email',
             'password' => 'required'
         ]);
 
-		if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password, 'status' => 1])) {
-			if(session('cart')){
-			    return redirect()->intended('/cart');
-			}else{
-
-			    return redirect()->intended('/user/dashboard');
-			}
+		if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password, 'status' => 'Active'])) {
+            if (Auth::user()->customer_or_tradesperson == "Customer")
+            {
+                // The user is logged in Customer...
+                //return redirect()->intended('/customer/dashboard');
+                return redirect()->intended('/customer/newproject');
+            }else{
+                // The user is logged in Tradesperson...
+                return redirect()->intended('/tradesperson/dashboard');
+            }
 		}
 		$errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
 		return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
