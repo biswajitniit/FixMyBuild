@@ -34,6 +34,8 @@
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
       <!-- Custom styles for this template -->
       <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
+
+
    </head>
    <body>
       <div class="main-contain">
@@ -79,7 +81,7 @@
                     @csrf
                      <div class="row">
                         <div class="form-group  col-md-12 mt-5">
-                           <input type="text" name="email"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="John.abc@gmail.com" required>
+                           <input type="email" name="email"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="John.abc@gmail.com" required>
                         </div>
                      </div>
                      <div class="row">

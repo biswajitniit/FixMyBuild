@@ -112,48 +112,48 @@
 
             <div class="row">
               <div class="form-group  col-md-12 mt-5">
-                <input type="text" name="name" class="form-control" placeholder="Full Name" >
+                <input type="text" name="name" class="form-control" placeholder="Full Name" required >
               </div>
             </div>
 
             <div class="form-group  col-md-12 mt-4">
-                <input type="text" name="email" class="form-control" placeholder="Email" id="email" autocomplete="false" readonly onfocus="this.removeAttribute('readonly');" >
+                <input type="email" name="email" class="form-control" placeholder="Email" id="email" autocomplete="false" readonly onfocus="this.removeAttribute('readonly');" required>
             </div>
 
             <div class="row">
               <div class="form-group col-md-12 mt-4 pw_">
-                 <input type="password" name="password" id="password" class="form-control" placeholder="Password*" onkeyup="checkPasswordStrength();">
+                 <input type="password" name="password" id="password" class="form-control" placeholder="Password*" onkeyup="checkPasswordStrength();" required>
                  <em onclick="tooglepassword()"><a href="#"><i class="fa fa-eye-slash" id="eye"></i></a></em>
               </div>
            </div>
            <div id="password-strength-status"></div>
             <div class="row">
                 <div class="form-group col-md-12 mt-4 pw_">
-                <input type="password" name="password_confirmation" id="password_confirmation"  class="form-control"  placeholder="Confirm Password*">
+                <input type="password" name="password_confirmation" id="password_confirmation"  class="form-control"  placeholder="Confirm Password*" required>
                 <em onclick="tooglepasswordconfirm()"><a href="#"><i class="fa fa-eye-slash" id="eyeconfirm"></i></a></em>
                 </div>
             </div>
 
 
               <div class="form-group  col-md-12 mt-4">
-                <input type="text" name="phone" class="form-control" placeholder="Phone">
+                <input type="text" name="phone" class="form-control" placeholder="Phone" required>
               </div>
               <div class="form-check mt-4 pl-0 mb-2">
                 <label class="form-check-label">Are you a customer or tradesperson?</label>
              </div>
              <div class="form-check-inline">
               <label class="form-check-label">
-                <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2" checked name="optradio">Customer
+                <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2" checked name="optradio" required>Customer
               </label>
             </div>
             <div class="form-check-inline">
               <label class="form-check-label">
-                <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" name="optradio">Tradesperson
+                <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" name="optradio" required>Tradesperson
               </label>
             </div>
               <div class="form-check mt-4">
                 <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" name="terms_of_service" value="1"> I have read and agree to FixMyBuild’s <a href="#">Terms of Service</a>
+                <input class="form-check-input" type="checkbox" name="terms_of_service" value="1" required> I have read and agree to FixMyBuild’s <a href="#">Terms of Service</a>
                 and <a href="#">Privacy Policy</a>.
                 </label>
              </div>
