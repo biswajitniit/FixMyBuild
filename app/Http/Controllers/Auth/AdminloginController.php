@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Input;
 use Redirect;
 class AdminloginController extends Controller
 {
+
     public function __construct()
     {
 		$this->middleware('guest:admin')->except('logout');
@@ -17,12 +18,10 @@ class AdminloginController extends Controller
     public function index()
     {
 		return view('admin.signin.signin');
-
     }
 
     public function postlogin(Request $request)
     {
-
         $this->validate($request, [
             'email'   => 'required|email',
             'password' => 'required'
@@ -35,5 +34,7 @@ class AdminloginController extends Controller
         return Redirect::back()->withErrors($errors)->withInput($request->only('email', 'remember'));
         return back()->withInput($request->only('email', 'remember'));
     }
+
+
 
 }
