@@ -62,8 +62,16 @@ class LoginController extends Controller
                 //return redirect()->intended('/customer/dashboard');
                 return redirect()->intended('/customer/newproject');
             }else{
-                // The user is logged in Tradesperson...
-                return redirect()->intended('/tradesperson/dashboard');
+                if(Auth::user()->steps_completed == 1){
+                    return redirect()->intended('/tradeperson/company-registration');
+                }else if(Auth::user()->steps_completed == 2){
+                    
+                }else if(Auth::user()->steps_completed == 3){
+                    
+                }else{
+
+                }
+                return redirect()->intended('/tradeperson/dashboard');
             }
 		}
 		$errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);

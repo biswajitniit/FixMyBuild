@@ -50,12 +50,14 @@ class HomeController extends Controller
 			'phone'                         => 'required',
 			'password'                      => 'required|min:6|confirmed',
 			'password_confirmation'         => 'required|min:6',
+            'customer_or_tradesperson'      => 'required',
         ],[
             'name.required' => 'Please enter your name',
             'email.required' => 'Please enter your email',
             'phone.required' => 'Please enter your phone',
             'password.required' => 'Please enter your password',
             'password_confirmation.required' => 'Please enter your confirm password',
+            'customer_or_tradesperson.required' => 'Please choose whether you are a Customer or a Tradeperson',
         ]);
 
         $user = new User();
@@ -65,11 +67,10 @@ class HomeController extends Controller
             $user->password                  = Hash::make($request['password']);
             $user->customer_or_tradesperson  = $request['customer_or_tradesperson'];
             $user->phone                     = $request['phone'];
+            $user->steps_completed           = 1;
             $user->status                    = 'Active';
-        $user->save();
-
-        return redirect()->back()->with('message', 'Thanks for signing up. Welcome to our fixmybuild. We are happy to have you on board.');
-
+            $user->save();
+            return redirect()->back()->with('message', 'Thanks for signing up. Welcome to our fixmybuild. We are happy to have you on board.');
     }
 
 }

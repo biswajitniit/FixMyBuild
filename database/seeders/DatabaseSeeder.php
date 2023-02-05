@@ -17,6 +17,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             UserSeeder::class,
+            AreaCoverSeeder::Class,
+            SubAreaCoverSeeder::Class,
+            WorktypeSeeder::Class,
+            SubWorkTypeSeeder::Class,
         ]);
     }
 }
