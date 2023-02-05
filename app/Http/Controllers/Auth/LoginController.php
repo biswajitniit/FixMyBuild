@@ -59,11 +59,10 @@ class LoginController extends Controller
             if (Auth::user()->customer_or_tradesperson == "Customer")
             {
                 // The user is logged in Customer...
-                //return redirect()->intended('/customer/dashboard');
-                return redirect()->intended('/customer/newproject');
+                return redirect()->intended('/customer/profile');
             }else{
                 // The user is logged in Tradesperson...
-                return redirect()->intended('/tradesperson/dashboard');
+                return redirect()->intended('/tradesperson/profile');
             }
 		}
 		$errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);

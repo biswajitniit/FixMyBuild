@@ -37,6 +37,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
 
     <style>
         #password-strength-status {
@@ -61,18 +62,18 @@
 <body>
   <div class="main-contain">
     <section  class="auth-sidebar">
-      <div class="auth-sidebar-content p-4">
-         <div id="particles-js">
-            <header class="logo"><a href="index.html"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
-            <div class="artwork">
-              <img src="{{ asset('frontend/img/log-reg-img.png') }}"  alt="">
-               <h2>Welcome to</h2>
-               <h4>Good quality work at sensible prices</h4>
-               <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat </p>
-            </div>
-         </div>
-      </div>
-   </section>
+        <div class="auth-sidebar-content p-4">
+           <div id="particles-js">
+              <header class="logo"><a href="index.html"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
+              <div class="artwork">
+                 <img src="{{ asset('frontend/img/log-reg-img.png') }}"  alt="">
+                 <h2>Welcome Back</h2>
+                 <h4>Good quality work at sensible prices</h4>
+                 <!-- <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat </p> -->
+              </div>
+           </div>
+        </div>
+     </section>
     <section class="content">
       <header>
         <a href="{{ url('/') }}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
@@ -136,7 +137,7 @@
 
 
               <div class="form-group  col-md-12 mt-4">
-                <input type="text" name="phone" class="form-control" placeholder="Phone" required>
+                <input type="text" name="phone"  id="phone" class="form-control" placeholder="Phone" required>
               </div>
               <div class="form-check mt-4 pl-0 mb-2">
                 <label class="form-check-label">Are you a customer or tradesperson?</label>
@@ -169,7 +170,7 @@
 
         </div>
       </div>
-      <p class="font-14px text-center mt-5">Copyright © 2022 FixMyBuild. All Rights Reserved.</p>
+      <p class="font-14px text-center mt-5">Copyright © 2022 FIX MY BUILD LTD. All Rights Reserved.</p>
     </section>
 
   </div>
@@ -178,6 +179,16 @@
   {{-- <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('frontend/js/particles.js') }}"></script>
   <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
+
+  <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <script>
+     var input = document.querySelector("#phone");
+     window.intlTelInput(input, {
+         separateDialCode: true,
+        //  excludeCountries: ["gb"],
+         preferredCountries: ["gb"]
+     });
+  </script>
   <script type="text/javascript">
     function tooglepassword(){
         var x = document.getElementById("password");

@@ -15,7 +15,9 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_id');
+            // define foreign key
+            $table->foreignId('customer_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->string('profile_picture')->nullable();
             $table->string('home_phone')->nullable();
             $table->string('mobile')->nullable();
             $table->string('email')->nullable();

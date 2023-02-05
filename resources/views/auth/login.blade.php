@@ -45,13 +45,14 @@
                   <header class="logo"><a href="index.html"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
                   <div class="artwork">
                      <img src="{{ asset('frontend/img/log-reg-img.png') }}"  alt="">
-                     <h2>Welcome to</h2>
+                     <h2>Welcome Back</h2>
                      <h4>Good quality work at sensible prices</h4>
-                     <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat </p>
+                     <!-- <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat </p> -->
                   </div>
                </div>
             </div>
          </section>
+
          <section class="content">
             <header>
                <a href="{{ url('/') }}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
@@ -77,16 +78,17 @@
                             </ul>
                         </div>
                     @endif
+
                   <form action="{{route('user.loginpost')}}" method="post" name="login">
                     @csrf
                      <div class="row">
                         <div class="form-group  col-md-12 mt-5">
-                           <input type="email" name="email"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="John.abc@gmail.com" required>
+                           <input type="email" name="email"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="John.abc@gmail.com" required >
                         </div>
                      </div>
                      <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
-                           <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password*" required>
+                           <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password*" required >
                            <em><a href="#"><i class="fa fa-eye-slash"></i></a></em>
                         </div>
                      </div>
@@ -117,7 +119,7 @@
                  </div>
                </div>
             </div>
-            <p class="font-14px text-center mt-5">Copyright © 2022 FixMyBuild. All Rights Reserved.</p>
+            <p class="font-14px text-center mt-5">Copyright © 2022 FIX MY BUILD LTD. All Rights Reserved.</p>
          </section>
       </div>
       <!-- Bootstrap core JavaScript -->
@@ -125,5 +127,10 @@
       <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
       <script src="{{ asset('frontend/js/particles.js') }}"></script>
       <script src="{{ asset('frontend/js/app.js') }}"></script>
+      <script>
+        $( document ).ready(function() {
+            $('input').attr('autocomplete','off');
+        });
+      </script>
    </body>
 </html>
