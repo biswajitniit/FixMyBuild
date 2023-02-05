@@ -66,9 +66,11 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
     Route::group(['prefix' => 'customer','middleware' => 'auth'], function () {
 
-        //Route::get('/dashboard', [UserdashboardController::class,'customer_dashboard'])->name('customer.dashboard');
-        Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
 
+        Route::get('profile', [CustomerController::class,'customer_profile'])->name('customer.profile');
+        Route::get('project', [CustomerController::class,'customer_project'])->name('customer.project');
+        Route::get('notifications', [CustomerController::class,'customer_notifications'])->name('customer.notifications');
+        Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
 
         /**
         * Logout Route

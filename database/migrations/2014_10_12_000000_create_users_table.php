@@ -23,6 +23,9 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone')->nullable();
+            $table->enum('verified',['0', '1'])->default('0')->comment('0 = not verified, 1= its verified');
+            $table->string('verification_code')->nullable();
+            $table->enum('locked ',['0', '1'])->default('0')->comment('0 = not verified, 1= its verified');
             $table->enum('customer_or_tradesperson', ['Customer', 'Tradesperson'])->comment('Customer,Tradesperson');
             $table->enum('terms_of_service', ['0', '1'])->default('0')->comment('0=not read,1=Read');
             $table->enum('status', ['Active', 'InActive'])->comment('Active,InActive');

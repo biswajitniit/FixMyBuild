@@ -25,22 +25,12 @@
                     <div class="tell_about">
                         <h3>Tell us about yourself</h3>
                         <div class="row form_wrap mt-3">
-                            <div class="col-md-2">
-                                <div class="form-group col-md-12">
-                                    <select class="form-control">
-                                        <option value="Title">Title</option>
-                                        <option value="mr">Mr</option>
-                                        <option value="mrs">Mrs</option>
-                                        <option value="miss">Miss</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="form-group col-md-12">
                                     <input type="text" class="form-control" id="" placeholder="Forename" name="" value=""/>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="form-group col-md-12">
                                     <input type="text" class="form-control" id="" placeholder="Surname" name="" value=""/>
                                 </div>
@@ -115,7 +105,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="" placeholder="Locality" />
+                                            <input type="text" class="form-control" id="" placeholder="Town/City" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -144,7 +134,9 @@
                             </div>
                             <div class="col-md-12 mb-4">
                                 <h3>Describe the work required clearly so that builders can understand.</h3>
-                                <p>If the style (including colors) are important please mention them explicitly to avoid confusion and unexpected costs.</p>
+                                <p>If the style (including colors) are important please mention them explicitly to avoid confusion and
+                                    unexpected costs.</p>
+                                <p>If you're unsure of what to write here you might find our advice on this page useful: <a href="#" class="sugg_">Suggestions</a></p>
                             </div>
                             <div class="col-md-12 mb-4">
                                 <div id="summernote"></div>
@@ -241,7 +233,7 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="text-center upload_wrap">
-                                                            <img src="assets/img/upload.svg" alt="" />
+                                                            <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
                                                             <p>Drag and drop files here</p>
                                                             <h4>OR</h4>
                                                             <button type="button" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
@@ -260,10 +252,10 @@
                             </div>
                             <div class="col-md-6 mt-2">
                                 <div class="d-inline mr-3">
-                                    abc.doc (3MB) <a href="#"><img src="assets/img/crose-btn.svg" alt="" /> </a>
+                                    abc.doc (3MB) <a href="#"><img src="{{ asset('frontend/img/crose-btn.svg') }}" alt="" /> </a>
                                 </div>
                                 <div class="d-inline mr-3">
-                                    xyz.jpg (6MB) <a href="#"><img src="assets/img/crose-btn.svg" alt="" /> </a>
+                                    xyz.jpg (6MB) <a href="#"><img src="{{ asset('frontend/img/crose-btn.svg') }}" alt="" /> </a>
                                 </div>
                             </div>
 
@@ -284,12 +276,8 @@
                                 <div class="row form_wrap mt-3">
                                     <div class="col-md-4">
                                         <div class="row">
-                                            <div class="col-3 pr-0">
-                                                <select class="form-control">
-                                                    <option value="22">+44 </option>
-                                                </select>
-                                            </div>
-                                            <div class="col-9 pl-0"><input type="text" class="form-control col-md-10" placeholder="Phone" /></div>
+
+                                            <div class="col-9 pl-0"><input type="text" class="form-control col-md-10" placeholder="Phone" id="phone"/></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
