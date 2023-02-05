@@ -12,9 +12,9 @@ use App\Http\Controllers\LogoutsController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\Tradepersion\TradepersionDashboardController;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -39,15 +39,13 @@ Route::post('/capture-photo', [MediaController::class,'capture_photo'])->name('c
 Route::group(['middleware' => 'prevent-back-history'],function(){
     Route::get('/', function () {
         return view('welcome');
-    });
+    })->name('home');
 
     //user section
     Route::get('/login', [LoginController::class,'login'])->name('login');
     Route::post('/user/loginpost', [LoginController::class,'loginpost'])->name('user.loginpost');
     Route::get('/user/registration', [HomeController::class,'registration'])->name('user.registration');
     Route::post('/user/save-user', [HomeController::class,'save_user'])->name('user.save-user');
-
-
     // Route::get('/auth/google', [GoogleController::class,'loginwithgoogle'])->name('login');
     // Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
 
@@ -80,6 +78,8 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/logout', [LogoutsController::class,'logout'])->name('logout');
     });
 
-
-
+    
+    Route::group(['prefix' => 'tradeperson','middleware' => 'auth'], function () {
+        Route::get('company-registration', [TradepersionDashboardController::class,'registrationsteptwo'])->name('tradepersion.compregistration');
+    });
 });

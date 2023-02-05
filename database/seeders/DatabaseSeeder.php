@@ -20,6 +20,10 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             UserSeeder::class,
             CustomerSeeder::class,
+            AreaCoverSeeder::Class,
+            SubAreaCoverSeeder::Class,
+            WorktypeSeeder::Class,
+            SubWorkTypeSeeder::Class,
         ]);
     }
 }
