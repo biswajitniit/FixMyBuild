@@ -27,13 +27,14 @@
  </section>
  <section class="pb-5">
     <div class="container">
-       <form action="#" method="post">
+       <form action="{{route('tradepersion.savecompregistration')}}" method="post">
+         @csrf
           <div class="row mb-5">
              <div class="col-md-10 offset-md-1">
                 <div class="tell_about gen-info">
                    <div class="row">
                       <div class="col-md-10">
-                         <input type="text" class="form-control pb-2" id="" placeholder="REG HJ 12345">
+                         <input type="text" name="comp_reg_no" class="form-control pb-2" id="" placeholder="REG HJ 12345">
                       </div>
                       <div class="col-md-2">
                          <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger btn-block pull-right">Find</button>
@@ -42,10 +43,12 @@
                    <div class="row mt-2">
                        <div class="col-md-4"><h5><strong>Company name: </strong></h5></div>
                        <div class="col-md-8"><h5>ACME INC</h5></div>
+                       <input type="hidden" name="comp_name" value="">
                    </div>
                    <div class="row mt-2">
                        <div class="col-md-4"><h5><strong>Company address:</strong></h5></div>
                        <div class="col-md-8"><h5>2464 Royal Ln. Mesa, New Jersey 45463</h5></div>
+                       <input type="hidden" name="comp_address" value="">
                    </div>
                    <div class="row mt-4">
                        <div class="col-md-6 text-center">
@@ -55,7 +58,7 @@
                            <h5><strong>Trading name</strong></h5>
                            <p>This name will appear on your quotes</p>
                            <div class="mt-4">
-                               <input type="text" class="form-control pb-2" id="" placeholder="Type your trading name">
+                               <input type="text" name="trader_name" class="form-control pb-2" id="" placeholder="Type your trading name">
                            </div>
                        </div>
                    </div>
@@ -71,7 +74,7 @@
                          <h3>Describe your company</h3>
                       </div>
                       <div class="col-md-12 mb-4">
-                         <div id="summernote"></div>
+                        <textarea id="editor" name="comp_description"></textarea>
                       </div>
                       <div class="col-md-6 mb-4">
                          <h3>Upload company logo
@@ -183,20 +186,21 @@
                          <div class="row form_wrap mt-3">
                             <div class="col-md-12">
                                <div class="form-group">
-                                  <input type="text" class="form-control" id="" placeholder="Your name*">
+                                  <input type="text" name="name" class="form-control" id="" placeholder="Your name*">
                                </div>
                             </div>
+                            <input type="hidden" name="phone_code" value="">
                             <div class="col-md-4">
-                               <input type="text" class="form-control col-md-10" id="phone" placeholder="Phone">
+                               <input type="text" name="phone_number" class="form-control col-md-10" id="phone" placeholder="Phone">
                             </div>
                             <div class="col-md-4">
                                <div class="form-group">
-                                  <input type="text" class="form-control" id="" placeholder="Office number">
+                                  <input type="text" name="phone_office" class="form-control" id="" placeholder="Office number">
                                </div>
                             </div>
                             <div class="col-md-4">
                                <div class="form-group">
-                                  <input type="email" class="form-control" id="" placeholder="Email*">
+                                  <input type="email" name="email" class="form-control" id="" placeholder="Email*">
                                </div>
                             </div>
                          </div>
@@ -216,7 +220,7 @@
                             </div>
                             <div class="col-md-6">
                                <div class="form-group">
-                                  <input type="text" class="form-control" id="" placeholder="Type your role">
+                                  <input type="text" name="designation" class="form-control" id="" placeholder="Type your role">
                                </div>
                             </div>
                          </div>
@@ -283,12 +287,12 @@
                       <h3>Is your company VAT registered?</h3>
                       <div class="form-check-inline mt-2 mb-3">
                          <label class="form-check-label">
-                         <input type="radio" class="form-check-input mr-2" name="optradio">Yes
+                         <input type="radio" name="vat_reg" value="1" class="form-check-input mr-2" name="optradio">Yes
                          </label>
                       </div>
                       <div class="form-check-inline mt-2 mb-2">
                          <label class="form-check-label">
-                         <input type="radio" class="form-check-input mr-2" name="optradio">No
+                         <input type="radio" name="vat_reg" value="0" class="form-check-input mr-2" name="optradio">No
                          </label>
                       </div>
                       <p>Please provide your UK VAT number<br>
@@ -297,7 +301,7 @@
                       <div class="gen-info mb-3 mt-3">
                          <div class="row">
                             <div class="col-md-10 col-12">
-                               <input type="text" class="form-control pb-2" id="" placeholder="Type company VAT number">
+                               <input type="text" name="vat_no" class="form-control pb-2" id="" placeholder="Type company VAT number">
                             </div>
                             <div class="col-md-2 col-12">
                                <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger btn-block pull-right">Verify</button>
@@ -305,6 +309,9 @@
                          </div>
                       </div>
                       <p><b>Company name:</b> ACME INC</p>
+                      <input type="hidden" name="vat_comp_name" value="">
+                      <input type="hidden" name="vat_comp_address" value="">
+
                       <p><b>Company address:</b> 2464 Royal Ln. Mesa, New Jersey 45463</p>
                    </div>
                 </div>
@@ -516,6 +523,8 @@
       $(".areaschkboxsec").removeClass("active");
       $(this).addClass('active');
    });
+
+   
 </script>
 
 @endpush

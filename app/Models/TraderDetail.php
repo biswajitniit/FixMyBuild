@@ -14,6 +14,7 @@ class TraderDetail extends Model
         'comp_reg_no',
         'comp_name',
         'comp_address',
+        'trader_name',
         'comp_description',
         'name',
         'phone_code',
