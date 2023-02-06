@@ -31,10 +31,12 @@
       <link rel="stylesheet" href="{{ asset('frontend/css/plugins.css') }}">
       <!-- Main Style CSS -->
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
+
+
       <!-- Custom styles for this template -->
       <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
       <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-
+      <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
       <!--modernizr min js here-->
       <script src="{{ asset('frontend/js/vendor/modernizr-3.7.1.min.js') }}"></script>
 
@@ -44,10 +46,11 @@
       <!--header area start-->
       <header class="header_area header_padding">
          <!--header middel start-->
-         <div class="header_middle">
+         {{-- <div class="header_middle @if() sticky-header @endif"> --}}
+            <div class="header_middle sticky-header">
             <div class="container-fluid pr-12">
                <div class="row align-items-center">
-                  <div class="col-xl-4 col-lg-4 col-md-4">
+                  <div class="col-xl-3 col-lg-3 col-md-3">
                      <div class="middel_right">
                         <div class="middel_right_info">
                            <div class="header_wishlist">
@@ -92,12 +95,12 @@
                         </div>
                      </div>
                   </div>
-                  <div class="col-xl-4 col-lg-4 col-md-4 text-center">
+                  <div class="col-xl-6 col-lg-6 col-md-6 text-center">
                      <div class="logo">
                         <a href="{{ url('/') }}"><img src="{{ asset('frontend/img/logo/logo.png') }}" alt=""></a>
                      </div>
                   </div>
-                  <div class="col-xl-4 col-lg-4 col-md-4 d-none d-lg-block">
+                  <div class="col-xl-3 col-lg-3 col-md-3 d-none d-lg-block">
                      <div class="middel_right">
                         <div class="middel_right_info">
                             <div class="header_wishlist">
@@ -124,7 +127,8 @@
                                             <hr class="dropdown-divider">
                                             </hr>
                                             </li>
-                                            <li><a class="dropdown-item" href="#">My profile</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('customer.project') }}">Project</a></li>
                                             <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                         </ul>
@@ -147,22 +151,22 @@
 
         <!--footer area start-->
         <footer class="footer_widgets">
-            <div class="container">
-                <div class="footer_bottom">
-                    <div class="row copyright_area">
-                        <div class="col-lg-6 col-md-6">
+            <div class="container-fluid">
+               <div class="footer_bottom">
+                  <div class="row copyright_area">
+                     <div class="col-lg-6 col-md-6">
                         <ul>
-                            <li><a href="#">Privacy policy</a></li>
-                            <li><a href="#">Terms</a></li>
+                           <li><a href="#">Privacy policy</a></li>
+                           <li><a href="#">Terms</a></li>
                         </ul>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                        <p>Copyright © 2022 FixMyBuild. All Rights Reserved.</p>
-                        </div>
-                    </div>
-                </div>
+                     </div>
+                     <div class="col-lg-6 col-md-6">
+                        <p>Copyright © 2022 FIX MY BUILD LTD. All Rights Reserved.</p>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </footer>
+         </footer>
         <!--footer area end-->
         <!-- <script></script> -->
         <!-- JS
@@ -188,17 +192,29 @@
         <!-- Video JS -->
         <script src="{{ asset('frontend/js/video.js') }}"></script>\
          <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-         <script>
-         tinymce.init({
-            selector: 'textarea#editor',
-            menubar: false
-          });
         
-          tinymce.init({
-            selector: 'textarea#editor1',
-            menubar: false
-          });
-          </script>
+        <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+        <script src="{{ asset('frontend/js/video.js') }}"></script>
+        <!-- Main JS -->
+        <script src="{{ asset('frontend/js/main.js') }}"></script>
+        <script>
+            tinymce.init({
+               selector: 'textarea#editor',
+               menubar: false
+            });
+         
+            tinymce.init({
+               selector: 'textarea#editor1',
+               menubar: false
+            });
+
+            var input = document.querySelector("#phone");
+            window.intlTelInput(input, {
+                separateDialCode: true,
+               //  excludeCountries: ["gb"],
+                preferredCountries: ["gb"]
+            });
+         </script>
         @stack('scripts')
 
     </body>

@@ -166,7 +166,7 @@ that is currently Firefox-only */
 }
 
 .form-control {
-	border-radius: 2px;
+	border-radius:0px;
 	border: none;
 	border-bottom: 1px solid #4F4F4F;
 	font-weight: 500;
@@ -246,7 +246,7 @@ that is currently Firefox-only */
 }
 
 .auth-sidebar .artwork {
-	/* width: 100%; */
+	width: 100%;
 	margin: auto;
 	max-width: 100%;
 	display: -ms-flexbox;
@@ -258,7 +258,7 @@ that is currently Firefox-only */
 	-ms-flex-positive: 1;
 	flex-grow: 1;
 	position: absolute;
-	bottom: 40px;
+	bottom: 20px;
 }
 
 .artwork h2 {
@@ -549,7 +549,6 @@ input.p-r-100px {
 	box-sizing: border-box !important;
 }
 
-@media screen and (max-width: 1200px) {}
 
 @media screen and (max-width: 992px) {
 
@@ -583,6 +582,7 @@ label.form-check-label {
 	font-size: 18px;
 	line-height: 28px;
 	color: #6D717A;
+	margin-top: -3px;
 }
 
 .sign_with {
@@ -628,7 +628,7 @@ label.form-check-label {
 }
 
 .artwork img {
-	height: 320px;
+	height: 400px;
 	object-fit: scale-down;
 	margin-bottom: 30px;
 }
@@ -734,4 +734,20 @@ label.form-check-label {
 		margin-right: 10px;
 		margin-left: 5px;
 	  }
+}
+
+
+@media screen and (max-width: 1920px) {
+	.artwork img {
+		height: 500px;
+		object-fit: scale-down;
+		margin-bottom: 150px;
 	}
+}
+@media screen and (max-width: 1600px) {
+	.artwork img {
+		height: 400px;
+		object-fit: scale-down;
+		margin-bottom: 90px;
+	}
+}

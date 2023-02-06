@@ -16,33 +16,41 @@
     </div>
 </section>
 <!--Code area end-->
+
+@if($errors->any())
+    <div class="alert alert-danger mt-15">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if(session()->has('message'))
+    <div class="alert alert-success mt-15">
+        {{ session()->get('message') }}
+    </div>
+@endif
+
 <!--Code area start-->
 <section class="pb-5">
     <div class="container">
-        <form action="#" method="post">
+        <form action="{{route('customer.storeproject')}}" method="post" name="savenewproject" id="savenewproject">
+            @csrf
             <div class="row">
                 <div class="col-md-10 offset-md-1">
                     <div class="tell_about">
                         <h3>Tell us about yourself</h3>
                         <div class="row form_wrap mt-3">
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <div class="form-group col-md-12">
-                                    <select class="form-control">
-                                        <option value="Title">Title</option>
-                                        <option value="mr">Mr</option>
-                                        <option value="mrs">Mrs</option>
-                                        <option value="miss">Miss</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="forename" placeholder="Forename" name="forename" value=""/>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="form-group col-md-12">
-                                    <input type="text" class="form-control" id="" placeholder="Forename" name="" value=""/>
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="form-group col-md-12">
-                                    <input type="text" class="form-control" id="" placeholder="Surname" name="" value=""/>
+                                    <input type="text" class="form-control" id="surname" placeholder="Surname" name="surname" value=""/>
                                 </div>
                             </div>
                         </div>
@@ -50,6 +58,9 @@
                 </div>
             </div>
             <!--// END-->
+
+
+
             <section>
                 <div class="container">
                     <div class="row">
@@ -93,34 +104,34 @@
                                 </div>
                             </div>
                             <div class="col-md-6 last_ua">
-                                <div class="form-check mb-2">
-                                    <input type="radio" class="form-check-input mb" id="radio1" name="optradio" value="option1" checked />
+                                {{-- <div class="form-check mb-2">
+                                    <input type="radio" class="form-check-input mb" id="radio1" name="choseaddresstype" value="choseexistaddress" checked />
                                     <h5>Last used address</h5>
                                 </div>
-                                <p>2972 Westheimer Rd. Santa Ana, Illinois 85486</p>
+                                <p>2972 Westheimer Rd. Santa Ana, Illinois 85486</p> --}}
                                 <div class="form-check mt-5">
-                                    <input type="radio" class="form-check-input mb" id="radio1" name="optradio" value="option1" />
+                                    <input type="radio" class="form-check-input mb" id="radio1" name="choseaddresstype" value="chosenewaddress" />
                                     <h5>Or type your address</h5>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group mb-3">
-                                        <input type="text" class="form-control" id="" placeholder="Address line 1" />
+                                        <input type="text" class="form-control" id="address_line_one" placeholder="Address line 1" name="address_line_one"/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group mb-3">
-                                        <input type="text" class="form-control" id="" placeholder="Address line 2" />
+                                        <input type="text" class="form-control" id="address_line_two" placeholder="Address line 2" name="address_line_two"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="" placeholder="Locality" />
+                                            <input type="text" class="form-control" id="town_city" placeholder="Town/City" name="town_city"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="" placeholder="Postcode" />
+                                            <input type="text" class="form-control" id="postcode" placeholder="Postcode" name="postcode"/>
                                         </div>
                                     </div>
                                 </div>
@@ -139,34 +150,24 @@
                             </div>
                             <div class="col-md-12 mb-4">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="" placeholder="Type your project name" />
+                                    <input type="text" class="form-control" id="project_name" placeholder="Type your project name" name="project_name"/>
                                 </div>
                             </div>
                             <div class="col-md-12 mb-4">
                                 <h3>Describe the work required clearly so that builders can understand.</h3>
-                                <p>If the style (including colors) are important please mention them explicitly to avoid confusion and unexpected costs.</p>
+                                <p>If the style (including colors) are important please mention them explicitly to avoid confusion and
+                                    unexpected costs.</p>
+                                <p>If you're unsure of what to write here you might find our advice on this page useful: <a href="#" class="sugg_">Suggestions</a></p>
                             </div>
                             <div class="col-md-12 mb-4">
-                                <div id="summernote"></div>
+                                {{-- <div id="summernote"></div> --}}
+                                <textarea name="description" id="summernote"></textarea>
+
                             </div>
                             <div class="col-md-12 mb-4">
                                 <h3>Please upload at least one photo, video or design of the work to be undertaken.</h3>
                                 <p>For example if you are replacing a door lock please take a photo of the existing lock.</p>
                             </div>
-
-                            {{-- <div class="col-md-3">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-outline-danger btn-block">
-                                        <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z"
-                                                fill="#EE5719"
-                                            />
-                                        </svg>
-                                        Take photo/video
-                                    </button>
-                                </div>
-                            </div> --}}
 
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -241,7 +242,7 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="text-center upload_wrap">
-                                                            <img src="assets/img/upload.svg" alt="" />
+                                                            <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
                                                             <p>Drag and drop files here</p>
                                                             <h4>OR</h4>
                                                             <button type="button" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
@@ -260,10 +261,10 @@
                             </div>
                             <div class="col-md-6 mt-2">
                                 <div class="d-inline mr-3">
-                                    abc.doc (3MB) <a href="#"><img src="assets/img/crose-btn.svg" alt="" /> </a>
+                                    abc.doc (3MB) <a href="#"><img src="{{ asset('frontend/img/crose-btn.svg') }}" alt="" /> </a>
                                 </div>
                                 <div class="d-inline mr-3">
-                                    xyz.jpg (6MB) <a href="#"><img src="assets/img/crose-btn.svg" alt="" /> </a>
+                                    xyz.jpg (6MB) <a href="#"><img src="{{ asset('frontend/img/crose-btn.svg') }}" alt="" /> </a>
                                 </div>
                             </div>
 
@@ -284,22 +285,18 @@
                                 <div class="row form_wrap mt-3">
                                     <div class="col-md-4">
                                         <div class="row">
-                                            <div class="col-3 pr-0">
-                                                <select class="form-control">
-                                                    <option value="22">+44 </option>
-                                                </select>
-                                            </div>
-                                            <div class="col-9 pl-0"><input type="text" class="form-control col-md-10" placeholder="Phone" /></div>
+
+                                            <div class="col-9 pl-0"><input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="phone"/></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="" placeholder="Home phone" />
+                                            <input type="text" name="contact_home_phone" class="form-control" id="" placeholder="Home phone" />
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="email" class="form-control" id="" placeholder="Email" />
+                                            <input type="email" name="contact_email" class="form-control" id="" placeholder="Email" />
                                         </div>
                                     </div>
                                 </div>

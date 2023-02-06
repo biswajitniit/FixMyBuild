@@ -66,9 +66,12 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
     Route::group(['prefix' => 'customer','middleware' => 'auth'], function () {
 
-        //Route::get('/dashboard', [UserdashboardController::class,'customer_dashboard'])->name('customer.dashboard');
-        Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
 
+        Route::get('profile', [CustomerController::class,'customer_profile'])->name('customer.profile');
+        Route::get('project', [CustomerController::class,'customer_project'])->name('customer.project');
+        Route::get('notifications', [CustomerController::class,'customer_notifications'])->name('customer.notifications');
+        Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
+        Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
 
         /**
         * Logout Route
@@ -76,7 +79,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/logout', [LogoutsController::class,'logout'])->name('logout');
     });
 
-    
+
     Route::group(['prefix' => 'tradeperson','middleware' => 'auth'], function () {
         Route::get('company-registration', [TradepersionDashboardController::class,'registrationsteptwo'])->name('tradepersion.compregistration');
         Route::post('save-company-registration', [TradepersionDashboardController::class,'saveregistrationsteptwo'])->name('tradepersion.savecompregistration');

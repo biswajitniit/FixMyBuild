@@ -23,7 +23,6 @@
     --color_btn:#061A48;
     --color_orange_gray:#ECE7DB;
     --btn-primary:#061A48;   
-     
 
     
   /* Veriable for actual use, don't touch for branding ----------------------*/
@@ -36,7 +35,7 @@
     --main_bg_color:var(--color_light);
     --footer_bg_color:var(--primary_color);
     --header_bg_color:var(--secondary_color);
-    --header_search_placeholder_color:var(--color_sky_blue);
+    --header_search_placeholder_color:var(--color_gray_light);
     --secondary_bg_color:var(--secondary_color);
     --light_bg_color:var(--color_white);
     --lighter_bg_color:var(--color_gray_lighter);
@@ -50,3 +49,25 @@
     --login_btn_bgcolor:var(--secondary_color);
     --login_btn_bgcolor_hover:var(--primary_color);
   }
+
+  .text-info{
+    color: #BB6BD9 !important;
+    font-weight: 500;
+  }
+  .text-dark{
+    color: #4F4F4F !important;
+    font-weight: 500;
+  }
+  .text-primary{
+    color: #2F80ED !important;
+    font-weight: 500;
+  }
+  .text-success{
+    color: #27AE60 !important;
+    font-weight: 500;
+  }
+  .text-danger{
+    color: #DB0C0C !important;
+    font-weight: 500;
+  }
+ 
