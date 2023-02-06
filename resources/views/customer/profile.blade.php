@@ -76,14 +76,14 @@
                         </div>
                         <div class="col-md-9">
                             <h3>
-                                Jenny Wilson
+                                {{Auth::user()->name}}
                                 <span>
                                     <a href="#"><img src="{{ asset('frontend/img/edit-pencil.svg') }}" alt="" /></a>
                                 </span>
                             </h3>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5>Email: jenny-wilson@gmail.com</h5>
+                                    <h5>Email: {{Auth::user()->email}}</h5>
                                 </div>
                                 <div class="col-md-6">
                                     <h5>
@@ -165,7 +165,7 @@
                             <h3>Contact</h3>
                         </div>
                         <div class="col-md-6">
-                            <input type="text" class="form-control" id="phone" placeholder="20 7278 3339 " />
+                            <input type="text" class="form-control" id="phone" placeholder="20 7278 3339" value="{{Auth::user()->phone}}"/>
                             <a href="#">Has your number changed?</a>
                         </div>
                     </div>

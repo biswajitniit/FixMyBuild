@@ -9,7 +9,7 @@
                 <h1>My profile</h1>
                 <ol class="breadcrumb mb-5">
                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                    <li class="breadcrumb-item active" aria-current="page">Project</li>
                 </ol>
             </div>
         </div>
@@ -44,79 +44,45 @@
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
-                                    <tr>
-                                        <th style="width: 80px;">Sl</th>
-                                        <th style="width: 150px;">Name</th>
-                                        <th style="width: 250px;">Category</th>
-                                        <th style="width: 150px;">Posting date</th>
-                                        <th style="width: 300px;">Status</th>
-                                        <th style="width: auto;"></th>
-                                    </tr>
+                                   <tr>
+                                      <th style="width:80px;">Sl</th>
+                                      <th style="width:140px;">Name</th>
+                                      <th style="width:300px;">Category</th>
+                                      <th style="width:140px;">Posting date</th>
+                                      <th style="width:340px;">Status</th>
+                                      <th style="width:80px;"></th>
+                                      <th style="width:auto;"></th>
+                                   </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-info">Submitted for review</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>02</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-dark">Returned for review</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>03</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-primary">View estimates</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>04</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-success">Project started</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
+                                   @if ($project)
+                                        @php
+                                            $count = 1;
+                                        @endphp
+                                       @foreach ($project as $row)
+                                            <tr>
+                                                <td>{{$count}}</td>
+                                                <td>{{$row->forename.' '.$row->surname}}</td>
+                                                <td>Bathrooms <br> Bathroom Designer</td>
+                                                <td>{{ date('d/m/Y h:i a',strtotime($row->created_at))}}</td>
+                                                <td class="text-success">Project started</td>
+                                                <td><a href="#"><img src="{{ asset('frontend/img/chat-info.svg') }}" alt=""></a></td>
+                                                <td><a href="#" class="btn btn-view">View</a></td>
+                                            </tr>
+                                            @php
+                                                $count++;
+                                            @endphp
+                                        @endforeach
+                                   @endif
+
+
                                 </tbody>
-                            </table>
+                             </table>
                         </div>
                     </div>
                 </div>
                 <!--//-->
-                <div class="white_bg">
+                {{-- <div class="white_bg">
                     <div class="row num_change">
                         <div class="col-md-12">
                             <h3>Project history</h3>
@@ -126,105 +92,70 @@
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
-                                    <tr>
-                                        <th style="width: 80px;">Sl</th>
-                                        <th style="width: 150px;">Name</th>
-                                        <th style="width: 250px;">Category</th>
-                                        <th style="width: 150px;">Posting date</th>
-                                        <th style="width: 300px;">Status</th>
-                                        <th style="width: auto;"></th>
-                                    </tr>
+                                   <tr>
+                                      <th style="width:80px;">Sl</th>
+                                      <th style="width:150px;">Name</th>
+                                      <th style="width:250px;">Category</th>
+                                      <th style="width:150px;">Posting date</th>
+                                      <th style="width:300px;">Status</th>
+                                      <th style="width:auto;"></th>
+                                   </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-success">Project completed</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>02</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-success">Project completed</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>03</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-danger">Project paused</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>04</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-danger">Project paused</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>05</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-success">Project completed</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>06</td>
-                                        <td>Modern bathroom</td>
-                                        <td>
-                                            Bathrooms <br />
-                                            Bathroom Designer
-                                        </td>
-                                        <td>
-                                            02/01/2023 <br />
-                                            11:12 am
-                                        </td>
-                                        <td class="text-success">Project completed</td>
-                                        <td><a href="#" class="btn btn-view">View</a></td>
-                                    </tr>
+                                   <tr>
+                                      <td>01</td>
+                                      <td>Modern bathroom</td>
+                                      <td>Bathrooms <br> Bathroom Designer</td>
+                                      <td>02/01/2023 <br> 11:12 am</td>
+                                      <td class="text-success">Project completed</td>
+                                      <td><a href="#" class="btn btn-view">View</a></td>
+                                   </tr>
+                                   <tr>
+                                      <td>02</td>
+                                      <td>Modern bathroom</td>
+                                      <td>Bathrooms <br> Bathroom Designer</td>
+                                      <td>02/01/2023 <br> 11:12 am</td>
+                                      <td class="text-success">Project completed</td>
+                                      <td><a href="#" class="btn btn-view">View</a></td>
+                                   </tr>
+                                   <tr>
+                                      <td>03</td>
+                                      <td>Modern bathroom</td>
+                                      <td>Bathrooms <br> Bathroom Designer</td>
+                                      <td>02/01/2023 <br> 11:12 am</td>
+                                      <td class="text-danger">Project paused</td>
+                                      <td><a href="#" class="btn btn-view">View</a></td>
+                                   </tr>
+                                   <tr>
+                                      <td>04</td>
+                                      <td>Modern bathroom</td>
+                                      <td>Bathrooms <br> Bathroom Designer</td>
+                                      <td>02/01/2023 <br> 11:12 am</td>
+                                      <td class="text-danger">Project paused</td>
+                                      <td><a href="#" class="btn btn-view">View</a></td>
+                                   </tr>
+                                   <tr>
+                                      <td>05</td>
+                                      <td>Modern bathroom</td>
+                                      <td>Bathrooms <br> Bathroom Designer</td>
+                                      <td>02/01/2023 <br> 11:12 am</td>
+                                      <td class="text-success">Project completed</td>
+                                      <td><a href="#" class="btn btn-view">View</a></td>
+                                   </tr>
+                                   <tr>
+                                      <td>06</td>
+                                      <td>Modern bathroom</td>
+                                      <td>Bathrooms <br> Bathroom Designer</td>
+                                      <td>02/01/2023 <br> 11:12 am</td>
+                                      <td class="text-success">Project completed</td>
+                                      <td><a href="#" class="btn btn-view">View</a></td>
+                                   </tr>
+
                                 </tbody>
-                            </table>
+                             </table>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!--//-->
             </div>
         </div>

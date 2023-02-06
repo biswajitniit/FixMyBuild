@@ -23,6 +23,7 @@ class CreateProjectsTable extends Migration
             $table->longText('description')->nullable();
             $table->string('contact_mobile_no')->nullable();
             $table->string('contact_home_phone')->nullable();
+            $table->string('contact_email')->nullable();
             $table->string('categories')->nullable();
             $table->enum('Status',['New', 'Under review', 'Referred', 'Estimation', 'Cancelled', 'Running', 'Stopped', 'Completed'])->default('NEW');
             $table->longText('notes')->nullable();

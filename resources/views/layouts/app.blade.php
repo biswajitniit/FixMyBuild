@@ -46,10 +46,11 @@
       <!--header area start-->
       <header class="header_area header_padding">
          <!--header middel start-->
-         <div class="header_middle">
+         {{-- <div class="header_middle @if() sticky-header @endif"> --}}
+            <div class="header_middle sticky-header">
             <div class="container-fluid pr-12">
                <div class="row align-items-center">
-                  <div class="col-xl-4 col-lg-4 col-md-4">
+                  <div class="col-xl-3 col-lg-3 col-md-3">
                      <div class="middel_right">
                         <div class="middel_right_info">
                            <div class="header_wishlist">
@@ -94,12 +95,12 @@
                         </div>
                      </div>
                   </div>
-                  <div class="col-xl-4 col-lg-4 col-md-4 text-center">
+                  <div class="col-xl-6 col-lg-6 col-md-6 text-center">
                      <div class="logo">
                         <a href="{{ url('/') }}"><img src="{{ asset('frontend/img/logo/logo.png') }}" alt=""></a>
                      </div>
                   </div>
-                  <div class="col-xl-4 col-lg-4 col-md-4 d-none d-lg-block">
+                  <div class="col-xl-3 col-lg-3 col-md-3 d-none d-lg-block">
                      <div class="middel_right">
                         <div class="middel_right_info">
                             <div class="header_wishlist">
@@ -150,7 +151,7 @@
 
         <!--footer area start-->
         <footer class="footer_widgets">
-            <div class="container">
+            <div class="container-fluid">
                <div class="footer_bottom">
                   <div class="row copyright_area">
                      <div class="col-lg-6 col-md-6">

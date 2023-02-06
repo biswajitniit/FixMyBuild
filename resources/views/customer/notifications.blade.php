@@ -9,7 +9,7 @@
                 <h1>My profile</h1>
                 <ol class="breadcrumb mb-5">
                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                    <li class="breadcrumb-item active" aria-current="page">Notifications</li>
                 </ol>
             </div>
         </div>
@@ -38,7 +38,7 @@
                             <div class="col-md-12">
                                 <div class="form-check form-switch">
                                     <div class="switchToggle">
-                                        <input type="checkbox" id="switch3" />
+                                        <input type="checkbox" id="switch3" checked/>
                                         <label for="switch3">Toggle</label>
                                     </div>
                                     <label class="form-check-label" for="mySwitch">My project has been reviewed</label>
@@ -48,7 +48,7 @@
                             <div class="col-md-12">
                                 <div class="form-check form-switch">
                                     <div class="switchToggle">
-                                        <input type="checkbox" id="switch4" />
+                                        <input type="checkbox" id="switch4" checked/>
                                         <label for="switch4">Toggle</label>
                                     </div>
                                     <label class="form-check-label" for="mySwitch">My project has been reviewed</label>
@@ -58,7 +58,7 @@
                             <div class="col-md-12">
                                 <div class="form-check form-switch">
                                     <div class="switchToggle">
-                                        <input type="checkbox" id="switch5" />
+                                        <input type="checkbox" id="switch5" checked/>
                                         <label for="switch5">Toggle</label>
                                     </div>
                                     <label class="form-check-label" for="mySwitch">A project milestone has been completed</label>
