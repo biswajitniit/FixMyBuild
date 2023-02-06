@@ -19,6 +19,7 @@ class CreateTraderDetailsTable extends Migration
             $table->string('comp_reg_no')->nullable();
             $table->string('comp_name')->nullable();
             $table->text('comp_address')->nullable();
+            $table->string('trader_name')->nullable();
             $table->longText('comp_description')->nullable();
             $table->string('name')->nullable();
             $table->string('phone_code')->nullable();

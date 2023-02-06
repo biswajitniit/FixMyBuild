@@ -82,5 +82,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
     Route::group(['prefix' => 'tradeperson','middleware' => 'auth'], function () {
         Route::get('company-registration', [TradepersionDashboardController::class,'registrationsteptwo'])->name('tradepersion.compregistration');
+        Route::post('save-company-registration', [TradepersionDashboardController::class,'saveregistrationsteptwo'])->name('tradepersion.savecompregistration');
+        Route::get('bank-registration', [TradepersionDashboardController::class,'registrationstepthree'])->name('tradepersion.bankregistration');
     });
 });

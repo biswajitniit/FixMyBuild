@@ -64,13 +64,10 @@ class LoginController extends Controller
                 if(Auth::user()->steps_completed == 1){
                     return redirect()->intended('/tradeperson/company-registration');
                 }else if(Auth::user()->steps_completed == 2){
-
+                    return redirect()->intended('/tradeperson/bank-registration');
                 }else if(Auth::user()->steps_completed == 3){
-
-                }else{
-
+                    return redirect()->intended('/tradeperson/dashboard');
                 }
-                return redirect()->intended('/tradeperson/dashboard');
             }
 		}
 		$errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
