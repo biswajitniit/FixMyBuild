@@ -59,7 +59,8 @@ class LoginController extends Controller
             if (Auth::user()->customer_or_tradesperson == "Customer")
             {
                 // The user is logged in Customer...
-                return redirect()->intended('/customer/profile');
+               // return redirect()->intended('/customer/profile');
+               return redirect()->intended('/');
             }else{
                 if(Auth::user()->steps_completed == 1){
                     return redirect()->intended('/tradeperson/company-registration');
