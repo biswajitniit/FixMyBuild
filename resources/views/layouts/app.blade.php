@@ -192,7 +192,7 @@
         <!-- Video JS -->
         <script src="{{ asset('frontend/js/video.js') }}"></script>\
          <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-        
+
         <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
         <script src="{{ asset('frontend/js/video.js') }}"></script>
         <!-- Main JS -->
@@ -202,7 +202,7 @@
                selector: 'textarea#editor',
                menubar: false
             });
-         
+
             tinymce.init({
                selector: 'textarea#editor1',
                menubar: false

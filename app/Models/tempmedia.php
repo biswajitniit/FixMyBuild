@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class tempmedia extends Model
 {
     use HasFactory;
+    protected  $table = 'tempmedia';
+
 }
