@@ -10,7 +10,7 @@
       <!-- Favicon -->
       <!-- <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico"> -->
 
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     {{--  dropbox CDN  --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.0/min/dropzone.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.0/dropzone.js"></script>
@@ -82,7 +82,7 @@
                                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
                                 },
                         type: 'POST',
-                        //url: '{{ url("files/destroy") }}',
+                        url: '{{ url("dropzonedestroy") }}',
                         data: {filename: name},
                         success: function (data){
                             console.log("File has been successfully removed!!");

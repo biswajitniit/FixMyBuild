@@ -46,34 +46,33 @@ class MediaController extends Controller
         // ]);
 
 
-        //$extension = $request->file->extension();
+        $extension = $request->file->extension();
         $filename = $request->file('file')->hashname();
-
-        //  $path = Storage::disk('s3')->put('Testfolder', $filename, 'public');
-        //  $path = Storage::disk('s3')->url($path);
-
         $file = $request->file('file');
-        \Storage::disk('s3')->put(
-                        'Testfolder/'.$filename,
-                        file_get_contents($file->getRealPath(), 'public')
-                    );
+        $path = Storage::disk('s3')->put('Testfolder/'.$filename,file_get_contents($file->getRealPath(),'public'));
+        $path = Storage::disk('s3')->url('Testfolder/'.$filename);
+
 
         $tempmedia = new Tempmedia();
         $tempmedia->user_id         = Auth::user()->id;
         $tempmedia->filename        = $filename;
-        //$tempmedia->file_extension  = $extension;
-        //$tempmedia->url             = $path;
+        $tempmedia->file_extension  = $extension;
+        $tempmedia->url             = $path;
         $tempmedia->file_created_date = date('Y-m-d');
         $tempmedia->save();
 
         /* Store $imageName name in DATABASE from HERE */
 
-        // return back()
-        //     ->with('success','You have successfully upload image.')
-        //     ->with('image', $path);
         return response()->json(['success' => $filename]);
 
     }
+
+    public function dropzonedestroy($id){
+        $fileUpload = Tempmedia::find($id);
+        $fileUpload->delete();
+        return response()->json(['success' => $id]);
+    }
+
 
 
 }
