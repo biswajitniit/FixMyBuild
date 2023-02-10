@@ -221,7 +221,7 @@
                                     <!-- Modal content-->
                                         <div class="modal-content">
 
-                                            <div class="modal-body">
+                                            <div class="modal-body modeldropzone">
 
                                             </div>
 
@@ -344,28 +344,29 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12 supported_">
 
-
-                            <div class="col-md-6">
-                                <div id="my_camera"></div>
-                                <br/>
-                                <input type=button value="Take Snapshot" onClick="take_snapshot()">
-                                <input type="hidden" name="image" class="image-tag">
+                    {{-- <form method="POST" action="{{ route('webcam.capture') }}">
+                        @csrf
+                            <div class="row">
+                                <div class="col-md-12 supported_">
+                                    <div class="col-md-6">
+                                        <div id="my_camera"></div>
+                                        <br/>
+                                        <input type=button value="Take Snapshot" onClick="take_snapshot()">
+                                        <input type="hidden" name="image" class="image-tag">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div id="results">Your captured image will appear here...</div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <br/>
+                                        <button class="btn btn-success">Submit</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <div id="results">Your captured image will appear here...</div>
-                            </div>
-                            <div class="col-md-12 text-center">
-                                <br/>
-                                <button class="btn btn-success">Submit</button>
-                            </div>
+                    </form> --}}
 
 
-
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
@@ -429,7 +430,7 @@
         //alert(e.currentTarget.href);
         var result = '<iframe  width="660" height="500"  src="'+e.currentTarget.href+'" frameborder="0" marginheight="0" marginwidth="0">Loading&amp;#8230;</iframe>';
         $("#exampleModal2").modal('show');
-        $(".modal-body").html(result);
+        $(".modeldropzone").html(result);
         e.preventDefault();
     }
 

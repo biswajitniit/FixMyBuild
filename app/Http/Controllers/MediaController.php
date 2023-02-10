@@ -47,7 +47,7 @@ class MediaController extends Controller
 
 
         $extension = $request->file->extension();
-        $filename = $request->file('file')->hashname();
+        $filename = $request->file('file')->getClientOriginalName();
         $file = $request->file('file');
         $path = Storage::disk('s3')->put('Testfolder/'.$filename,file_get_contents($file->getRealPath(),'public'));
         $path = Storage::disk('s3')->url('Testfolder/'.$filename);
@@ -67,10 +67,16 @@ class MediaController extends Controller
 
     }
 
-    public function dropzonedestroy($id){
-        $fileUpload = Tempmedia::find($id);
-        $fileUpload->delete();
-        return response()->json(['success' => $id]);
+    public function dropzonedestroy(Request $request){
+         $filename =  $request->get('filename');
+         Tempmedia::where('filename',$filename)->delete();
+        // $path=public_path().'/images/'.$filename;
+        // if (file_exists($path)) {
+        //     unlink($path);
+        // }
+        Storage::disk('s3')->delete('Testfolder/'. $filename);
+
+        return $filename;
     }
 
 
