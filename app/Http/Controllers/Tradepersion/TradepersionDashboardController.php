@@ -9,6 +9,7 @@ use App\Models\AreaCover;
 use App\Models\SubWorkType;
 use App\Models\SubAreaCover;
 use App\Models\TraderDetail;
+use Illuminate\Support\Facades\Http;
 
 class TradepersionDashboardController extends Controller
 {
@@ -86,5 +87,52 @@ class TradepersionDashboardController extends Controller
     public function registrationstepthree()
     {
         return view('tradepersion.registrationthree');
+    }
+
+    public function saveregistrationstepthree(Request $request){
+        $this->validate($request, [
+			'contingency'           => 'required',
+			'bnk_account_type'      => 'required',
+			'bnk_account_name'      => 'required',
+			'bnk_sort_code'         => 'required',
+			'bnk_account_number'    => 'required',
+        ],[
+            'contingency.required'      => 'Please enter contingency',
+            'bnk_account_type.required' => 'Please select your bank account type',
+            'bnk_account_name.required' => 'Please enter your account holder name',
+            'bnk_sort_code.required'    => 'Please enter your bank sort code',
+            'bnk_account_number.required'   => 'Please enter your bank account number',
+        ]);
+        $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
+        $traderdetails->contingency = $request()->contingency;
+        $traderdetails->bnk_account_type = $request()->bnk_account_type;
+        $traderdetails->bnk_account_name = $request()->bnk_account_name;
+        $traderdetails->bnk_sort_code = $request()->bnk_sort_code;
+        $traderdetails->bnk_account_number = $request()->bnk_account_number;
+        $traderdetails->builder_amendment = $request()->builder_amendment;
+        $traderdetails->noti_new_quotes = $request()->noti_new_quotes;
+        $traderdetails->noti_quote_accepted = $request()->noti_quote_accepted;
+        $traderdetails->noti_project_stopped = $request()->noti_project_stopped;
+        $traderdetails->noti_quote_rejected = $request()->noti_quote_rejected;
+        $traderdetails->noti_project_cancelled = $request()->noti_project_cancelled;
+        if($traderdetails->save()){
+            $userstatus = User::where('id', Auth::user()->id)->update(['steps_completed' => "2"]);
+            return redirect()->intended('/tradeperson/dashboard');
+        }else{
+            $errors = new MessageBag(['submiterror' => ['Something went wrong please try again.']]);
+		    return Redirect::back()->withErrors($errors)->withInput();
+        }
+    }
+
+    function get_companydetails(Request $request){
+        $key= "1d5582f8-d62b-459f-9264-2e7a998d97b9";
+        $secret = "";
+        $company_id = $request->company_id;
+        $response = Http::withBasicAuth($key,$secret)->get('https://api.company-information.service.gov.uk/company/'.$company_id);
+        if ($response->failed()) {
+           return $response;
+        } else {
+           return $response;
+        }
     }
 }
