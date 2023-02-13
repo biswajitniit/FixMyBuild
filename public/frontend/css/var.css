@@ -51,7 +51,7 @@
   }
 
   .text-info{
-    color: #BB6BD9 !important;
+    color: #F2994A !important;
     font-weight: 500;
   }
   .text-dark{
@@ -68,6 +68,10 @@
   }
   .text-danger{
     color: #DB0C0C !important;
+    font-weight: 500;
+  }
+  .text-awaiting{
+    color: #BB6BD9 !important;
     font-weight: 500;
   }
  

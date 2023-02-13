@@ -121,10 +121,13 @@ outline: none !important;
 text-decoration: none;
 color: var(--secondary_font_color);
 }
-
+a {
+    text-decoration: none;
+    color: var(--secondary_color);
+    }
 a:hover {
 text-decoration: none;
-color: var(--secondary_font_color);
+color: var(--primary_color);
 }
 
 .form-control:focus {
@@ -1386,6 +1389,7 @@ border-radius: 0 50px 50px 0;
 display: flex;
 align-items: center;
 height: 70px;
+margin-right: -45px;
 }
 
 .header_wishlist {
@@ -5953,7 +5957,7 @@ margin-bottom: 14px;
 }
 }
 .copyright_area ul {
-  margin-left: -12px;
+  margin-left: 10px;
 }
 .copyright_area li {
 float: left;
@@ -5969,9 +5973,12 @@ text-transform: capitalize;
 line-height: 16px;
 font-size: 11px;
 font-weight: 700;
-margin-right: 52px;
+margin-right: 25px;
 text-align: right;
 color: var(--color_gray_light);
+}
+.copyright_area li a{
+    color: var(--color_gray);
 }
 .copyright_area li a:hover {
 color: var(--secondary_color);
@@ -12544,10 +12551,10 @@ line-height: 21px;
 color: #828282;
 }
 .dashboard_sidebar li a:hover {
-color: #061a48;
+    color:var(--secondary_color);
 }
 .dashboard_sidebar li.active a {
-color: #061a48;
+    color: var(--primary_color);
 }
 .dashboard_wrapper .num_change .form-control {
 border: none;
@@ -12644,6 +12651,108 @@ padding: 0px;
 .iti--separate-dial-code input[type="tel"] {
 padding-left: 75px !important;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* Dropdown Button */
+.middel_right .alert {
+    padding: 20px !important;
+    margin-bottom: 0;
+}
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    right: 0px;
+    display: none;
+    position: absolute;
+    background-color: #FFF;
+    min-width: 445px;
+    z-index: 1;    
+    box-shadow: 0px 4px 13px rgb(0 0 0 / 15%);
+    border-radius: 10px;
+    }
+    .display-block {
+        display: block !important;
+    }
+.head_{
+        padding: 20px 30px 10px;
+    }        
+.head_ h5 a{
+    float: right;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: var(--secondary_color);
+    padding: 0;
+}
+.mid_cont{
+    padding: 20px 30px;
+    border-top: 1px solid #D9D9D9;
+    border-bottom: 1px solid #D9D9D9;
+}   
+.mid_cont img{
+    height: 40px;
+    width: 40px;
+}
+.foote_{
+    padding: 10px 30px;    
+    text-align: center;
+}  
+.dropdown-content h5{
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color:var(--primary_color);
+}
+.dropdown-content .mid_cont h5 a{
+    color:var(--primary_color);
+    padding: 0;
+    font-size: 16px;
+}
+.dropdown-content .mid_cont h5 a:hover{
+    color:var(--secondary_color);
+}
+.dropdown-content h6{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #828282;
+}
+.dropdown-content .foote_ a{
+    color:var(--secondary_color);
+    padding: 0;
+    font-size: 16px;
+    display:inline
+}
+.dropdown-content .foote_ a:hover{
+    color:var(--primary_color); 
+}
+.head_ h5 a:hover{
+    color:var(--primary_color); 
+}
+.show {display:block;} 
+
+.all-notificaion h5{
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color:var(--primary_color);
+}
+
 @media handheld, only screen and (max-width: 768px) {
 .white_bg {
 padding: 25px;
@@ -12662,7 +12771,7 @@ height: 73vh;
 }
 .badge {
 top: 10px;
-right: 5px;
+right: 15px;
 }
 .tab_wrappper li {
 margin-bottom: 0px;
@@ -12704,16 +12813,45 @@ height: 85vh;
 .dashboard_sidebar {
 height: 500px;
 }
+.middel_right_info {
+  margin-right: 0px;
+}
+.copyright_area ul {
+  margin-left: 60px;
+}
+.copyright_area p {
+  margin-right: 115px;
+}
 }
 @media screen and (max-width: 1600px) {
 .banner-inner {
 height: 80vh;
 }
+.middel_right_info {
+  margin-right: -45px;
+}
+.copyright_area p {
+  margin-right: 25px;
+}
+.copyright_area ul {
+  margin-left: 10px;
+}
+}
+@media handheld, only screen and (max-width: 414px) {
+    .input-group-text {
+    margin-left: 10px;
+    }
+    .dropdown-content {
+        min-width: 280px;
+    }
 }
 
 @media handheld, only screen and (max-width: 414px) {
 .input-group-text {
 margin-left: 10px;
+}
+.dropdown-content {
+    min-width: 280px;
 }
 }
 @media handheld, only screen and (max-width: 390px) {

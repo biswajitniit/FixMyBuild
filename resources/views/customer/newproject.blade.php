@@ -169,6 +169,23 @@
                                 <p>For example if you are replacing a door lock please take a photo of the existing lock.</p>
                             </div>
 
+
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <a data-bs-toggle="modal" data-bs-target="#exampleModal4" class="btn btn-outline-danger btn-block">
+                                        <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z"
+                                                fill="#EE5719"
+                                            />
+                                        </svg>
+                                        Take photo
+                                    </a>
+                                </div>
+                            </div>
+
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <a data-bs-toggle="modal" data-bs-target="#exampleModal3" class="btn btn-outline-danger btn-block">
@@ -189,24 +206,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <a data-bs-toggle="modal" data-bs-target="#exampleModal4" class="btn btn-outline-danger btn-block">
-                                        <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z"
-                                                fill="#EE5719"
-                                            />
-                                        </svg>
-                                        Take photo
-                                    </a>
-                                </div>
-                            </div>
-
-
-
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <a data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-outline-danger btn-block">
+                                    <a href="{{ route('dropzoneupload') }}" data-bs-toggle="modal" onclick="geturldata(event)" class="btn btn-outline-danger btn-block">
                                         <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M17.0344 4.21564L13.2844 0.465637C13.1415 0.326345 12.9495 0.248887 12.75 0.250012H5.25C4.85218 0.250012 4.47064 0.408047 4.18934 0.689352C3.90804 0.970656 3.75 1.35219 3.75 1.75001V3.25001H2.25C1.85218 3.25001 1.47064 3.40805 1.18934 3.68935C0.908035 3.97066 0.75 4.35219 0.75 4.75001V18.25C0.75 18.6478 0.908035 19.0294 1.18934 19.3107C1.47064 19.592 1.85218 19.75 2.25 19.75H12.75C13.1478 19.75 13.5294 19.592 13.8107 19.3107C14.092 19.0294 14.25 18.6478 14.25 18.25V16.75H15.75C16.1478 16.75 16.5294 16.592 16.8107 16.3107C17.092 16.0294 17.25 15.6478 17.25 15.25V4.75001C17.2511 4.55048 17.1737 4.35851 17.0344 4.21564ZM12.75 18.25H2.25V4.75001H9.44062L12.75 8.05939V18.25ZM15.75 15.25H14.25V7.75001C14.2511 7.55048 14.1737 7.35851 14.0344 7.21564L10.2844 3.46564C10.1415 3.32635 9.94954 3.24889 9.75 3.25001H5.25V1.75001H12.4406L15.75 5.05939V15.25ZM10.5 12.25C10.5 12.4489 10.421 12.6397 10.2803 12.7803C10.1397 12.921 9.94891 13 9.75 13H5.25C5.05109 13 4.86032 12.921 4.71967 12.7803C4.57902 12.6397 4.5 12.4489 4.5 12.25C4.5 12.0511 4.57902 11.8603 4.71967 11.7197C4.86032 11.579 5.05109 11.5 5.25 11.5H9.75C9.94891 11.5 10.1397 11.579 10.2803 11.7197C10.421 11.8603 10.5 12.0511 10.5 12.25ZM10.5 15.25C10.5 15.4489 10.421 15.6397 10.2803 15.7803C10.1397 15.921 9.94891 16 9.75 16H5.25C5.05109 16 4.86032 15.921 4.71967 15.7803C4.57902 15.6397 4.5 15.4489 4.5 15.25C4.5 15.0511 4.57902 14.8603 4.71967 14.7197C4.86032 14.579 5.05109 14.5 5.25 14.5H9.75C9.94891 14.5 10.1397 14.579 10.2803 14.7197C10.421 14.8603 10.5 15.0511 10.5 15.25Z"
@@ -216,48 +216,18 @@
                                         Upload files
                                     </a>
                                 </div>
-                                <!-- The Modal Upload files-->
-                                <div class="modal fade select_address" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
+                                <div id="exampleModal2" class="modal fade" role="dialog" >
+                                    <div class="modal-dialog" style="width:700px;max-width:initial;height:500px;">
+                                    <!-- Modal content-->
                                         <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Upload files</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                                                            fill="black"
-                                                        />
-                                                    </svg>
-                                                </button>
+
+                                            <div class="modal-body modeldropzone">
+
                                             </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-md-6 supported_">
-                                                        <h4>Supported file type list:</h4>
-                                                        <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
-                                                        <h6><strong>Documents:</strong> .doc, .docx .key .odt .pdf .ppt, .pptx, .pps, .ppsx .xls, .xlsx</h6>
-                                                        <h6><strong>Audio:</strong> .mp3 .m4a .ogg .wav</h6>
-                                                        <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="text-center upload_wrap">
-                                                            <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                                                            <p>Drag and drop files here</p>
-                                                            <h4>OR</h4>
-                                                            <button type="button" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-light">Upload</button>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-                                <!-- The Modal Upload files END-->
                             </div>
                             <div class="col-md-6 mt-2">
                                 <div class="d-inline mr-3">
@@ -331,14 +301,15 @@
                     <div class="row">
                         <div class="col-md-12 supported_">
 
-
+                            <div id="my_camera_video"></div>
                             <div id='gUMArea'>
-                                <div>
+                                {{-- <div>
                                 <input type="radio" name="media" value="video" checked id='mediaVideo'>Video
-                                </div>
+                                </div> --}}
                                 <button class="btn btn-default"  id='gUMbtn'>Request Stream</button>
                             </div>
                             <div id='btns' style="display: none;">
+
                                 <button  class="btn btn-default" id='start'>Start</button>
                                 <button  class="btn btn-default" id='stop'>Stop</button>
                             </div>
@@ -374,28 +345,29 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12 supported_">
 
-
-                            <div class="col-md-6">
-                                <div id="my_camera"></div>
-                                <br/>
-                                <input type=button value="Take Snapshot" onClick="take_snapshot()">
-                                <input type="hidden" name="image" class="image-tag">
+                    <form method="POST" action="{{ route('capture-photo') }}" enctype="multipart/form-data">
+                        @csrf
+                            <div class="row">
+                                <div class="col-md-12 supported_">
+                                    <div class="col-md-6">
+                                        <div id="my_camera"></div>
+                                        <br/>
+                                        <input type=button value="Take Snapshot" onClick="take_snapshot()">
+                                        <input type="hidden" name="image" class="image-tag" >
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div id="results">Your captured image will appear here...</div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <br/>
+                                        <button class="btn btn-success">Submit</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <div id="results">Your captured image will appear here...</div>
-                            </div>
-                            <div class="col-md-12 text-center">
-                                <br/>
-                                <button class="btn btn-success">Submit</button>
-                            </div>
+                    </form>
 
 
-
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
@@ -410,24 +382,25 @@
 
 @push('scripts')
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script language="JavaScript">
-    // Webcam.set({
-    //     width: 490,
-    //     height: 350,
-    //     image_format: 'jpeg',
-    //     jpeg_quality: 90
-    // });
+    Webcam.set({
+        width: 490,
+        height: 350,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
 
-    // Webcam.attach( '#my_camera' );
+    Webcam.attach( '#my_camera' );
+    Webcam.attach( '#my_camera_video' );
 
-    // function take_snapshot() {
-    //     Webcam.snap( function(data_uri) {
-    //         $(".image-tag").val(data_uri);
-    //         document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
-    //     } );
-    // }
+    function take_snapshot() {
+        Webcam.snap( function(data_uri) {
+            $(".image-tag").val(data_uri);
+            document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+        } );
+    }
 
     $(document).ready(function(){
         $('.postcodefind').on('click', function () {
@@ -455,6 +428,15 @@
         });
     });
 
+    function geturldata(e){
+        //alert(e.currentTarget.href);
+        var result = '<iframe  width="660" height="500"  src="'+e.currentTarget.href+'" frameborder="0" marginheight="0" marginwidth="0">Loading&amp;#8230;</iframe>';
+        $("#exampleModal2").modal('show');
+        $(".modeldropzone").html(result);
+        e.preventDefault();
+    }
+
+
 
     function Searchpostcode() {
         var input = document.getElementById("Search");
@@ -471,10 +453,13 @@
     }
 
     $('#summernote').summernote({
-        placeholder: 'FixMyBuild',
+        //placeholder: 'FixMyBuild',
         tabsize: 2,
         height: 200
     });
+
+
+
 </script>
 @endpush
 

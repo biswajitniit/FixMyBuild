@@ -36,6 +36,10 @@ Route::get('/clear-cache', function() {
 Route::post('/capture-video-streaming', [MediaController::class,'capture_video_streaming'])->name('capture-video-streaming');
 Route::post('/capture-photo', [MediaController::class,'capture_photo'])->name('capture-photo');
 
+Route::get('/dropzoneupload', [MediaController::class,'dropzoneupload'])->name('dropzoneupload');
+Route::post('/dropzonesave', [MediaController::class,'dropzonesave'])->name('dropzonesave');
+Route::post('/dropzonedestroy', [MediaController::class,'dropzonedestroy'])->name('dropzonedestroy');
+
 Route::group(['middleware' => 'prevent-back-history'],function(){
     Route::get('/', function () {
         return view('welcome');

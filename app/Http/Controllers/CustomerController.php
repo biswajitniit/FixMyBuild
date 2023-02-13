@@ -56,8 +56,6 @@ class CustomerController extends Controller
                 $address->save();
             $addressid = $address->id;
 
-
-
             $project = new Project();
                 $project->user_id                   = Auth::user()->id;
                 $project->project_address_id        = $addressid;
@@ -71,7 +69,7 @@ class CustomerController extends Controller
                 $project->status                    = 'New';
             $project->save();
 
-            return redirect()->back()->with('message', '');
+            return redirect()->back()->with('message', 'Project added successfully.');
 
         }else{
 
