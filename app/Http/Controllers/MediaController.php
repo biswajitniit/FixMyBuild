@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Aws\S3\Exception\S3Exception;
 use App\Models\Tempmedia;
+use League\Flysystem\File;
 class MediaController extends Controller
 {
 
@@ -16,14 +17,61 @@ class MediaController extends Controller
     public function capture_video_streaming(Request $request){
 
         $filename_with_extention = $request->file('video')->hashname();
-
         $path =  Storage::disk('public')->put('videos',$request->video);
         $url = Storage::disk('public')->url($path);
+
+
+        // copy file local storage to s3 bucket
+        $file_path = storage_path('app/public/videos/'.$filename_with_extention);
+        $spath = Storage::disk('s3')->put('Testfolder/'.$filename_with_extention, file_get_contents($file_path,'public'));
+        $spath = Storage::disk('s3')->url('Testfolder/'.$filename_with_extention);
+
+        $tempmedia = new Tempmedia();
+        $tempmedia->user_id         = Auth::user()->id;
+        $tempmedia->filename        = $filename_with_extention;
+        $tempmedia->file_extension  = 'mkv';
+        $tempmedia->url             = $spath;
+        $tempmedia->file_created_date = date('Y-m-d');
+        $tempmedia->save();
+
+        @unlink($file_path);
         return $url;
     }
 
     public function capture_photo(Request $request){
 
+         $img = $request->image;
+         $folderPath = "uploads/";
+
+         $image_parts = explode(";base64,", $img);
+         $image_type_aux = explode("image/", $image_parts[0]);
+         $image_type = $image_type_aux[1];
+
+         $image_base64 = base64_decode($image_parts[1]);
+         $fileName = uniqid() . '.png';
+
+         $file = $folderPath . $fileName;
+
+        // save in local storage
+         $path =  Storage::disk('public')->put($file, $image_base64);
+         $url = Storage::disk('public')->url($path);
+
+        // copy file local storage to s3 bucket
+        $file_path = storage_path('app/public/uploads/'.$fileName);
+        $spath = Storage::disk('s3')->put('Testfolder/'.$fileName, file_get_contents($file_path,'public'));
+        $spath = Storage::disk('s3')->url('Testfolder/'.$fileName);
+
+        $tempmedia = new Tempmedia();
+        $tempmedia->user_id         = Auth::user()->id;
+        $tempmedia->filename        = $fileName;
+        $tempmedia->file_extension  = 'png';
+        $tempmedia->url             = $spath;
+        $tempmedia->file_created_date = date('Y-m-d');
+        $tempmedia->save();
+
+        // unlink from local storage
+        @unlink($file_path);
+        return redirect()->back()->with('message', 'Photo added successfully.');
 
     }
 
