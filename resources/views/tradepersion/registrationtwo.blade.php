@@ -34,34 +34,38 @@
                 <div class="tell_about gen-info">
                    <div class="row">
                       <div class="col-md-10">
-                         <input type="text" name="comp_reg_no" class="form-control pb-2" id="" placeholder="REG HJ 12345">
+                         <input type="text" name="comp_reg_no" class="form-control pb-2" value="14494824" id="comp_reg_no" placeholder="REG HJ 12345">
                       </div>
                       <div class="col-md-2">
-                         <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger btn-block pull-right">Find</button>
+                         <button type="button" onclick="findcomp()" class="btn btn-danger btn-block pull-right">Find</button>
                       </div>
                    </div>
-                   <div class="row mt-2">
-                       <div class="col-md-4"><h5><strong>Company name: </strong></h5></div>
-                       <div class="col-md-8"><h5>ACME INC</h5></div>
-                       <input type="hidden" name="comp_name" value="">
-                   </div>
-                   <div class="row mt-2">
-                       <div class="col-md-4"><h5><strong>Company address:</strong></h5></div>
-                       <div class="col-md-8"><h5>2464 Royal Ln. Mesa, New Jersey 45463</h5></div>
-                       <input type="hidden" name="comp_address" value="">
-                   </div>
-                   <div class="row mt-4">
-                       <div class="col-md-6 text-center">
+                   <div id="serchcompres" style="display:none">
+                     <div class="row mt-2">
+                        <div class="col-md-4"><h5><strong>Company name: </strong></h5></div>
+                        <div class="col-md-8"><h5 id="txt_comp_name"></h5></div>
+                        <input type="hidden" name="comp_name" value="" id="comp_name">
+                     </div>
+                     <div class="row mt-2">
+                           <div class="col-md-4"><h5><strong>Company address:</strong></h5></div>
+                           <div class="col-md-8"><h5 id="txt_comp_address"></h5></div>
+                           <input type="hidden" name="comp_address" value="" id="comp_address">
+                     </div>
+                     <div class="row mt-4">
+                        <div class="col-md-6 text-center">
                            <img src="assets/img/Group 128.png" alt="">
-                       </div>
-                       <div class="col-md-6 mt-4">
+                        </div>
+                        <div class="col-md-6 mt-4">
                            <h5><strong>Trading name</strong></h5>
                            <p>This name will appear on your quotes</p>
                            <div class="mt-4">
-                               <input type="text" name="trader_name" class="form-control pb-2" id="" placeholder="Type your trading name">
+                              <input type="text" name="trader_name" class="form-control pb-2" id="" placeholder="Type your trading name">
                            </div>
-                       </div>
+                        </div>
+                     </div>
                    </div>
+                   
+                   
                 </div>
              </div>
           </div>
@@ -523,7 +527,28 @@
       $(".areaschkboxsec").removeClass("active");
       $(this).addClass('active');
    });
-
+    
+    function findcomp(){
+      var company_id = $('#comp_reg_no').val();
+      $.ajax
+      ({
+         type: "GET",
+         url: "get-company-details",
+         data: {company_id: company_id},
+         success: function (data){
+            data = JSON.parse(data);
+            if(data){
+               $('#serchcompres').css('display', 'block');
+               $('#txt_comp_name').html(data.company_name);
+               $('#comp_name').val(data.company_name);
+               $('#txt_comp_address').html(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
+               $('#comp_address').val(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
+            }
+            
+            console.log(data);
+         }
+      });
+    }
    
 </script>
 

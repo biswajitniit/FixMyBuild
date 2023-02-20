@@ -7,7 +7,7 @@
           <div class="col-md-12 text-center pt-5 fmb_titel">
              <h1>Company Registration</h1>
              <ol class="breadcrumb mb-5">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Company Registration</li>
              </ol>
           </div>
@@ -27,7 +27,8 @@
  </section>
  <section class="pb-5">
     <div class="container">
-       <form action="#" method="post">
+       <form action="{{route('tradepersion.savebankregistration')}}" method="post">
+        @csrf
           <div class="row">
              <div class="col-md-10 offset-md-1">
                 <div class="tell_about gen-info">
@@ -41,7 +42,7 @@
                          <h6>Default contingency</h6>
                       </div>
                       <div class="col-2">
-                         <input type="text" class="form-control text-center font-24"  placeholder="20">
+                         <input type="text" name="contingency" class="form-control text-center font-24"  placeholder="20">
                       </div>
                       <div class="col-2">
                          <h6 class="font-44">%</h6>
@@ -71,12 +72,12 @@
                             <div class="col-md-12">
                                <div class="form-check-inline mr-5">
                                   <label class="form-check-label">
-                                  <input type="radio" class="form-check-input mr-2" value="">Personal
+                                  <input type="radio" class="form-check-input mr-2" name="bnk_account_type" value="Personal">Personal
                                   </label>
                                </div>
                                <div class="form-check-inline">
                                   <label class="form-check-label">
-                                  <input type="radio" class="form-check-input mr-2" value="">Business
+                                  <input type="radio" class="form-check-input mr-2" name="bnk_account_type" value="Business">Business
                                   </label>
                                </div>
                             </div>
@@ -84,23 +85,23 @@
                          <!--//-->
                          <div class="row mt-3">
                             <div class="col-md-12">
-                               <input type="text" class="form-control pb-3"  placeholder="Account holder’s name">
+                               <input type="text" name="bnk_account_name" class="form-control pb-3"  placeholder="Account holder’s name">
                             </div>
                          </div>
                          <!--//-->
                          <div class="row mt-3">
                             <div class="col-md-6">
-                               <input type="text" class="form-control pb-3"  id="sortcode" placeholder="Sort code                   __                  __">
+                               <input type="text" class="form-control pb-3" name="bnk_sort_code"  id="sortcode" placeholder="Sort code                   __                  __">
                             </div>
                             <div class="col-md-6">
-                               <input type="text" class="form-control pb-3"  placeholder="Account number">
+                               <input type="text" class="form-control pb-3" name="bnk_account_number"  placeholder="Account number">
                             </div>
                          </div>
                          <!--//-->
                          <div class="row mt-3">
                             <div class="col-md-12">
                                <div class="form-check">
-                                  <input class="form-check-input" type="checkbox" id="check1" name="option1">
+                                  <input class="form-check-input" type="checkbox" value="1" id="check1" name="builder_amendment">
                                   <label class="form-check-label">Builder registration page amendment</label>
                                </div>
                             </div>
@@ -127,7 +128,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch1">
+                                     <input type="checkbox" id="switch1" name="noti_new_quotes" value="1">
                                      <label for="switch1">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When new quotes are requested</label>
@@ -137,7 +138,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch2">
+                                     <input type="checkbox" id="switch2" name="noti_quote_accepted" value="1">
                                      <label for="switch2">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When your quote is accepted and, where applicable, upfront payment received</label>
@@ -147,7 +148,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch3">
+                                     <input type="checkbox" id="switch3" name="noti_quote_accepted" value="1">
                                      <label for="switch3">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When a project is stopped</label>
@@ -157,7 +158,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch4">
+                                     <input type="checkbox" id="switch4" name="noti_quote_rejected" value="1">
                                      <label for="switch4">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When your quote is rejected</label>
@@ -167,7 +168,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch5">
+                                     <input type="checkbox" id="switch5" name="noti_project_cancelled" value="1">
                                      <label for="switch5">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When a project is cancelled before it starts</label>
