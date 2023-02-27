@@ -28,14 +28,14 @@ use App\Models\Admin;
 |
 */
 
-Route::get('/', [AdminloginController::class, 'index'])->name('admin.login');
-Route::post('/login', [AdminloginController::class, 'postlogin'])->name('adminLoginPost');
+// Route::get('/admin', [AdminloginController::class, 'index'])->name('admin.login');
+// Route::post('/admin/login', [AdminloginController::class, 'postlogin'])->name('adminLoginPost');
 
-Route::group(['middleware' => 'adminauth'], function () {
-	// Admin Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
-    Route::get('/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
+// Route::group(['middleware' => ['auth:admin']], function() {
+// 	// Admin Dashboard
+//     Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
+//     Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
 
-    Route::get('/users', [UserController::class, 'users'])->name('admin/users');
-    Route::any('/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
-});
+//     Route::get('/admin/users', [UserController::class, 'users'])->name('admin/users');
+//     Route::any('/admin/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
+// });

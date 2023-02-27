@@ -21,49 +21,36 @@
     <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/font-awesome/css/font-awesome.min.css') }}">
     <!-- End plugin css for this page -->
 
-
-      <!-- Plugin css for this page -->
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/dropzone/dropzone.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/font-awesome/css/font-awesome.min.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-1to10.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-horizontal.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-movie.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-pill.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-reversed.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-square.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bootstrap-stars.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/css-stars.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/examples.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/fontawesome-stars-o.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/fontawesome-stars.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-asColorPicker/css/asColorPicker.min.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/x-editable/bootstrap-editable.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/dropify/dropify.min.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-file-upload/uploadfile.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-tags-input/jquery.tagsinput.min.css') }}">
-      <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css') }}">
-      <!-- End plugin css for this page -->
-
-
-
-
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/dropzone/dropzone.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-1to10.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-horizontal.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-movie.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-pill.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-reversed.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bars-square.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/bootstrap-stars.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/css-stars.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/examples.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/fontawesome-stars-o.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-bar-rating/fontawesome-stars.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-asColorPicker/css/asColorPicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/x-editable/bootstrap-editable.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/dropify/dropify.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-file-upload/uploadfile.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/jquery-tags-input/jquery.tagsinput.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css') }}">
+    <!-- End plugin css for this page -->
 
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
     <link rel="stylesheet" href="{{ asset('adminpanel/assets/css/demo_1/style.css') }}">
     <!-- End layout styles -->
-
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('adminpanel/assets/images/favicon.ico') }}">
-
     <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
-
-
-
-
-
-
 </head>
   <body>
     <div class="container-scroller">
@@ -120,49 +107,66 @@
             <span class="nav-item-head">Template Pages</span>
           </li> --}}
           <li class="nav-item">
-            <a class="nav-link" href="{{ url('/') }}">
+            <a class="nav-link" href="{{ url('/admin/dashboard') }}">
               <i class="mdi mdi-view-dashboard menu-icon"></i>
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
+          @if (Auth::guard('admin')->user()->type == "superadmin")
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#category" aria-expanded="false" aria-controls="apps">
+                        <i class="mdi mdi-menu menu-icon"></i>
+                        <span class="menu-title">Menu</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="category">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{{ url('/admin/category') }}">Category</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url('/admin/sub-category') }}">Sub Category</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url('/admin/sub-category-item') }}">Sub Category Item</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#category" aria-expanded="false" aria-controls="apps">
-              <i class="mdi mdi-menu menu-icon"></i>
-              <span class="menu-title">Menu</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="category">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{ url('/admin/category') }}">Category</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{ url('/admin/sub-category') }}">Sub Category</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{ url('/admin/sub-category-item') }}">Sub Category Item</a></li>
-              </ul>
-            </div>
-          </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/admin/users') }}">
+                        <i class="mdi mdi-account-multiple-outline menu-icon"></i>
+                        <span class="menu-title">Users</span>
+                    </a>
+                </li>
 
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url('/admin/users') }}">
-              <i class="mdi mdi-account-multiple-outline menu-icon"></i>
-              <span class="menu-title">Users</span>
-            </a>
-          </li>
-
-
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#cmspage" aria-expanded="false" aria-controls="apps">
-              <i class="mdi mdi-menu menu-icon"></i>
-              <span class="menu-title">CMS Pages</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="cmspage">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{ url('/') }}">About</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{ url('/') }}">Privacy policy</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{ url('/') }}">Terms Conditions</a></li>
-              </ul>
-            </div>
-          </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#cmspage" aria-expanded="false" aria-controls="apps">
+                        <i class="mdi mdi-menu menu-icon"></i>
+                        <span class="menu-title">CMS Pages</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="cmspage">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">About</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Privacy policy</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Terms Conditions</a></li>
+                        </ul>
+                    </div>
+                </li>
+          @else
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#project" aria-expanded="false" aria-controls="apps">
+                    <i class="mdi mdi-menu menu-icon"></i>
+                    <span class="menu-title">Projects</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="project">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/submitted-for-review') }}">Submitted for review</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/returned-for-review') }}">Returned for review</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/view-estimates') }}">Estimates</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/project-started') }}">Project started</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/awaiting-your-review') }}">Awaiting your review</a></li>
+                    </ul>
+                </div>
+            </li>
+          @endif
 
 
           <li class="nav-item">

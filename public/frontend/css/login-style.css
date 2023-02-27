@@ -229,16 +229,16 @@ that is currently Firefox-only */
 }
 
 .auth-sidebar .auth-sidebar-content {
-	background: rgba(191, 186, 178, 0.7);
-	background-size: cover;
-	display: -ms-flexbox;
-	display: flex;
-	-ms-flex-direction: column;
-	flex-direction: column;
-	-ms-flex-pack: justify;
-	justify-content: space-between;
-	height: 100%;
-	position: relative;
+    background: rgb(193 188 181)url(../img/log-reg-img.png) no-repeat center;
+    background-size: cover;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    height: 100vh;
+    position: relative;
 }
 
 .auth-sidebar-content .logo {
@@ -258,7 +258,7 @@ that is currently Firefox-only */
 	-ms-flex-positive: 1;
 	flex-grow: 1;
 	position: absolute;
-	bottom: 20px;
+	bottom: 10px;
 }
 
 .artwork h2 {
@@ -267,7 +267,7 @@ that is currently Firefox-only */
 	line-height: 47px;
 	text-transform: uppercase;
 	color: #061A48;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 
 .artwork h4 {
@@ -677,6 +677,10 @@ label.form-check-label {
 	font-size: 15px;
 	line-height: 23px;
 	color: #6D717A;
+}
+.auth-content h6 i {
+    width: 15px;
+    text-align: center;
 }
 .fa-check{
 	color: #29B313;

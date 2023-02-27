@@ -20360,7 +20360,7 @@ footer {
         /* background: #1e184f; */
     }
         .sidebar .nav .nav-item:not(:nth-child(2)).active > .nav-link .menu-title {
-          color: #ffffff;
+          /* color: #ffffff; */
           font-family: "Open Sans", sans-serif;
           font-weight: 600; }
           .sidebar-icon-only .sidebar .nav .nav-item:not(:nth-child(2)).active > .nav-link .menu-title {
@@ -20368,9 +20368,10 @@ footer {
         .sidebar .nav .nav-item:not(:nth-child(2)).active > .nav-link i {
           color: #ffffff; }
         .sidebar .nav .nav-item:not(:nth-child(2)).active .sub-menu .nav-link {
-          color: #dfe2e8; }
+          /* color: #dfe2e8; */
+         }
           .sidebar .nav .nav-item:not(:nth-child(2)).active .sub-menu .nav-link.active {
-            color: #ffffff; }
+            color: #000000; }
             .sidebar-icon-only .sidebar .nav .nav-item:not(:nth-child(2)).active .sub-menu .nav-link.active {
               color: #000000; }
       .sidebar .nav .nav-item.nav-profile .nav-link {

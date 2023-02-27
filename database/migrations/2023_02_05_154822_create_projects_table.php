@@ -25,7 +25,7 @@ class CreateProjectsTable extends Migration
             $table->string('contact_home_phone')->nullable();
             $table->string('contact_email')->nullable();
             $table->string('categories')->nullable();
-            $table->enum('Status',['New', 'Under review', 'Referred', 'Estimation', 'Cancelled', 'Running', 'Stopped', 'Completed'])->default('NEW');
+            $table->enum('Status',['Submitted for review','Returned for review','Estimation','Project started','Awaiting your review'])->default('Submitted for review');
             $table->longText('notes')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -13,6 +13,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Tradepersion\TradepersionDashboardController;
+use App\Http\Controllers\Admin\Reviewer\ReviewerController;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -40,6 +41,17 @@ Route::get('/dropzoneupload', [MediaController::class,'dropzoneupload'])->name('
 Route::post('/dropzonesave', [MediaController::class,'dropzonesave'])->name('dropzonesave');
 Route::post('/dropzonedestroy', [MediaController::class,'dropzonedestroy'])->name('dropzonedestroy');
 
+
+ Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login');
+ Route::post('/admin/login', [AdminLoginController::class, 'postlogin'])->name('adminLoginPost');
+    // Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
+    // Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
+
+
+
+
+
+
 Route::group(['middleware' => 'prevent-back-history'],function(){
     Route::get('/', function () {
         return view('welcome');
@@ -66,7 +78,24 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
     //     $user = Socialite::driver('google')->user();
     // });
 
+    // Route::group(['prefix' => 'admin','middleware' => 'auth:admin'], function () {
 
+    // });
+
+
+    Route::group(['middleware' => ['auth:admin']], function() {
+        Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
+        Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
+
+        Route::get('/admin/users', [UserController::class, 'users'])->name('admin/users');
+        Route::any('/admin/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
+
+        Route::resource('reviewer', 'ReviewerController');
+        Route::get('/admin/project/submitted-for-review', [ReviewerController::class, 'submitted_for_review'])->name('admin/project/submitted-for-review');
+        Route::get('/admin/project/submitted-for-review-show/{projectid}', [ReviewerController::class, 'submitted_for_review_show'])->name('admin/project/submitted-for-review-show/submitted-for-review-show');
+
+
+    });
 
     Route::group(['prefix' => 'customer','middleware' => 'auth'], function () {
 
@@ -77,6 +106,9 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
 
+
+        Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
+        Route::post('deletecustomermediafiles', [CustomerController::class,'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
         /**
         * Logout Route
         */
@@ -90,6 +122,5 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('bank-registration', [TradepersionDashboardController::class,'registrationstepthree'])->name('tradepersion.bankregistration');
         Route::post('save-bank-registration', [TradepersionDashboardController::class,'saveregistrationstepthree'])->name('tradepersion.savebankregistration');
         Route::get('get-company-details', [TradepersionDashboardController::class, 'get_companydetails']);
-        
     });
 });
