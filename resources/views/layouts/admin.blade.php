@@ -116,14 +116,13 @@
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#category" aria-expanded="false" aria-controls="apps">
                         <i class="mdi mdi-menu menu-icon"></i>
-                        <span class="menu-title">Menu</span>
+                        <span class="menu-title">Builders</span>
                         <i class="menu-arrow"></i>
                     </a>
                     <div class="collapse" id="category">
                         <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"><a class="nav-link" href="{{ url('/admin/category') }}">Category</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url('/admin/sub-category') }}">Sub Category</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url('/admin/sub-category-item') }}">Sub Category Item</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('buildercategory.index') }}">Category</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('buildersubcategory.index') }}">Sub Category</a></li>
                         </ul>
                     </div>
                 </li>
@@ -150,22 +149,15 @@
                     </div>
                 </li>
           @else
+
+
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#project" aria-expanded="false" aria-controls="apps">
-                    <i class="mdi mdi-menu menu-icon"></i>
-                    <span class="menu-title">Projects</span>
-                    <i class="menu-arrow"></i>
+                <a class="nav-link" href="{{ url('admin/project/awaiting-your-review') }}">
+                  <i class="mdi mdi-view-dashboard menu-icon"></i>
+                  <span class="menu-title">Awaiting your review</span>
                 </a>
-                <div class="collapse" id="project">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/submitted-for-review') }}">Submitted for review</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/returned-for-review') }}">Returned for review</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/view-estimates') }}">Estimates</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/project-started') }}">Project started</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url('admin/project/awaiting-your-review') }}">Awaiting your review</a></li>
-                    </ul>
-                </div>
             </li>
+
           @endif
 
 

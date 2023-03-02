@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Submitted For Review')
+@section('title', 'Awaiting your review')
 @section('content')
 
 
 <div class="main-panel">
     <div class="content-wrapper pb-0">
         <div class="page-header">
-            <h3 class="page-title">Submitted For Review</h3>
+            <h3 class="page-title">Awaiting your review</h3>
             <div class="header-right d-flex flex-wrap mt-2 mt-sm-0">
                 {{-- <button type="button"  class="btn btn-primary mt-2 mt-sm-0 btn-icon-text">
                   <i class="mdi mdi-plus-circle"></i> Submitted For Review </button> --}}
@@ -26,7 +26,7 @@
 
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Submitted For Review's</h4>
+                <h4 class="card-title">Awaiting your review</h4>
                 <div class="row">
                     <div class="col-12">
                         <div class="table-responsive">
@@ -47,7 +47,7 @@
                                         {{-- <td>{{ $projects->forename.' '.$projects->surname }}</td> --}}
                                         <td>{{ date('d/m/Y h:i a',strtotime($projects->created_at)) }}</td>
                                         <td>{{ $projects->Status }}</td>
-                                        <td><a href="{{ route('submitted-for-review-show', $projects->id) }}" title="View Projects"><i class="mdi mdi-eye"></i></a></td>
+                                        <td><a href="{{route('awaiting-your-review-show',[$projects->id])}}" title="View Projects"><i class="mdi mdi-eye"></i></a></td>
                                     </tr>
                                     @endforeach
                                 </tbody>

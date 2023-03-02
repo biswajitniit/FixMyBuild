@@ -1,46 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Reviewer;
+namespace App\Http\Controllers\Admin\Builder;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Project;
-use App\Models\Projectfile;
-use App\Models\Projectaddresses;
-
-
-class ReviewerController extends Controller
+use App\Models\Buildercategory;
+use App\Models\Buildersubcategory;
+use DataTables;
+class BuildersubcategoryController extends Controller
 {
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function awaiting_your_review(){
-        $project = Project::where('Status','Submitted for review')->get();
-        return view("admin.reviewer.awaiting-your-review",compact('project'));
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function awaiting_your_review_show(){
-        $project = Project::where('Status','Submitted for review')->get();
-        return view("admin.reviewer.awaiting-your-review-show",compact('project'));
-    }
-
-    /**
-     * Submited for review show.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function submitted_for_review_show(Request $request, $projectid){
-
-    // }
-
     /**
      * Display a listing of the resource.
      *
@@ -48,7 +16,7 @@ class ReviewerController extends Controller
      */
     public function index()
     {
-        //
+        return view("admin.builder.subcategory.sub-category-list");
     }
 
     /**
@@ -116,4 +84,22 @@ class ReviewerController extends Controller
     {
         //
     }
+
+    function getbuildersubcategory(){
+        $query=Subcategory::with('buildersubcategories')->orderby('id')->get();
+        $totalData =count($query);
+        $totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
+        return Datatables::of($query)
+        ->addColumn('category_name', function ($query) {
+            return $query->categorys->category_name;
+        })
+        ->addColumn('sub_category_name', function ($query) {
+            return $query->sub_category_name;
+        })
+        ->addColumn('action', function ($query) {
+            return $query->id;
+        })->rawColumns(['action'])
+        ->make('true');
+    }
+
 }

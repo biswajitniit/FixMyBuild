@@ -14,6 +14,9 @@ use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Tradepersion\TradepersionDashboardController;
 use App\Http\Controllers\Admin\Reviewer\ReviewerController;
+use App\Http\Controllers\Admin\Builder\BuildercategoryController;
+
+
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -91,8 +94,17 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::any('/admin/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
 
         Route::resource('reviewer', 'ReviewerController');
-        Route::get('/admin/project/submitted-for-review', [ReviewerController::class, 'submitted_for_review'])->name('admin/project/submitted-for-review');
-        Route::get('/admin/project/submitted-for-review-show/{projectid}', [ReviewerController::class, 'submitted_for_review_show'])->name('admin/project/submitted-for-review-show/submitted-for-review-show');
+        Route::get('/admin/project/awaiting-your-review', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
+        Route::get('/admin/project/awaiting-your-review-show/{projectid}', [ReviewerController::class, 'awaiting_your_review_show'])->name('awaiting-your-review-show');
+
+
+        Route::get('getbuildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@getbuildercategory')->name('getbuildercategory');
+        Route::delete('getbuildercategory/delete/{id}', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@delete')->name('getbuildercategory.delete');
+        Route::resource('buildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController');
+
+
+        Route::get('getbuildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@getbuildersubcategory')->name('getbuildersubcategory');
+        Route::resource('buildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController');
 
 
     });

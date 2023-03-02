@@ -1,21 +1,11 @@
 @extends('layouts.admin')
-@section('title', 'Category Listing')
+@section('title', 'Sub Category List')
 @section('content')
 
 
 
 <div class="main-panel">
     <div class="content-wrapper">
-      {{--<div class="page-header">
-        <h3 class="page-title"> Category table </h3>
-         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Tables</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Data table</li>
-          </ol>
-        </nav>
-      </div>--}}
-
       <div class="page-header flex-wrap">
         <div class="header-left">
           {{-- <button class="btn btn-primary mb-2 mb-md-0 me-2">Create new document</button>
@@ -23,21 +13,25 @@
         </div>
         <div class="header-right d-flex flex-wrap mt-2 mt-sm-0">
 
-          <button type="button" onclick="location.href='{{ route('admin.add-category') }}'" class="btn btn-primary mt-2 mt-sm-0 btn-icon-text">
-            <i class="mdi mdi-plus-circle"></i> Add Category </button>
+          <button type="button" onclick="location.href='{{ route('buildersubcategory.create')}}'" class="btn btn-primary mt-2 mt-sm-0 btn-icon-text">
+            <i class="mdi mdi-plus-circle"></i> Add Sub Category </button>
         </div>
       </div>
 
-      @if(session()->has('message'))
+      {{-- @if(session()->has('message'))
             <div class="alert alert-danger">
                 {{ session()->get('message') }}
             </div>
+      @endif --}}
+      @if(session()->get('success'))
+      <div class="alert alert-success">
+        {{ session()->get('success') }}
+      </div>
       @endif
-
 
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Category table</h4>
+          <h4 class="card-title">Sub Category table</h4>
           <div class="row">
             <div class="col-12">
               <div class="table-responsive">
@@ -46,10 +40,7 @@
                   <thead>
                     <tr class="bg-primary text-white">
                       <th>Category Name</th>
-                      <th>Category Sort No</th>
-                      <th>Menu Dropdown</th>
-                      <th>Menu Show Div Type</th>
-                      <th>Menu Show In Header</th>
+                      <th>Sub Category Name</th>
                       <th>Status</th>
                       <th>Actions</th>
                     </tr>
@@ -86,7 +77,7 @@
                 processing: true,
                 serverSide: true,
                 lengthMenu: [[100, 200, 300], [100, 200, 300]],
-                order: [[ 1, "asc" ]],
+                order: [[ 0, "asc" ]],
                 columnDefs: [{
                     "searchable": true,
                     "orderable": false,
@@ -94,32 +85,23 @@
                 }],
                 "ajax": {
                     data: ({_token: '{{csrf_token()}}'}),
-                    url : "{{url('/')}}/categorylist",
+                    url : "{{route('getbuildersubcategory')}}",
                     type : 'GET',
                 },
                 columns: [
-                        {data: 'category_name' },
-                        {data: 'category_sort_no'},
-                        {data: 'menu_dropdown'},
-                        {data: 'menu_show_div_type'},
-                        {data: 'menu_show_in_header'},
-                        {
-                            data: 'status',
-                            render: function (data, type, row){
-                                if(data == "Active"){
-                                    return '<label class="badge badge-success">Active</label>';
-                                }else{
-                                    return '<label class="badge badge-danger">In Active</label>';
-                                }
-                            },
+                    {data: 'category_name' },
+                    {data: 'sub_category_name'},
+                    {
+                        data: 'status',
+                        render: function (data, type, row){
+                            if(data == "Active"){
+                                return '<label class="badge badge-success">Active</label>';
+                            }else{
+                                return '<label class="badge badge-danger">In Active</label>';
+                            }
                         },
-                       {
-                            data: 'action',
-                            render: function (data, type, row){
-                                return '<a href="<?php echo url("admin/edit-category")?>/'+data+'" title="Edit Category"><i class="mdi mdi-table-edit"></i></a> | <a href="<?php echo url("admin/categorytrash")?>/'+data+'" title="Trash Category" onclick="return confirm("Are you sure?")"><i class="mdi mdi-delete-forever"></i></a> ';
-                            },
-                        },
-
+                    },
+                    {data: 'action'},
                 ]
             });
         });
