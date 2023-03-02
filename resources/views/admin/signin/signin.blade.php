@@ -46,13 +46,29 @@
                     <div class="form-group">
                       <input type="password" class="form-control form-control-lg" name="password" id="exampleInputPassword1" placeholder="Password">
                     </div>
+
+                    <div class="form-group row">
+                        {{-- <label class="col-sm-3 col-form-label">Type</label> --}}
+                        <div class="col-sm-5">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input type="radio" class="form-check-input" name="type" id="type1" value="superadmin" checked=""> Super Admin <i class="input-helper"></i></label>
+                          </div>
+                        </div>
+                        <div class="col-sm-5">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input type="radio" class="form-check-input" name="type" id="type2" value="reviewer"> Reviewer <i class="input-helper"></i></label>
+                          </div>
+                        </div>
+                      </div>
+
                     <div class="my-2 d-flex justify-content-between align-items-center">
                         <div class="form-check">
                           <label class="form-check-label text-muted">
                             <input type="checkbox" class="form-check-input"> Keep me signed in </label>
                         </div>
-
-                      </div>
+                    </div>
                     <div class="mt-3">
                       <button class="btn btn-block btn-primary btn-lg font-weight-semibold auth-form-btn">SIGN IN</button>
                     </div>

@@ -66,14 +66,12 @@
            <div id="particles-js">
               <header class="logo"><a href="index.html"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
               <div class="artwork">
-                 <img src="{{ asset('frontend/img/log-reg-img.png') }}"  alt="">
                  <h2>Welcome Back</h2>
                  <h4>Good quality work at sensible prices</h4>
-                 <!-- <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat </p> -->
               </div>
            </div>
         </div>
-     </section>
+    </section>
     <section class="content">
       <header>
         <a href="{{ url('/') }}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>

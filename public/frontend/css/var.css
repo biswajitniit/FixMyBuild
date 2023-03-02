@@ -74,4 +74,21 @@
     color: #BB6BD9 !important;
     font-weight: 500;
   }
+
+  .bg-success{
+    background: #27AE60 !important;
+    font-weight: 500;
+  }
+  .bg-danger{
+    background: #EB5757 !important;
+    font-weight: 500;
+  }
+  .bg-info{
+    background: #F2994A !important;
+    font-weight: 500;
+  }
+  .bg-primary{
+    background: #2D9CDB !important;
+    font-weight: 500;
+  }
  

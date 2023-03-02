@@ -9,7 +9,7 @@
         <h3 class="page-title"> Edit Category </h3>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.category') }}">Categorys</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('buildercategory.index')}}">Categorys</a></li>
             <li class="breadcrumb-item active" aria-current="page">Edit Category</li>
           </ol>
         </nav>
@@ -39,55 +39,29 @@
 
 
 
-              <form class="cmxform" id="editcategory" method="post" action="{{ route('admin.edit-category-post') }}" name="editcategory">
+              <form class="cmxform" id="editcategory" method="post" action="{{ route('buildercategory.update',$buildercategory->id) }}" name="editcategory">
+                @method('PATCH')
                 @csrf
-                <input type="hidden" name="catid" value="{{ $category->id }}}">
+
                 <fieldset>
                   <div class="form-group">
-                    <label for="category_name">Category Name <span class="required">*</span></label>
-                    <input id="category_name" class="form-control" name="category_name" type="text" value="{{ $category->category_name }}">
-                  </div>
-                  <div class="form-group">
-                    <label for="category_sort_no">Category Sort No </label>
-                    <input id="category_sort_no" class="form-control" name="category_sort_no" type="text" value="{{ $category->category_sort_no }}">
+                    <label for="builder_category_name">Category Name <span class="required">*</span></label>
+                    <input id="builder_category_name" class="form-control" name="builder_category_name" type="text" value="{{ $buildercategory->builder_category_name }}">
                   </div>
 
-                  <div class="form-group">
-                    <label for="menu_dropdown">Menu Dropdown</label>
-                    <select name="menu_dropdown" class="js-example-basic-single" style="width:100%" >
-                        <option value="1" @if($category->menu_dropdown == 1) selected="selected" @endif>Yes</option>
-                        <option value="2" @if($category->menu_dropdown == 2) selected="selected" @endif>No</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="menu_show_div_type">Menu Show Div Type</label>
-                    <select name="menu_show_div_type" class="js-example-basic-single" style="width:100%" >
-                        <option value="1"  @if($category->menu_show_div_type == 1) selected="selected" @endif>Dropdown</option>
-                        <option value="2"  @if($category->menu_show_div_type == 2) selected="selected" @endif>Megamenu</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="menu_show_in_header">Menu Show In Header</label>
-                    <select name="menu_show_in_header" class="js-example-basic-single" style="width:100%" >
-                        <option value="1" @if($category->menu_show_in_header == 1) selected="selected" @endif>Show</option>
-                        <option value="2" @if($category->menu_show_in_header == 2) selected="selected" @endif>Not Show</option>
-                    </select>
-                  </div>
 
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Status</label>
                     <div class="col-sm-4">
                       <div class="form-check">
                         <label class="form-check-label">
-                          <input type="radio" class="form-check-input" name="status" id="status1" value="1" @if($category->status == 1) checked @endif> Active </label>
+                          <input type="radio" class="form-check-input" name="status" id="status1" value="Active" @if($buildercategory->status == 'Active') checked @endif> Active </label>
                       </div>
                     </div>
                     <div class="col-sm-5">
                       <div class="form-check">
                         <label class="form-check-label">
-                          <input type="radio" class="form-check-input" name="status" id="status2" value="2" @if($category->status == 2) checked @endif> InActive </label>
+                          <input type="radio" class="form-check-input" name="status" id="status2" value="InActive" @if($buildercategory->status == 'InActive') checked @endif> InActive </label>
                       </div>
                     </div>
                   </div>
@@ -103,7 +77,7 @@
     <!-- partial:../../partials/_footer.html -->
     <footer class="footer">
         <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © {{ date('Y') }} <a href="{{ url('/') }}" target="_blank">Hemchhaya</a>. All rights reserved.</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © {{ date('Y') }} <a href="{{ url('/') }}" target="_blank">FixMyBuild</a>. All rights reserved.</span>
         </div>
     </footer>
     <!-- partial -->

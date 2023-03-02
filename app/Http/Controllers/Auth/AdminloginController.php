@@ -27,8 +27,9 @@ class AdminloginController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) { //echo "HERE"; die;
-			 return redirect()->intended('/admin/dashboard');
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'type' => $request->type], $request->get('remember'))) { //echo "HERE"; die;
+			 //return redirect()->intended('/admin/dashboard');
+             return redirect()->intended('/admin/dashboard');
         }
         $errors = new MessageBag(['loginerror' => ['You have entered an invalid email or password.']]);
         return Redirect::back()->withErrors($errors)->withInput($request->only('email', 'remember'));

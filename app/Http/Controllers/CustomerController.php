@@ -10,6 +10,12 @@ use App\Models\Projectfile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
+use Illuminate\Support\Facades\Storage;
+use Session;
+use Aws\S3\Exception\S3Exception;
+use App\Models\Tempmedia;
+use League\Flysystem\File;
+
 class CustomerController extends Controller
 {
     //
@@ -74,8 +80,25 @@ class CustomerController extends Controller
         }else{
 
         }
-
-
     }
+
+    function getcustomermediafiles(){
+        $getcustomerfiles = Tempmedia::where('file_created_date',date('Y-m-d'))->where('user_id',Auth::user()->id)->get();
+        if($getcustomerfiles){
+            $html = '';
+            foreach($getcustomerfiles as $row){
+                $html .= '<div class="d-inline mr-3">'.$row->filename.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+            }
+            echo $html;
+        }
+    }
+
+    function deletecustomermediafiles(Request $request){
+
+        $filename = Tempmedia::where('id',$request->deleteid)->first()->filename;
+        Tempmedia::where('id',$request->deleteid)->delete();
+        Storage::disk('s3')->delete('Testfolder/'. $filename);
+    }
+
 
 }
