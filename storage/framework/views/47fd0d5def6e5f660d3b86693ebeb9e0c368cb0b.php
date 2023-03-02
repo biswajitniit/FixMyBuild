@@ -1,13 +1,13 @@
-@extends('layouts.app')
 
-@section('content')
+
+<?php $__env->startSection('content'); ?>
 <section>
     <div class="container">
        <div class="row">
           <div class="col-md-12 text-center pt-5 fmb_titel">
              <h1>Company Registration</h1>
              <ol class="breadcrumb mb-5">
-                <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="<?php echo e(route('home')); ?>">Home</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Company Registration</li>
              </ol>
           </div>
@@ -27,8 +27,8 @@
  </section>
  <section class="pb-5">
     <div class="container">
-       <form action="{{route('tradepersion.savecompregistration')}}" method="post">
-         @csrf
+       <form action="<?php echo e(route('tradepersion.savecompregistration')); ?>" method="post">
+         <?php echo csrf_field(); ?>
           <div class="row mb-5">
              <div class="col-md-10 offset-md-1">
                 <div class="tell_about gen-info">
@@ -87,7 +87,7 @@
                          <div class="row mt-3">
                             <div class="col-md-5">
                                <div class="form-group">
-                                  <a  class="btn btn-outline-danger btn-block" href="{{ route('dropzoneupload') }}" data-bs-toggle="modal" onclick="geturldata(event)">
+                                  <a  class="btn btn-outline-danger btn-block" href="<?php echo e(route('dropzoneupload')); ?>" data-bs-toggle="modal" onclick="geturldata(event)">
                                      <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M4.8418 5.55469C4.69569 5.40823 4.61364 5.2098 4.61364 5.00293C4.61364 4.79606 4.69569 4.59763 4.8418 4.45117L8.94336 0.349609C9.09148 0.202905 9.29152 0.120605 9.5 0.120605C9.70848 0.120605 9.90852 0.202905 10.0566 0.349609L14.1582 4.45117C14.3043 4.59763 14.3864 4.79606 14.3864 5.00293C14.3864 5.2098 14.3043 5.40823 14.1582 5.55469C14.0855 5.6285 13.9989 5.68712 13.9033 5.72714C13.8077 5.76715 13.7052 5.78776 13.6016 5.78776C13.498 5.78776 13.3954 5.76715 13.2998 5.72714C13.2043 5.68712 13.1176 5.6285 13.0449 5.55469L10.2812 2.79102V11.8438C10.2812 12.051 10.1989 12.2497 10.0524 12.3962C9.90592 12.5427 9.7072 12.625 9.5 12.625C9.2928 12.625 9.09409 12.5427 8.94757 12.3962C8.80106 12.2497 8.71875 12.051 8.71875 11.8438V2.79102L5.95508 5.55469C5.88238 5.6285 5.79573 5.68712 5.70017 5.72714C5.60461 5.76715 5.50204 5.78776 5.39844 5.78776C5.29484 5.78776 5.19227 5.76715 5.09671 5.72714C5.00114 5.68712 4.91449 5.6285 4.8418 5.55469ZM18.0938 11.0625C17.8865 11.0625 17.6878 11.1448 17.5413 11.2913C17.3948 11.4378 17.3125 11.6365 17.3125 11.8438V17.3125H1.6875V11.8438C1.6875 11.6365 1.60519 11.4378 1.45868 11.2913C1.31216 11.1448 1.11345 11.0625 0.90625 11.0625C0.69905 11.0625 0.500336 11.1448 0.353823 11.2913C0.20731 11.4378 0.125 11.6365 0.125 11.8438V17.3125C0.125 17.7269 0.28962 18.1243 0.582646 18.4174C0.875671 18.7104 1.2731 18.875 1.6875 18.875H17.3125C17.7269 18.875 18.1243 18.7104 18.4174 18.4174C18.7104 18.1243 18.875 17.7269 18.875 17.3125V11.8438C18.875 11.6365 18.7927 11.4378 18.6462 11.2913C18.4997 11.1448 18.301 11.0625 18.0938 11.0625Z" fill="#EE5719"/>
                                      </svg>
@@ -147,7 +147,7 @@
                             <div class="col-md-4">
                                <div class="form-group">
                                  <div class="form-group">
-                                    <a href="{{ route('dropzoneupload') }}" data-bs-toggle="modal" onclick="geturldataupload(event)" class="btn btn-outline-danger btn-block">
+                                    <a href="<?php echo e(route('dropzoneupload')); ?>" data-bs-toggle="modal" onclick="geturldataupload(event)" class="btn btn-outline-danger btn-block">
                                         <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M17.0344 4.21564L13.2844 0.465637C13.1415 0.326345 12.9495 0.248887 12.75 0.250012H5.25C4.85218 0.250012 4.47064 0.408047 4.18934 0.689352C3.90804 0.970656 3.75 1.35219 3.75 1.75001V3.25001H2.25C1.85218 3.25001 1.47064 3.40805 1.18934 3.68935C0.908035 3.97066 0.75 4.35219 0.75 4.75001V18.25C0.75 18.6478 0.908035 19.0294 1.18934 19.3107C1.47064 19.592 1.85218 19.75 2.25 19.75H12.75C13.1478 19.75 13.5294 19.592 13.8107 19.3107C14.092 19.0294 14.25 18.6478 14.25 18.25V16.75H15.75C16.1478 16.75 16.5294 16.592 16.8107 16.3107C17.092 16.0294 17.25 15.6478 17.25 15.25V4.75001C17.2511 4.55048 17.1737 4.35851 17.0344 4.21564ZM12.75 18.25H2.25V4.75001H9.44062L12.75 8.05939V18.25ZM15.75 15.25H14.25V7.75001C14.2511 7.55048 14.1737 7.35851 14.0344 7.21564L10.2844 3.46564C10.1415 3.32635 9.94954 3.24889 9.75 3.25001H5.25V1.75001H12.4406L15.75 5.05939V15.25ZM10.5 12.25C10.5 12.4489 10.421 12.6397 10.2803 12.7803C10.1397 12.921 9.94891 13 9.75 13H5.25C5.05109 13 4.86032 12.921 4.71967 12.7803C4.57902 12.6397 4.5 12.4489 4.5 12.25C4.5 12.0511 4.57902 11.8603 4.71967 11.7197C4.86032 11.579 5.05109 11.5 5.25 11.5H9.75C9.94891 11.5 10.1397 11.579 10.2803 11.7197C10.421 11.8603 10.5 12.0511 10.5 12.25ZM10.5 15.25C10.5 15.4489 10.421 15.6397 10.2803 15.7803C10.1397 15.921 9.94891 16 9.75 16H5.25C5.05109 16 4.86032 15.921 4.71967 15.7803C4.57902 15.6397 4.5 15.4489 4.5 15.25C4.5 15.0511 4.57902 14.8603 4.71967 14.7197C4.86032 14.579 5.05109 14.5 5.25 14.5H9.75C9.94891 14.5 10.1397 14.579 10.2803 14.7197C10.421 14.8603 10.5 15.0511 10.5 15.25Z"
@@ -417,18 +417,18 @@
                          <nav class="nav-sidebar">
                             <ul class="nav tabs">
                               <?php $i=1; ?>
-                              @foreach($works as $w)
-                               <li class="workchkboxsec @if($i==1) active @endif"><a href="#tab{{$i}}" data-toggle="tab">{{$w->work_type}} <div class="pull-right">{{count($w->subworktypes)}}</div></a></li>
+                              <?php $__currentLoopData = $works; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $w): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                               <li class="workchkboxsec <?php if($i==1): ?> active <?php endif; ?>"><a href="#tab<?php echo e($i); ?>" data-toggle="tab"><?php echo e($w->work_type); ?> <div class="pull-right"><?php echo e(count($w->subworktypes)); ?></div></a></li>
                                <?php $i++; ?>
-                               @endforeach
+                               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                          </nav>
                       </div>
                       <div class="col-md-8">
                          <div class="tab-content tab_wrappper">
                            <?php $i=1; ?>
-                           @foreach($works as $w)
-                            <div class="tab-pane text-style @if($i==1) active @endif" id="tab{{$i}}">
+                           <?php $__currentLoopData = $works; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $w): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="tab-pane text-style <?php if($i==1): ?> active <?php endif; ?>" id="tab<?php echo e($i); ?>">
                                <div class="wrap">
                                   <div class="search">
                                      <button type="submit" class="searchButton">
@@ -440,18 +440,18 @@
                                   </div>
                                </div>
                                <div class="row">
-                                 @foreach($w->subworktypes as $sw)
+                                 <?php $__currentLoopData = $w->subworktypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sw): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                   <li class="col-6">
                                      <div class="form-check subworktypechk">
-                                        <input type="checkbox" id="subwork{{$sw->id}}" class="form-check-input"  name="subworktype[]" value="{{$sw->id}}">
-                                        <label class="form-check-label" for="subwork{{$sw->id}}">{{$sw->sub_work_type}}</label>
+                                        <input type="checkbox" id="subwork<?php echo e($sw->id); ?>" class="form-check-input"  name="subworktype[]" value="<?php echo e($sw->id); ?>">
+                                        <label class="form-check-label" for="subwork<?php echo e($sw->id); ?>"><?php echo e($sw->sub_work_type); ?></label>
                                      </div>
                                   </li>
-                                  @endforeach
+                                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                </div>
                             </div>
                             <?php $i++; ?>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                          </div>
                       </div>
                    </div>
@@ -466,23 +466,24 @@
                          <nav class="nav-sidebar">
                             <ul class="nav tabs">
                               <?php $j=1;?>
-                             @foreach($areas as $a)
-                               <li class="areaschkboxsec @if($j == 1) active @endif">
-                                  <a href="#tab0{{$j}}" data-toggle="tab">
-                                     {{$a->area_type}}
-                                     <div class="pull-right">{{count($a->subareas)}}</div>
+                             <?php $__currentLoopData = $areas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $a): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                               <li class="areaschkboxsec <?php if($j == 1): ?> active <?php endif; ?>">
+                                  <a href="#tab0<?php echo e($j); ?>" data-toggle="tab">
+                                     <?php echo e($a->area_type); ?>
+
+                                     <div class="pull-right"><?php echo e(count($a->subareas)); ?></div>
                                   </a>
                                </li>
                                <?php $j++; ?>
-                               @endforeach
+                               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                          </nav>
                       </div>
                       <div class="col-md-8">
                          <div class="tab-content tab_wrappper">
                            <?php $j=1;?>
-                             @foreach($areas as $a)
-                            <div class="tab-pane @if($j == 1) active @endif text-style" id="tab0{{$j}}">
+                             <?php $__currentLoopData = $areas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $a): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="tab-pane <?php if($j == 1): ?> active <?php endif; ?> text-style" id="tab0<?php echo e($j); ?>">
                                <div class="wrap">
                                   <div class="search">
                                      <button type="submit" class="searchButton">
@@ -495,19 +496,19 @@
                                   </div>
                                </div>
                                <div class="row tab_cont">
-                                 @foreach($a->subareas as $ac)
+                                 <?php $__currentLoopData = $a->subareas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ac): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                   <li class="col-6">
                                      <div class="form-check areachkbx">
-                                        <input type="checkbox" id="areacovers{{$ac->id}}" class="form-check-input"  name="subareacovers[]" value="{{$ac->id}}">
-                                        <label class="form-check-label" for="areacovers{{$ac->id}}">{{$ac->sub_area_type}}</label>
+                                        <input type="checkbox" id="areacovers<?php echo e($ac->id); ?>" class="form-check-input"  name="subareacovers[]" value="<?php echo e($ac->id); ?>">
+                                        <label class="form-check-label" for="areacovers<?php echo e($ac->id); ?>"><?php echo e($ac->sub_area_type); ?></label>
                                      </div>
                                   </li>
-                                  @endforeach
+                                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                   
                                </div>
                             </div>
                             <?php $j++; ?>
-                           @endforeach
+                           <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                          </div>
                       </div>
                    </div>
@@ -540,8 +541,8 @@
            </div>
            <div class="modal-body">
 
-               <form method="POST" action="{{ route('capture-photo') }}" enctype="multipart/form-data">
-                   @csrf
+               <form method="POST" action="<?php echo e(route('capture-photo')); ?>" enctype="multipart/form-data">
+                   <?php echo csrf_field(); ?>
                        <div class="row">
                            <div class="col-md-12 supported_">
                                <div class="col-md-6">
@@ -593,9 +594,7 @@
 
                        <div id="my_camera_video"></div>
                        <div id='gUMArea'>
-                           {{-- <div>
-                           <input type="radio" name="media" value="video" checked id='mediaVideo'>Video
-                           </div> --}}
+                           
                            <button class="btn btn-default"  id='gUMbtn'>Request Stream</button>
                        </div>
                        <div id='btns' style="display: none;">
@@ -619,7 +618,7 @@
 </div>
 <!-- The Modal Upload Video file END-->
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script type="text/javascript">
     Webcam.set({
         width: 490,
@@ -716,8 +715,10 @@
     //End of company file uploading
 </script>
 
-@endpush
+<?php $__env->stopPush(); ?>
 
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp7\htdocs\FixMyBuild\resources\views/tradepersion/registrationtwo.blade.php ENDPATH**/ ?>
