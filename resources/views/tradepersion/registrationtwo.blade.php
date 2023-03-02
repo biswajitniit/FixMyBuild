@@ -417,8 +417,9 @@
                          <nav class="nav-sidebar">
                             <ul class="nav tabs">
                               <?php $i=1; ?>
+                              
                               @foreach($works as $w)
-                               <li class="workchkboxsec @if($i==1) active @endif"><a href="#tab{{$i}}" data-toggle="tab">{{$w->work_type}} <div class="pull-right">{{count($w->subworktypes)}}</div></a></li>
+                               <li class="workchkboxsec @if($i==1) active @endif"><a href="#tab{{$i}}" data-toggle="tab">{{$w->builder_category_name}} <div class="pull-right">{{count($w->buildersubcategories)}}</div></a></li>
                                <?php $i++; ?>
                                @endforeach
                             </ul>
@@ -440,11 +441,11 @@
                                   </div>
                                </div>
                                <div class="row">
-                                 @foreach($w->subworktypes as $sw)
+                                 @foreach($w->buildersubcategories as $sw)
                                   <li class="col-6">
                                      <div class="form-check subworktypechk">
                                         <input type="checkbox" id="subwork{{$sw->id}}" class="form-check-input"  name="subworktype[]" value="{{$sw->id}}">
-                                        <label class="form-check-label" for="subwork{{$sw->id}}">{{$sw->sub_work_type}}</label>
+                                        <label class="form-check-label" for="subwork{{$sw->id}}">{{$sw->builder_subcategory_name}}</label>
                                      </div>
                                   </li>
                                   @endforeach

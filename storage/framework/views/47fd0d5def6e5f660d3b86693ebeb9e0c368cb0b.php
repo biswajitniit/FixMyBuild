@@ -417,8 +417,9 @@
                          <nav class="nav-sidebar">
                             <ul class="nav tabs">
                               <?php $i=1; ?>
+                              
                               <?php $__currentLoopData = $works; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $w): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                               <li class="workchkboxsec <?php if($i==1): ?> active <?php endif; ?>"><a href="#tab<?php echo e($i); ?>" data-toggle="tab"><?php echo e($w->work_type); ?> <div class="pull-right"><?php echo e(count($w->subworktypes)); ?></div></a></li>
+                               <li class="workchkboxsec <?php if($i==1): ?> active <?php endif; ?>"><a href="#tab<?php echo e($i); ?>" data-toggle="tab"><?php echo e($w->builder_category_name); ?> <div class="pull-right"><?php echo e(count($w->buildersubcategories)); ?></div></a></li>
                                <?php $i++; ?>
                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
@@ -440,11 +441,11 @@
                                   </div>
                                </div>
                                <div class="row">
-                                 <?php $__currentLoopData = $w->subworktypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sw): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                 <?php $__currentLoopData = $w->buildersubcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sw): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                   <li class="col-6">
                                      <div class="form-check subworktypechk">
                                         <input type="checkbox" id="subwork<?php echo e($sw->id); ?>" class="form-check-input"  name="subworktype[]" value="<?php echo e($sw->id); ?>">
-                                        <label class="form-check-label" for="subwork<?php echo e($sw->id); ?>"><?php echo e($sw->sub_work_type); ?></label>
+                                        <label class="form-check-label" for="subwork<?php echo e($sw->id); ?>"><?php echo e($sw->builder_subcategory_name); ?></label>
                                      </div>
                                   </li>
                                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
