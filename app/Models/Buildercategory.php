@@ -16,7 +16,7 @@ class Buildercategory extends Model
 
      public function buildersubcategories()
      {
-         return $this->hasOne(Buildersubcategory::class, 'builder_category_name', 'id');
+         return $this->hasMany(Buildersubcategory::class, 'builder_category_id', 'id');
      }
 
 }
