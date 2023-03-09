@@ -1,6 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'Add Category')
-@section('content')
+<?php $__env->startSection('title', 'Add Category'); ?>
+<?php $__env->startSection('content'); ?>
 
 
 <div class="main-panel">
@@ -9,7 +8,7 @@
         <h3 class="page-title"> Add Category </h3>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('buildercategory.index')}}">Categorys</a></li>
+            <li class="breadcrumb-item"><a href="<?php echo e(route('buildercategory.index')); ?>">Categorys</a></li>
             <li class="breadcrumb-item active" aria-current="page">Add Category</li>
           </ol>
         </nav>
@@ -19,28 +18,29 @@
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              {{-- <h4 class="card-title">Complete form validation</h4> --}}
+              
 
-                @if($errors->any())
+                <?php if($errors->any()): ?>
                     <div class="alert alert-danger">
                         <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($error); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </div>
-                @endif
+                <?php endif; ?>
 
-                @if(session()->has('message'))
+                <?php if(session()->has('message')): ?>
                     <div class="alert alert-success">
-                        {{ session()->get('message') }}
+                        <?php echo e(session()->get('message')); ?>
+
                     </div>
-                @endif
+                <?php endif; ?>
 
 
 
-              <form class="cmxform" id="addcategory" method="post" action="{{ route('buildercategory.store') }}" name="addcategory">
-                @csrf
+              <form class="cmxform" id="addcategory" method="post" action="<?php echo e(route('buildercategory.store')); ?>" name="addcategory">
+                <?php echo csrf_field(); ?>
                 <fieldset>
 
 
@@ -73,7 +73,13 @@
       </div>
     </div>
     <!-- content-wrapper ends -->
-    @include('admin.layout.footer')
+    <!-- partial:../../partials/_footer.html -->
+    <footer class="footer">
+        <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © <?php echo e(date('Y')); ?> <a href="<?php echo e(url('/')); ?>" target="_blank">FixMyBuild</a>. All rights reserved.</span>
+        </div>
+    </footer>
+    <!-- partial -->
   </div>
   <!-- main-panel ends -->
 
@@ -81,7 +87,7 @@
 
 
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script type="text/javascript">
         $(".alert").delay(2000).slideUp(200, function () {
             $(this).alert('close');
@@ -108,5 +114,7 @@
         });
 
     </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\webdev\FixMyBuild\resources\views/admin/builder/category/add-category.blade.php ENDPATH**/ ?>

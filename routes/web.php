@@ -103,7 +103,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::resource('buildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController');
 
 
-        Route::get('getbuildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@getbuildersubcategory')->name('getbuildersubcategory');
+        Route::get('getbuildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController@getbuildersubcategory')->name('getbuildersubcategory');
         Route::resource('buildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController');
 
 

@@ -18,6 +18,7 @@ class CreateBuildersubcategoriesTable extends Migration
             $table->unsignedBigInteger('builder_category_id');
             $table->foreign('builder_category_id')->references('id')->on('buildercategories')->onDelete('cascade');
             $table->string('builder_subcategory_name');
+            $table->enum('status', ['Active', 'InActive'])->comment('Active,InActive')->default('Active');
             $table->timestamps();
             $table->softDeletes();
         });

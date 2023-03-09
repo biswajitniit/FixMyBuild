@@ -26,7 +26,8 @@ class BuildersubcategoryController extends Controller
      */
     public function create()
     {
-        //
+        $category = Buildercategory::where('status','Active')->orderBy('builder_category_name')->get();
+		return view("admin.builder.subcategory.add-sub-category",compact('category'));
     }
 
     /**
@@ -37,7 +38,23 @@ class BuildersubcategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validation for required fields (and using some regex to validate our numeric value)
+        $this->validate($request, [
+            'builder_category_id'       => 'required',
+            'builder_subcategory_name' => 'required',
+        ],[
+            'builder_category_id.required' => 'Please select one category',
+            'builder_subcategory_name.required' => 'Please enter a sub category name',
+        ]);
+        // Getting values from the blade template form
+        $category = new Buildersubcategory([
+            'builder_category_id'      => $request->post('builder_category_id'),
+            'builder_subcategory_name' => $request->post('builder_subcategory_name'),
+            'status'                   => $request->post('status')
+        ]);
+        $category->save();
+        //return redirect('/buildercategory')->with('success', 'Category added successfully.');   // -> resources/views/stocks/index.blade.php
+        return redirect()->back()->with('message', 'Sub Category added successfully.');
     }
 
     /**
@@ -86,18 +103,30 @@ class BuildersubcategoryController extends Controller
     }
 
     function getbuildersubcategory(){
-        $query=Subcategory::with('buildersubcategories')->orderby('id')->get();
+        $query=Buildersubcategory::with('buildersubcategories')->orderby('id')->get();
         $totalData =count($query);
         $totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
         return Datatables::of($query)
-        ->addColumn('category_name', function ($query) {
-            return $query->categorys->category_name;
+        ->addColumn('builder_category_name', function ($query) {
+            return $query->buildercategory->builder_category_name;
         })
-        ->addColumn('sub_category_name', function ($query) {
-            return $query->sub_category_name;
+        ->addColumn('builder_subcategory_name', function ($query) {
+            return $query->builder_subcategory_name;
+        })
+        ->addColumn('status', function ($query) {
+            if($query->status=='Active'){
+                $mstatus='Active';
+            }else{
+                $mstatus='InActive';
+            }
+            return $mstatus;
         })
         ->addColumn('action', function ($query) {
-            return $query->id;
+            //return $query->id;
+            $editUrl = route('buildersubcategory.edit', $query->id);
+            //$deleteUrl = route('buildercategory.destroy', $query->id);
+            return '<a href="'.$editUrl.'" title="Edit Builder Category"><i class="mdi mdi-table-edit"></i></a> | <a href="jasacript:void(0)" title="Trash Builder Category" onclick="return deletebuildercategory('.$query->id.')"><i class="mdi mdi-delete-forever"></i></a>';
+
         })->rawColumns(['action'])
         ->make('true');
     }
