@@ -103,12 +103,13 @@ class BuildersubcategoryController extends Controller
     }
 
     function getbuildersubcategory(){
-        $query=Buildersubcategory::with('buildersubcategories')->orderby('id')->get();
+        $query=Buildersubcategory::with('Buildercategory')->orderby('id')->get();
         $totalData =count($query);
         $totalFiltered = $totalData;  // when there is no search parameter then total number rows = total number filtered rows.
         return Datatables::of($query)
         ->addColumn('builder_category_name', function ($query) {
-            return $query->buildercategory->builder_category_name;
+            return $query->Buildercategory->builder_category_name;
+           return 'biswajit';
         })
         ->addColumn('builder_subcategory_name', function ($query) {
             return $query->builder_subcategory_name;

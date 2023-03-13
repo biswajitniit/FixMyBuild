@@ -13,10 +13,9 @@ class Buildercategory extends Model
         'builder_category_name','status',
      ];
 
-
-     public function buildersubcategories()
-     {
-         return $this->hasMany(Buildersubcategory::class, 'builder_category_id', 'id');
-     }
+    public function Buildersubcategory()
+    {
+        return $this->hasMany('App\buildersubcates');
+    }
 
 }

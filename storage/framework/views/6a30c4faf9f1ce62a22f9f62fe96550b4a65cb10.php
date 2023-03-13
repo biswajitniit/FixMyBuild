@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', 'Add Category'); ?>
 <?php $__env->startSection('content'); ?>
 
@@ -73,13 +74,7 @@
       </div>
     </div>
     <!-- content-wrapper ends -->
-    <!-- partial:../../partials/_footer.html -->
-    <footer class="footer">
-        <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © <?php echo e(date('Y')); ?> <a href="<?php echo e(url('/')); ?>" target="_blank">FixMyBuild</a>. All rights reserved.</span>
-        </div>
-    </footer>
-    <!-- partial -->
+    <?php echo $__env->make('admin.layout.footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
   </div>
   <!-- main-panel ends -->
 

@@ -15,7 +15,8 @@ class Buildersubcategory extends Model
         'status',
      ];
 
-     public function buildercategory(){
+     public function Buildercategory(){
         return $this->belongsTo(Buildercategory::class,'builder_category_id');
      }
+
 }

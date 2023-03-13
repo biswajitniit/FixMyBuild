@@ -45,9 +45,8 @@
                             <table class="table">
                                 <thead>
                                    <tr>
-                                      <th style="width:80px;">Sl</th>
+                                      <th style="width:80px;">#</th>
                                       <th style="width:140px;">Name</th>
-                                      <th style="width:300px;">Category</th>
                                       <th style="width:140px;">Posting date</th>
                                       <th style="width:340px;">Status</th>
                                       <th style="width:80px;"></th>
@@ -63,8 +62,7 @@
                                             <tr>
                                                 <td>{{$count}}</td>
                                                 <td>{{$row->forename.' '.$row->surname}}</td>
-                                                <td>Bathrooms <br> Bathroom Designer</td>
-                                                <td>{{ date('d/m/Y h:i a',strtotime($row->created_at))}}</td>
+                                                <td>{{ date('d/m/Y',strtotime($row->created_at))}} <br> <em> {{ date('h:i a',strtotime($row->created_at))}} </em> </td>
                                                 <td class="text-success">Project started</td>
                                                 <td><a href="#"><img src="{{ asset('frontend/img/chat-info.svg') }}" alt=""></a></td>
                                                 <td><a href="#" class="btn btn-view">View</a></td>

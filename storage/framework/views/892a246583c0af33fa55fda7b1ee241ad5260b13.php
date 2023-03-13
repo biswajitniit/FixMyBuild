@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', 'Category Listing'); ?>
 <?php $__env->startSection('content'); ?>
 

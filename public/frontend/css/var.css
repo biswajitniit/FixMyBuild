@@ -11,11 +11,11 @@
     --color_white:#ffffff;
 
     /* Special brand colors ----------------------*/
-    --color_red:#ff0000;  
+    --color_red:#EE5719;  
     --color_peach:#a9a0bf;/* WHY CHOSE US Secure Audio/Video Platform colors ----------------------*/
     --color_green:#90d6c3;/* WHY CHOSE US Secure Multilingual colors ----------------------*/
     --color_sky_blue:#9ec5db;/* WHY CHOSE US Secure Free Career Counseling colors ----------------------*/
-    --color_orange:#b3c97f;/* WHY CHOSE US Secure Free Demo colors ----------------------*/
+    --color_orange:#EE5719;/* WHY CHOSE US Secure Free Demo colors ----------------------*/
     --color_yellow:#FFCB15;/* Rating colors ----------------------*/
     --color_light_sky_blue:#061A48;/* Color use in form element ----------------------*/ 
     --color_deep_green:#071f26;/* Inner page banner gradient deep color ----------------------*/ 
@@ -74,7 +74,10 @@
     color: #BB6BD9 !important;
     font-weight: 500;
   }
-
+  .text-paused{
+    color: #EE5719 !important;
+    font-weight: 500;
+  }
   .bg-success{
     background: #27AE60 !important;
     font-weight: 500;
@@ -91,4 +94,5 @@
     background: #2D9CDB !important;
     font-weight: 500;
   }
+
  

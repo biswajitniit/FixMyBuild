@@ -51,10 +51,10 @@
          <!--header middel start-->
          {{-- <div class="header_middle @if() sticky-header @endif"> --}}
             <div class="header_middle sticky-header">
-            <div class="container-fluid pr-12">
+            <div class="container pr-12">
                <div class="row align-items-center">
                   <div class="col-xl-3 col-lg-3 col-md-3">
-                     <div class="middel_right">
+                     <div class="middel_right justify-content-start">
                         <div class="middel_right_info">
                            <div class="header_wishlist">
                               <a href="about-us.html">About us</a>
@@ -104,7 +104,7 @@
                      </div>
                   </div>
                   <div class="col-xl-3 col-lg-3 col-md-3 d-none d-lg-block">
-                     <div class="middel_right">
+                     <div class="middel_right justify-content-end">
                         <div class="middel_right_info">
                             <div class="header_wishlist">
                               @if (Auth::check())
@@ -154,7 +154,7 @@
 
         <!--footer area start-->
         <footer class="footer_widgets">
-            <div class="container-fluid">
+            <div class="container">
                <div class="footer_bottom">
                   <div class="row copyright_area">
                      <div class="col-lg-6 col-md-6">
