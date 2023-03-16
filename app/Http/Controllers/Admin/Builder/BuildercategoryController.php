@@ -107,9 +107,12 @@ class BuildercategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete(Request $request)
     {
-       echo "here"; die;
+        $category = Buildercategory::find($request->id);
+        $category->delete(); // Easy right?
+        echo "removed";
+
     }
 
     public function getbuildercategory(Request $request){

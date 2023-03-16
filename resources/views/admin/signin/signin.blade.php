@@ -47,8 +47,7 @@
                       <input type="password" class="form-control form-control-lg" name="password" id="exampleInputPassword1" placeholder="Password">
                     </div>
 
-                    <div class="form-group row">
-                        {{-- <label class="col-sm-3 col-form-label">Type</label> --}}
+                    {{-- <div class="form-group row">
                         <div class="col-sm-5">
                           <div class="form-check">
                             <label class="form-check-label">
@@ -61,7 +60,7 @@
                               <input type="radio" class="form-check-input" name="type" id="type2" value="reviewer"> Reviewer <i class="input-helper"></i></label>
                           </div>
                         </div>
-                      </div>
+                    </div> --}}
 
                     <div class="my-2 d-flex justify-content-between align-items-center">
                         <div class="form-check">

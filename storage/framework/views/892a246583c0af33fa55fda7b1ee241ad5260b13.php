@@ -1,4 +1,3 @@
-
 <?php $__env->startSection('title', 'Category Listing'); ?>
 <?php $__env->startSection('content'); ?>
 
@@ -93,18 +92,31 @@
             });
         });
 
-        function confirmMsg()
-        {
+
+        function deletebuildercategory(id){
             var answer = confirm("Delete selected record?")
             if (answer){
-                return true;
+                var token = '<?php echo e(csrf_token()); ?>';
+
+                $.ajax(
+                {
+                    url: "<?php echo e(route('getbuildercategory.delete')); ?>",
+                    type: 'post',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                        '_method': 'delete',
+                    },
+                    success: function (result){
+                        alert('Record delete successfully.');
+                        window.location.reload();
+                    }
+                });
+
+
             }
             return false;
         }
-
-        // function deletebuildercategory(id){
-        //
-        // }
     </script>
 <?php $__env->stopPush(); ?>
 <?php $__env->stopSection(); ?>

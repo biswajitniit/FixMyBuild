@@ -1,6 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'User List')
-@section('content')
+<?php $__env->startSection('title', 'User List'); ?>
+<?php $__env->startSection('content'); ?>
 
 
 <div class="main-panel">
@@ -13,11 +12,12 @@
             </div>
         </div>
 
-        @if(session()->has('message'))
+        <?php if(session()->has('message')): ?>
             <div class="alert alert-danger">
-                {{ session()->get('message') }}
+                <?php echo e(session()->get('message')); ?>
+
             </div>
-        @endif
+        <?php endif; ?>
 
 
 
@@ -62,7 +62,7 @@
         </div>
     </div>
     <!-- content-wrapper ends -->
-    @include('admin.layout.footer')
+    <?php echo $__env->make('admin.layout.footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 </div>
 <!-- main-panel ends -->
 
@@ -72,7 +72,7 @@
 
 
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script type="text/javascript">
     $(document).ready(function(){
         // DataTable
@@ -87,8 +87,8 @@
                     "targets": 0
                 }],
                 "ajax": {
-                    data: ({_token: '{{csrf_token()}}'}),
-                    url : "{{route('admin.user-list-datatable')}}",
+                    data: ({_token: '<?php echo e(csrf_token()); ?>'}),
+                    url : "<?php echo e(route('admin.user-list-datatable')); ?>",
                     type : 'GET',
                 },
                 columns: [
@@ -128,5 +128,7 @@
         }
 
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\webdev\FixMyBuild\resources\views/admin/user/user-list.blade.php ENDPATH**/ ?>

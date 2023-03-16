@@ -96,18 +96,31 @@
             });
         });
 
-        function confirmMsg()
-        {
+
+        function deletebuildercategory(id){
             var answer = confirm("Delete selected record?")
             if (answer){
-                return true;
+                var token = '{{csrf_token()}}';
+
+                $.ajax(
+                {
+                    url: "{{ route('getbuildercategory.delete')}}",
+                    type: 'post',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                        '_method': 'delete',
+                    },
+                    success: function (result){
+                        alert('Record delete successfully.');
+                        window.location.reload();
+                    }
+                });
+
+
             }
             return false;
         }
-
-        // function deletebuildercategory(id){
-        //
-        // }
     </script>
 @endpush
 @endsection

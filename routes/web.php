@@ -99,11 +99,12 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
 
         Route::get('getbuildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@getbuildercategory')->name('getbuildercategory');
-        Route::delete('getbuildercategory/delete/{id}', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@delete')->name('getbuildercategory.delete');
+        Route::delete('getbuildercategory/delete', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@delete')->name('getbuildercategory.delete');
         Route::resource('buildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController');
 
 
         Route::get('getbuildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController@getbuildersubcategory')->name('getbuildersubcategory');
+        Route::delete('getbuildersubcategory/delete', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController@delete')->name('getbuildersubcategory.delete');
         Route::resource('buildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController');
 
 
