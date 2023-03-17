@@ -44,74 +44,67 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label" for="simpleinput">Text</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="simpleinput" value="Some text value..." />
+                            <label class="col-lg-3 col-form-label" for="simpleinput">Name of the project</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" id="simpleinput" value="" />
                             </div>
                         </div>
+
                         <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label" for="example-email">Email</label>
-                            <div class="col-lg-10">
-                                <input type="email" id="example-email" name="example-email" class="form-control" placeholder="Email" />
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label" for="example-password">Password</label>
-                            <div class="col-lg-10">
-                                <input type="password" class="form-control" id="example-password" value="password" />
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label" for="example-placeholder">Placeholder</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" placeholder="placeholder" id="example-placeholder" />
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label" for="example-textarea">Text area</label>
-                            <div class="col-lg-10">
+                            <label class="col-lg-3 col-form-label" for="example-textarea">Description</label>
+                            <div class="col-lg-9">
                                 <textarea class="form-control" rows="5" id="example-textarea"></textarea>
                             </div>
                         </div>
+
                         <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label">Readonly</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" readonly="" value="Readonly value" />
+                            <label class="col-lg-3 col-form-label" for="simpleinput">Attachments</label>
+                            <div class="col-lg-9">
+                                <div class="row bg-light p-3">
+                                    <div class="col-lg-4 col-xl-4">
+                                        <!-- Simple card -->
+                                        <div class="card mb-4 mb-xl-0">
+                                            <img class="card-img-top img-fluid" src="assets/images/small/img-1.jpg" alt="Card image cap" />
+                                        </div>
+                                    </div>
+                                    <!-- end col -->
+
+                                    <div class="col-lg-4 col-xl-4">
+                                        <div class="card mb-4 mb-xl-0">
+                                            <img class="card-img-top img-fluid" src="assets/images/small/img-2.jpg" alt="Card image cap" />
+                                        </div>
+                                    </div>
+                                    <!-- end col -->
+
+                                    <div class="col-lg-4 col-xl-4">
+                                        <div class="card mb-4 mb-xl-0">
+                                            <img class="card-img-top img-fluid" src="assets/images/small/img-2.jpg" alt="Card image cap" />
+                                        </div>
+                                    </div>
+                                    <!-- end col -->
+                                </div>
                             </div>
                         </div>
+
                         <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label">Disabled</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" disabled="" value="Disabled value" />
+                            <label class="col-lg-3 col-form-label" for="example-textarea">Description</label>
+                            <div class="col-lg-9">
+                                <textarea class="form-control" rows="5" id="example-textarea"></textarea>
                             </div>
                         </div>
+
                         <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label" for="example-static">Static control</label>
-                            <div class="col-lg-10">
-                                <input type="text" readonly="" class="form-control-plaintext" id="example-static" value="email@example.com" />
+                            <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
+                            <div class="col-lg-9">
+                                <button type="button" class="btn btn-outline-primary">Approve</button> <button type="button" class="btn btn-outline-danger">Refer</button>
                             </div>
                         </div>
-                        <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label" for="example-helping">Helping text</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" id="example-helping" placeholder="Helping text" />
-                                <span class="help-block">
-                                    <small> A block of help text that breaks onto a new line and may extend beyond one line.</small>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label class="col-lg-2 col-form-label">Input Select</label>
-                            <div class="col-lg-10">
-                                <select class="form-select">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
-                            </div>
-                        </div>
+
+
+
+
+
+
                     </div>
 
                 </div>
