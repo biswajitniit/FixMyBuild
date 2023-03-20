@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Projectfile;
 use App\Models\Projectaddresses;
-
+use App\Models\Buildercategory;
+use App\Models\Buildersubcategory;
+use Illuminate\Support\Facades\DB;
 
 class ReviewerController extends Controller
 {
@@ -29,7 +31,8 @@ class ReviewerController extends Controller
      */
     public function awaiting_your_review_show(){
         $project = Project::where('Status','Submitted for review')->get();
-        return view("admin.reviewer.awaiting-your-review-show",compact('project'));
+        $buildercategory = Buildercategory::where('status','Active')->get();
+        return view("admin.reviewer.awaiting-your-review-show",compact('project','buildercategory'));
     }
 
     /**
@@ -116,4 +119,31 @@ class ReviewerController extends Controller
     {
         //
     }
+
+    public function get_builder_subcategory_list(Request $request){
+        if(!empty($request->catid)){
+            foreach($request->catid as $catid){
+                $buildercategory = Buildercategory::where('id', $catid)->get();
+                if($buildercategory){
+                    foreach($buildercategory as $rowcat){
+                        echo '<h4 class="header-title mt-3">'.$rowcat->builder_category_name.'</h4>';
+                        $buildersubcategory = Buildersubcategory::where('builder_category_id', $catid)->get();
+                        if($buildersubcategory){
+                            foreach($buildersubcategory as $rowsubcat){
+                                echo '<div class="mt-3">
+                                        <div class="form-check mb-1">
+                                            <input type="checkbox" class="form-check-input" id="subcat'.$rowsubcat->id.'" value="'.$rowsubcat->id.'"/>
+                                            <label class="form-check-label" for="customCheck'.$rowsubcat->id.'">'.$rowsubcat->builder_subcategory_name.'</label>
+                                        </div>
+                                    </div>';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
 }

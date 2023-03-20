@@ -102,6 +102,87 @@
 
 
 
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Notes and Comments</label>
+                                </div>
+                            </div>
+                            <!-- end col -->
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-2">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus icon-dual"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <select name="">
+                                            <option value="">Internal</option>
+                                            <option value="">To Customer</option>
+                                            <option value="">For Tradespeople</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <textarea name=""></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end col -->
+                        </div>
+
+
+
+
+
+
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Categories</label>
+                                </div>
+                            </div>
+                            <!-- end col -->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card" style="height:250px; overflow-y: scroll;">
+                                    <div class="card-body">
+
+                                        @if($buildercategory)
+                                            @foreach ($buildercategory as $rowcategory)
+                                            <div class="mt-1">
+                                                <div class="form-check mb-1">
+                                                    <input type="checkbox" class="form-check-input catid" id="customCheck{{$rowcategory->id}}" value="{{$rowcategory->id}}"  onclick="get_builder_subcategory_list(this.value)"/>
+                                                    <label class="form-check-label" for="customCheck{{$rowcategory->id}}">{{ $rowcategory->builder_category_name }}</label>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        @endif
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card" style="height:250px; overflow-y: scroll;">
+                                    <div class="card-body" id="buildersubcategory">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end col -->
+                        </div>
+
+
 
 
 
@@ -121,15 +202,25 @@
     @include('admin.layout.footer')
   </div>
   <!-- main-panel ends -->
-
-
-
-
-
-
-
-
 @push('scripts')
+<script>
+function get_builder_subcategory_list() {
+    var val = [];
+    $('.catid:checked').each(function(i) {
+        val[i] = $(this).val();
+    });
 
+    if(val!=''){
+        $.ajax({
+            type:'POST',
+            url:'{{ route("get-builder-subcategory-list") }}',
+            data:{catid:val,_token: '{{csrf_token()}}'},
+            success:function(result){
+                $("#buildersubcategory").html(result);
+            }
+        });
+    }
+}
+</script>
 @endpush
 @endsection
