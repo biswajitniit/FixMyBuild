@@ -132,4 +132,4 @@
       </script>
    </body>
 </html>
-<?php /**PATH E:\webdev\FixMyBuild\resources\views/auth/login.blade.php ENDPATH**/ ?>
+<?php /**PATH D:\xampp7\htdocs\FixMyBuild\resources\views/auth/login.blade.php ENDPATH**/ ?>

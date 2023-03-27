@@ -24,5 +24,16 @@ class UserSeeder extends Seeder
             'remember_token'                 => 'nZSz8mqVzR4CeCpal6vzw0lnqOO1sYvMayKgItHI7e9RfavsBAs2PcWvUtDb',
             'status'                         => 'Active',
         ]);
+
+        User::create([
+            'name'                           => 'Himanshu Kumar',
+            'email'                          => 'tradepersion@fixmybuild.com',
+            'password'                       => '$2y$10$BYh4nqKV4ztrwDxkJgmHXebjBwbrCxhWtdp/IZaqIUqhOPHQsAaCG',
+            'phone'                          => '9513103478',
+            'customer_or_tradesperson'       => 'Tradepersion',
+            'terms_of_service'               => '1',
+            'remember_token'                 => 'nZSz8mqVzR4CeCpal6vzw0lnqOO1sYvMayKgItHI7e9RfavsBAs2PcWvUtDb',
+            'status'                         => 'Active',
+        ]);
     }
 }
