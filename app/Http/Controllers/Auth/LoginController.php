@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Redirect;
+use Hash;
 
 class LoginController extends Controller
 {
@@ -70,9 +71,11 @@ class LoginController extends Controller
                     return redirect()->intended('/tradeperson/dashboard');
                 }
             }
-		}
-		$errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
-		return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
+		}else{
+            $errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
+		    return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
+        }
+		
     }
 
 }

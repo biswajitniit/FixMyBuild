@@ -36,4 +36,4 @@
         </div>
     </body>
 </html>
-<?php /**PATH E:\webdev\FixMyBuild\resources\views/errors/minimal.blade.php ENDPATH**/ ?>
+<?php /**PATH D:\xampp7\htdocs\FixMyBuild\resources\views/errors/minimal.blade.php ENDPATH**/ ?>
