@@ -17,6 +17,8 @@ class CreateProjectsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('project_address_id');
+            $table->string('builder_category_id')->nullable();
+            $table->string('builder_subcategory_id')->nullable();
             $table->string('forename')->nullable();
             $table->string('surname')->nullable();
             $table->string('project_name')->nullable();
@@ -25,6 +27,7 @@ class CreateProjectsTable extends Migration
             $table->string('contact_home_phone')->nullable();
             $table->string('contact_email')->nullable();
             $table->string('categories')->nullable();
+            $table->string('subcategories')->nullable();
             $table->enum('Status',['Submitted for review','Returned for review','Estimation','Project started','Awaiting your review'])->default('Submitted for review');
             $table->longText('notes')->nullable();
             $table->timestamps();

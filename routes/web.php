@@ -96,7 +96,11 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::resource('reviewer', 'ReviewerController');
         Route::get('/admin/project/awaiting-your-review', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
         Route::get('/admin/project/awaiting-your-review-show/{projectid}', [ReviewerController::class, 'awaiting_your_review_show'])->name('awaiting-your-review-show');
+        Route::get('/awaiting-your-review-save', [ReviewerController::class, 'awaiting_your_review_save'])->name('awaiting-your-review-save');
         Route::post('/get-builder-subcategory-list', [ReviewerController::class,'get_builder_subcategory_list'])->name('get-builder-subcategory-list');
+
+
+
 
         Route::get('getbuildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@getbuildercategory')->name('getbuildercategory');
         Route::delete('getbuildercategory/delete', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@delete')->name('getbuildercategory.delete');

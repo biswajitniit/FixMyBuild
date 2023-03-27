@@ -29,8 +29,8 @@ class ReviewerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function awaiting_your_review_show(){
-        $project = Project::where('Status','Submitted for review')->get();
+    public function awaiting_your_review_show(Request $request, $projectid){
+        $project = Project::where('id',$projectid)->first();
         $buildercategory = Buildercategory::where('status','Active')->get();
         return view("admin.reviewer.awaiting-your-review-show",compact('project','buildercategory'));
     }
