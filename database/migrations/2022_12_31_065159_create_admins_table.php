@@ -19,6 +19,7 @@ class CreateAdminsTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->boolean('is_super')->default(false);
+            $table->enum('type',['superadmin','reviewer','helpdesk'])->default('superadmin');
             $table->rememberToken();
             $table->timestamps();
         });

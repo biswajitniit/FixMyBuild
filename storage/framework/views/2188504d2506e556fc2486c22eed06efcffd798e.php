@@ -7,37 +7,37 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('frontend/img/favicon.ico') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo e(asset('frontend/img/favicon.ico')); ?>">
 
      <!-- CSS
     ========================= -->
      <!--bootstrap min css-->
-    <link rel="stylesheet" href="{{ asset('frontend/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/bootstrap.min.css')); ?>">
     <!--owl carousel min css-->
-    <link rel="stylesheet" href="{{ asset('frontend/css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/owl.carousel.min.css')); ?>">
     <!--slick min css-->
-    <link rel="stylesheet" href="{{ asset('frontend/css/slick.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/slick.css')); ?>">
     <!--magnific popup min css-->
-    {{-- <link rel="stylesheet" href="{{ asset('frontend/css/magnific-popup.css') }}"> --}}
+    
     <!--font awesome css-->
-    <link rel="stylesheet" href="{{ asset('frontend/css/font.awesome.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/font.awesome.css')); ?>">
     <!--ionicons min css-->
-    <link rel="stylesheet" href="{{ asset('frontend/css/ionicons.min.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/ionicons.min.css')); ?>">
     <!--animate css-->
-    <link rel="stylesheet" href="{{ asset('frontend/css/animate.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/animate.css')); ?>">
     <!--jquery ui min css-->
-    <link rel="stylesheet" href="{{ asset('frontend/css/jquery-ui.min.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/jquery-ui.min.css')); ?>">
     <!--slinky menu css-->
-    <link rel="stylesheet" href="{{ asset('frontend/css/slinky.menu.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/slinky.menu.css')); ?>">
     <!-- Plugins CSS -->
-    <link rel="stylesheet" href="{{ asset('frontend/css/plugins.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/plugins.css')); ?>">
 
     <!-- Main Style CSS -->
-    <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('frontend/css/style.css')); ?>">
 
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
-    <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
+    <link href="<?php echo e(asset('frontend/css/login-style.css')); ?>" rel="stylesheet">
 
 
     <style>
@@ -65,7 +65,7 @@
     <section  class="auth-sidebar">
         <div class="auth-sidebar-content p-4">
            <div id="particles-js">
-              <header class="logo"><a href="index.html"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
+              <header class="logo"><a href="index.html"><img src="<?php echo e(asset('frontend/img/logo/logo.png')); ?>"  alt="Logo"></a></header>
               <div class="artwork">
                  <h2>Welcome Back</h2>
                  <h4>Good quality work at sensible prices</h4>
@@ -76,7 +76,7 @@
     </section>
     <section class="content">
       <header>
-        <a href="{{ url('/') }}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
+        <a href="<?php echo e(url('/')); ?>" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
      </header>
       <div class="auth-content">
         <div>
@@ -86,30 +86,31 @@
               <h2 class="heading1 mb-2 text-center color-blue ">Create an Account </h2>
               <p  class="heading2">
                 Already have an account?
-                <span><a class="link-color" href="{{ url('login') }}">Sign in</a></span>
+                <span><a class="link-color" href="<?php echo e(url('login')); ?>">Sign in</a></span>
               </p>
             </div>
           </div>
 
-            @if($errors->any())
+            <?php if($errors->any()): ?>
                 <div class="alert alert-danger mt-15">
                     <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                 </div>
-            @endif
+            <?php endif; ?>
 
-            @if(session()->has('message'))
+            <?php if(session()->has('message')): ?>
                 <div class="alert alert-success mt-15">
-                    {{ session()->get('message') }}
+                    <?php echo e(session()->get('message')); ?>
+
                 </div>
-            @endif
+            <?php endif; ?>
 
 
-            <form action="{{ route('user.save-user') }}" name="userregistration" class="contact-form" method="POST">
-             @csrf
+            <form action="<?php echo e(route('user.save-user')); ?>" name="userregistration" class="contact-form" method="POST">
+             <?php echo csrf_field(); ?>
 
             <div class="row">
               <div class="form-group  col-md-12 mt-5">
@@ -174,10 +175,8 @@
 
   </div>
   <!-- Bootstrap core JavaScript -->
-  {{-- <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
-  <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script> --}}
-  {{-- <script src="{{ asset('frontend/js/particles.js') }}"></script>
-  <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
+  
+  
 
   <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
   <script>
@@ -242,3 +241,4 @@
 
 </body>
 </html>
+<?php /**PATH E:\webdev\FixMyBuild\resources\views/registration.blade.php ENDPATH**/ ?>

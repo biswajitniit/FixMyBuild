@@ -63,16 +63,16 @@ class CustomerController extends Controller
             $addressid = $address->id;
 
             $project = new Project();
-                $project->user_id                   = Auth::user()->id;
-                $project->project_address_id        = $addressid;
-                $project->forename                  = $request['forename'];
-                $project->surname                   = $request['surname'];
-                $project->project_name              = $request['project_name'];
-                $project->description               = $request['description'];
+                $project->user_id                   =  Auth::user()->id;
+                $project->project_address_id        =  $addressid;
+                $project->forename                  =  $request['forename'];
+                $project->surname                   =  $request['surname'];
+                $project->project_name              =  $request['project_name'];
+                $project->description               =  $request['description'];
                 $project->contact_mobile_no         =  $request['contact_mobile_no'];
                 $project->contact_home_phone        =  $request['contact_home_phone'];
                 $project->contact_email             =  $request['contact_email'];
-                $project->status                    = 'New';
+                $project->Status                    =  'submitted_for_review';
             $project->save();
 
             return redirect()->back()->with('message', 'Project added successfully.');
