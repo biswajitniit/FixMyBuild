@@ -29,6 +29,8 @@ class CreateProjectsTable extends Migration
             $table->string('categories')->nullable();
             $table->string('subcategories')->nullable();
             $table->enum('status',['submitted_for_review','returned_for_review','estimation','project_started','awaiting_your_review'])->default('submitted_for_review');
+            $table->string('reviewer_status')->nullable();
+            $table->dateTime('reviewer_status_updated_at')->nullable();
             $table->longText('notes')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

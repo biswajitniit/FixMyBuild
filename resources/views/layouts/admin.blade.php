@@ -51,6 +51,8 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('adminpanel/assets/images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
+
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
 </head>
   <body>
     <div class="container-scroller">
@@ -430,7 +432,7 @@
     <script src="//cdn.ckeditor.com/4.19.1/standard/ckeditor.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
     @stack('scripts')
 
   </body>

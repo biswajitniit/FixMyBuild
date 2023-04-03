@@ -1,6 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'Awaiting your review')
-@section('content')
+<?php $__env->startSection('title', 'Awaiting your review'); ?>
+<?php $__env->startSection('content'); ?>
 
 <div class="main-panel">
     <div class="content-wrapper">
@@ -8,7 +7,7 @@
         <h3 class="page-title"> Awaiting your review </h3>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin/project/awaiting-your-review')}}">Awaiting your review</a></li>
+            <li class="breadcrumb-item"><a href="<?php echo e(route('admin/project/awaiting-your-review')); ?>">Awaiting your review</a></li>
             <li class="breadcrumb-item active" aria-current="page">View Review</li>
           </ol>
         </nav>
@@ -18,43 +17,44 @@
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              {{-- <h4 class="card-title">Complete form validation</h4> --}}
+              
 
-                @if($errors->any())
+                <?php if($errors->any()): ?>
                     <div class="alert alert-danger">
                         <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($error); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </div>
-                @endif
+                <?php endif; ?>
 
-                @if(session()->has('message'))
+                <?php if(session()->has('message')): ?>
                     <div class="alert alert-success">
-                        {{ session()->get('message') }}
+                        <?php echo e(session()->get('message')); ?>
+
                     </div>
-                @endif
+                <?php endif; ?>
 
 
 
-              <form class="cmxform" id="save_awaiting_review" method="post" action="{{ route('awaiting-your-review-save') }}" name="save_awaiting_review">
-                @csrf
-                <input type="hidden" name="projectid" value="{{$project->id}}">
+              <form class="cmxform" id="save_awaiting_review" method="post" action="<?php echo e(route('awaiting-your-review-save')); ?>" name="save_awaiting_review">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="projectid" value="<?php echo e($project->id); ?>">
 
                 <div class="row">
                     <div class="col">
                         <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="simpleinput">Name of the project</label>
                             <div class="col-lg-9">
-                                <input type="text" class="form-control" id="simpleinput" value="{{ $project->project_name }}" />
+                                <input type="text" class="form-control" id="simpleinput" value="<?php echo e($project->project_name); ?>" />
                             </div>
                         </div>
 
                         <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="example-textarea">Description</label>
                             <div class="col-lg-9">
-                                <textarea class="form-control" rows="5" id="editor-description">{{ $project->description }}</textarea>
+                                <textarea class="form-control" rows="5" id="editor-description"><?php echo e($project->description); ?></textarea>
                             </div>
                         </div>
 
@@ -63,62 +63,62 @@
                             <div class="col-lg-9">
                                 <div class="row bg-light p-3">
 
-                                    @if($projectmedia)
-                                        @foreach ($projectmedia as $rowprojectmedia)
-                                            @php
+                                    <?php if($projectmedia): ?>
+                                        <?php $__currentLoopData = $projectmedia; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rowprojectmedia): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php
                                                 $file_ext = pathinfo($rowprojectmedia->url, PATHINFO_EXTENSION);
-                                            @endphp
+                                            ?>
 
-                                            @if($file_ext=="jpg" || $file_ext=="png" || $file_ext=="JPG" || $file_ext=="PNG")
+                                            <?php if($file_ext=="jpg" || $file_ext=="png" || $file_ext=="JPG" || $file_ext=="PNG"): ?>
                                                 <div class="col-lg-4 col-xl-4">
                                                     <!-- Simple card -->
                                                     <div class="card mb-4 mb-xl-0">
-                                                        <a href="{{@$rowprojectmedia->url}}" target="_blank" title="View image">
-                                                            <img class="card-img-top img-fluid" src="{{@$rowprojectmedia->url}}" alt="jpg" style="width:100%;height:auto;"/>
+                                                        <a href="<?php echo e(@$rowprojectmedia->url); ?>" target="_blank" title="View image">
+                                                            <img class="card-img-top img-fluid" src="<?php echo e(@$rowprojectmedia->url); ?>" alt="jpg" style="width:100%;height:auto;"/>
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <!-- end col -->
-                                            @endif
+                                            <?php endif; ?>
 
-                                            @if($file_ext=="xlsx" || $file_ext=="xls")
+                                            <?php if($file_ext=="xlsx" || $file_ext=="xls"): ?>
                                                 <div class="col-lg-4 col-xl-4">
                                                     <!-- Simple card -->
                                                     <div class="card mb-4 mb-xl-0">
-                                                        <a href="{{@$rowprojectmedia->url}}" target="_blank" title="View Excels" download>
-                                                            <img class="card-img-top img-fluid" src="{{ asset('adminpanel/file/excels.webp') }}" alt="xls" style="width:100%;height:auto;"/>
+                                                        <a href="<?php echo e(@$rowprojectmedia->url); ?>" target="_blank" title="View Excels" download>
+                                                            <img class="card-img-top img-fluid" src="<?php echo e(asset('adminpanel/file/excels.webp')); ?>" alt="xls" style="width:100%;height:auto;"/>
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <!-- end col -->
-                                            @endif
+                                            <?php endif; ?>
 
-                                            @if($file_ext=="pdf")
+                                            <?php if($file_ext=="pdf"): ?>
                                                 <div class="col-lg-4 col-xl-4">
                                                     <!-- Simple card -->
                                                     <div class="card mb-4 mb-xl-0">
-                                                        <a href="{{@$rowprojectmedia->url}}" target="_blank" title="View Excels" download>
-                                                            <img class="card-img-top img-fluid" src="{{ asset('adminpanel/file/pdf.png') }}" alt="pdf" style="width:100%;height:auto;"/>
+                                                        <a href="<?php echo e(@$rowprojectmedia->url); ?>" target="_blank" title="View Excels" download>
+                                                            <img class="card-img-top img-fluid" src="<?php echo e(asset('adminpanel/file/pdf.png')); ?>" alt="pdf" style="width:100%;height:auto;"/>
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <!-- end col -->
-                                            @endif
+                                            <?php endif; ?>
 
-                                            @if($file_ext=="mov" || $file_ext=="mp4" || $file_ext=="3gp" || $file_ext=="ogg" || $file_ext=="webm" || $file_ext=="avi" || $file_ext=="mov" || $file_ext=="wmv")
+                                            <?php if($file_ext=="mov" || $file_ext=="mp4" || $file_ext=="3gp" || $file_ext=="ogg" || $file_ext=="webm" || $file_ext=="avi" || $file_ext=="mov" || $file_ext=="wmv"): ?>
                                                 <div class="col-lg-4 col-xl-4">
                                                     <!-- Simple card -->
                                                     <div class="card mb-4 mb-xl-0">
-                                                        <a href="{{@$rowprojectmedia->url}}" target="_blank" title="View video">
-                                                            <img class="card-img-top img-fluid" src="{{ asset('adminpanel/file/video.jpg') }}" alt="pdf" style="width:100%;height:auto;"/>
+                                                        <a href="<?php echo e(@$rowprojectmedia->url); ?>" target="_blank" title="View video">
+                                                            <img class="card-img-top img-fluid" src="<?php echo e(asset('adminpanel/file/video.jpg')); ?>" alt="pdf" style="width:100%;height:auto;"/>
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <!-- end col -->
-                                            @endif
+                                            <?php endif; ?>
 
-                                        @endforeach
-                                    @endif
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php endif; ?>
 
 
                                 </div>
@@ -192,16 +192,16 @@
                                 <div class="card" style="height:250px; overflow-y: scroll;">
                                     <div class="card-body">
 
-                                        @if($buildercategory)
-                                            @foreach ($buildercategory as $rowcategory)
+                                        <?php if($buildercategory): ?>
+                                            <?php $__currentLoopData = $buildercategory; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rowcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <div class="mt-1">
                                                 <div class="form-check mb-1">
-                                                    <input type="checkbox" name="builder_category[]" class="form-check-input catid" id="customCheck{{$rowcategory->id}}" value="{{$rowcategory->id}}"  onclick="get_builder_subcategory_list(this.value)"/>
-                                                    <label class="form-check-label" for="customCheck{{$rowcategory->id}}">{{ $rowcategory->builder_category_name }}</label>
+                                                    <input type="checkbox" name="builder_category[]" class="form-check-input catid" id="customCheck<?php echo e($rowcategory->id); ?>" value="<?php echo e($rowcategory->id); ?>"  onclick="get_builder_subcategory_list(this.value)"/>
+                                                    <label class="form-check-label" for="customCheck<?php echo e($rowcategory->id); ?>"><?php echo e($rowcategory->builder_category_name); ?></label>
                                                 </div>
                                             </div>
-                                            @endforeach
-                                        @endif
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        <?php endif; ?>
 
                                     </div>
                                 </div>
@@ -234,10 +234,10 @@
       </div>
     </div>
     <!-- content-wrapper ends -->
-    @include('admin.layout.footer')
+    <?php echo $__env->make('admin.layout.footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
   </div>
   <!-- main-panel ends -->
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     CKEDITOR.replace( 'editor-description' );
 function get_builder_subcategory_list() {
@@ -249,8 +249,8 @@ function get_builder_subcategory_list() {
     if(val!=''){
         $.ajax({
             type:'POST',
-            url:'{{ route("get-builder-subcategory-list") }}',
-            data:{catid:val,_token: '{{csrf_token()}}'},
+            url:'<?php echo e(route("get-builder-subcategory-list")); ?>',
+            data:{catid:val,_token: '<?php echo e(csrf_token()); ?>'},
             success:function(result){
                 $("#buildersubcategory").html(result);
             }
@@ -278,5 +278,7 @@ $(document).ready(function(){
 });
 
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\webdev\FixMyBuild\resources\views/admin/reviewer/awaiting-your-review-show.blade.php ENDPATH**/ ?>

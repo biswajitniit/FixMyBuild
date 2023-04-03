@@ -1,4 +1,3 @@
-
 <?php $__env->startSection('title', 'Awaiting your review'); ?>
 <?php $__env->startSection('content'); ?>
 
@@ -46,7 +45,7 @@
                                         <td><?php echo e($projects->forename.' '.$projects->surname); ?></td>
                                         
                                         <td><?php echo e(date('d/m/Y h:i a',strtotime($projects->created_at))); ?></td>
-                                        <td><?php echo e($projects->Status); ?></td>
+                                        <td><?php echo e(str_replace("_", " ", $projects->status)); ?></td>
                                         <td><a href="<?php echo e(route('awaiting-your-review-show',[$projects->id])); ?>" title="View Projects"><i class="mdi mdi-eye"></i></a></td>
                                     </tr>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
