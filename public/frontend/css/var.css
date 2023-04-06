@@ -49,7 +49,14 @@
     --login_btn_bgcolor:var(--secondary_color);
     --login_btn_bgcolor_hover:var(--primary_color);
   }
-
+.estimate-submitted{
+  color: #15DEC6 !important;
+  font-weight: 500;
+}
+.estimate-recalled{
+  color: #EFD912 !important;
+  font-weight: 500;
+}
   .text-info{
     color: #F2994A !important;
     font-weight: 500;
