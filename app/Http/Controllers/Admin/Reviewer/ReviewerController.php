@@ -46,6 +46,20 @@ class ReviewerController extends Controller
      */
     public function awaiting_your_review_save(Request $request){
 
+       if($request->post('builder_category')){
+
+            $data = array(
+                'reviewer_status'          => 'refer',
+                'categories'               => implode(',',$request->post('builder_category')),
+                'subcategories'            => implode(',',$request->post('builder_subcategory'))
+            );
+            Project::where('id', $request->projectid)->update($data);
+
+       }
+
+
+
+
         if($request->post('notes_for')){
             foreach($request->post('notes_for') as $key => $val){
                 $projectnotes = new Projectnotesandcommend();
@@ -57,7 +71,15 @@ class ReviewerController extends Controller
             }
         }
 
+        return redirect()->route('final-review', [$request->post('projectid')]);
+
     }
+
+    public function final_review($projectid){
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
+        return view("admin.reviewer.final-review",compact('projectnotesandcommend'));
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -145,8 +167,8 @@ class ReviewerController extends Controller
                         $buildersubcategory = Buildersubcategory::where('builder_category_id', $catid)->get();
                         if($buildersubcategory){
                             foreach($buildersubcategory as $rowsubcat){
-                                echo '<div class="mt-3">
-                                        <div class="form-check mb-1">
+                                echo '<div class="mt-1">
+                                        <div class="form-check">
                                             <input type="checkbox" name="builder_subcategory[]" class="form-check-input" id="subcat'.$rowsubcat->id.'" value="'.$rowsubcat->id.'"/>
                                             <label class="form-check-label" for="customCheck'.$rowsubcat->id.'">'.$rowsubcat->builder_subcategory_name.'</label>
                                         </div>

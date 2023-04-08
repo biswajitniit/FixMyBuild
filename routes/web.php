@@ -98,7 +98,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/admin/project/awaiting-your-review-show/{projectid}', [ReviewerController::class, 'awaiting_your_review_show'])->name('awaiting-your-review-show');
         Route::post('/awaiting-your-review-save', [ReviewerController::class, 'awaiting_your_review_save'])->name('awaiting-your-review-save');
         Route::post('/get-builder-subcategory-list', [ReviewerController::class,'get_builder_subcategory_list'])->name('get-builder-subcategory-list');
-
+        Route::get('/admin/project/final-review/{projectid}', [ReviewerController::class,'final_review'])->name('final-review');
 
 
 
