@@ -12552,7 +12552,7 @@ p {
 }
 .iti--separate-dial-code .iti__selected-flag,
 .iti--allow-dropdown .iti__flag-container:hover .iti__selected-flag {
-  background-color: transparent;
+  background-color: transparent !important;
 }
 .dashboard_sidebar li {
   margin-bottom: 12px;
@@ -12673,7 +12673,7 @@ p {
 .iti--separate-dial-code input,
 .iti--separate-dial-code input[type="text"],
 .iti--separate-dial-code input[type="tel"] {
-  padding-left: 75px !important;
+  padding-left: 80px !important;
 }
 
 .tab_wrap span.badge.badge-secondary {
@@ -13567,7 +13567,7 @@ table.table {
 #custom-search-input input::-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #BDBDBD;
   }
-  
+
 #custom-search-input input::-ms-input-placeholder { /* Microsoft Edge */
     color: #BDBDBD;
   }
@@ -13587,17 +13587,17 @@ table.table {
   .pagination a.next_ svg path {
     fill: var(--primary_color);
   }
-  .pagination a.prve_ svg path {  
+  .pagination a.prve_ svg path {
     fill: #BDBDBD;
   }
   .pagination a:hover svg path {
     fill: var(--secondary_color);
-  }  
+  }
   /* Style the active/current link */
   .pagination a.active {
     color:var(--secondary_color);
   }
-  
+
   /* Add a grey background color on mouse-over */
   .pagination a:hover:not(.active) {color:var(--secondary_color);}
 
@@ -13660,7 +13660,7 @@ table.table {
 .status_wp .dropdown.open .dropdown-label:before {
     transform: translateY(-50%) rotate(-180deg);
   }
-  
+
 .status_wp .checkbox {
     margin-bottom: 10px;
   }
@@ -13844,7 +13844,7 @@ table.table {
 .content-wrap h5{
   font-weight: 700;
   font-size: 24px;
-  line-height: 28px;  
+  line-height: 28px;
   color: #061A48;
   margin-bottom: 20px;
 }
@@ -13994,7 +13994,7 @@ table.table {
   font-size: 24px;
   line-height: 24px;
   margin-top:0px !important;
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
 }
 
 
@@ -14039,7 +14039,7 @@ table.table {
 }
   .tradperson_tab nav > div a.nav-item.nav-link {
     line-height: 1.2;
-  } 
+  }
   .bs-wizard > .bs-wizard-step .bs-wizard-stepnum,
   .bs-wizard > .bs-wizard-step .bs-wizard-info {
     font-size: 10px;

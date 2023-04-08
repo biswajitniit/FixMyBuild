@@ -29,14 +29,14 @@
       <link rel="stylesheet" href="{{ asset('frontend/css/slinky.menu.css') }}">
       <!-- Plugins CSS -->
       <link rel="stylesheet" href="{{ asset('frontend/css/plugins.css') }}">
+      <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
       <!-- Main Style CSS -->
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
-
 
       <!-- Custom styles for this template -->
       <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
       <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-      <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+
       <!--modernizr min js here-->
       <script src="{{ asset('frontend/js/vendor/modernizr-3.7.1.min.js') }}"></script>
       <!--for sweetalert-->

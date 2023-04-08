@@ -131,6 +131,14 @@
                             <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
                             <div class="col-lg-9">
                                 <input type="checkbox" data-toggle="switchbutton" checked data-onlabel="Approve" data-offlabel="Refer" data-onstyle="success" data-offstyle="danger">
+                                <div id="approve"
+                                    <a onclick="return show_refer('Approve')">Approve</a>
+                                </div>
+                                <div id="refer"
+                                    <a onclick="return show_approve('Refer')">Refer</a>
+                                </div>
+
+                                <input type="hidden" id="your_decision" value="Approve">
                             </div>
                         </div>
 

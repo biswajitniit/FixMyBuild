@@ -29,19 +29,18 @@
       <link rel="stylesheet" href="<?php echo e(asset('frontend/css/slinky.menu.css')); ?>">
       <!-- Plugins CSS -->
       <link rel="stylesheet" href="<?php echo e(asset('frontend/css/plugins.css')); ?>">
+      <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
       <!-- Main Style CSS -->
       <link rel="stylesheet" href="<?php echo e(asset('frontend/css/style.css')); ?>">
-
 
       <!-- Custom styles for this template -->
       <link href="<?php echo e(asset('frontend/css/login-style.css')); ?>" rel="stylesheet">
       <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-      <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+
       <!--modernizr min js here-->
       <script src="<?php echo e(asset('frontend/js/vendor/modernizr-3.7.1.min.js')); ?>"></script>
       <!--for sweetalert-->
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.all.min.js"></script>
-      <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.min.css" rel="stylesheet">
+      
 
    </head>
    <body class="inner_body">
