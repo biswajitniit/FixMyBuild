@@ -46,7 +46,7 @@
                                         <td>{{ $projects->forename.' '.$projects->surname }}</td>
                                         {{-- <td>{{ $projects->forename.' '.$projects->surname }}</td> --}}
                                         <td>{{ date('d/m/Y h:i a',strtotime($projects->created_at)) }}</td>
-                                        <td>{{ $projects->Status }}</td>
+                                        <td>{{ str_replace("_", " ", $projects->status) }}</td>
                                         <td><a href="{{route('awaiting-your-review-show',[$projects->id])}}" title="View Projects"><i class="mdi mdi-eye"></i></a></td>
                                     </tr>
                                     @endforeach

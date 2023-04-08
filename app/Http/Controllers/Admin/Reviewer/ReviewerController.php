@@ -10,7 +10,10 @@ use App\Models\Projectaddresses;
 use App\Models\Buildercategory;
 use App\Models\Buildersubcategory;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Projectnotesandcommend;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Admin;
 class ReviewerController extends Controller
 {
 
@@ -20,7 +23,7 @@ class ReviewerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function awaiting_your_review(){
-        $project = Project::where('Status','Submitted for review')->get();
+        $project = Project::where('Status','submitted_for_review')->get();
         return view("admin.reviewer.awaiting-your-review",compact('project'));
     }
 
@@ -31,8 +34,9 @@ class ReviewerController extends Controller
      */
     public function awaiting_your_review_show(Request $request, $projectid){
         $project = Project::where('id',$projectid)->first();
+        $projectmedia = Projectfile::where('project_id',$projectid)->get();
         $buildercategory = Buildercategory::where('status','Active')->get();
-        return view("admin.reviewer.awaiting-your-review-show",compact('project','buildercategory'));
+        return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory'));
     }
 
     /**
@@ -40,9 +44,42 @@ class ReviewerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function submitted_for_review_show(Request $request, $projectid){
+    public function awaiting_your_review_save(Request $request){
 
-    // }
+       if($request->post('builder_category')){
+
+            $data = array(
+                'reviewer_status'          => 'refer',
+                'categories'               => implode(',',$request->post('builder_category')),
+                'subcategories'            => implode(',',$request->post('builder_subcategory'))
+            );
+            Project::where('id', $request->projectid)->update($data);
+
+       }
+
+
+
+
+        if($request->post('notes_for')){
+            foreach($request->post('notes_for') as $key => $val){
+                $projectnotes = new Projectnotesandcommend();
+                    $projectnotes->reviewer_id =  Auth::guard('admin')->user()['id'];
+                    $projectnotes->project_id  =  $request->post('projectid');
+                    $projectnotes->notes_for   =  $val;
+                    $projectnotes->notes       =  $request->post('description')[$key];
+                $projectnotes->save();
+            }
+        }
+
+        return redirect()->route('final-review', [$request->post('projectid')]);
+
+    }
+
+    public function final_review($projectid){
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
+        return view("admin.reviewer.final-review",compact('projectnotesandcommend'));
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -72,7 +109,7 @@ class ReviewerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -130,9 +167,9 @@ class ReviewerController extends Controller
                         $buildersubcategory = Buildersubcategory::where('builder_category_id', $catid)->get();
                         if($buildersubcategory){
                             foreach($buildersubcategory as $rowsubcat){
-                                echo '<div class="mt-3">
-                                        <div class="form-check mb-1">
-                                            <input type="checkbox" class="form-check-input" id="subcat'.$rowsubcat->id.'" value="'.$rowsubcat->id.'"/>
+                                echo '<div class="mt-1">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="builder_subcategory[]" class="form-check-input" id="subcat'.$rowsubcat->id.'" value="'.$rowsubcat->id.'"/>
                                             <label class="form-check-label" for="customCheck'.$rowsubcat->id.'">'.$rowsubcat->builder_subcategory_name.'</label>
                                         </div>
                                     </div>';

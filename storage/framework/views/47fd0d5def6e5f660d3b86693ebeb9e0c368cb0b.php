@@ -310,7 +310,7 @@
                       </div>
                       <div id="comp_vat_details" style="display: none">
                         <p>Please provide your UK VAT number<br>
-                           (This is 9 or 12 numbers, sometimes with 'GB' at the start, like 123456789 or GB123456789)
+                           (This is 9 or 12 numbers, sometimes with 'GB' at the start, like <u>123456789</u> or GB123456789)
                         </p>
                         <div class="gen-info mb-3 mt-3">
                            <div class="row">
