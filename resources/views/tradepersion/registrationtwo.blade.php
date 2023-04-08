@@ -39,6 +39,7 @@
                       <div class="col-md-2">
                          <button type="button" onclick="findcomp()" class="btn btn-danger btn-block pull-right">Find</button>
                       </div>
+                      <div id="findcomperror"></div>
                    </div>
                    <div id="serchcompres" style="display:none">
                      <div class="row mt-2">
@@ -53,7 +54,7 @@
                      </div>
                      <div class="row mt-4">
                         <div class="col-md-6 text-center">
-                           <img src="assets/img/Group 128.png" alt="">
+                           <img src="{{asset('frontend/img/Group 128.png')}}" alt="">
                         </div>
                         <div class="col-md-6 mt-4">
                            <h5><strong>Trading name</strong></h5>
@@ -78,9 +79,10 @@
                          <h3>Describe your company</h3>
                       </div>
                       <div class="col-md-12 mb-4">
-                        <textarea id="editor" name="comp_description"></textarea>
+                        {{-- <textarea id="editor" name="comp_description"></textarea> --}}
+                        <textarea id="summernote" name="editordata"></textarea>
                       </div>
-                      <div class="col-md-6 mb-4">
+                      <div class="col-md-5 mb-4">
                          <h3>Upload company logo
                          </h3>
                          <p>This is optional.</p>
@@ -113,7 +115,7 @@
                             </div>
                          </div>
                       </div>
-                      <div class="col-md-6 mb-4">
+                      <div class="col-md-7 mb-4">
                          <h3>Public liability insurance
                          </h3>
                          <p>Please provide a copy of your public liability insurance documentation, including the amount of coverage and scheduled start and end dates.</p>
@@ -223,14 +225,16 @@
                       <div class="col-md-12">
                          <div class="row form_wrap mt-3">
                             <div class="col-md-6">
-                               <select class="form-control">
-                                  <option value="22">Other</option>
+                               <select class="form-control" id="company_role">
+                                 <option value="">Select your role</option>
+                                 <option value="Director">Director</option>
+                                 <option value="Tradesperson">Tradesperson</option>
+                                 <option value="Secretary">Secretary</option>
+                                  <option value="Other">Other</option>
                                </select>
                             </div>
-                            <div class="col-md-6">
-                               <div class="form-group">
-                                  <input type="text" name="designation" class="form-control" id="" placeholder="Type your role">
-                               </div>
+                            <div class="col-md-6" id="other_designation">
+                               
                             </div>
                          </div>
                       </div>
@@ -304,24 +308,28 @@
                          <input type="radio" name="vat_reg" value="0" class="form-check-input mr-2" name="optradio">No
                          </label>
                       </div>
-                      <p>Please provide your UK VAT number<br>
-                         (This is 9 or 12 numbers, sometimes with 'GB' at the start, like 123456789 or GB123456789)
-                      </p>
-                      <div class="gen-info mb-3 mt-3">
-                         <div class="row">
-                            <div class="col-md-10 col-12">
-                               <input type="text" name="vat_no" class="form-control pb-2" id="" placeholder="Type company VAT number">
-                            </div>
-                            <div class="col-md-2 col-12">
-                               <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger btn-block pull-right">Verify</button>
-                            </div>
-                         </div>
-                      </div>
-                      <p><b>Company name:</b> ACME INC</p>
-                      <input type="hidden" name="vat_comp_name" value="">
-                      <input type="hidden" name="vat_comp_address" value="">
+                      <div id="comp_vat_details" style="display: none">
+                        <p>Please provide your UK VAT number<br>
+                           (This is 9 or 12 numbers, sometimes with 'GB' at the start, like 123456789 or GB123456789)
+                        </p>
+                        <div class="gen-info mb-3 mt-3">
+                           <div class="row">
+                              <div class="col-md-10 col-12">
+                                 <input type="text" name="vat_no" class="form-control pb-2" id="comp_vat_number" placeholder="Type company VAT number">
+                              </div>
+                              <div class="col-md-2 col-12">
+                                 <button type="button" class="btn btn-danger btn-block pull-right" onclick="verifyCompanyVat()">Verify</button>
+                              </div>
+                              <input type="hidden" name="vat_comp_name" id="vat_comp_nameid" value="">
+                              <input type="hidden" name="vat_comp_address" id="vat_comp_addressid" value="">
+                           </div>
+                        </div>
+                        <div id="compavatdetails">
 
-                      <p><b>Company address:</b> 2464 Royal Ln. Mesa, New Jersey 45463</p>
+                        </div>
+                        
+                      </div>
+                      
                    </div>
                 </div>
                 <!--//-->
@@ -621,7 +629,21 @@
 <!-- The Modal Upload Video file END-->
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script type="text/javascript">
+   $('#summernote').summernote({
+        //placeholder: 'FixMyBuild',
+        tabsize: 2,
+        height: 200,
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+        ]
+    });
+
     Webcam.set({
         width: 490,
         height: 350,
@@ -678,19 +700,66 @@
          data: {company_id: company_id},
          success: function (data){
             data = JSON.parse(data);
-            if(data){
+            console.log(data);
+            if(data.errors){
+               $('#serchcompres').css('display', 'none');
+               $('#findcomperror').html('<p style="color:red">Please enter correct Company Registation number</p>');
+            }
+            if(data.accounts){
                $('#serchcompres').css('display', 'block');
                $('#txt_comp_name').html(data.company_name);
                $('#comp_name').val(data.company_name);
                $('#txt_comp_address').html(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
                $('#comp_address').val(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
             }
-            
-            console.log(data);
          }
       });
     }
 
+    $('input[type=radio][name=vat_reg]').change(function() {
+      if (this.value == '1') {
+         $('#comp_vat_details').show();
+      }
+      else if (this.value == '0') {
+         $('#comp_vat_details').hide();
+      }
+   });
+   
+   function verifyCompanyVat(){
+      var vat_number = $('#comp_vat_number').val();
+      if(vat_number){
+         vat_number = vat_number.replace(/\s+/g, "");
+         vat_number = vat_number.replace(/\D/g,'');
+         $.ajax
+         ({
+            type: "GET",
+            url: "get-company-vat-details",
+            data: {vat_number: vat_number},
+            success: function (data){
+               data = JSON.parse(data);
+               if(data.target){
+                  var comp_name = data.target.name;
+                  var comp_addr = data.target.address.line1+', '+data.target.address.line2+', '+data.target.address.postcode;
+                  $('#compavatdetails').html('<p><b>Company name:</b> '+comp_name+'</p><p><b>Company address:</b> '+comp_addr+'</p>');
+                  $('#vat_comp_nameid').val(comp_name);
+                  $('#vat_comp_addressid').val(comp_addr); 
+               }else{
+                  $('#compavatdetails').html('<p style="color:red">Provided UK VAT does not match a registered company</p>');
+                  $('#vat_comp_nameid').val('');
+                  $('#vat_comp_addressid').val(''); 
+               }
+            }
+         });
+      }
+         
+   }
+
+   $('#company_role').change(function(){
+      console.log(this.value);
+      if(this.value == 'Other'){
+         $('#other_designation').html('<div class="form-group"><input type="text" name="designation" class="form-control" id="" placeholder="Type your role"></div>');
+      }
+   });
    //  For Uploading Company Logo
    function geturldata(e){
       var result = '<iframe  width="660" height="500"  src="'+e.currentTarget.href+'" frameborder="0" marginheight="0" marginwidth="0">Loading&amp;#8230;</iframe>';

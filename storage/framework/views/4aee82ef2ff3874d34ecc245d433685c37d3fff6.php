@@ -86,4 +86,4 @@
 
     </body>
 </html>
-<?php /**PATH E:\webdev\FixMyBuild\resources\views/media/dropzone.blade.php ENDPATH**/ ?>
+<?php /**PATH D:\xampp7\htdocs\FixMyBuild\resources\views/media/dropzone.blade.php ENDPATH**/ ?>

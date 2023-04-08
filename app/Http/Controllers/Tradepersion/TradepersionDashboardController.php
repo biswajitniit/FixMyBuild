@@ -134,4 +134,16 @@ class TradepersionDashboardController extends Controller
            return $response;
         }
     }
+    public function get_company_vat_details(Request $request)
+    {
+        $key= "";
+        $secret = "";
+        $vat_number = $request->vat_number;
+        $response = Http::withBasicAuth($key,$secret)->get('https://api.service.hmrc.gov.uk/organisations/vat/check-vat-number/lookup/'.$vat_number);
+        if ($response->failed()) {
+           return $response;
+        } else {
+           return $response;
+        }
+    }
 }
