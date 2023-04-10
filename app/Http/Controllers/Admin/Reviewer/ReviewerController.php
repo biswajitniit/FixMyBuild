@@ -34,9 +34,10 @@ class ReviewerController extends Controller
      */
     public function awaiting_your_review_show(Request $request, $projectid){
         $project = Project::where('id',$projectid)->first();
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
         $projectmedia = Projectfile::where('project_id',$projectid)->get();
         $buildercategory = Buildercategory::where('status','Active')->get();
-        return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory'));
+        return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory','projectnotesandcommend'));
     }
 
     /**
@@ -47,18 +48,18 @@ class ReviewerController extends Controller
     public function awaiting_your_review_save(Request $request){
 
        if($request->post('builder_category')){
-
             $data = array(
-                'reviewer_status'          => 'refer',
+                'reviewer_status'          => $request->post('your_decision'),
                 'categories'               => implode(',',$request->post('builder_category')),
                 'subcategories'            => implode(',',$request->post('builder_subcategory'))
             );
             Project::where('id', $request->projectid)->update($data);
-
+       }else{
+            $data = array(
+                'reviewer_status'          => $request->post('your_decision')
+            );
+            Project::where('id', $request->projectid)->update($data);
        }
-
-
-
 
         if($request->post('notes_for')){
             foreach($request->post('notes_for') as $key => $val){
@@ -80,6 +81,14 @@ class ReviewerController extends Controller
         return view("admin.reviewer.final-review",compact('projectnotesandcommend'));
     }
 
+
+    public function awaiting_your_review_final_save(Request $request){
+        $data = array(
+            'reviewer_status'          => 'Approve'
+        );
+        Project::where('id', $request->projectid)->update($data);
+        return redirect()->route('admin/project/awaiting-your-review');
+    }
 
     /**
      * Display a listing of the resource.
