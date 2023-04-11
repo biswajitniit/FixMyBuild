@@ -36,7 +36,8 @@ class ReviewerController extends Controller
         $project = Project::where('id',$projectid)->first();
         $projectmedia = Projectfile::where('project_id',$projectid)->get();
         $buildercategory = Buildercategory::where('status','Active')->get();
-        return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory'));
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
+        return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory','projectnotesandcommend'));
     }
 
     /**
@@ -49,7 +50,7 @@ class ReviewerController extends Controller
        if($request->post('builder_category')){
 
             $data = array(
-                'reviewer_status'          => 'refer',
+                'reviewer_status'          => $request->post('your_decision'),
                 'categories'               => implode(',',$request->post('builder_category')),
                 'subcategories'            => implode(',',$request->post('builder_subcategory'))
             );
@@ -80,6 +81,13 @@ class ReviewerController extends Controller
         return view("admin.reviewer.final-review",compact('projectnotesandcommend'));
     }
 
+    public function awaiting_your_review_final_save(Request $request){
+        $data = array(
+            'reviewer_status'          => 'Approve'
+        );
+        Project::where('id', $request->projectid)->update($data);
+        return redirect()->route('admin/project/awaiting-your-review');
+    }
 
     /**
      * Display a listing of the resource.
