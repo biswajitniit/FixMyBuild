@@ -37,6 +37,7 @@ class ReviewerController extends Controller
         $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
         $projectmedia = Projectfile::where('project_id',$projectid)->get();
         $buildercategory = Buildercategory::where('status','Active')->get();
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
         return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory','projectnotesandcommend'));
     }
 
@@ -80,7 +81,6 @@ class ReviewerController extends Controller
         $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
         return view("admin.reviewer.final-review",compact('projectnotesandcommend'));
     }
-
 
     public function awaiting_your_review_final_save(Request $request){
         $data = array(

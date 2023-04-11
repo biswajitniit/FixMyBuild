@@ -128,12 +128,10 @@
                         <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
                             <div class="col-lg-9">
-
                                 <div id="approve">
                                     <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
                                 </div>
-
-                                <div id="refer" style="display:none;">
+                                <div id="refer" style="display: none;">
                                     <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
                                 </div>
 
@@ -175,10 +173,15 @@
                             </div>
                         @endif
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev_bisu
                         @if($project->reviewer_status == 'Refer')
                             <div class="row">
                                 <table class="table-hover" id="customFields" style="width:100%">
                                     <tbody id="TextBoxesGroup">
+<<<<<<< HEAD
                                         <tr valign="top">
                                             @php
                                                 $count = 1;
@@ -205,16 +208,41 @@
                                         </tr>
                                     </tbody>
                                     <input type="hidden" id="count_total_record_id" value="{{$count}}" />
+=======
+
+                                        @if($projectnotesandcommend)
+                                            @foreach ($projectnotesandcommend as $rowproject)
+                                                <tr valign="top">
+                                                    <td>
+                                                        <select name="notes_for[]" id="notes_for1" class="form-select">
+                                                            <option value="internal" @if($rowproject->notes_for == 'internal') selected @endif>Internal</option>
+                                                            <option value="customer" @if($rowproject->notes_for == 'customer') selected @endif>To Customer</option>
+                                                            <option value="tradespeople" @if($rowproject->notes_for == 'tradespeople') selected @endif>For Tradespeople</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <textarea name="description[]" id="description1" class="form-control" style="height: 20px"><?php echo $rowproject->notes; ?></textarea>
+                                                    </td>
+                                                    <td><a href="javascript:void(0);" class="remCF"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-delete"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg></a></td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                    <input type="hidden" id="count_total_record_id" value="1" />
+>>>>>>> dev_bisu
                                 </table>
                                 <!-- end col -->
                             </div>
                         @endif
 
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> dev_bisu
 
 
                         <div class="row">
@@ -290,13 +318,18 @@
 <script>
     CKEDITOR.replace( 'editor-description' );
 
+<<<<<<< HEAD
     function show_approve_refer(type){
+=======
+   function show_approve_refer(type){
+>>>>>>> dev_bisu
         if(type == 'Approve'){
             $("#refer").show();
             $("#approve").hide();
             $("#your_decision").attr('value','Refer');
         }
         if(type == 'Refer'){
+<<<<<<< HEAD
             $("#refer").hide();
             $("#approve").show();
             $("#your_decision").attr('value','Approve');
@@ -305,6 +338,14 @@
 
     }
 
+=======
+            $("#approve").show();
+            $("#refer").hide();
+            $("#your_decision").attr('value','Approve');
+        }
+
+   }
+>>>>>>> dev_bisu
 function get_builder_subcategory_list() {
     var val = [];
     $('.catid:checked').each(function(i) {
