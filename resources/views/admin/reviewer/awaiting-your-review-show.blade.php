@@ -173,42 +173,10 @@
                             </div>
                         @endif
 
-<<<<<<< HEAD
-=======
-
->>>>>>> dev_bisu
                         @if($project->reviewer_status == 'Refer')
                             <div class="row">
                                 <table class="table-hover" id="customFields" style="width:100%">
                                     <tbody id="TextBoxesGroup">
-<<<<<<< HEAD
-                                        <tr valign="top">
-                                            @php
-                                                $count = 1;
-                                            @endphp
-                                           @if($projectnotesandcommend)
-                                                @foreach ($projectnotesandcommend as $projectrow)
-                                                    <td>
-                                                        <select name="notes_for[]" id="notes_for1" class="form-select">
-                                                            <option value="internal" @if($projectrow->notes_for == 'internal' )selected @endif>Internal</option>
-                                                            <option value="customer" @if($projectrow->notes_for == 'customer' )selected @endif>To Customer</option>
-                                                            <option value="tradespeople" @if($projectrow->notes_for == 'tradespeople' )selected @endif>For Tradespeople</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <textarea name="description[]" id="description1" class="form-control" style="height: 20px">{{ $projectrow->notes }}</textarea>
-                                                    </td>
-                                                    <td></td>
-                                                    @php
-                                                    $count++;
-                                                @endphp
-                                                @endforeach
-                                            @endif
-
-                                        </tr>
-                                    </tbody>
-                                    <input type="hidden" id="count_total_record_id" value="{{$count}}" />
-=======
 
                                         @if($projectnotesandcommend)
                                             @foreach ($projectnotesandcommend as $rowproject)
@@ -229,20 +197,11 @@
                                         @endif
                                     </tbody>
                                     <input type="hidden" id="count_total_record_id" value="1" />
->>>>>>> dev_bisu
                                 </table>
                                 <!-- end col -->
                             </div>
                         @endif
 
-<<<<<<< HEAD
-
-
-
-
-
-=======
->>>>>>> dev_bisu
 
 
                         <div class="row">
@@ -318,34 +277,19 @@
 <script>
     CKEDITOR.replace( 'editor-description' );
 
-<<<<<<< HEAD
-    function show_approve_refer(type){
-=======
    function show_approve_refer(type){
->>>>>>> dev_bisu
         if(type == 'Approve'){
             $("#refer").show();
             $("#approve").hide();
             $("#your_decision").attr('value','Refer');
         }
         if(type == 'Refer'){
-<<<<<<< HEAD
-            $("#refer").hide();
-            $("#approve").show();
-            $("#your_decision").attr('value','Approve');
-        }
-
-
-    }
-
-=======
             $("#approve").show();
             $("#refer").hide();
             $("#your_decision").attr('value','Approve');
         }
 
    }
->>>>>>> dev_bisu
 function get_builder_subcategory_list() {
     var val = [];
     $('.catid:checked').each(function(i) {

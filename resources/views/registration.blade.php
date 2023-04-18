@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Sign Up</title>
+    <title>FixMyBuild | Sign Up</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -65,7 +65,7 @@
     <section  class="auth-sidebar">
         <div class="auth-sidebar-content p-4">
            <div id="particles-js">
-              <header class="logo"><a href="index.html"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
+              <header class="logo"><a href="{{ url('/') }}"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
               <div class="artwork">
                  <h2>Welcome Back</h2>
                  <h4>Good quality work at sensible prices</h4>
@@ -169,7 +169,7 @@
 
         </div>
       </div>
-      <p class="font-14px text-center mt-5">Copyright © 2022 FIX MY BUILD LTD. All Rights Reserved.</p>
+      <p class="font-14px text-center mt-5">Copyright &copy; {{date('Y')}} FIX MY BUILD LTD. All Rights Reserved.</p>
     </section>
 
   </div>

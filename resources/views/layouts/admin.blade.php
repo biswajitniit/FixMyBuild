@@ -52,7 +52,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('adminpanel/assets/images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
 
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
+
 </head>
   <body>
     <div class="container-scroller">
@@ -137,19 +137,13 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#cmspage" aria-expanded="false" aria-controls="apps">
-                        <i class="mdi mdi-menu menu-icon"></i>
-                        <span class="menu-title">CMS Pages</span>
-                        <i class="menu-arrow"></i>
+                    <a class="nav-link" href="{{ route('cms.index') }}">
+                      <i class="mdi mdi-file-document-box menu-icon"></i>
+                      <span class="menu-title">CMS Pages</span>
                     </a>
-                    <div class="collapse" id="cmspage">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">About</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Privacy policy</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Terms Conditions</a></li>
-                        </ul>
-                    </div>
                 </li>
+
+
           @endif
 
           @if (Auth::guard('admin')->user()->type == "reviewer")
@@ -429,10 +423,8 @@
     <script src="{{ asset('adminpanel/assets/js/inputmask.js') }}"></script>
     <!-- End custom js for this page -->
 
-    <script src="//cdn.ckeditor.com/4.19.1/standard/ckeditor.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{{ asset('adminpanel/ckeditor/ckeditor.js') }}"></script>
 
-    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
     @stack('scripts')
 
   </body>
