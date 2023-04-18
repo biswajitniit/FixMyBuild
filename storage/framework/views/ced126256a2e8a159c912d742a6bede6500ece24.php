@@ -81,14 +81,23 @@
                                         <img src="<?php echo e(asset('frontend/img/user_.png')); ?>" alt="">
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a class="dropdown-item" href="#">Jenny Wilson<em>Customer</em></a></li>
-                                            <li>
-                                            <hr class="dropdown-divider">
-                                            </hr>
-                                            </li>
-                                            <li><a class="dropdown-item" href="#">My profile</a></li>
-                                            <li><a class="dropdown-item" href="<?php echo e(route('customer.newproject')); ?>">New project</a></li>
-                                            <li><a class="dropdown-item" href="<?php echo e(route('logout')); ?>">Logout</a></li>
+                                          <li><a class="dropdown-item" href="#"><?php echo e(Auth::user()->name); ?><em><?php echo e(Auth::user()->customer_or_tradesperson); ?></em></a></li>
+                                          <li>
+                                          <hr class="dropdown-divider">
+                                          </hr>
+                                          </li>
+                                          <?php if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active'): ?>
+                                          <li><a class="dropdown-item" href="<?php echo e(route('customer.profile')); ?>">My profile</a></li>
+                                          <li><a class="dropdown-item" href="<?php echo e(route('customer.project')); ?>">My projects</a></li>
+                                          <li><a class="dropdown-item" href="<?php echo e(route('customer.newproject')); ?>">New project</a></li>
+                                          <li><a class="dropdown-item" href="<?php echo e(route('logout')); ?>">Logout</a></li>
+                                          <?php endif; ?>
+                                          <?php if(Auth::user()->customer_or_tradesperson == 'Tradepersion' && Auth::user()->status == 'Active'): ?>
+                                          <li><a class="dropdown-item" href="<?php echo e(route('customer.profile')); ?>">My profile</a></li>
+                                          <li><a class="dropdown-item" href="<?php echo e(route('customer.project')); ?>">My projects</a></li>
+                                          <li><a class="dropdown-item" href="<?php echo e(route('customer.newproject')); ?>">New project</a></li>
+                                          <li><a class="dropdown-item" href="<?php echo e(route('logout')); ?>">Logout</a></li>
+                                          <?php endif; ?>
                                         </ul>
                                     </div>
                               <?php else: ?>
@@ -130,10 +139,18 @@
                                             <hr class="dropdown-divider">
                                             </hr>
                                             </li>
-                                            <li><a class="dropdown-item" href="<?php echo e(route('customer.profile')); ?>">My profile</a></li>
-                                            <li><a class="dropdown-item" href="<?php echo e(route('customer.project')); ?>">Project</a></li>
-                                            <li><a class="dropdown-item" href="<?php echo e(route('customer.newproject')); ?>">New project</a></li>
-                                            <li><a class="dropdown-item" href="<?php echo e(route('logout')); ?>">Logout</a></li>
+                                            <?php if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active'): ?>
+                                             <li><a class="dropdown-item" href="<?php echo e(route('customer.profile')); ?>">My profile</a></li>
+                                             <li><a class="dropdown-item" href="<?php echo e(route('customer.project')); ?>">My projects</a></li>
+                                             <li><a class="dropdown-item" href="<?php echo e(route('customer.newproject')); ?>">New project</a></li>
+                                             <li><a class="dropdown-item" href="<?php echo e(route('logout')); ?>">Logout</a></li>
+                                             <?php endif; ?>
+                                             <?php if(Auth::user()->customer_or_tradesperson == 'Tradepersion' && Auth::user()->status == 'Active'): ?>
+                                             <li><a class="dropdown-item" href="<?php echo e(route('customer.profile')); ?>">My profile</a></li>
+                                             <li><a class="dropdown-item" href="<?php echo e(route('customer.project')); ?>">My projects</a></li>
+                                             <li><a class="dropdown-item" href="<?php echo e(route('customer.newproject')); ?>">New project</a></li>
+                                             <li><a class="dropdown-item" href="<?php echo e(route('logout')); ?>">Logout</a></li>
+                                             <?php endif; ?>
                                         </ul>
                                     </div>
                                 <?php else: ?>

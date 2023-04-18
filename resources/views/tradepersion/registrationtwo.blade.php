@@ -27,6 +27,21 @@
  </section>
  <section class="pb-5">
     <div class="container">
+      @if($errors->any())
+         <div class="alert alert-danger">
+            <ul>
+                  @foreach ($errors->all() as $error)
+                     <li>{{ $error }}</li>
+                  @endforeach
+            </ul>
+         </div>
+      @endif
+
+      @if(session()->has('message'))
+         <div class="alert alert-success">
+            {{ session()->get('message') }}
+         </div>
+      @endif
        <form action="{{route('tradepersion.savecompregistration')}}" method="post">
          @csrf
           <div class="row mb-5">
@@ -80,7 +95,7 @@
                       </div>
                       <div class="col-md-12 mb-4">
                         {{-- <textarea id="editor" name="comp_description"></textarea> --}}
-                        <textarea id="summernote" name="editordata"></textarea>
+                        <textarea id="summernote" name="comp_description"></textarea>
                       </div>
                       <div class="col-md-5 mb-4">
                          <h3>Upload company logo
@@ -200,7 +215,7 @@
                                   <input type="text" name="name" class="form-control" id="" placeholder="Your name*">
                                </div>
                             </div>
-                            <input type="hidden" name="phone_code" value="">
+                            <input type="hidden" name="phone_code" value="" id="phone_code">
                             <div class="col-md-4">
                                <input type="text" name="phone_number" class="form-control col-md-10" id="phone" placeholder="Phone">
                             </div>
@@ -225,7 +240,7 @@
                       <div class="col-md-12">
                          <div class="row form_wrap mt-3">
                             <div class="col-md-6">
-                               <select class="form-control" id="company_role">
+                               <select class="form-control" id="company_role" name="company_role">
                                  <option value="">Select your role</option>
                                  <option value="Director">Director</option>
                                  <option value="Tradesperson">Tradesperson</option>
@@ -244,7 +259,7 @@
                       <div class="row mt-4">
                          <div class="col-md-3">
                             <div class="form-group">
-                               <button type="submit" class="btn btn-outline-danger btn-block">
+                               <button type="button" class="btn btn-outline-danger btn-block">
                                   <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                      <path d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z" fill="#EE5719"/>
                                   </svg>
@@ -631,6 +646,15 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script type="text/javascript">
+   $(document).ready(function(){
+      var selectedtel = $(".iti__selected-dial-code").text();
+      $('#phone_code').val(selectedtel);
+   });
+   input.addEventListener("countrychange", function() {
+      var selectedtel = $(".iti__selected-dial-code").text();
+      $('#phone_code').val(selectedtel);
+   });
+
    $('#summernote').summernote({
         //placeholder: 'FixMyBuild',
         tabsize: 2,

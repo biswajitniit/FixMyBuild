@@ -81,14 +81,23 @@
                                         <img src="{{ asset('frontend/img/user_.png') }}" alt="">
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a class="dropdown-item" href="#">Jenny Wilson<em>Customer</em></a></li>
-                                            <li>
-                                            <hr class="dropdown-divider">
-                                            </hr>
-                                            </li>
-                                            <li><a class="dropdown-item" href="#">My profile</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                          <li><a class="dropdown-item" href="#">{{ Auth::user()->name }}<em>{{ Auth::user()->customer_or_tradesperson }}</em></a></li>
+                                          <li>
+                                          <hr class="dropdown-divider">
+                                          </hr>
+                                          </li>
+                                          @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
+                                          <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                          @endif
+                                          @if(Auth::user()->customer_or_tradesperson == 'Tradepersion' && Auth::user()->status == 'Active')
+                                          <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                          @endif
                                         </ul>
                                     </div>
                               @else
@@ -130,10 +139,18 @@
                                             <hr class="dropdown-divider">
                                             </hr>
                                             </li>
-                                            <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('customer.project') }}">Project</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
-                                            <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                            @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
+                                             <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                             @endif
+                                             @if(Auth::user()->customer_or_tradesperson == 'Tradepersion' && Auth::user()->status == 'Active')
+                                             <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                             @endif
                                         </ul>
                                     </div>
                                 @else

@@ -27,10 +27,10 @@ class UserSeeder extends Seeder
 
         User::create([
             'name'                           => 'Himanshu Kumar',
-            'email'                          => 'tradepersion@fixmybuild.com',
-            'password'                       => '$2y$10$BYh4nqKV4ztrwDxkJgmHXebjBwbrCxhWtdp/IZaqIUqhOPHQsAaCG',
+            'email'                          => 'tradeperson@fixmybuild.com',
+            'password'                       => '$2y$10$9c4/3snzvsSVT.IuMbddLe0IoCf2JCt8kXCpxh..DwPcqnNNmqjLW',
             'phone'                          => '9513103478',
-            'customer_or_tradesperson'       => 'Tradepersion',
+            'customer_or_tradesperson'       => 'Tradesperson',
             'terms_of_service'               => '1',
             'remember_token'                 => 'nZSz8mqVzR4CeCpal6vzw0lnqOO1sYvMayKgItHI7e9RfavsBAs2PcWvUtDb',
             'status'                         => 'Active',
