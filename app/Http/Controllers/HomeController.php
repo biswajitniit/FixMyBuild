@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Cms;
 
 class HomeController extends Controller
 {
@@ -71,6 +72,23 @@ class HomeController extends Controller
             $user->status                    = 'Active';
             $user->save();
             return redirect()->back()->with('message', 'Thanks for signing up. Welcome to our fixmybuild. We are happy to have you on board.');
+    }
+
+    public function about_us(){
+        $cms = Cms::where('cms_pagename','about-us')->first();
+        return view('cms.about-us',compact('cms'));
+    }
+    public function contact_us(){
+        $cms = Cms::where('cms_pagename','contact-us')->first();
+        return view('cms.contact-us',compact('cms'));
+    }
+    public function privacy_policy(){
+        $cms = Cms::where('cms_pagename','privacy-policy')->first();
+        return view('cms.privacy-policy',compact('cms'));
+    }
+    public function terms(){
+        $cms = Cms::where('cms_pagename','terms')->first();
+        return view('cms.terms',compact('cms'));
     }
 
 }

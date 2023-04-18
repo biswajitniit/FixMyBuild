@@ -125,24 +125,19 @@
                             </div>
                         </div>
 
-
-
                         <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
                             <div class="col-lg-9">
-                                <input type="checkbox" data-toggle="switchbutton" checked data-onlabel="Approve" data-offlabel="Refer" data-onstyle="success" data-offstyle="danger">
-
                                 <div id="approve">
-                                    <a onclick="return show_refer('Approve')">Approve</a>
+                                    <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
                                 </div>
-                                <div id="refer">
-                                    <a onclick="return show_approve('Refer')">Refer</a>
+                                <div id="refer" style="display: none;">
+                                    <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
                                 </div>
 
-                                <input type="hidden" id="your_decision" value="Approve">
+                                <input type="hidden" name="your_decision" id="your_decision" value="Approve">
                             </div>
                         </div>
-
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -153,27 +148,60 @@
                             <!-- end col -->
                         </div>
 
-                        <div class="row">
-                            <table class="table-hover" id="customFields" style="width:100%">
-                                <tbody id="TextBoxesGroup">
-                                    <tr valign="top">
-                                        <td>
-                                            <select name="notes_for[]" id="notes_for1" class="form-select">
-                                                <option value="internal">Internal</option>
-                                                <option value="customer">To Customer</option>
-                                                <option value="tradespeople">For Tradespeople</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <textarea name="description[]" id="description1" class="form-control" style="height: 20px"></textarea>
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                                <input type="hidden" id="count_total_record_id" value="1" />
-                            </table>
-                            <!-- end col -->
-                        </div>
+
+                        @if($project->reviewer_status == '')
+                            <div class="row">
+                                <table class="table-hover" id="customFields" style="width:100%">
+                                    <tbody id="TextBoxesGroup">
+                                        <tr valign="top">
+                                            <td>
+                                                <select name="notes_for[]" id="notes_for1" class="form-select">
+                                                    <option value="internal">Internal</option>
+                                                    <option value="customer">To Customer</option>
+                                                    <option value="tradespeople">For Tradespeople</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <textarea name="description[]" id="description1" class="form-control" style="height: 20px"></textarea>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <input type="hidden" id="count_total_record_id" value="1" />
+                                </table>
+                                <!-- end col -->
+                            </div>
+                        @endif
+
+                        @if($project->reviewer_status == 'Refer')
+                            <div class="row">
+                                <table class="table-hover" id="customFields" style="width:100%">
+                                    <tbody id="TextBoxesGroup">
+
+                                        @if($projectnotesandcommend)
+                                            @foreach ($projectnotesandcommend as $rowproject)
+                                                <tr valign="top">
+                                                    <td>
+                                                        <select name="notes_for[]" id="notes_for1" class="form-select">
+                                                            <option value="internal" @if($rowproject->notes_for == 'internal') selected @endif>Internal</option>
+                                                            <option value="customer" @if($rowproject->notes_for == 'customer') selected @endif>To Customer</option>
+                                                            <option value="tradespeople" @if($rowproject->notes_for == 'tradespeople') selected @endif>For Tradespeople</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <textarea name="description[]" id="description1" class="form-control" style="height: 20px"><?php echo $rowproject->notes; ?></textarea>
+                                                    </td>
+                                                    <td><a href="javascript:void(0);" class="remCF"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-delete"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg></a></td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                    <input type="hidden" id="count_total_record_id" value="1" />
+                                </table>
+                                <!-- end col -->
+                            </div>
+                        @endif
+
 
 
                         <div class="row">
@@ -185,7 +213,6 @@
                             </div>
                             <!-- end col -->
                         </div>
-
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -249,6 +276,20 @@
 @push('scripts')
 <script>
     CKEDITOR.replace( 'editor-description' );
+
+   function show_approve_refer(type){
+        if(type == 'Approve'){
+            $("#refer").show();
+            $("#approve").hide();
+            $("#your_decision").attr('value','Refer');
+        }
+        if(type == 'Refer'){
+            $("#approve").show();
+            $("#refer").hide();
+            $("#your_decision").attr('value','Approve');
+        }
+
+   }
 function get_builder_subcategory_list() {
     var val = [];
     $('.catid:checked').each(function(i) {

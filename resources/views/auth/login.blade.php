@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
-      <title>Sign In</title>
+      <title>FixMyBuild | Sign In</title>
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <!-- Favicon -->
@@ -42,7 +42,7 @@
          <section  class="auth-sidebar">
             <div class="auth-sidebar-content p-4">
                <div id="particles-js">
-                  <header class="logo"><a href="index.html"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
+                  <header class="logo"><a href="{{ url('/') }}"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
                   <div class="artwork">
                      <h2>Welcome Back</h2>
                      <h4>Good quality work at sensible prices</h4>
@@ -86,8 +86,8 @@
                      </div>
                      <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
-                           <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password*" required >
-                           <em><a href="#"><i class="fa fa-eye-slash"></i></a></em>
+                           <input type="password" name="password" class="form-control" id="id_password" placeholder="Password*" required >
+                           <em><a href="#"><i class="fa fa-eye"  id="togglePassword"></i></a></em>
                         </div>
                      </div>
                      <div class="form-check mt-3">
@@ -98,11 +98,11 @@
                      <div class="row">
                         <div class="form-group col-md-12 mt-4 text-center forget_">
                            <button type="submit" class="btn btn-primary mb-3">Sign in</button>
-                           <a href="forget-password.html">Forgot your password?</a>
+                           <a href="{{ url('/forget-password') }}">Forgot your password?</a>
                         </div>
                      </div>
                   </form>
-                  <div class="row">
+                  {{-- <div class="row">
                     <div class="form-group col-md-12 mt-5 text-center sign_with">
                        <p>Or sign in with</p>
                        <ul>
@@ -114,21 +114,36 @@
                         <li><a href="#"><i class="fa fa-apple"></i></a></li>
                        </ul>
                     </div>
-                 </div>
+                 </div> --}}
                </div>
             </div>
-            <p class="font-14px text-center mt-5">Copyright © 2022 FIX MY BUILD LTD. All Rights Reserved.</p>
+            <p class="font-14px text-center mt-5">Copyright &copy; <?php echo date('Y') ?> FIX MY BUILD LTD. All Rights Reserved.</p>
          </section>
       </div>
       <!-- Bootstrap core JavaScript -->
       <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
-      <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
+      {{-- <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
       <script src="{{ asset('frontend/js/particles.js') }}"></script>
-      <script src="{{ asset('frontend/js/app.js') }}"></script>
+      <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
       <script>
         $( document ).ready(function() {
             $('input').attr('autocomplete','off');
+
+
+
+
         });
+
+        const togglePassword = document.querySelector('#togglePassword');
+            const password = document.querySelector('#id_password');
+
+            togglePassword.addEventListener('click', function (e) {
+                // toggle the type attribute
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                // toggle the eye slash icon
+                this.classList.toggle('fa-eye-slash');
+            });
       </script>
    </body>
 </html>

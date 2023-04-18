@@ -15,7 +15,8 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Tradepersion\TradepersionDashboardController;
 use App\Http\Controllers\Admin\Reviewer\ReviewerController;
 use App\Http\Controllers\Admin\Builder\BuildercategoryController;
-
+use App\Http\Controllers\Admin\Cms\CmsController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -55,6 +56,11 @@ Route::post('/dropzonedestroy', [MediaController::class,'dropzonedestroy'])->nam
 
 
 
+
+// Route::middleware(['middleware'=>'PreventBackHistory'])->group(function () {
+//     Auth::routes();
+// });
+
 Route::group(['middleware' => 'prevent-back-history'],function(){
     Route::get('/', function () {
         return view('welcome');
@@ -65,6 +71,20 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
     Route::post('/user/loginpost', [LoginController::class,'loginpost'])->name('user.loginpost');
     Route::get('/user/registration', [HomeController::class,'registration'])->name('user.registration');
     Route::post('/user/save-user', [HomeController::class,'save_user'])->name('user.save-user');
+
+    Route::get('/about-us', [HomeController::class,'about_us'])->name('about-us');
+    Route::get('/contact-us', [HomeController::class,'contact_us'])->name('contact-us');
+    Route::get('/privacy-policy', [HomeController::class,'privacy_policy'])->name('privacy-policy');
+    Route::get('/terms', [HomeController::class,'terms'])->name('terms');
+
+    Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+    Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
+    Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+    Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+
+
+
+
     // Route::get('/auth/google', [GoogleController::class,'loginwithgoogle'])->name('login');
     // Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
 
@@ -97,19 +117,22 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/admin/project/awaiting-your-review', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
         Route::get('/admin/project/awaiting-your-review-show/{projectid}', [ReviewerController::class, 'awaiting_your_review_show'])->name('awaiting-your-review-show');
         Route::post('/awaiting-your-review-save', [ReviewerController::class, 'awaiting_your_review_save'])->name('awaiting-your-review-save');
+        Route::post('/awaiting-your-review-final-save', [ReviewerController::class, 'awaiting_your_review_final_save'])->name('awaiting-your-review-final-save');
         Route::post('/get-builder-subcategory-list', [ReviewerController::class,'get_builder_subcategory_list'])->name('get-builder-subcategory-list');
         Route::get('/admin/project/final-review/{projectid}', [ReviewerController::class,'final_review'])->name('final-review');
-
 
 
         Route::get('getbuildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@getbuildercategory')->name('getbuildercategory');
         Route::delete('getbuildercategory/delete', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@delete')->name('getbuildercategory.delete');
         Route::resource('buildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController');
 
-
         Route::get('getbuildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController@getbuildersubcategory')->name('getbuildersubcategory');
         Route::delete('getbuildersubcategory/delete', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController@delete')->name('getbuildersubcategory.delete');
         Route::resource('buildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController');
+
+
+        Route::resource('admin/cms', 'App\Http\Controllers\Admin\Cms\CmsController');
+
 
 
     });
