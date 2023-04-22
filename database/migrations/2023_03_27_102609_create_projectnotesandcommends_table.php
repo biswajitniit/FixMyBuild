@@ -18,7 +18,7 @@ class CreateProjectnotesandcommendsTable extends Migration
             $table->unsignedBigInteger('reviewer_id');
             $table->unsignedBigInteger('project_id');
             $table->string('notes_for')->nullable();
-            $table->string('notes')->nullable();
+            $table->longText('notes')->nullable();
             $table->timestamps();
             $table->foreign('reviewer_id')->references('id')->on('admins')->onDelete('cascade');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');

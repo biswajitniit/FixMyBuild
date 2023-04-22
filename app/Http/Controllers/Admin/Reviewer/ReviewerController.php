@@ -62,16 +62,29 @@ class ReviewerController extends Controller
             Project::where('id', $request->projectid)->update($data);
        }
 
-        if($request->post('notes_for')){
-            foreach($request->post('notes_for') as $key => $val){
-                $projectnotes = new Projectnotesandcommend();
-                    $projectnotes->reviewer_id =  Auth::guard('admin')->user()['id'];
-                    $projectnotes->project_id  =  $request->post('projectid');
-                    $projectnotes->notes_for   =  $val;
-                    $projectnotes->notes       =  $request->post('description')[$key];
-                $projectnotes->save();
-            }
-        }
+        // Notes for Internal
+        $projectnotes = new Projectnotesandcommend();
+            $projectnotes->reviewer_id =  Auth::guard('admin')->user()['id'];
+            $projectnotes->project_id  =  $request->post('projectid');
+            $projectnotes->notes_for   =  'internal';
+            $projectnotes->notes       =  $request->post('notes_for_internal');
+        $projectnotes->save();
+
+        // Notes for Customer
+        $projectnotes = new Projectnotesandcommend();
+            $projectnotes->reviewer_id =  Auth::guard('admin')->user()['id'];
+            $projectnotes->project_id  =  $request->post('projectid');
+            $projectnotes->notes_for   =  'customer';
+            $projectnotes->notes       =  $request->post('notes_for_customer');
+        $projectnotes->save();
+
+        // Notes for Tradespeople
+        $projectnotes = new Projectnotesandcommend();
+            $projectnotes->reviewer_id =  Auth::guard('admin')->user()['id'];
+            $projectnotes->project_id  =  $request->post('projectid');
+            $projectnotes->notes_for   =  'tradespeople';
+            $projectnotes->notes       =  $request->post('notes_for_tradespeople');
+        $projectnotes->save();
 
         return redirect()->route('final-review', [$request->post('projectid')]);
 

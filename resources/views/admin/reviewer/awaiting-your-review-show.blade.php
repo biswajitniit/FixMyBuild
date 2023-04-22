@@ -125,86 +125,112 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
-                            <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
-                            <div class="col-lg-9">
-                                <div id="approve">
-                                    <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
+                        @if ($project->reviewer_status == 'Refer')
+                            <div class="mb-3 row">
+                                <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
+                                <div class="col-lg-9">
+                                    <div id="approve" style="display: none;">
+                                        <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
+                                    </div>
+                                    <div id="refer" style="display: block;">
+                                        <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
+                                    </div>
+
+                                    <input type="hidden" name="your_decision" id="your_decision" value="Refer">
                                 </div>
-                                <div id="refer" style="display: none;">
-                                    <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
-                                </div>
-
-                                <input type="hidden" name="your_decision" id="your_decision" value="Approve">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Notes and Comments</label>
-                                </div>
-                            </div>
-                            <!-- end col -->
-                        </div>
-
-
-                        @if($project->reviewer_status == '')
-                            <div class="row">
-                                <table class="table-hover" id="customFields" style="width:100%">
-                                    <tbody id="TextBoxesGroup">
-                                        <tr valign="top">
-                                            <td>
-                                                <select name="notes_for[]" id="notes_for1" class="form-select">
-                                                    <option value="internal">Internal</option>
-                                                    <option value="customer">To Customer</option>
-                                                    <option value="tradespeople">For Tradespeople</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <textarea name="description[]" id="description1" class="form-control" style="height: 20px"></textarea>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                    <input type="hidden" id="count_total_record_id" value="1" />
-                                </table>
-                                <!-- end col -->
                             </div>
                         @endif
 
-                        @if($project->reviewer_status == 'Refer')
-                            <div class="row">
-                                <table class="table-hover" id="customFields" style="width:100%">
-                                    <tbody id="TextBoxesGroup">
+                        @if ($project->reviewer_status == 'Approve')
+                            <div class="mb-3 row">
+                                <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
+                                <div class="col-lg-9">
+                                    <div id="approve" style="display: block;">
+                                        <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
+                                    </div>
+                                    <div id="refer" style="display: none;">
+                                        <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
+                                    </div>
 
-                                        @if($projectnotesandcommend)
-                                            @foreach ($projectnotesandcommend as $rowproject)
-                                                <tr valign="top">
-                                                    <td>
-                                                        <select name="notes_for[]" id="notes_for1" class="form-select">
-                                                            <option value="internal" @if($rowproject->notes_for == 'internal') selected @endif>Internal</option>
-                                                            <option value="customer" @if($rowproject->notes_for == 'customer') selected @endif>To Customer</option>
-                                                            <option value="tradespeople" @if($rowproject->notes_for == 'tradespeople') selected @endif>For Tradespeople</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <textarea name="description[]" id="description1" class="form-control" style="height: 20px"><?php echo $rowproject->notes; ?></textarea>
-                                                    </td>
-                                                    <td><a href="javascript:void(0);" class="remCF"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-delete"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg></a></td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                                    <input type="hidden" id="count_total_record_id" value="1" />
-                                </table>
-                                <!-- end col -->
+                                    <input type="hidden" name="your_decision" id="your_decision" value="Approve">
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($project->reviewer_status == '')
+                            <div class="mb-3 row">
+                                <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
+                                <div class="col-lg-9">
+                                    <div id="approve">
+                                        <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
+                                    </div>
+                                    <div id="refer" style="display: none;">
+                                        <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
+                                    </div>
+
+                                    <input type="hidden" name="your_decision" id="your_decision" value="Approve">
+                                </div>
                             </div>
                         @endif
 
 
 
-                        <div class="row">
+                        @if($projectnotesandcommend->isNotEmpty())
+                            @foreach ($projectnotesandcommend as $row)
+
+                                @if($row->notes_for == 'customer')
+                                    <div class="mb-3 row">
+                                        <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
+                                        <div class="col-lg-9">
+                                            <textarea class="form-control" name="notes_for_customer" rows="5">{{ $row->notes }}</textarea>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($row->notes_for == 'internal')
+                                    <div class="mb-3 row">
+                                        <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
+                                        <div class="col-lg-9">
+                                            <textarea class="form-control" name="notes_for_internal" rows="5">{{ $row->notes }}</textarea>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($row->notes_for == 'tradespeople')
+                                    <div class="mb-3 row">
+                                        <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
+                                        <div class="col-lg-9">
+                                            <textarea class="form-control" name="notes_for_tradespeople" rows="5" id="editor-description">{{ $row->notes }}</textarea>
+                                        </div>
+                                    </div>
+                                @endif
+
+                            @endforeach
+                        @else
+
+                            <div class="mb-3 row">
+                                <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Internal</label>
+                                <div class="col-lg-9">
+                                    <textarea class="form-control" name="notes_for_internal" rows="5"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Customer</label>
+                                <div class="col-lg-9">
+                                    <textarea class="form-control" name="notes_for_customer" rows="5"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Tradespeople</label>
+                                <div class="col-lg-9">
+                                    <textarea class="form-control" name="notes_for_tradespeople" rows="5"></textarea>
+                                </div>
+                            </div>
+                        @endif
+
+                        {{-- <div class="row">
                             <div class="col-lg-12">
                                 <div class="mb-3">
                                     <svg xmlns="http://www.w3.org/2000/svg" id="addCF" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus icon-dual"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -212,7 +238,7 @@
                                 </div>
                             </div>
                             <!-- end col -->
-                        </div>
+                        </div> --}}
 
                         <div class="row">
                             <div class="col-lg-12">

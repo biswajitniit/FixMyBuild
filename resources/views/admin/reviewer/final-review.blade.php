@@ -48,58 +48,37 @@
                             @if($projectnotesandcommend)
                                 @foreach ($projectnotesandcommend as $row)
 
-
-                                @if($row->notes_for == 'customer')
-                                <div class="mb-3 row">
-                                    <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                    <div class="col-lg-9">
-                                        <textarea class="form-control" rows="5" id="editor-description">{{ $row->notes }}</textarea>
-                                    </div>
-                                </div>
-                                @endif
-
-                                @if($row->notes_for == 'internal')
-                                <div class="mb-3 row">
-                                    <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                    <div class="col-lg-9">
-                                        <textarea class="form-control" rows="5">{{ $row->notes }}</textarea>
-                                    </div>
-                                </div>
-                                @endif
-
-                                @if($row->notes_for == 'tradespeople')
-                                <div class="mb-3 row">
-                                    <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                    <div class="col-lg-9">
-                                        <textarea class="form-control" rows="5">{{ $row->notes }}</textarea>
-                                    </div>
-                                </div>
-                                @endif
-
-                                    @if($row->notes_for == 'tradespeople')
-                                        <div class="mb-3 row">
-                                            <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                            <div class="col-lg-9">
-                                                <textarea class="form-control" rows="5"><?php echo $row->notes ?></textarea>
-                                            </div>
+                                    @if($row->notes_for == 'customer')
+                                    <div class="mb-3 row">
+                                        <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
+                                        <div class="col-lg-9">
+                                            <textarea class="form-control" rows="5">{{ $row->notes }}</textarea>
                                         </div>
+                                    </div>
                                     @endif
 
-                                    @if($row->notes_for == 'customer')
-                                        <div class="mb-3 row">
-                                            <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                            <div class="col-lg-9">
-                                                <textarea class="form-control" rows="5" id="editor-description"><?php echo $row->notes ?></textarea>
-                                            </div>
+                                    @if($row->notes_for == 'internal')
+                                    <div class="mb-3 row">
+                                        <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
+                                        <div class="col-lg-9">
+                                            <textarea class="form-control" rows="5">{{ $row->notes }}</textarea>
                                         </div>
+                                    </div>
+                                    @endif
+
+                                    @if($row->notes_for == 'tradespeople')
+                                    <div class="mb-3 row">
+                                        <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
+                                        <div class="col-lg-9">
+                                            <textarea class="form-control" rows="5" id="editor-description">{{ $row->notes }}</textarea>
+                                        </div>
+                                    </div>
                                     @endif
 
                                 @endforeach
                             @endif
 
-
                             <a href="{{ url('/admin/project/awaiting-your-review-show/'.Request::segment(4)) }}" class="btn btn-light">Back</a>
-
                             <input type="submit" class="btn btn-primary" value="Send">
                         </div>
                     </div>
