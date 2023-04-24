@@ -17,6 +17,7 @@ class CreateTraderDetailsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->string('comp_reg_no')->nullable();
+            $table->string('txt_comp_name')->nullable();
             $table->string('comp_name')->nullable();
             $table->text('comp_address')->nullable();
             $table->string('trader_name')->nullable();
@@ -26,6 +27,7 @@ class CreateTraderDetailsTable extends Migration
             $table->string('phone_number')->nullable();
             $table->string('phone_office')->nullable();
             $table->string('email')->nullable();
+            $table->string('company_role')->nullable();
             $table->string('designation')->nullable();
             $table->boolean('vat_reg')->nullable();
             $table->string('vat_no')->nullable();
@@ -36,12 +38,15 @@ class CreateTraderDetailsTable extends Migration
             $table->string('bnk_account_name')->nullable();
             $table->string('bnk_sort_code')->nullable();
             $table->string('bnk_account_number')->nullable();
-            $table->boolean('builder_amendment')->default(0);
-            $table->boolean('noti_new_quotes')->default(1);
-            $table->boolean('noti_quote_accepted')->default(1);
-            $table->boolean('noti_project_stopped')->default(1);
-            $table->boolean('noti_quote_rejected')->default(0);
-            $table->boolean('noti_project_cancelled')->default(0);
+            $table->boolean('builder_amendment')->default(0)->change();
+            $table->boolean('noti_new_quotes')->default(1)->change();
+            $table->boolean('noti_quote_accepted')->default(1)->change();
+            $table->boolean('noti_project_stopped')->default(1)->change();
+            $table->boolean('noti_quote_rejected')->default(0)->change();
+            $table->boolean('noti_project_cancelled')->default(0)->change();
+            $table->string('insurance_policy_name')->nullable();
+            $table->date('insurance_policy_exp_date')->nullable();
+            $table->boolean('insurance_status')->default(0)->change();
             $table->timestamps();
         });
     }

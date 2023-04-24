@@ -13,12 +13,6 @@ class BuildersubcategorySeeder extends Seeder
      */
     public function run()
     {
-        Buildersubcategory::create(
-            [
-            'builder_category_id'             => 1,
-            'builder_subcategory_name'        => 'Air Conditioning Installation',
-            'status'                          => 'status',
-            ]
-        );
+        
     }
 }

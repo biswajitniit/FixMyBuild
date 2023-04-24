@@ -162,5 +162,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('bank-registration', [TradepersionDashboardController::class,'registrationstepthree'])->name('tradepersion.bankregistration');
         Route::post('save-bank-registration', [TradepersionDashboardController::class,'saveregistrationstepthree'])->name('tradepersion.savebankregistration');
         Route::get('get-company-details', [TradepersionDashboardController::class, 'get_companydetails']);
+        Route::get('get-company-vat-details', [TradepersionDashboardController::class, 'get_company_vat_details']);
+
     });
 });

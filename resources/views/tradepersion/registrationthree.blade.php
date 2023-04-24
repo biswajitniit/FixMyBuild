@@ -27,9 +27,40 @@
  </section>
  <section class="pb-5">
     <div class="container">
+      
+      @if($errors->any())
+         <div class="alert alert-danger">
+            <ul>
+                  @foreach ($errors->all() as $error)
+                     <li>{{ $error }}</li>
+                  @endforeach
+            </ul>
+         </div>
+      @endif
+
+      @if(session()->has('message'))
+         <div class="alert alert-success">
+            {{ session()->get('message') }}
+         </div>
+      @endif
        <form action="{{route('tradepersion.savebankregistration')}}" method="post">
         @csrf
           <div class="row">
+            @if (session('status'))
+            <div class="col-md-10 offset-md-1 gen-info">
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="alert alert-success" role="alert">
+                        <h2 class="alert-heading">Great</h2>
+                        <p>Your request has been successfully received.</p>
+                        <hr>
+                        <p class="mb-1">Your registration will be reviewd and our team will contact you if we need more information.</p>
+                        <p><a href="{{route('home')}}" class="btn btn-primary">Continue</a></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            @endif
              <div class="col-md-10 offset-md-1">
                 <div class="tell_about gen-info">
                    <div class="row">
@@ -148,7 +179,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch3" name="noti_quote_accepted" value="1">
+                                     <input type="checkbox" id="switch3" name="noti_project_stopped" value="1">
                                      <label for="switch3">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When a project is stopped</label>
