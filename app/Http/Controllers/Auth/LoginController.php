@@ -56,19 +56,25 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
-		if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password, 'status' => 'Active'])) {
+		if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])) {
             if (Auth::user()->customer_or_tradesperson == "Customer")
             {
+                if(Auth::user()->status == 'Active'){
+                    return redirect()->intended('/');
+                }else{
+                    $errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
+		            return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
+                }
                 // The user is logged in Customer...
                // return redirect()->intended('/customer/profile');
-               return redirect()->intended('/');
+               
             }else{
                 if(Auth::user()->steps_completed == 1){
                     return redirect()->intended('/tradeperson/company-registration');
                 }else if(Auth::user()->steps_completed == 2){
                     return redirect()->intended('/tradeperson/bank-registration');
                 }else if(Auth::user()->steps_completed == 3){
-                    return redirect()->intended('/tradeperson/dashboard');
+                    return redirect()->intended('/');
                 }
             }
 		}else{
