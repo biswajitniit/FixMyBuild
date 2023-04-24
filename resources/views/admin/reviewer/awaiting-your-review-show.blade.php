@@ -253,13 +253,18 @@
                             <div class="col-md-6">
                                 <div class="card" style="height:250px; overflow-y: scroll;">
                                     <div class="card-body">
-
+                                        @php
+                                            $category = explode(",",$project->categories);
+                                            //echo "<pre>"; print_r($category);
+                                        @endphp
                                         @if($buildercategory)
                                             @foreach ($buildercategory as $rowcategory)
+
+
                                             <div class="mt-1">
                                                 <div class="form-check mb-1">
                                                     <input type="checkbox" name="builder_category[]" class="form-check-input catid" id="customCheck{{$rowcategory->id}}" value="{{$rowcategory->id}}"  onclick="get_builder_subcategory_list(this.value)"/>
-                                                    <label class="form-check-label" for="customCheck{{$rowcategory->id}}">{{ $rowcategory->builder_category_name }}</label>
+                                                    <label class="form-check-label" for="customCheck{{$rowcategory->id}}" @if(array_key_exists($rowcategory->id, $category)) checked @endif>{{ $rowcategory->builder_category_name }}</label>
                                                 </div>
                                             </div>
                                             @endforeach
