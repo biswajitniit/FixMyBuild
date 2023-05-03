@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Cms;
+use App\Models\Terms;
 
 class HomeController extends Controller
 {
@@ -86,9 +87,10 @@ class HomeController extends Controller
         $cms = Cms::where('cms_pagename','privacy-policy')->first();
         return view('cms.privacy-policy',compact('cms'));
     }
-    public function terms(){
-        $cms = Cms::where('cms_pagename','terms')->first();
-        return view('cms.terms',compact('cms'));
+    public function termspage(Request $request, $pageid){
+        $terms = Terms::where('id',$pageid)->first();
+        $termspagename = Terms::where('status','Active')->get();
+        return view('cms.terms',compact('terms','termspagename'));
     }
 
 }

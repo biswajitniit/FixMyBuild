@@ -12,8 +12,8 @@
                      <h2 class="pt-md-3 pt-sm-1 font-64 font-weight-bold">Good quality work at sensible prices</h2>
                      <p>118 reputable builders registered on our platform so far.</p>
                      <div class="price-display mt-4">
-                        <a class="btn mr-3" href="#">Start your project</a>
-                        <a class="btn mr-3 cy-project" href="#">Continue your project</a>
+                        <a class="btn mr-3" href="{{ route('customer.newproject') }}">Start your project</a>
+                        <a class="btn mr-3 cy-project" href="{{ route('customer.project') }}">Continue your project</a>
                      </div>
                   </div>
                </div>

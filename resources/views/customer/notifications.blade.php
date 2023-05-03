@@ -8,7 +8,7 @@
             <div class="col-md-12 text-center pt-5 fmb_titel">
                 <h1>My profile</h1>
                 <ol class="breadcrumb mb-5">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Notifications</li>
                 </ol>
             </div>
@@ -24,7 +24,7 @@
                 <ul>
                     <li><a href="{{ route('customer.profile') }}">Profile</a></li>
                     <li><a href="{{ route('customer.project') }}">Projects</a></li>
-                    <li class="active"><a href="{{ route('customer.notifications') }}">Notifications</a></li>
+                    <li class="active"><a href="{{ route('customer.notifications') }}">Settings</a></li>
                     <li><a href="{{ route('logout') }}">Logout</a></li>
                 </ul>
             </div>

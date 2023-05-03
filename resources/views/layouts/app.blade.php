@@ -203,7 +203,7 @@
                  <div class="col-lg-6 col-md-6">
                     <ul>
                        <li><a href="{{ url('/privacy-policy') }}">Privacy policy</a></li>
-                       <li><a href="{{ url('/terms') }}">Terms</a></li>
+                       <li><a href="{{ route('termspage',[1]) }}">Terms</a></li>
                     </ul>
                  </div>
                  <div class="col-lg-6 col-md-6">

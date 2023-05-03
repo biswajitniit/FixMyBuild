@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Tradepersion\TradepersionDashboardController;
 use App\Http\Controllers\Admin\Reviewer\ReviewerController;
+use App\Http\Controllers\Admin\Terms\TermsController;
 use App\Http\Controllers\Admin\Builder\BuildercategoryController;
 use App\Http\Controllers\Admin\Cms\CmsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -75,7 +76,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
     Route::get('/about-us', [HomeController::class,'about_us'])->name('about-us');
     Route::get('/contact-us', [HomeController::class,'contact_us'])->name('contact-us');
     Route::get('/privacy-policy', [HomeController::class,'privacy_policy'])->name('privacy-policy');
-    Route::get('/terms', [HomeController::class,'terms'])->name('terms');
+    Route::get('/termspage/{pageid}', [HomeController::class,'termspage'])->name('termspage');
 
     Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
     Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
@@ -85,25 +86,26 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
 
 
-    // Route::get('/auth/google', [GoogleController::class,'loginwithgoogle'])->name('login');
-    // Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
-
-    // Route::get('/dashboard', function () {
-    //     return view('Dashboard/dashboard');
-    // })->name('dashboard');
+    Route::get('/auth/google', [GoogleController::class,'redirect'])->name('google-auth');
+    Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
 
 
-    // Route::get('/auth/redirect', function () {
-    //     return Socialite::driver('google')->redirect();
-    // });
+    Route::get('/dashboard', function () {
+        return view('Dashboard/dashboard');
+    })->name('dashboard');
 
-    // Route::get('/auth/callback', function () {
-    //     $user = Socialite::driver('google')->user();
-    // });
 
-    // Route::group(['prefix' => 'admin','middleware' => 'auth:admin'], function () {
+    Route::get('/auth/redirect', function () {
+        return Socialite::driver('google')->redirect();
+    });
 
-    // });
+    Route::get('/auth/callback', function () {
+        $user = Socialite::driver('google')->user();
+    });
+
+    Route::group(['prefix' => 'admin','middleware' => 'auth:admin'], function () {
+
+    });
 
 
     Route::group(['middleware' => ['auth:admin']], function() {
@@ -113,13 +115,17 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/admin/users', [UserController::class, 'users'])->name('admin/users');
         Route::any('/admin/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
 
-        Route::resource('reviewer', 'ReviewerController');
+        Route::resource('reviewer', ReviewerController::class);
         Route::get('/admin/project/awaiting-your-review', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
         Route::get('/admin/project/awaiting-your-review-show/{projectid}', [ReviewerController::class, 'awaiting_your_review_show'])->name('awaiting-your-review-show');
         Route::post('/awaiting-your-review-save', [ReviewerController::class, 'awaiting_your_review_save'])->name('awaiting-your-review-save');
         Route::post('/awaiting-your-review-final-save', [ReviewerController::class, 'awaiting_your_review_final_save'])->name('awaiting-your-review-final-save');
         Route::post('/get-builder-subcategory-list', [ReviewerController::class,'get_builder_subcategory_list'])->name('get-builder-subcategory-list');
         Route::get('/admin/project/final-review/{projectid}', [ReviewerController::class,'final_review'])->name('final-review');
+
+
+        Route::resource('terms', TermsController::class);
+
 
 
         Route::get('getbuildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@getbuildercategory')->name('getbuildercategory');

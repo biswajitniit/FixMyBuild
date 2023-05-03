@@ -49,5 +49,8 @@ return [
     //     'client_secret' => env('FACEBOOK_APP_SECRET'),
     //     'redirect' => env('FACEBOOK_REDIRECT'),
     // ]
-
+    "apple" => [
+        "client_id" => "<your_client_id>",
+        "client_secret" => "<your_client_secret>",
+    ],
 ];

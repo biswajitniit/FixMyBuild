@@ -255,16 +255,15 @@
                                     <div class="card-body">
                                         @php
                                             $category = explode(",",$project->categories);
-                                            //echo "<pre>"; print_r($category);
+                                            //echo "<pre>"; print_r($category); die;
+                                           // echo count($category); die
                                         @endphp
                                         @if($buildercategory)
-                                            @foreach ($buildercategory as $rowcategory)
-
-
+                                            @foreach ($buildercategory as $key => $value)
                                             <div class="mt-1">
                                                 <div class="form-check mb-1">
-                                                    <input type="checkbox" name="builder_category[]" class="form-check-input catid" id="customCheck{{$rowcategory->id}}" value="{{$rowcategory->id}}"  onclick="get_builder_subcategory_list(this.value)"/>
-                                                    <label class="form-check-label" for="customCheck{{$rowcategory->id}}" @if(array_key_exists($rowcategory->id, $category)) checked @endif>{{ $rowcategory->builder_category_name }}</label>
+                                                    <input type="checkbox" name="builder_category[]" class="form-check-input catid" id="customCheck{{$value->id}}" value="{{$value->id}}" @if(in_array($value->id, $category)) checked @endif  onclick="get_builder_subcategory_list(this.value)"/>
+                                                    <label class="form-check-label" for="customCheck{{$value->id}}" >{{ $value->builder_category_name }}</label>
                                                 </div>
                                             </div>
                                             @endforeach
@@ -276,6 +275,31 @@
                             <div class="col-md-6">
                                 <div class="card" style="height:250px; overflow-y: scroll;">
                                     <div class="card-body" id="buildersubcategory">
+
+
+                                        @if(!empty(array_filter($category)))
+                                            @foreach ($category as $rowcategory)
+                                                @php
+                                                    $buildersubcategory = GetBuildersubcategory($rowcategory);
+                                                    $projectsubcategory = explode(",",$project->subcategories);
+                                                @endphp
+
+                                                <h4 class="header-title mt-3">{{ GetBuildercategoryname($rowcategory) }}</h4>
+
+                                                @if($buildersubcategory)
+                                                    @foreach ($buildersubcategory as $skey => $svalue)
+
+                                                    <div class="mt-1">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="builder_subcategory[]" class="form-check-input" id="subcat{{$svalue->id}}" value="{{$svalue->id}}" @if(in_array($svalue->id, $projectsubcategory)) checked @endif/>
+                                                            <label class="form-check-label" for="customCheck{{$svalue->id}}">{{$svalue->builder_subcategory_name}}</label>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                @endif
+
+                                            @endforeach
+                                        @endif
 
                                     </div>
                                 </div>

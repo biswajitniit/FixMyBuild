@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCmsTable extends Migration
+class CreateTermsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateCmsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cms', function (Blueprint $table) {
+        Schema::create('terms', function (Blueprint $table) {
             $table->id();
-            $table->string('cms_pagename');
-            $table->string('cms_heading')->nullable();
-            $table->longText('cms_description')->nullable();
-            $table->enum('status', ['Active', 'Inactive'])->comment('Active,Inactive');
+            $table->string('name')->unique();
+            $table->integer('terms_order');
+            $table->longText('terms_description')->nullable();
+            $table->enum('status', ['Active', 'InActive'])->comment('Active,InActive')->default('Active');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,7 +31,7 @@ class CreateCmsTable extends Migration
      */
     public function down()
     {
-        Schema::table('cms', function (Blueprint $table) {
+        Schema::table('terms', function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
     }

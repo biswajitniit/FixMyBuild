@@ -37,6 +37,7 @@ class ReviewerController extends Controller
         $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
         $projectmedia = Projectfile::where('project_id',$projectid)->get();
         $buildercategory = Buildercategory::where('status','Active')->get();
+
         $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
         return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory','projectnotesandcommend'));
     }
@@ -61,6 +62,8 @@ class ReviewerController extends Controller
             );
             Project::where('id', $request->projectid)->update($data);
        }
+       // if record exist in then delete
+        Projectnotesandcommend::where('project_id',$request->post('projectid'))->delete();
 
         // Notes for Internal
         $projectnotes = new Projectnotesandcommend();

@@ -10,10 +10,11 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
-        "laravel/socialite": "^5.5",
+        "laravel/socialite": "^5.6",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "socialiteproviders/apple": "^5.0",
         "spatie/laravel-cookie-consent": "^2.12",
         "yajra/laravel-datatables-oracle": "^9.21"
     },
@@ -26,6 +27,9 @@
         "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
+        "files": [
+			"app/Helpers/helpers.php"
+		],
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
