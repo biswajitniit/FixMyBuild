@@ -152,7 +152,9 @@
                 </div>
                 <div class="form-check mt-4">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif/> I have read and agree to FixMyBuild’s <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                        <input class="form-check-input" type="checkbox" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif/> I have read and agree to FixMyBuild's
+
+                        <a href="{{ url('/terms-of-service') }}">Terms of Service</a> and <a href="{{ url('/privacy-policy') }}">Privacy Policy</a>.
                     </label>
                 </div>
                 <div class="row">

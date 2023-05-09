@@ -2,7 +2,6 @@
 
 @section('content')
 
-
       <!--Banner area start-->
       <section class="banner-inner">
          <div class="container">

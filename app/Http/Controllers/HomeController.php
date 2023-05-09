@@ -212,6 +212,11 @@ class HomeController extends Controller
         $cms = Cms::where('cms_pagename','privacy-policy')->first();
         return view('cms.privacy-policy',compact('cms'));
     }
+    public function terms_of_service(){
+        $cms = Cms::where('cms_pagename','terms-of-service')->first();
+        return view('cms.terms-of-service',compact('cms'));
+    }
+
     public function termspage(Request $request, $pageid){
         $terms = Terms::where('id',$pageid)->first();
         $termspagename = Terms::where('status','Active')->get();

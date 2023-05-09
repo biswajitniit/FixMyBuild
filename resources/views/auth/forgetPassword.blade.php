@@ -34,6 +34,9 @@
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
       <!-- Custom styles for this template -->
       <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
+
+
+
    </head>
    <body>
       <div class="main-contain">
@@ -113,7 +116,9 @@
          </section>
       </div>
       <!-- Bootstrap core JavaScript -->
-      <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
+
+      <script src="{{ asset('frontend/js/jquery.min.js') }}"></script>
+      {{-- <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script> --}}
       {{-- <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
       <script src="assets/js/particles.js"></script>
       <script src="assets/js/app.js"></script> --}}
