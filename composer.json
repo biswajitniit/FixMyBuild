@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "adnanhussainturki/microsoft-api-php": "^0.03.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
@@ -15,6 +16,7 @@
         "laravel/ui": "^3.4",
         "league/flysystem-aws-s3-v3": "^1.0",
         "socialiteproviders/apple": "^5.0",
+        "socialiteproviders/microsoft-azure": "^5.1",
         "spatie/laravel-cookie-consent": "^2.12",
         "yajra/laravel-datatables-oracle": "^9.21"
     },

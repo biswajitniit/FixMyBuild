@@ -50,21 +50,21 @@
          </section>
          <section class="content">
             <header>
-               <a href="" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
+               <a href="{{url('/')}}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
             </header>
             <div class="auth-content">
                <div>
                 <div class="row">
                     <div class="input-field col-md-12">
                         <h2 class="heading1 mb-2 text-left color-blue">Set New password</h2>
-                        <p class="heading3 text-left">
+                        {{-- <p class="heading3 text-left">
                             <strong>Instruction:</strong>
                         </p>
                         <h6><i class="fa fa-check"></i> 8-32 character</h6>
                         <h6><i class="fa fa-check"></i> One upper case</h6>
                         <h6><i class="fa fa-check"></i> One lower case</h6>
                         <h6><i class="fa fa-times"></i> One special character</h6>
-                        <h6><i class="fa fa-circle"></i> One numeric character</h6>
+                        <h6><i class="fa fa-circle"></i> One numeric character</h6> --}}
                     </div>
                 </div>
 
@@ -122,7 +122,7 @@
          </section>
       </div>
       <!-- Bootstrap core JavaScript -->
-      <<script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
+      <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
       {{-- <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
       <script src="assets/js/particles.js"></script>
       <script src="assets/js/app.js"></script> --}}

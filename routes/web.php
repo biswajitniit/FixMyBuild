@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminloginController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\MicrosoftController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\LogoutController;
@@ -88,6 +89,10 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
     Route::get('/auth/google', [GoogleController::class,'redirect'])->name('google-auth');
     Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
+
+
+    Route::get('/auth/microsoft', [MicrosoftController::class,'redirect'])->name('microsoft-auth');
+    Route::get('/microsoft/callback', [GoogleController::class,'callbackFromMicrosoft'])->name('microsoftcallback');
 
 
     Route::get('/dashboard', function () {

@@ -38,7 +38,7 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
-
+    <link href="{{ asset('frontend/css/validationEngine.jquery.css') }}" rel="stylesheet">
 
     <style>
         #password-strength-status {
@@ -107,63 +107,62 @@
                 </div>
             @endif
 
+            <form action="{{ route('user.save-user') }}" name="userregistration" id="userregistration" class="contact-form" method="POST">
+                @csrf
 
-            <form action="{{ route('user.save-user') }}" name="userregistration" class="contact-form" method="POST">
-             @csrf
-
-            <div class="row">
-              <div class="form-group  col-md-12 mt-5">
-                <input type="text" name="name" class="form-control" placeholder="Full Name" required >
-              </div>
-            </div>
-
-            <div class="form-group  col-md-12 mt-4">
-                <input type="email" name="email" class="form-control" placeholder="Email" id="email" autocomplete="false" readonly onfocus="this.removeAttribute('readonly');" required>
-            </div>
-
-            <div class="row">
-              <div class="form-group col-md-12 mt-4 pw_">
-                 <input type="password" name="password" id="password" class="form-control" placeholder="Password*" onkeyup="checkPasswordStrength();" required>
-                 <em onclick="tooglepassword()"><a href="#"><i class="fa fa-eye-slash" id="eye"></i></a></em>
-              </div>
-           </div>
-           <div id="password-strength-status"></div>
-            <div class="row">
-                <div class="form-group col-md-12 mt-4 pw_">
-                <input type="password" name="password_confirmation" id="password_confirmation"  class="form-control"  placeholder="Confirm Password*" required>
-                <em onclick="tooglepasswordconfirm()"><a href="#"><i class="fa fa-eye-slash" id="eyeconfirm"></i></a></em>
+                <div class="row">
+                    <div class="form-group col-md-12 mt-5">
+                        <input type="text" name="name" class="form-control" placeholder="Full Name"  required value="{{old('name')}}"/>
+                    </div>
                 </div>
-            </div>
-              <div class="form-group  col-md-12 mt-4">
-                <input type="text" name="phone" class="form-control col-md-10" id="phone" placeholder="Phone" required>
-             </div>
 
-              <div class="form-check mt-4 pl-0 mb-2">
-                <label class="form-check-label">Are you a customer or tradesperson?</label>
-             </div>
-             <div class="form-check-inline">
-              <label class="form-check-label">
-                <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2" checked name="optradio" required>Customer
-              </label>
-            </div>
-            <div class="form-check-inline">
-              <label class="form-check-label">
-                <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" name="optradio" required>Tradesperson
-              </label>
-            </div>
-              <div class="form-check mt-4">
-                <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" name="terms_of_service" value="1" required> I have read and agree to FixMyBuild’s <a href="#">Terms of Service</a>
-                and <a href="#">Privacy Policy</a>.
-                </label>
-             </div>
-            <div class="row">
-              <div class="form-group col-md-12 mt-4">
-            <button type="submit" class="btn btn-primary">Register</button>
-          </div>
-        </div>
+                <div class="form-group col-md-12 mt-4">
+                    <input type="email" name="email" class="form-control" placeholder="Email" id="email" value="{{old('email')}}"/>
+                </div>
 
-          </form>
+                <div class="row">
+                    <div class="form-group col-md-12 mt-4 pw_">
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password*" onkeyup="checkPasswordStrength();" />
+                        <em onclick="tooglepassword()">
+                            <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
+                        </em>
+                    </div>
+                </div>
+                <div id="password-strength-status"></div>
+                <div class="row">
+                    <div class="form-group col-md-12 mt-4 pw_">
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password*" />
+                        <em onclick="tooglepasswordconfirm()">
+                            <a href="#"><i class="fa fa-eye-slash" id="eyeconfirm"></i></a>
+                        </em>
+                    </div>
+                </div>
+                <div class="form-group col-md-12 mt-4">
+                    <input type="text" name="phone" class="form-control col-md-10" id="phone" placeholder="Phone"  value="{{old('phone')}}"/>
+                </div>
+
+                <div class="form-check mt-4 pl-0 mb-2">
+                    <label class="form-check-label">Are you a customer or tradesperson?</label>
+                </div>
+                <div class="form-check-inline">
+                    <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2"   @if(old('customer_or_tradesperson') == 'Customer') checked @endif name="optradio"  />Customer </label>
+                </div>
+                <div class="form-check-inline">
+                    <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" @if(old('customer_or_tradesperson') == 'Tradesperson') checked @endif name="optradio"  />Tradesperson </label>
+                </div>
+                <div class="form-check mt-4">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif/> I have read and agree to FixMyBuild’s <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                    </label>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12 mt-4">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                </div>
+            </form>
+
+
           <div class="row">
             <div class="form-group col-md-12 mt-5 text-center sign_with">
                <p>Or register with</p>
@@ -194,16 +193,21 @@
   {{-- <script src="{{ asset('frontend/js/particles.js') }}"></script>
   <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
 
+  <script src="{{ asset('frontend/js/jquery.min.js') }}"></script>
   <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <script src="{{ asset('frontend/js/jquery.validationEngine-en.js') }}" type="text/javascript" charset="utf-8"></script>
+  <script src="{{ asset('frontend/js/jquery.validationEngine.js') }}" type="text/javascript" charset="utf-8"></script>
   <script>
      var input = document.querySelector("#phone");
      window.intlTelInput(input, {
          separateDialCode: true,
-        //  excludeCountries: ["gb"],
          preferredCountries: ["gb"]
      });
-  </script>
-  <script type="text/javascript">
+
+    // $(document).ready(function(){
+    //     $("#userregistration").validationEngine();
+    // });
+
     function tooglepassword(){
         var x = document.getElementById("password");
         if (x.type === "password") {
@@ -251,9 +255,7 @@
             }
         }
     }
-
   </script>
-
 
 </body>
 </html>

@@ -53,4 +53,12 @@ return [
         "client_id" => "<your_client_id>",
         "client_secret" => "<your_client_secret>",
     ],
+    'azure' => [
+        'client_id' => env('AZURE_CLIENT_ID'),
+        'client_secret' => env('AZURE_CLIENT_SECRET'),
+        'redirect' => env('AZURE_REDIRECT_URI'),
+        'tenant' => env('AZURE_TENANT_ID'),
+        'proxy' => env('PROXY')  // optionally
+    ],
+
 ];
