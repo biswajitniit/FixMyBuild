@@ -57,7 +57,7 @@
             </header>
             <div class="auth-content">
                <div>
-                  <div class='row'>
+                  <div class='row mb-3'>
                      <div class='input-field col-md-12'>
                         <h2 class="heading1 mb-2 text-left color-blue">Forgot password?</h2>
                         <p  class="heading3 text-left">
@@ -75,11 +75,11 @@
                   <form action="{{ route('forget.password.post') }}" method="post" class="fwrap">
                     @csrf
                      <div class="row">
-                       <div class="card mt-5">
+                       <div class="card mb-2">
                           <div class="input-group">
                             <div class="col-md-10 col-10 p-4">
                                 <label>Send an email to</label>
-                                <input type="email" id="email_address" name="email" required class="form-control" placeholder="Email">
+                                <input type="email" id="email_address" name="email" required class="form-control" placeholder="Email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" value="{{old('email')}}">
                                 @if ($errors->has('email'))
                                 <span class="text-danger">{{ $errors->first('email') }}</span>
                                 @endif

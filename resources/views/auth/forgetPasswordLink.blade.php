@@ -89,13 +89,19 @@
                     </div>
                 </div>
 
+                @if (Session::has('error'))
+                        <div class="alert alert-danger" role="alert">
+                        {{ Session::get('error') }}
+                    </div>
+                @endif
+
                 <form action="{{ route('reset.password.post') }}" method="post">
                     @csrf
                     <input type="hidden" name="token" value="{{ $token }}">
 
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
-                            <input type="text" id="email_address" class="form-control" name="email" placeholder="Email"  required autofocus>
+                            <input type="text" id="email_address" class="form-control" name="email" placeholder="Email"  required autofocus pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$">
                             @if ($errors->has('email'))
                                 <span class="text-danger">{{ $errors->first('email') }}</span>
                             @endif
@@ -104,7 +110,7 @@
 
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
-                            <input type="password" id="password" class="form-control" name="password" placeholder="Password" required autofocus onkeyup="checkPasswordStrength();" >
+                            <input type="password" id="password" class="form-control" name="password" placeholder="Password" required autofocus onkeyup="checkPasswordStrength();" onChange="Chkpassword_and_conpassword()">
                             <em onclick="tooglepassword()">
                                 <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
                             </em>
@@ -119,7 +125,7 @@
 
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
-                            <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" placeholder="Retype password" required autofocus onkeyup="checkPasswordStrength_One();">
+                            <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" placeholder="Retype password" required autofocus onkeyup="checkPasswordStrength_One();" onChange="Chkpassword_and_conpassword()">
                             <em onclick="tooglepasswordconfirm()">
                                 <a href="#"><i class="fa fa-eye-slash" id="eyeconfirm"></i></a>
                             </em>
@@ -161,6 +167,17 @@
        // $(document).ready(function(){
        //     $("#userregistration").validationEngine();
        // });
+
+       function Chkpassword_and_conpassword() {
+            const password = document.querySelector('input[name=password]');
+            const confirm = document.querySelector('input[name=password_confirmation]');
+            if (confirm.value === password.value) {
+                confirm.setCustomValidity('');
+            } else {
+                confirm.setCustomValidity('Passwords do not match');
+            }
+        }
+
 
        function tooglepassword(){
            var x = document.getElementById("password");

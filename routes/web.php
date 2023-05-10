@@ -73,6 +73,9 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
     Route::post('/user/loginpost', [LoginController::class,'loginpost'])->name('user.loginpost');
     Route::get('/user/registration', [HomeController::class,'registration'])->name('user.registration');
     Route::post('/user/save-user', [HomeController::class,'save_user'])->name('user.save-user');
+    Route::get('account/verify/{token}', [HomeController::class, 'verifyAccount'])->name('user.verify');
+
+
 
     Route::get('/about-us', [HomeController::class,'about_us'])->name('about-us');
     Route::get('/contact-us', [HomeController::class,'contact_us'])->name('contact-us');
