@@ -1,0 +1,30 @@
+/* Start  Registration page css */
+.error{
+    color: red;
+  }
+
+  label.error{
+    color: var(--color_gray);
+    background-color: #FBE1E1;
+    padding: 3px 5px;
+    margin-top: 2px;
+  }
+
+#password-strength-status, #password-strength-status-confirm {
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.medium-password {
+    background-color: #fd0;
+}
+
+.weak-password {
+    background-color: #FBE1E1;
+}
+
+.strong-password {
+    background-color: #D5F9D5;
+}
+/* end  Registration page css */

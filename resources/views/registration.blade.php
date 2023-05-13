@@ -38,27 +38,7 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
-    <link href="{{ asset('frontend/css/validationEngine.jquery.css') }}" rel="stylesheet">
-
-    <style>
-        #password-strength-status, #password-strength-status-confirm {
-            padding: 5px 10px;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
-
-        .medium-password {
-            background-color: #fd0;
-        }
-
-        .weak-password {
-            background-color: #FBE1E1;
-        }
-
-        .strong-password {
-            background-color: #D5F9D5;
-        }
-    </style>
+    <link href="{{ asset('frontend/customcss/custom.css') }}" rel="stylesheet">
 </head>
 <body>
   <div class="main-contain">
@@ -200,16 +180,37 @@
 
   </div>
   <!-- Bootstrap core JavaScript -->
-  {{-- <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
-  <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script> --}}
-  {{-- <script src="{{ asset('frontend/js/particles.js') }}"></script>
-  <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
 
   <script src="{{ asset('frontend/js/jquery.min.js') }}"></script>
   <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-  <script src="{{ asset('frontend/js/jquery.validationEngine-en.js') }}" type="text/javascript" charset="utf-8"></script>
-  <script src="{{ asset('frontend/js/jquery.validationEngine.js') }}" type="text/javascript" charset="utf-8"></script>
+  <script src="{{ asset('frontend/validatejs/jquery.validate.js') }}"></script>
   <script>
+
+    $(document).ready(function(){
+        $("#userregistration").validate({
+            // Specify validation rules
+            rules: {
+                fullname: "required",
+                email: "required",
+                password: {
+                    required: true,
+                }
+            },
+            messages: {
+                fullname: {
+                    required: "Please enter full name",
+                },
+                email: {
+                    required: "Please enter email address",
+                    email: "Please enter a valid email address.",
+                },
+                password: {
+                    required: "Please enter password",
+                },
+            },
+
+        });
+    });
 
     $(document).ready(function(){
         $("#fullname").bind("keypress", function (event) {

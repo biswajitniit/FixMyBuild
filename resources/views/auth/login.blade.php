@@ -34,8 +34,7 @@
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
       <!-- Custom styles for this template -->
       <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
-
-
+      <link href="{{ asset('frontend/customcss/custom.css') }}" rel="stylesheet">
    </head>
    <body>
       <div class="main-contain">
@@ -84,11 +83,11 @@
                     @endif
 
 
-                  <form action="{{route('user.loginpost')}}" method="post" name="login">
+                  <form action="{{route('user.loginpost')}}" method="post" name="login" id="login">
                     @csrf
                      <div class="row">
                         <div class="form-group  col-md-12">
-                           <input type="email" name="email"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email*" required value="{{old('email')}}" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$">
+                           <input type="email" name="email" id="email" class="form-control"  aria-describedby="emailHelp" placeholder="Email*" required  value="{{old('email')}}" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$">
                         </div>
                      </div>
 
@@ -148,11 +147,32 @@
       </div>
       <!-- Bootstrap core JavaScript -->
       <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
+      <script src="{{ asset('frontend/validatejs/jquery.validate.js') }}"></script>
       {{-- <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
       <script src="{{ asset('frontend/js/particles.js') }}"></script>
       <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
       <script>
+        $(document).ready(function(){
+            $("#login").validate({
+                // Specify validation rules
+                rules: {
+                    email: "required",
+                    password: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    email: {
+                        required: "Please enter email address",
+                        email: "Please enter a valid email address.",
+                    },
+                    password: {
+                        email: "Please enter password",
+                    },
+                },
 
+            });
+        });
         function tooglepassword(){
             var x = document.getElementById("password");
             if (x.type === "password") {

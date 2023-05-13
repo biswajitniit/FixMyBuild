@@ -104,11 +104,11 @@
                                 </div>
                             </div>
                             <div class="col-md-6 last_ua">
-                                {{-- <div class="form-check mb-2">
+                                <div class="form-check mb-2">
                                     <input type="radio" class="form-check-input mb" id="radio1" name="choseaddresstype" value="choseexistaddress" checked />
                                     <h5>Last used address</h5>
                                 </div>
-                                <p>2972 Westheimer Rd. Santa Ana, Illinois 85486</p> --}}
+                                <p>2972 Westheimer Rd. Santa Ana, Illinois 85486</p>
                                 <div class="form-check mt-5">
                                     <input type="radio" class="form-check-input mb" id="radio1" name="choseaddresstype" value="chosenewaddress" />
                                     <h5>Or type your address</h5>
@@ -381,6 +381,29 @@
 
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script language="JavaScript">
+    $(document).ready(function(){
+        $("#savenewproject").validate({
+            // Specify validation rules
+            rules: {
+                forename: "required",
+                surname: "required",
+                project_name: "required",
+            },
+            messages: {
+                fullname: {
+                    forename: "Please enter forename",
+                },
+                surname: {
+                    forename: "Please enter surname",
+                },
+                surname: {
+                    project_name: "Please enter project name",
+                },
+            },
+
+        });
+    });
+
 
     gUMbtn1 = id('gUMbtn1'),
     gUMbtn1.onclick = e => {

@@ -33,12 +33,14 @@ class ReviewerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function awaiting_your_review_show(Request $request, $projectid){
-        $project = Project::where('id',$projectid)->first();
-        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
-        $projectmedia = Projectfile::where('project_id',$projectid)->get();
+      //echo Hashids_decode($projectid); die;
+        $project = Project::where('id',Hashids_decode($projectid))->first();
+        //dd($project);
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',Hashids_decode($projectid))->get();
+        $projectmedia = Projectfile::where('project_id',Hashids_decode($projectid))->get();
         $buildercategory = Buildercategory::where('status','Active')->get();
 
-        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',Hashids_decode($projectid))->get();
         return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory','projectnotesandcommend'));
     }
 
@@ -94,7 +96,7 @@ class ReviewerController extends Controller
     }
 
     public function final_review($projectid){
-        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',Hashids_decode($projectid))->get();
         return view("admin.reviewer.final-review",compact('projectnotesandcommend'));
     }
 

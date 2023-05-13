@@ -34,7 +34,7 @@
 
       <!--modernizr min js here-->
       <script src="{{ asset('frontend/js/vendor/modernizr-3.7.1.min.js') }}"></script>
-
+      <link href="{{ asset('frontend/customcss/custom.css') }}" rel="stylesheet">
         <!-- Matomo -->
         <script>
             var _paq = window._paq = window._paq || [];
@@ -253,7 +253,7 @@
     <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
     <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
-
+    <script src="{{ asset('frontend/validatejs/jquery.validate.js') }}"></script>
     <script>
     tinymce.init({
         selector: 'textarea#editor',
