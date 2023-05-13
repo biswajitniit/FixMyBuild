@@ -8,7 +8,7 @@ use Hashids\Hashids;
 
 if (! function_exists('Hashids_encode')) {
     function Hashids_encode($id) {
-       $hashids = new Hashids('',50,'0123456789abcdefghijklmnopqrstuvwxyz');
+       $hashids = new Hashids('erwerwerwer12353335',50,'0123456789abcdefghijklmnopqrstuvwxyz');
        //$hashids = new Hashids();
        return $hashids->encode($id);
     }
@@ -16,7 +16,7 @@ if (! function_exists('Hashids_encode')) {
 
 if (! function_exists('Hashids_decode')) {
     function Hashids_decode($id) {
-        $hashids = new Hashids('',50,'0123456789abcdefghijklmnopqrstuvwxyz');
+        $hashids = new Hashids('erwerwerwer12353335',50,'0123456789abcdefghijklmnopqrstuvwxyz');
        return $hashids->decode($id)[0];
     }
 }
