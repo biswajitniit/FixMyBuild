@@ -65,7 +65,7 @@
                                                 <td>{{ date('d/m/Y',strtotime($row->created_at))}} <br> <em> {{ date('h:i a',strtotime($row->created_at))}} </em> </td>
                                                 <td class="text-success">Project started</td>
                                                 <td><a href="#"><img src="{{ asset('frontend/img/chat-info.svg') }}" alt=""></a></td>
-                                                <td><a href="#" class="btn btn-view">View</a></td>
+                                                <td><a href="{{url('/customer/project_details/'.$row->id)}}" class="btn btn-view">View</a></td>
                                             </tr>
                                             @php
                                                 $count++;

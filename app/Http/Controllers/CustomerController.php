@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Projectfile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Storage;
 use Session;
@@ -98,6 +99,27 @@ class CustomerController extends Controller
         $filename = Tempmedia::where('id',$request->deleteid)->first()->filename;
         Tempmedia::where('id',$request->deleteid)->delete();
         Storage::disk('s3')->delete('Testfolder/'. $filename);
+    }
+
+    function details(Request $request){
+
+        $projects = Project::where('id',$request->id)->first();
+        //dd(Auth::user());
+        //dd($projects);
+        try{
+            if(Auth::user()->id == $projects->user_id){
+                $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
+                $doc= projectfile::where('project_id', $request->id)->get();
+                
+                
+                return view('customer/project_details',compact('projects','projectaddress','doc'));
+            }else{
+                return redirect('/customer/project');
+            }
+        } catch (\Exception $e){
+            return redirect('/customer/project');
+        }
+        
     }
 
 
