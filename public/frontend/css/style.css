@@ -12677,7 +12677,7 @@ p {
 .iti--separate-dial-code input,
 .iti--separate-dial-code input[type="text"],
 .iti--separate-dial-code input[type="tel"] {
-  padding-left: 94px !important;
+  padding-left: 75px !important;
 }
 
 .tab_wrap span.badge.badge-secondary {
@@ -13570,7 +13570,7 @@ table.table {
 #custom-search-input input::-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #BDBDBD;
   }
-
+  
 #custom-search-input input::-ms-input-placeholder { /* Microsoft Edge */
     color: #BDBDBD;
   }
@@ -13590,17 +13590,17 @@ table.table {
   .pagination a.next_ svg path {
     fill: var(--primary_color);
   }
-  .pagination a.prve_ svg path {
+  .pagination a.prve_ svg path {  
     fill: #BDBDBD;
   }
   .pagination a:hover svg path {
     fill: var(--secondary_color);
-  }
+  }  
   /* Style the active/current link */
   .pagination a.active {
     color:var(--secondary_color);
   }
-
+  
   /* Add a grey background color on mouse-over */
   .pagination a:hover:not(.active) {color:var(--secondary_color);}
 
@@ -13663,7 +13663,7 @@ table.table {
 .status_wp .dropdown.open .dropdown-label:before {
     transform: translateY(-50%) rotate(-180deg);
   }
-
+  
 .status_wp .checkbox {
     margin-bottom: 10px;
   }
@@ -13847,7 +13847,7 @@ table.table {
 .content-wrap h5{
   font-weight: 700;
   font-size: 24px;
-  line-height: 28px;
+  line-height: 28px;  
   color: #061A48;
   margin-bottom: 20px;
 }
@@ -13995,7 +13995,7 @@ table.table {
   font-size: 24px;
   line-height: 24px;
   margin-top:0px !important;
-  margin-bottom: 15px;
+  margin-bottom: 15px; 
 }
 
 h2.company-name {
@@ -14011,7 +14011,7 @@ h2.company-name {
 h2.company-name input[type="text"] {
   background: transparent;
   border: none;
-  border-bottom: 1px solid  #828282;
+  border-bottom: 1px solid  #828282;  
   color:var(--color_gray_light);
   width:100%;
   font-weight:300;
@@ -14195,7 +14195,7 @@ h2.company-name a:hover svg path {
 .ukvat-number h2 input[type="text"] {
   background: transparent;
   border: none;
-  border-bottom: 1px solid  #828282;
+  border-bottom: 1px solid  #828282;  
   color:var(--color_gray_light);
   width:100%;
   font-weight: 300;
@@ -14280,7 +14280,7 @@ h2.company-name a:hover svg path {
 .bank-account-wrap h6{
   font-weight: 500;
   font-size: 16px;
-  line-height: 19px;
+  line-height: 19px; 
 }
 .bank-account-wrap svg{
   float: left;
@@ -14372,7 +14372,7 @@ h2.company-name a:hover svg path {
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: #ECE7DB;
+  color: #ECE7DB; 
 }
 .cookies-wrap p a:hover{
   color: #fff;
@@ -14467,7 +14467,7 @@ h2.company-name a:hover svg path {
 }
 .tradperson_tab nav > div a.nav-item.nav-link {
     line-height: 1.2;
-}
+} 
   .bs-wizard > .bs-wizard-step .bs-wizard-stepnum,
   .bs-wizard > .bs-wizard-step .bs-wizard-info {
     font-size: 10px;
