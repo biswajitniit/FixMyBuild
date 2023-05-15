@@ -12597,6 +12597,18 @@ p {
 .dashboard_wrapper .num_change a:hover {
   color: #061a48;
 }
+.dashboard_wrapper .num_change button {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #ee5719;
+    margin-top: 10px;
+    display: block;
+    margin-left: -10px;
+  }
+  .dashboard_wrapper .num_change button:hover {
+    color: #061a48;
+  }
 .dashboard_wrapper
   .num_change
   .iti--separate-dial-code
@@ -12677,7 +12689,7 @@ p {
 .iti--separate-dial-code input,
 .iti--separate-dial-code input[type="text"],
 .iti--separate-dial-code input[type="tel"] {
-  padding-left: 75px !important;
+  padding-left: 85px !important;
 }
 
 .tab_wrap span.badge.badge-secondary {
@@ -12794,6 +12806,12 @@ a#cancel_ {
 }
 a#cancel_:hover {
   color: #061a48;
+}
+button#cancel_ {
+    color: #bdbdbd;
+}
+button#cancel_:hover {
+    color: #061a48;
 }
 /* a#save_{
     color: var(--secondary_color);
@@ -13570,7 +13588,7 @@ table.table {
 #custom-search-input input::-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #BDBDBD;
   }
-  
+
 #custom-search-input input::-ms-input-placeholder { /* Microsoft Edge */
     color: #BDBDBD;
   }
@@ -13590,17 +13608,17 @@ table.table {
   .pagination a.next_ svg path {
     fill: var(--primary_color);
   }
-  .pagination a.prve_ svg path {  
+  .pagination a.prve_ svg path {
     fill: #BDBDBD;
   }
   .pagination a:hover svg path {
     fill: var(--secondary_color);
-  }  
+  }
   /* Style the active/current link */
   .pagination a.active {
     color:var(--secondary_color);
   }
-  
+
   /* Add a grey background color on mouse-over */
   .pagination a:hover:not(.active) {color:var(--secondary_color);}
 
@@ -13663,7 +13681,7 @@ table.table {
 .status_wp .dropdown.open .dropdown-label:before {
     transform: translateY(-50%) rotate(-180deg);
   }
-  
+
 .status_wp .checkbox {
     margin-bottom: 10px;
   }
@@ -13847,7 +13865,7 @@ table.table {
 .content-wrap h5{
   font-weight: 700;
   font-size: 24px;
-  line-height: 28px;  
+  line-height: 28px;
   color: #061A48;
   margin-bottom: 20px;
 }
@@ -13995,7 +14013,7 @@ table.table {
   font-size: 24px;
   line-height: 24px;
   margin-top:0px !important;
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
 }
 
 h2.company-name {
@@ -14011,7 +14029,7 @@ h2.company-name {
 h2.company-name input[type="text"] {
   background: transparent;
   border: none;
-  border-bottom: 1px solid  #828282;  
+  border-bottom: 1px solid  #828282;
   color:var(--color_gray_light);
   width:100%;
   font-weight:300;
@@ -14195,7 +14213,7 @@ h2.company-name a:hover svg path {
 .ukvat-number h2 input[type="text"] {
   background: transparent;
   border: none;
-  border-bottom: 1px solid  #828282;  
+  border-bottom: 1px solid  #828282;
   color:var(--color_gray_light);
   width:100%;
   font-weight: 300;
@@ -14280,7 +14298,7 @@ h2.company-name a:hover svg path {
 .bank-account-wrap h6{
   font-weight: 500;
   font-size: 16px;
-  line-height: 19px; 
+  line-height: 19px;
 }
 .bank-account-wrap svg{
   float: left;
@@ -14361,6 +14379,23 @@ h2.company-name a:hover svg path {
   margin:20px 0 10px;
 }
 
+#display-name .edit-name-btn, #edit-name #submit-name, #edit-name .cancel-btn{
+    border: none;
+    background: transparent;
+}
+
+.dashboard_wrapper .num_change button {
+    border: none;
+    background: transparent;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #ee5719;
+    margin-top: 10px;
+    display: block;
+    margin-left: -10px;
+}
+
 .cookies-wrap{
   background: #061A48;
   opacity: 0.95;
@@ -14372,7 +14407,7 @@ h2.company-name a:hover svg path {
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: #ECE7DB; 
+  color: #ECE7DB;
 }
 .cookies-wrap p a:hover{
   color: #fff;
@@ -14384,6 +14419,95 @@ h2.company-name a:hover svg path {
 
 .term_ ul{
   margin-top: 50px;
+}
+
+.dashboard_wrapper .num_change #save_ {
+    border: 0;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #ee5719;
+    margin-top: 10px;
+    display: block;
+    margin-left: -10px;
+    background: transparent;
+}
+
+.dashboard_wrapper .num_change #save_:disabled {
+    color: #ddd;
+}
+
+#avatar_dropzone .dz-success-mark svg path {
+    fill: green;
+}
+
+#avatar_dropzone .dz-error-mark svg path {
+    fill: red;
+}
+
+#avatar_dropzone .dz-details {
+    color: var(--primary_color);
+}
+
+#avatar_dropzone .dz-image-preview .dz-image img{
+    border-radius: 50%;
+}
+
+.reg_ img {
+    width: 27px;
+    border-radius: 50%;
+    object-fit: cover;
+    aspect-ratio: 1/1;
+}
+
+
+.profile_pics > img{
+    width: 187px;
+    aspect-ratio: 1/1;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.supported_ .invalid-file{
+    color: red;
+    text-align: center;
+}
+
+#avatar_dropzone .dz-preview {
+    position:   relative;
+}
+
+#avatar_dropzone .dz-preview .dz-success-mark svg,
+#avatar_dropzone .dz-preview .dz-error-mark svg{
+    position: absolute;
+    top: 85px;
+    right: 25px;
+    width: 32px;
+}
+
+#avatar_dropzone .dz-preview .dz-details{
+    margin-top: 15px;
+}
+
+#avatar_dropzone .dz-image img{
+    width: 100%;
+}
+
+#display-name h3{
+    border-bottom: 1px solid transparent;
+    padding-bottom: 10px;
+    padding-top: 3px;
+    margin-bottom: 26px;
+}
+
+#display-name h3 .show-name{
+    background-color: transparent;
+    border: none;
+    color: white;
+}
+
+#updateNameForm #submit-name:disabled img{
+    opacity:0.7;
 }
 
 /* mobile Responsive  */
@@ -14467,7 +14591,7 @@ h2.company-name a:hover svg path {
 }
 .tradperson_tab nav > div a.nav-item.nav-link {
     line-height: 1.2;
-} 
+}
   .bs-wizard > .bs-wizard-step .bs-wizard-stepnum,
   .bs-wizard > .bs-wizard-step .bs-wizard-info {
     font-size: 10px;

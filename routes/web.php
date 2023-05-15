@@ -160,6 +160,11 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
         Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
         Route::post('deletecustomermediafiles', [CustomerController::class,'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
+
+        Route::post('changepassword', [CustomerController::class,'change_password'])->name('customer.changepassword');
+        Route::put('updatename', [CustomerController::class,'update_name'])->name('customer.updatename');
+        Route::put('updatephone', [CustomerController::class,'update_phone'])->name('customer.updatephone');
+        Route::put('updateavatar', [CustomerController::class,'update_avatar'])->name('customer.updateavatar');
         /**
         * Logout Route
         */

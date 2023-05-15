@@ -9,6 +9,9 @@ use App\Models\User;
 use App\Models\Projectfile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
+// use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 use Illuminate\Support\Facades\Storage;
 use Session;
@@ -100,5 +103,96 @@ class CustomerController extends Controller
         Storage::disk('s3')->delete('Testfolder/'. $filename);
     }
 
+
+    function update_name(Request $request) {
+        if($request->ajax()){
+            $this->validate($request, [
+                'name'                              => ['required', 'string'],
+            ],[
+                'name.required'                     => 'Name field should not be empty',
+            ]);
+            try{
+                $user = User::find(Auth::user()->id);
+                $user->name = $request->name;
+                $user->update();
+
+                Auth::setUser($user);
+            } catch(\Exception $e){
+                return response()->json(['errors'=>['name' => ['Failed to update name!']]], $e->getCode());
+            }
+
+            return response()->json(['name'=>auth()->user()->name]);
+        }
+
+        abort(403);
+    }
+
+
+    function change_password(Request $request){
+            $this->validate($request, [
+                'new_password'                      => ['required', 'string', 'confirmed', 'max:32', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+                'new_password_confirmation'         => ['required', 'string', 'max:32', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+                'current_password'                  => ['required', 'string'],
+            ],[
+                'new_password.required' => 'Please enter your new password',
+                'new_password.confirmed' => "Your new password and confirm password fields don't match",
+                'new_password_confirmation.required' => 'Please enter your confirm password',
+                'password.required' => 'Please enter your password',
+            ]);
+
+            try {
+                if (Hash::check($request->current_password, auth()->user()->password)) {
+                    $user = auth()->user()->id;
+                    User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
+                } else {
+                    return response()->json(['error'=>'Invalid current password credentials'], 400);
+                }
+            } catch(\Exception $e) {
+                return response()->json(['error'=>'Failed to update password!'], 500);
+            }
+
+            return response()->json(['success'=>'Password changed successfully.']);
+    }
+
+    function update_phone(Request $request){
+        if($request->ajax()){
+            $this->validate($request, [
+                'phone' => ['required', 'string', 'max:14', 'min:12']
+            ]);
+
+            try{
+                $user = User::find(Auth::user()->id);
+                $user->phone = $request->phone;
+                $user->update();
+
+                Auth::setUser($user);
+            }catch(\Exception $e){
+                return response()->json(['error'=>'Failed to update phone!'], 500);
+            }
+            return response()->json(['success'=>'Updated Phone Successfully', 'phone'=>Auth::user()->phone]);
+        }
+        abort(403);
+    }
+
+    function update_avatar(Request $request){
+        try{
+            $user = Auth::user();
+            $oldImage = $user->profile_image;
+            $image = $request->file('file');
+            $imageName = $request->file('file')->getClientOriginalName();
+            $extension = $image->getClientOriginalExtension();
+            $imageName = \Str::of($imageName)->basename('.'.$extension).'_'.Auth::user()->id.'.'.$image->getClientOriginalExtension();
+            $path = Storage::disk('s3')->put('Testfolder/'.$imageName,file_get_contents($image->getRealPath(),'public'));
+            $path = Storage::disk('s3')->url('Testfolder/'.$imageName);
+            $user = Auth::user();
+            $user->profile_image = $path;
+            $user->update();
+            // Storage::disk('s3')->delete('');
+            Auth::setUser($user);
+            return response()->json(['image_link'=>$user->profile_image]);
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch data'],500);
+        }
+    }
 
 }
