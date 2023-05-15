@@ -169,16 +169,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.269.11",
+            "version": "3.269.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b187de784f668f976345a9f11d5cae4af0c7be25"
+                "reference": "9e9dc24c3c748c91ee5a8c9e058b5ce95fa19dc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b187de784f668f976345a9f11d5cae4af0c7be25",
-                "reference": "b187de784f668f976345a9f11d5cae4af0c7be25",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9e9dc24c3c748c91ee5a8c9e058b5ce95fa19dc4",
+                "reference": "9e9dc24c3c748c91ee5a8c9e058b5ce95fa19dc4",
                 "shasum": ""
             },
             "require": {
@@ -258,9 +258,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.269.11"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.269.8"
             },
-            "time": "2023-05-11T18:20:50+00:00"
+            "time": "2023-05-08T18:20:53+00:00"
         },
         {
             "name": "brick/math",
@@ -2521,6 +2521,7 @@
         },
         {
             "name": "microsoft/microsoft-graph",
+<<<<<<< HEAD
             "version": "1.97.0",
             "source": {
                 "type": "git",
@@ -2531,6 +2532,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/54e5694d12a3cecbc2492c71c4da4370172183d7",
                 "reference": "54e5694d12a3cecbc2492c71c4da4370172183d7",
+=======
+            "version": "1.96.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/microsoftgraph/msgraph-sdk-php.git",
+                "reference": "3903fc58c87e923a56db4feaf90b2eb3b2a1d9e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/3903fc58c87e923a56db4feaf90b2eb3b2a1d9e2",
+                "reference": "3903fc58c87e923a56db4feaf90b2eb3b2a1d9e2",
+>>>>>>> 6bcb55e54a40b31d678ae88969d516fa58c70526
                 "shasum": ""
             },
             "require": {
@@ -2566,9 +2579,15 @@
             "homepage": "https://developer.microsoft.com/en-us/graph",
             "support": {
                 "issues": "https://github.com/microsoftgraph/msgraph-sdk-php/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/microsoftgraph/msgraph-sdk-php/tree/1.97.0"
             },
             "time": "2023-05-10T12:48:14+00:00"
+=======
+                "source": "https://github.com/microsoftgraph/msgraph-sdk-php/tree/1.96.0"
+            },
+            "time": "2023-05-03T12:25:52+00:00"
+>>>>>>> 6bcb55e54a40b31d678ae88969d516fa58c70526
         },
         {
             "name": "monolog/monolog",

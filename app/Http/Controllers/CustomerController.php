@@ -31,9 +31,9 @@ class CustomerController extends Controller
         $projecthistory = Project::where('user_id',Auth::user()->id)->where('created_at', '!=', Carbon::today())->get();
         return view("customer/project",compact('project','projecthistory'));
     }
-    public function customer_notifications(Request $request){
-        return view("customer/notifications");
-    }
+    // public function customer_notifications(Request $request){
+    //     return view("customer/notifications");
+    // }
     public function customer_storeproject(Request $request){
 
         if($request->choseaddresstype == "chosenewaddress"){
