@@ -8,7 +8,6 @@ use App\Http\Controllers\MicrosoftController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\LogoutController;
-//use App\Http\Controllers\Dashboard\UserdashboardController;
 use App\Http\Controllers\LogoutsController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Admin\User\UserController;
@@ -162,7 +161,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
 
-        Route::get('project_details/{id}', [CustomerController::class,'details']);
+        Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
 
 
         Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
