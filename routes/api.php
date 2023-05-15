@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +14,20 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::namespace('Api')->group(function() {
+    Route::post('/login', 'AuthController@login');
+    Route::post('/signup', 'AuthController@signup');
+    Route::post('/verify-email', 'AuthController@verify_email');
+    Route::post('/forgot-password', 'PasswordController@forgot_password');
+    Route::post('/verify-otp', 'PasswordController@verify_otp');
+    Route::post('/create-password', 'PasswordController@create_password');
+
+    Route::middleware('auth:sanctum')->group(function() {
+      Route::post('/change-password', 'UserController@change_password');
+      Route::get('/profile', 'UserController@get_profile');
+      Route::apiResource('projects', 'ProjectController');
+    });
+  });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
