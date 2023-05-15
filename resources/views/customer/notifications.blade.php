@@ -109,7 +109,7 @@
                          <p>Once your account is closed all of your information including the details of all of your projects will be permanently deleted.</p>
                          <h5>Please select the main reason for closing your account (Optional)</h5>
                          <div>
-                            <select class="form-select">
+                            <select class="form-select" name="account_delete" required="">
                                <option>I'm not using this account anymore</option>
                                <option>I have another account</option>
                                <option>I want to create a new account</option>
@@ -119,11 +119,11 @@
                                <option>I have open issues with Fix my build</option>
                              </select>
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="check1" name="option1" required="">
+                            <input class="form-check-input" type="checkbox" id="delete_permanently" value="1" name="delete_permanently" onclick="clickCheckBox()" required="">
                             <label class="form-check-label">Yes, I want to permanently close my Fix my build account and delete my data.</label>
                           </div>
                           <div class="form-group pre_ col-md-5 mt-3">
-                            <button type="submit" class="btn btn-light">Close your account</button>
+                            <button type="submit" id="submitted" class="btn btn-light" disabled>Close your account</button>
                           </div>
                          </form>
                         </div>
@@ -186,5 +186,17 @@
             }
         })
     }
+
+    function clickCheckBox() {
+            const checkbox = document.getElementById("delete_permanently");
+            const button  = document.getElementById("submitted");
+            if (checkbox.checked == false) {
+                button.disabled = true;
+            }
+            else{
+                  button.disabled = false;
+            }
+
+        }
 </script>
 @endpush

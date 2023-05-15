@@ -64,6 +64,9 @@ class UserController extends Controller
 
         try {
             $user = User::find(auth()->user()->id);
+            $user->account_deletion_reason=$request->account_delete;
+            $user->delete_permanently=$request->delete_permanently;
+            $user->save();
             $user->delete();
             return redirect()->route('home');
         } catch (Exception $e) {
