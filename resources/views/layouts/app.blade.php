@@ -100,7 +100,11 @@
                                 @else
                                     <div class="dropdown">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                                            <img src="{{ asset('frontend/img/user_.png') }}" alt="">
+                                            @if (auth()->user()->profile_image)
+                                                <img src="{{ auth()->user()->profile_image }}" alt="" />
+                                            @else
+                                                <img src="{{ asset('images/user.png') }}" alt="" />
+                                            @endif
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                           <li><a class="dropdown-item" href="#">{{ Auth::user()->name }}<em>{{ Auth::user()->customer_or_tradesperson }}</em></a></li>
@@ -160,7 +164,11 @@
                                 @else
                                    <div class="dropdown">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                                            <img src="{{ asset('frontend/img/user_.png') }}" alt="">
+                                            @if (auth()->user()->profile_image)
+                                                <img src="{{ auth()->user()->profile_image }}" alt="" />
+                                            @else
+                                                <img src="{{ asset('images/user.png') }}" alt="" />
+                                            @endif
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                             <li><a class="dropdown-item" href="#">{{ Auth::user()->name }}<em>{{ Auth::user()->customer_or_tradesperson}}</em></a></li>
@@ -261,11 +269,11 @@
     });
 
     var input = document.querySelector("#phone");
-    window.intlTelInput(input, {
-        separateDialCode: true,
-        //  excludeCountries: ["gb"],
-        preferredCountries: ["gb"]
-    });
+    // window.intlTelInput(input, {
+    //     separateDialCode: true,
+    //     //  excludeCountries: ["gb"],
+    //     preferredCountries: ["gb"],
+    // });
     </script>
 
 

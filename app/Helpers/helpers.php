@@ -17,7 +17,7 @@ if (! function_exists('Hashids_encode')) {
 if (! function_exists('Hashids_decode')) {
     function Hashids_decode($id) {
         $hashids = new Hashids('erwerwerwer12353335',50,'0123456789abcdefghijklmnopqrstuvwxyz');
-       return $hashids->decode($id)[0];
+       return $hashids->decode($id);
     }
 }
 

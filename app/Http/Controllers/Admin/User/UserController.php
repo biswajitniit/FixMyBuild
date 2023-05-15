@@ -6,10 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use DataTables;
-
+use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function users(){
         return view('admin.user.user-list');
@@ -53,4 +59,18 @@ class UserController extends Controller
 
     }
 
+    public function delete_account(Request $request)
+    {
+
+        try {
+            $user = User::find(auth()->user()->id);
+            $user->account_deletion_reason=$request->account_delete;
+            $user->delete_permanently=$request->delete_permanently;
+            $user->save();
+            $user->delete();
+            return redirect()->route('home');
+        } catch (Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+        }
+    }
 }

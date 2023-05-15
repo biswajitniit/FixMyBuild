@@ -10,7 +10,7 @@
                   <h1>Project</h1>
                   <ol class="breadcrumb mb-5">
                      <li class="breadcrumb-item"><a href="{{url('/customer/profile')}}">Home</a></li>
-                     <li class="breadcrumb-item"><a href="{{url('/customer/project')}}">Project list</a></li>
+                     <li class="breadcrumb-item"><a href="{{url('/customer/projects')}}">Project list</a></li>
                      <li class="breadcrumb-item active" aria-current="page">Details</li>
                   </ol>
                </div>
@@ -110,7 +110,7 @@
                                  @foreach($doc as $docs)
                                  @if($docs->file_type=='document')
                                  
-                                    <div class="d-inline mr-4 img-text"><a href="{{$docs->url}}" target="_blank"><img src="{{asset('/categoryimg/'.$docs->filename)}}" alt="">{{$docs->filename}}</a></div>
+                                    <div class="d-inline mr-4 img-text"><a href="{{$docs->url}}" target="_blank"><img src="" alt="">{{$docs->filename}}</a></div>
                                     @endif
                                     @endforeach
                                  </div>
@@ -120,7 +120,7 @@
                         </div> 
                       </div>
                      <div class="form-group col-md-12 mt-5 text-center">
-                        <a href="{{url('/customer/project')}}" class="btn btn-primary">Back</a>
+                        <a href="{{url('/customer/projects')}}" class="btn btn-primary">Back</a>
                      </div>
                   </div>
                </div>
