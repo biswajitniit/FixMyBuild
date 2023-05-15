@@ -2521,6 +2521,18 @@
         },
         {
             "name": "microsoft/microsoft-graph",
+<<<<<<< HEAD
+            "version": "1.97.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/microsoftgraph/msgraph-sdk-php.git",
+                "reference": "54e5694d12a3cecbc2492c71c4da4370172183d7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/54e5694d12a3cecbc2492c71c4da4370172183d7",
+                "reference": "54e5694d12a3cecbc2492c71c4da4370172183d7",
+=======
             "version": "1.96.0",
             "source": {
                 "type": "git",
@@ -2531,6 +2543,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/3903fc58c87e923a56db4feaf90b2eb3b2a1d9e2",
                 "reference": "3903fc58c87e923a56db4feaf90b2eb3b2a1d9e2",
+>>>>>>> 6bcb55e54a40b31d678ae88969d516fa58c70526
                 "shasum": ""
             },
             "require": {
@@ -2566,9 +2579,15 @@
             "homepage": "https://developer.microsoft.com/en-us/graph",
             "support": {
                 "issues": "https://github.com/microsoftgraph/msgraph-sdk-php/issues",
+<<<<<<< HEAD
+                "source": "https://github.com/microsoftgraph/msgraph-sdk-php/tree/1.97.0"
+            },
+            "time": "2023-05-10T12:48:14+00:00"
+=======
                 "source": "https://github.com/microsoftgraph/msgraph-sdk-php/tree/1.96.0"
             },
             "time": "2023-05-03T12:25:52+00:00"
+>>>>>>> 6bcb55e54a40b31d678ae88969d516fa58c70526
         },
         {
             "name": "monolog/monolog",
@@ -8100,16 +8119,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.7",
+            "version": "9.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c993f0d3b0489ffc42ee2fe0bd645af1538a63b2"
+                "reference": "17d621b3aff84d0c8b62539e269e87d8d5baa76e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c993f0d3b0489ffc42ee2fe0bd645af1538a63b2",
-                "reference": "c993f0d3b0489ffc42ee2fe0bd645af1538a63b2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/17d621b3aff84d0c8b62539e269e87d8d5baa76e",
+                "reference": "17d621b3aff84d0c8b62539e269e87d8d5baa76e",
                 "shasum": ""
             },
             "require": {
@@ -8183,7 +8202,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.7"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.8"
             },
             "funding": [
                 {
@@ -8199,7 +8218,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-14T08:58:40+00:00"
+            "time": "2023-05-11T05:14:45+00:00"
         },
         {
             "name": "sebastian/cli-parser",

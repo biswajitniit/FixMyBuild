@@ -102,22 +102,21 @@ class CustomerController extends Controller
     }
 
     function details(Request $request){
-
-        $projects = Project::where('id',$request->id)->first();
-        //dd(Auth::user());
-        //dd($projects);
+        $id=Hashids_decode($request->id);
+        $projects = Project::where('id',$id)->first();
+        
         try{
             if(Auth::user()->id == $projects->user_id){
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
-                $doc= projectfile::where('project_id', $request->id)->get();
+                $doc= projectfile::where('project_id', $id)->get();
                 
                 
                 return view('customer/project_details',compact('projects','projectaddress','doc'));
             }else{
-                return redirect('/customer/project');
+                return redirect('/customer/projects');
             }
         } catch (\Exception $e){
-            return redirect('/customer/project');
+            return redirect('/customer/projects');
         }
         
     }
