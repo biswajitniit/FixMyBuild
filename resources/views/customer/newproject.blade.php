@@ -86,11 +86,13 @@
                                 <div class="col-md-10 post_code">
                                     <div class="form-control d-inline">
                                         <input type="text" class="col-6 mt-2" name="postcode" id="postcode" placeholder="Postcode" />
+                                        <input type="hidden" name="zipcode_selected" id="zipcode_selected" value="">
                                         {{-- <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger col-4 pull-right">Find me</a> --}}
                                         <a class="btn btn-danger col-4 pull-right postcodefind">Find me</a>
                                     </div>
                                     <div id="errormsg"></div>
                                     <div id="postcodelist"></div>
+                                    <p id="selected_post_code_html"></p>
                                     <!-- The Modal -->
                                     <!-- Modal -->
                                     <div class="modal fade select_address" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -104,7 +106,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-link" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-light">Save</button>
+                                                    <button type="button" class="btn btn-light" onclick="Get_zipcode()">Save</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -353,14 +355,14 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div id="my_camera"></div>
-                                        <input type="button" class="btn btn-warning" value="Take Snapshot" onClick="take_snapshot()">
+                                        <input type="button" class="btn btn-outline-danger btn-block" value="Take Snapshot" onClick="take_snapshot()">
                                         <input type="hidden" name="image" class="image-tag" >
-
                                     </div>
-                                    <div class="col-md-6">
-                                        <div id="results">Your captured image will appear here...</div>
+                                    <div class="col-md-6 ml-100">
+                                        {{-- <div id="results">Your captured image will appear here...</div> --}}
+                                        <div id="results"></div>
                                     </div>
                                 </div>
                             </div>
@@ -368,7 +370,7 @@
                         <div class="row">
                             <div class="col-md-12 text-center">
                                 {{-- <button class="btn btn-danger">Submit</button> --}}
-                                <button class="btn btn-success" type="submit">Submit</button>
+                                <button class="btn btn-primary" type="submit">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -389,6 +391,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script language="JavaScript">
+
+
     $(document).ready(function(){
         $("#savenewproject").validate({
             // Specify validation rules
@@ -412,6 +416,11 @@
         });
     });
 
+    function Get_zipcode(){
+        var zipcode = $('input[name="zipcode"]:checked').val();
+        $("#zipcode_selected").attr('value',zipcode);
+        $("#selected_post_code_html").html(zipcode);
+    }
 
     gUMbtn1 = id('gUMbtn1'),
     gUMbtn1.onclick = e => {
@@ -481,7 +490,7 @@
                                 fulladdress += value.country;
                             }
 
-                            addresshtml += '<div class="form-check"><input type="radio" class="form-check-input" id="radio'+counter+'" name="optradio[]" value="'+fulladdress+'" />'+fulladdress+'<label class="form-check-label" for="radio'+counter+'"></label></div>';
+                            addresshtml += '<div class="form-check"><input type="radio" class="form-check-input" id="radio'+counter+'" name="zipcode" value="'+fulladdress+'" />'+fulladdress+'<label class="form-check-label" for="radio'+counter+'"></label></div>';
                             counter++;
                         });
                         $(".zipcode-modal-header").html('<h5 class="modal-title" id="exampleModalLabel">Select your address<span>Postcode: '+$postcode+'</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/></svg></button>');
