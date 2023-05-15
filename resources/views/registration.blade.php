@@ -38,27 +38,7 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
-    <link href="{{ asset('frontend/css/validationEngine.jquery.css') }}" rel="stylesheet">
-
-    <style>
-        #password-strength-status {
-            padding: 5px 10px;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
-
-        .medium-password {
-            background-color: #fd0;
-        }
-
-        .weak-password {
-            background-color: #FBE1E1;
-        }
-
-        .strong-password {
-            background-color: #D5F9D5;
-        }
-    </style>
+    <link href="{{ asset('frontend/customcss/custom.css') }}" rel="stylesheet">
 </head>
 <body>
   <div class="main-contain">
@@ -81,7 +61,7 @@
       <div class="auth-content">
         <div>
 
-          <div class='row'>
+          <div class='row  mb-5'>
             <div class='input-field col-md-12'>
               <h2 class="heading1 mb-2 text-center color-blue ">Create an Account </h2>
               <p  class="heading2">
@@ -92,7 +72,7 @@
           </div>
 
             @if($errors->any())
-                <div class="alert alert-danger mt-15">
+                <div class="alert alert-danger">
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -111,55 +91,67 @@
                 @csrf
 
                 <div class="row">
-                    <div class="form-group col-md-12 mt-5">
-                        <input type="text" name="name" class="form-control" placeholder="Full Name"  required value="{{old('name')}}"/>
+                    <div class="form-group col-md-12">
+                        <input type="text" name="name" id="fullname" class="form-control" placeholder="Full Name"  required value="{{old('name')}}"/>
                     </div>
                 </div>
 
                 <div class="form-group col-md-12 mt-4">
-                    <input type="email" name="email" class="form-control" placeholder="Email" id="email" value="{{old('email')}}"/>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email" id="email" value="{{old('email')}}" required pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"/>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-12 mt-4 pw_">
-                        <input type="password" name="password" id="password" class="form-control" placeholder="Password*" onkeyup="checkPasswordStrength();" />
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password*" onkeyup="checkPasswordStrength();" onChange="Chkpassword_and_conpassword()" required />
                         <em onclick="tooglepassword()">
                             <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
                         </em>
                     </div>
                 </div>
+
                 <div id="password-strength-status"></div>
+
                 <div class="row">
                     <div class="form-group col-md-12 mt-4 pw_">
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password*" />
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password*"  onkeyup="checkPasswordStrength_confirm();" onChange="Chkpassword_and_conpassword()" required/>
                         <em onclick="tooglepasswordconfirm()">
                             <a href="#"><i class="fa fa-eye-slash" id="eyeconfirm"></i></a>
                         </em>
                     </div>
                 </div>
+
+                <div id="password-strength-status-confirm"></div>
+
                 <div class="form-group col-md-12 mt-4">
-                    <input type="text" name="phone" class="form-control col-md-10" id="phone" placeholder="Phone"  value="{{old('phone')}}"/>
+                    <input type="text" name="phone" class="form-control col-md-10" id="phone" placeholder="Phone"  value="{{old('phone')}}" required/>
                 </div>
 
                 <div class="form-check mt-4 pl-0 mb-2">
                     <label class="form-check-label">Are you a customer or tradesperson?</label>
                 </div>
+
                 <div class="form-check-inline">
-                    <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2"   @if(old('customer_or_tradesperson') == 'Customer') checked @endif name="optradio"  />Customer </label>
+                    <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2"   @if(old('customer_or_tradesperson') == 'Customer') checked @endif name="optradio"  required/>Customer </label>
                 </div>
+
                 <div class="form-check-inline">
-                    <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" @if(old('customer_or_tradesperson') == 'Tradesperson') checked @endif name="optradio"  />Tradesperson </label>
+                    <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" @if(old('customer_or_tradesperson') == 'Tradesperson') checked @endif name="optradio"  required/>Tradesperson </label>
                 </div>
+
                 <div class="form-check mt-4">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif/> I have read and agree to FixMyBuild’s <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                        <input class="form-check-input" type="checkbox" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif required/> I have read and agree to FixMyBuild's
+
+                        <a href="{{ url('/terms-of-service') }}">Terms of Service</a> and <a href="{{ url('/privacy-policy') }}">Privacy Policy</a>.
                     </label>
                 </div>
+
                 <div class="row">
                     <div class="form-group col-md-12 mt-4">
                         <button type="submit" class="btn btn-primary">Register</button>
                     </div>
                 </div>
+
             </form>
 
 
@@ -188,16 +180,63 @@
 
   </div>
   <!-- Bootstrap core JavaScript -->
-  {{-- <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
-  <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script> --}}
-  {{-- <script src="{{ asset('frontend/js/particles.js') }}"></script>
-  <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
 
   <script src="{{ asset('frontend/js/jquery.min.js') }}"></script>
   <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-  <script src="{{ asset('frontend/js/jquery.validationEngine-en.js') }}" type="text/javascript" charset="utf-8"></script>
-  <script src="{{ asset('frontend/js/jquery.validationEngine.js') }}" type="text/javascript" charset="utf-8"></script>
+  <script src="{{ asset('frontend/validatejs/jquery.validate.js') }}"></script>
   <script>
+
+    $(document).ready(function(){
+        $("#userregistration").validate({
+            // Specify validation rules
+            rules: {
+                fullname: "required",
+                email: "required",
+                password: {
+                    required: true,
+                }
+            },
+            messages: {
+                fullname: {
+                    required: "Please enter full name",
+                },
+                email: {
+                    required: "Please enter email address",
+                    email: "Please enter a valid email address.",
+                },
+                password: {
+                    required: "Please enter password",
+                },
+            },
+
+        });
+    });
+
+    $(document).ready(function(){
+        $("#fullname").bind("keypress", function (event) {
+            if (event.charCode!=0) {
+                var regex = new RegExp("^[a-zA-Z ]+$");
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                if (!regex.test(key)) {
+                    event.preventDefault();
+                    return false;
+                }
+            }
+        });
+    });
+
+    function Chkpassword_and_conpassword() {
+        const password = document.querySelector('input[name=password]');
+        const confirm = document.querySelector('input[name=password_confirmation]');
+        if (confirm.value === password.value) {
+            confirm.setCustomValidity('');
+        } else {
+            confirm.setCustomValidity('Passwords do not match');
+        }
+    }
+
+
+
      var input = document.querySelector("#phone");
      window.intlTelInput(input, {
          separateDialCode: true,
@@ -255,6 +294,31 @@
             }
         }
     }
+
+    function checkPasswordStrength_confirm() {
+        var number = /([0-9])/;
+        var alphabets = /([a-zA-Z])/;
+        var special_characters = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+        var password = $('#password_confirmation').val().trim();
+        if(password.length<6) {
+            $('#password-strength-status-confirm').removeClass();
+            $('#password-strength-status-confirm').addClass('weak-password');
+            $('#password-strength-status-confirm').html("Weak (should be atleast 6 characters.)");
+        } else {
+            if(password.match(number) && password.match(alphabets) && password.match(special_characters)) {
+                $('#password-strength-status-confirm').removeClass();
+                $('#password-strength-status-confirm').addClass('strong-password');
+                $('#password-strength-status-confirm').html("Strong");
+            }
+            else {
+                $('#password-strength-status-confirm').removeClass();
+                $('#password-strength-status-confirm').addClass('medium-password');
+                $('#password-strength-status-confirm').html("Medium (should include alphabets, numbers and special characters.)");
+            }
+        }
+    }
+
+
   </script>
 
 </body>

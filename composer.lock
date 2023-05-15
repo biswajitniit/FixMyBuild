@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7fedbcd8d1b91c04c67333e28be72ce3",
+    "content-hash": "b100475ff58c98970a7e68f243f5bfa2",
     "packages": [
         {
             "name": "adnanhussainturki/microsoft-api-php",
@@ -170,13 +170,17 @@
         {
             "name": "aws/aws-sdk-php",
             "version": "3.269.8",
+            "version": "3.269.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
                 "reference": "9e9dc24c3c748c91ee5a8c9e058b5ce95fa19dc4"
+                "reference": "9e9dc24c3c748c91ee5a8c9e058b5ce95fa19dc4"
             },
             "dist": {
                 "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9e9dc24c3c748c91ee5a8c9e058b5ce95fa19dc4",
+                "reference": "9e9dc24c3c748c91ee5a8c9e058b5ce95fa19dc4",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9e9dc24c3c748c91ee5a8c9e058b5ce95fa19dc4",
                 "reference": "9e9dc24c3c748c91ee5a8c9e058b5ce95fa19dc4",
                 "shasum": ""
@@ -831,6 +835,76 @@
             "time": "2022-02-23T14:25:13+00:00"
         },
         {
+            "name": "graham-campbell/manager",
+            "version": "v4.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GrahamCampbell/Laravel-Manager.git",
+                "reference": "b4cafa6491b9c92ecf7ce17521580050a27b8308"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GrahamCampbell/Laravel-Manager/zipball/b4cafa6491b9c92ecf7ce17521580050a27b8308",
+                "reference": "b4cafa6491b9c92ecf7ce17521580050a27b8308",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^5.5 || ^6.0 || ^7.0 || ^8.0 || ^9.0",
+                "illuminate/support": "^5.5 || ^6.0 || ^7.0 || ^8.0 || ^9.0",
+                "php": "^7.1.3 || ^8.0"
+            },
+            "require-dev": {
+                "graham-campbell/analyzer": "^2.4 || ^3.0",
+                "graham-campbell/testbench-core": "^3.4",
+                "mockery/mockery": "^1.3.1",
+                "phpunit/phpunit": "^6.5.14 || ^7.5.20 || ^8.5.8 || ^9.3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GrahamCampbell\\Manager\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                }
+            ],
+            "description": "Manager Provides Some Manager Functionality For Laravel",
+            "keywords": [
+                "Graham Campbell",
+                "GrahamCampbell",
+                "Laravel Manager",
+                "Laravel-Manager",
+                "connector",
+                "framework",
+                "interface",
+                "laravel",
+                "manager"
+            ],
+            "support": {
+                "issues": "https://github.com/GrahamCampbell/Laravel-Manager/issues",
+                "source": "https://github.com/GrahamCampbell/Laravel-Manager/tree/v4.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/graham-campbell/manager",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-01-24T01:59:19+00:00"
+        },
+        {
             "name": "graham-campbell/result-type",
             "version": "v1.1.1",
             "source": {
@@ -1219,6 +1293,123 @@
                 }
             ],
             "time": "2023-04-17T16:11:26+00:00"
+        },
+        {
+            "name": "hashids/hashids",
+            "version": "4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vinkla/hashids.git",
+                "reference": "8cab111f78e0bd9c76953b082919fc9e251761be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vinkla/hashids/zipball/8cab111f78e0bd9c76953b082919fc9e251761be",
+                "reference": "8cab111f78e0bd9c76953b082919fc9e251761be",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0 || ^9.4",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "suggest": {
+                "ext-bcmath": "Required to use BC Math arbitrary precision mathematics (*).",
+                "ext-gmp": "Required to use GNU multiple precision mathematics (*)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hashids\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Akimov",
+                    "email": "ivan@barreleye.com"
+                },
+                {
+                    "name": "Vincent Klaiber",
+                    "email": "hello@doubledip.se"
+                }
+            ],
+            "description": "Generate short, unique, non-sequential ids (like YouTube and Bitly) from numbers",
+            "homepage": "https://hashids.org/php",
+            "keywords": [
+                "bitly",
+                "decode",
+                "encode",
+                "hash",
+                "hashid",
+                "hashids",
+                "ids",
+                "obfuscate",
+                "youtube"
+            ],
+            "support": {
+                "issues": "https://github.com/vinkla/hashids/issues",
+                "source": "https://github.com/vinkla/hashids/tree/4.1.0"
+            },
+            "time": "2020-11-26T19:24:33+00:00"
+        },
+        {
+            "name": "justijndepover/laravel-cookie-consent",
+            "version": "0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/justijndepover/laravel-cookie-consent.git",
+                "reference": "d121d4edf6d93d462f920cef42806987b9bdf8ee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/justijndepover/laravel-cookie-consent/zipball/d121d4edf6d93d462f920cef42806987b9bdf8ee",
+                "reference": "d121d4edf6d93d462f920cef42806987b9bdf8ee",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^8.0 || ^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Justijndepover\\CookieConsent\\CookieConsentServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Justijndepover\\CookieConsent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Justijn Depover",
+                    "email": "justijndepover@gmail.com"
+                }
+            ],
+            "description": "Make your Laravel application comply with the EU cookie law.",
+            "support": {
+                "issues": "https://github.com/justijndepover/laravel-cookie-consent/issues",
+                "source": "https://github.com/justijndepover/laravel-cookie-consent/tree/0.5.0"
+            },
+            "time": "2022-09-20T19:49:43+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2334,16 +2525,16 @@
         },
         {
             "name": "microsoft/microsoft-graph",
-            "version": "1.96.0",
+            "version": "1.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/microsoftgraph/msgraph-sdk-php.git",
-                "reference": "3903fc58c87e923a56db4feaf90b2eb3b2a1d9e2"
+                "reference": "570613d2694595dc1dfdc25561a5180e5f0ab8f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/3903fc58c87e923a56db4feaf90b2eb3b2a1d9e2",
-                "reference": "3903fc58c87e923a56db4feaf90b2eb3b2a1d9e2",
+                "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/570613d2694595dc1dfdc25561a5180e5f0ab8f9",
+                "reference": "570613d2694595dc1dfdc25561a5180e5f0ab8f9",
                 "shasum": ""
             },
             "require": {
@@ -2379,9 +2570,9 @@
             "homepage": "https://developer.microsoft.com/en-us/graph",
             "support": {
                 "issues": "https://github.com/microsoftgraph/msgraph-sdk-php/issues",
-                "source": "https://github.com/microsoftgraph/msgraph-sdk-php/tree/1.96.0"
+                "source": "https://github.com/microsoftgraph/msgraph-sdk-php/tree/1.36.0"
             },
-            "time": "2023-05-03T12:25:52+00:00"
+            "time": "2021-08-11T14:10:01+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2545,6 +2736,52 @@
                 "source": "https://github.com/jmespath/jmespath.php/tree/2.6.1"
             },
             "time": "2021-06-14T00:11:39+00:00"
+        },
+        {
+            "name": "mtvs/eloquent-hashids",
+            "version": "v3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mtvs/eloquent-hashids.git",
+                "reference": "41dc9f554c18e4ff8e049fcd43abcf3fec0b2eb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mtvs/eloquent-hashids/zipball/41dc9f554c18e4ff8e049fcd43abcf3fec0b2eb8",
+                "reference": "41dc9f554c18e4ff8e049fcd43abcf3fec0b2eb8",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^8.0|^9.0|^10.0",
+                "vinkla/hashids": "^9.0|^10.0|^11.0"
+            },
+            "require-dev": {
+                "laravel/legacy-factories": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0",
+                "phpunit/phpunit": "^8.4|^9.0|^10.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mtvs\\EloquentHashids\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mohammad Ali Tavassoli",
+                    "email": "mtvs.dev@gmail.com"
+                }
+            ],
+            "description": "On-the-fly hashids for Laravel Eloquent models.",
+            "support": {
+                "issues": "https://github.com/mtvs/eloquent-hashids/issues",
+                "source": "https://github.com/mtvs/eloquent-hashids/tree/v3.4.0"
+            },
+            "time": "2023-03-02T09:55:05+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -3660,6 +3897,76 @@
             "time": "2021-09-25T23:10:38+00:00"
         },
         {
+            "name": "retinens/laravel-cookie-consent",
+            "version": "2.12.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/retinens/laravel-cookie-consent.git",
+                "reference": "8e93b9efee3a68960e5c832f937170c2fc0b2f37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/retinens/laravel-cookie-consent/zipball/8e93b9efee3a68960e5c832f937170c2fc0b2f37",
+                "reference": "8e93b9efee3a68960e5c832f937170c2fc0b2f37",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cookie": "^6.0|^7.0|^8.0",
+                "illuminate/support": "^6.0|^7.0|^8.0",
+                "illuminate/view": "^6.0|^7.0|^8.0",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "fakerphp/faker": "~1.9",
+                "orchestra/testbench": "^4.0|^5.0|^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\CookieConsent\\CookieConsentServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\CookieConsent\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Willem Van Bockstal",
+                    "email": "willem@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Make your Laravel app comply with the crazy EU cookie law",
+            "homepage": "https://github.com/spatie/cookie-consent",
+            "keywords": [
+                "comply",
+                "cookie",
+                "cookie-consent",
+                "eu",
+                "law",
+                "spatie"
+            ],
+            "support": {
+                "source": "https://github.com/retinens/laravel-cookie-consent/tree/2.12.13"
+            },
+            "time": "2021-02-26T08:04:10+00:00"
+        },
+        {
             "name": "socialiteproviders/apple",
             "version": "5.0.3",
             "source": {
@@ -4537,13 +4844,17 @@
         {
             "name": "symfony/http-foundation",
             "version": "v5.4.23",
+            "version": "v5.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
                 "reference": "af9fbb378f5f956c8f29d4886644c84c193780ac"
+                "reference": "af9fbb378f5f956c8f29d4886644c84c193780ac"
             },
             "dist": {
                 "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/af9fbb378f5f956c8f29d4886644c84c193780ac",
+                "reference": "af9fbb378f5f956c8f29d4886644c84c193780ac",
                 "url": "https://api.github.com/repos/symfony/http-foundation/zipball/af9fbb378f5f956c8f29d4886644c84c193780ac",
                 "reference": "af9fbb378f5f956c8f29d4886644c84c193780ac",
                 "shasum": ""
@@ -4593,6 +4904,7 @@
             "homepage": "https://symfony.com",
             "support": {
                 "source": "https://github.com/symfony/http-foundation/tree/v5.4.23"
+                "source": "https://github.com/symfony/http-foundation/tree/v5.4.23"
             },
             "funding": [
                 {
@@ -4608,6 +4920,7 @@
                     "type": "tidelift"
                 }
             ],
+            "time": "2023-04-18T06:30:11+00:00"
             "time": "2023-04-18T06:30:11+00:00"
         },
         {
@@ -6262,6 +6575,74 @@
             "time": "2023-01-03T09:29:04+00:00"
         },
         {
+            "name": "vinkla/hashids",
+            "version": "9.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vinkla/laravel-hashids.git",
+                "reference": "cb0086db96cdb49816465adc97e3a024c8ee9767"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vinkla/laravel-hashids/zipball/cb0086db96cdb49816465adc97e3a024c8ee9767",
+                "reference": "cb0086db96cdb49816465adc97e3a024c8ee9767",
+                "shasum": ""
+            },
+            "require": {
+                "graham-campbell/manager": "^4.4",
+                "hashids/hashids": "^4.1",
+                "illuminate/contracts": "^8.0",
+                "illuminate/support": "^8.0",
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "graham-campbell/analyzer": "^3.0",
+                "graham-campbell/testbench": "^5.4",
+                "mockery/mockery": "^1.3",
+                "phpunit/phpunit": "^9.3",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "9.1-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Vinkla\\Hashids\\HashidsServiceProvider"
+                    ],
+                    "aliases": {
+                        "Hashids": "Vinkla\\Hashids\\Facades\\Hashids"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Vinkla\\Hashids\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vincent Klaiber",
+                    "email": "hello@doubledip.se"
+                }
+            ],
+            "description": "A Hashids bridge for Laravel",
+            "keywords": [
+                "hashids",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/vinkla/laravel-hashids/issues",
+                "source": "https://github.com/vinkla/laravel-hashids/tree/9.1.0"
+            },
+            "time": "2020-11-26T19:38:22+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v5.5.0",
             "source": {
@@ -7729,16 +8110,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.7",
+            "version": "9.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c993f0d3b0489ffc42ee2fe0bd645af1538a63b2"
+                "reference": "17d621b3aff84d0c8b62539e269e87d8d5baa76e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c993f0d3b0489ffc42ee2fe0bd645af1538a63b2",
-                "reference": "c993f0d3b0489ffc42ee2fe0bd645af1538a63b2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/17d621b3aff84d0c8b62539e269e87d8d5baa76e",
+                "reference": "17d621b3aff84d0c8b62539e269e87d8d5baa76e",
                 "shasum": ""
             },
             "require": {
@@ -7812,7 +8193,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.7"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.8"
             },
             "funding": [
                 {
@@ -7828,7 +8209,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-14T08:58:40+00:00"
+            "time": "2023-05-11T05:14:45+00:00"
         },
         {
             "name": "sebastian/cli-parser",

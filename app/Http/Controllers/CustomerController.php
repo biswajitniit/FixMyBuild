@@ -9,9 +9,13 @@ use App\Models\User;
 use App\Models\Projectfile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+
 use Illuminate\Support\Facades\Hash;
 // use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+
+use Illuminate\Support\Facades\DB;
+
 
 use Illuminate\Support\Facades\Storage;
 use Session;
@@ -33,9 +37,9 @@ class CustomerController extends Controller
         $projecthistory = Project::where('user_id',Auth::user()->id)->where('created_at', '!=', Carbon::today())->get();
         return view("customer/project",compact('project','projecthistory'));
     }
-    public function customer_notifications(Request $request){
-        return view("customer/notifications");
-    }
+    // public function customer_notifications(Request $request){
+    //     return view("customer/notifications");
+    // }
     public function customer_storeproject(Request $request){
 
         if($request->choseaddresstype == "chosenewaddress"){
@@ -101,6 +105,26 @@ class CustomerController extends Controller
         $filename = Tempmedia::where('id',$request->deleteid)->first()->filename;
         Tempmedia::where('id',$request->deleteid)->delete();
         Storage::disk('s3')->delete('Testfolder/'. $filename);
+    }
+
+    function details(Request $request){
+        $id=Hashids_decode($request->id);
+        $projects = Project::where('id',$id)->first();
+
+        try{
+            if(Auth::user()->id == $projects->user_id){
+                $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
+                $doc= projectfile::where('project_id', $id)->get();
+
+
+                return view('customer/project_details',compact('projects','projectaddress','doc'));
+            }else{
+                return redirect('/customer/projects');
+            }
+        } catch (\Exception $e){
+            return redirect('/customer/projects');
+        }
+
     }
 
 

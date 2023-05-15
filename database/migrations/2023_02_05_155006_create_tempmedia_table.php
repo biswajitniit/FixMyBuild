@@ -17,6 +17,7 @@ class CreateTempmediaTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->unsigned();
             $table->string('sessionid')->nullable();
+            $table->string('file_type', 10);
             $table->string('filename')->nullable();
             $table->string('file_extension')->nullable();
             $table->string('url')->nullable();

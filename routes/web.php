@@ -8,7 +8,6 @@ use App\Http\Controllers\MicrosoftController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\LogoutController;
-//use App\Http\Controllers\Dashboard\UserdashboardController;
 use App\Http\Controllers\LogoutsController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Admin\User\UserController;
@@ -19,6 +18,7 @@ use App\Http\Controllers\Admin\Terms\TermsController;
 use App\Http\Controllers\Admin\Builder\BuildercategoryController;
 use App\Http\Controllers\Admin\Cms\CmsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\NotificationController;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -73,11 +73,16 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
     Route::post('/user/loginpost', [LoginController::class,'loginpost'])->name('user.loginpost');
     Route::get('/user/registration', [HomeController::class,'registration'])->name('user.registration');
     Route::post('/user/save-user', [HomeController::class,'save_user'])->name('user.save-user');
+    Route::get('account/verify/{token}', [HomeController::class, 'verifyAccount'])->name('user.verify');
+
+
 
     Route::get('/about-us', [HomeController::class,'about_us'])->name('about-us');
     Route::get('/contact-us', [HomeController::class,'contact_us'])->name('contact-us');
     Route::get('/privacy-policy', [HomeController::class,'privacy_policy'])->name('privacy-policy');
     Route::get('/termspage/{pageid}', [HomeController::class,'termspage'])->name('termspage');
+    Route::get('/terms-of-service', [HomeController::class,'terms_of_service'])->name('terms-of-service');
+
 
     Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
     Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
@@ -153,18 +158,19 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
         Route::get('profile', [CustomerController::class,'customer_profile'])->name('customer.profile');
         Route::get('project', [CustomerController::class,'customer_project'])->name('customer.project');
-        Route::get('notifications', [CustomerController::class,'customer_notifications'])->name('customer.notifications');
         Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
+
+        Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
 
 
         Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
         Route::post('deletecustomermediafiles', [CustomerController::class,'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
 
-        Route::post('changepassword', [CustomerController::class,'change_password'])->name('customer.changepassword');
-        Route::put('updatename', [CustomerController::class,'update_name'])->name('customer.updatename');
-        Route::put('updatephone', [CustomerController::class,'update_phone'])->name('customer.updatephone');
-        Route::put('updateavatar', [CustomerController::class,'update_avatar'])->name('customer.updateavatar');
+        // Notification Route
+        Route::get('/notification', [NotificationController::class,'index'])->name('customer.notifications.index');
+        Route::post('/notification/data_store', [NotificationController::class,'data_store'])->name('notifications.data_store');
+        Route::post('/notification/data_fetch', [NotificationController::class,'get_notification_data'])->name('notifications.data_fetch');
         /**
         * Logout Route
         */
@@ -181,4 +187,6 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('get-company-vat-details', [TradepersionDashboardController::class, 'get_company_vat_details']);
 
     });
+
+    Route::delete('/users/users-delete_account', [UserController::class,'delete_account'])->name('user.user-delete-account');
 });

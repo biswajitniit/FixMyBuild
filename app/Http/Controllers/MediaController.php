@@ -27,10 +27,10 @@ class MediaController extends Controller
         $spath = Storage::disk('s3')->url('Testfolder/'.$filename_with_extention);
 
         $tempmedia = new Tempmedia();
-        $tempmedia->user_id         = Auth::user()->id;
-        $tempmedia->filename        = $filename_with_extention;
-        $tempmedia->file_extension  = 'mkv';
-        $tempmedia->url             = $spath;
+        $tempmedia->user_id           = Auth::user()->id;
+        $tempmedia->filename          = $filename_with_extention;
+        $tempmedia->file_extension    = 'mkv';
+        $tempmedia->url               = $spath;
         $tempmedia->file_created_date = date('Y-m-d');
         $tempmedia->save();
 
