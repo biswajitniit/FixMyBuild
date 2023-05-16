@@ -171,6 +171,13 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/notification', [NotificationController::class,'index'])->name('customer.notifications.index');
         Route::post('/notification/data_store', [NotificationController::class,'data_store'])->name('notifications.data_store');
         Route::post('/notification/data_fetch', [NotificationController::class,'get_notification_data'])->name('notifications.data_fetch');
+
+        Route::put('updatecustomeravatar', [CustomerController::class,'update_avatar'])->name('customer.updateavatar');
+        Route::put('updatecustomername', [CustomerController::class,'update_name'])->name('customer.updatename');
+        Route::post('changecustomerpassword', [CustomerController::class,'change_password'])->name('customer.changepassword');
+        Route::put('updatecustomerphone', [CustomerController::class,'update_phone'])->name('customer.updatephone');
+
+
         /**
         * Logout Route
         */
