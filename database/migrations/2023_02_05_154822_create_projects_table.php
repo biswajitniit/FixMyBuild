@@ -16,7 +16,7 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('project_address_id');
+            //$table->unsignedBigInteger('project_address_id');
             $table->string('builder_category_id')->nullable();
             $table->string('builder_subcategory_id')->nullable();
             $table->string('forename')->nullable();
@@ -34,7 +34,7 @@ class CreateProjectsTable extends Migration
             $table->longText('notes')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('project_address_id')->references('id')->on('projectaddresses')->onDelete('cascade');
+            //$table->foreign('project_address_id')->references('id')->on('projectaddresses')->onDelete('cascade');
         });
     }
 

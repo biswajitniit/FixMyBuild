@@ -157,7 +157,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
 
         Route::get('profile', [CustomerController::class,'customer_profile'])->name('customer.profile');
-        Route::get('project', [CustomerController::class,'customer_project'])->name('customer.project');
+        Route::get('projects', [CustomerController::class,'customer_project'])->name('customer.project');
         Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
 
@@ -171,6 +171,13 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/notification', [NotificationController::class,'index'])->name('customer.notifications.index');
         Route::post('/notification/data_store', [NotificationController::class,'data_store'])->name('notifications.data_store');
         Route::post('/notification/data_fetch', [NotificationController::class,'get_notification_data'])->name('notifications.data_fetch');
+
+        Route::put('updatecustomeravatar', [CustomerController::class,'update_avatar'])->name('customer.updateavatar');
+        Route::put('updatecustomername', [CustomerController::class,'update_name'])->name('customer.updatename');
+        Route::post('changecustomerpassword', [CustomerController::class,'change_password'])->name('customer.changepassword');
+        Route::put('updatecustomerphone', [CustomerController::class,'update_phone'])->name('customer.updatephone');
+
+
         /**
         * Logout Route
         */
