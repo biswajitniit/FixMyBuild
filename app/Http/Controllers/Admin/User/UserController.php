@@ -68,6 +68,39 @@ class UserController extends Controller
             $user->delete_permanently=$request->delete_permanently;
             $user->save();
             $user->delete();
+
+           $html = view('email.email-account-delete')->with('name', $user->name)->render();
+
+                $postdata = array(
+                                'From'          => 'support@fixmybuild.com',
+                                'To'            =>  $user->email,
+                                'Subject'       => 'Fixmybuild Account Deletion',
+                                'HtmlBody'      =>  $html,
+                                'MessageStream' => 'outbound'
+                            );
+
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                  CURLOPT_URL => 'https://api.postmarkapp.com/email',
+                  CURLOPT_RETURNTRANSFER => true,
+                  CURLOPT_ENCODING => '',
+                  CURLOPT_MAXREDIRS => 10,
+                  CURLOPT_TIMEOUT => 0,
+                  CURLOPT_FOLLOWLOCATION => true,
+                  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                  CURLOPT_CUSTOMREQUEST => 'POST',
+                  CURLOPT_POSTFIELDS =>json_encode($postdata),
+                  CURLOPT_HTTPHEADER => array(
+                    'X-Postmark-Server-Token: 397dcd71-2e20-4a1d-b1fd-24bac29255dc',
+                    'Content-Type: application/json'
+                  ),
+                ));
+
+                $response = curl_exec($curl);
+                curl_close($curl);
+
+               $message = "Account delete successfully done";
             return redirect()->route('home');
         } catch (Exception $e) {
             $request->session()->flash('alert-danger', $e->getMessage());

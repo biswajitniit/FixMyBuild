@@ -24,7 +24,7 @@
                 <ul>
                     <li><a href="{{ route('customer.profile') }}">Profile</a></li>
                     <li class="active"><a href="{{ route('customer.project') }}">Projects</a></li>
-                    <li><a href="{{ route('customer.notifications') }}">Notifications</a></li>
+                    <li><a href="{{ route('customer.notifications.index') }}">Notifications</a></li>
                     <li><a href="{{ route('logout') }}">Logout</a></li>
                 </ul>
             </div>
