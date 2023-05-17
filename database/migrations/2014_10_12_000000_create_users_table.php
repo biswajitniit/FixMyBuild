@@ -31,7 +31,7 @@ class CreateUsersTable extends Migration
             $table->string('profile_image')->nullable();
             //$table->tinyInteger('steps_completed');
             $table->string('account_deletion_reason')->nullable();
-            $table->tinyInteger('delete_permanently');
+            $table->tinyInteger('delete_permanently')->default('0');
             //$table->tinyInteger('is_email_verified');
             $table->enum('status', ['Active', 'InActive'])->comment('Active,InActive');
             $table->rememberToken();

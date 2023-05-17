@@ -157,7 +157,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
 
         Route::get('profile', [CustomerController::class,'customer_profile'])->name('customer.profile');
-        Route::get('project', [CustomerController::class,'customer_project'])->name('customer.project');
+        Route::get('projects', [CustomerController::class,'customer_project'])->name('customer.project');
         Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
 
