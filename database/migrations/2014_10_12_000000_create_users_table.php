@@ -28,9 +28,15 @@ class CreateUsersTable extends Migration
             $table->enum('locked',['0', '1'])->default('0')->comment('0 = not verified, 1= its verified');
             $table->enum('customer_or_tradesperson', ['Customer', 'Tradesperson'])->comment('Customer,Tradesperson');
             $table->enum('terms_of_service', ['0', '1'])->default('0')->comment('0=not read,1=Read');
+            $table->string('profile_image')->nullable();
+            //$table->tinyInteger('steps_completed');
+            $table->string('account_deletion_reason')->nullable();
+            $table->tinyInteger('delete_permanently');
+            //$table->tinyInteger('is_email_verified');
             $table->enum('status', ['Active', 'InActive'])->comment('Active,InActive');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -41,6 +47,8 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 }
