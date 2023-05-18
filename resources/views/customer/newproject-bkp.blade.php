@@ -16,29 +16,23 @@
     </div>
 </section>
 <!--Code area end-->
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10 offset-md-1">
-                @if($errors->any())
-                    <div class="alert alert-danger mt-15">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
 
-                @if(session()->has('message'))
-                    <div class="alert alert-success mt-15">
-                        {{ session()->get('message') }}
-                    </div>
-                @endif
-            </div>
-        </div>
+@if($errors->any())
+    <div class="alert alert-danger mt-15">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
-</section>
+@endif
+
+@if(session()->has('message'))
+    <div class="alert alert-success mt-15">
+        {{ session()->get('message') }}
+    </div>
+@endif
+
 <!--Code area start-->
 <section class="pb-5">
     <div class="container">
@@ -92,10 +86,7 @@
                                 <div class="col-md-10 post_code">
                                     <div class="form-control d-inline">
                                         <input type="text" class="col-6 mt-2" name="postcode" id="postcode" placeholder="Postcode" />
-                                        <input type="hidden" name="zipcode_selected_address_line_one" id="zipcode_selected_address_line_one" value="">
-                                        <input type="hidden" name="zipcode_selected_address_line_two" id="zipcode_selected_address_line_two" value="">
-                                        <input type="hidden" name="zipcode_selected_town_city" id="zipcode_selected_town_city" value="">
-                                        <input type="hidden" name="zipcode_selected_postcode" id="zipcode_selected_postcode" value="">
+                                        <input type="hidden" name="zipcode_selected" id="zipcode_selected" value="">
                                         {{-- <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger col-4 pull-right">Find me</a> --}}
                                         <a class="btn btn-danger col-4 pull-right postcodefind">Find me</a>
                                     </div>
@@ -427,20 +418,9 @@
     });
 
     function Get_zipcode(){
-        // var zipcode = $('input[name="zipcode"]:checked').val();
-        // $("#zipcode_selected").attr('value',zipcode);
-        // $("#selected_post_code_html").html(zipcode);
-        // $('#exampleModal').modal('toggle');
-
         var zipcode = $('input[name="zipcode"]:checked').val();
-
-        $("#zipcode_selected_address_line_one").attr('value',zipcode.split(",")[0]);
-        $("#zipcode_selected_address_line_two").attr('value',zipcode.split(",")[1]);
-        $("#zipcode_selected_town_city").attr('value',zipcode.split(",")[2]);
-        $("#zipcode_selected_postcode").attr('value',zipcode.split(",")[3]);
-
+        $("#zipcode_selected").attr('value',zipcode);
         $("#selected_post_code_html").html(zipcode);
-        $('#exampleModal').modal('toggle');
     }
 
     gUMbtn1 = id('gUMbtn1'),

@@ -42,7 +42,7 @@ class CustomerController extends Controller
     // }
     public function customer_storeproject(Request $request){
 
-        if($request->choseaddresstype == "chosenewaddress"){
+        if($request->addresstype == 1){ // Enter your postcode
 
             // $this->validate($request, [
             //     'name'                          => 'required',
@@ -60,18 +60,11 @@ class CustomerController extends Controller
             //     'customer_or_tradesperson.required' => 'Please choose whether you are a Customer or a Tradeperson',
             // ]);
 
-            $address = new Projectaddresses();
-                $address->user_id           = Auth::user()->id;
-                $address->address_line_one  = $request['address_line_one'];
-                $address->address_line_two  = $request['address_line_two'];
-                $address->town_city         = $request['town_city'];
-                $address->postcode          = $request['postcode'];
-                $address->save();
-            $addressid = $address->id;
+
 
             $project = new Project();
                 $project->user_id                   =  Auth::user()->id;
-                $project->project_address_id        =  $addressid;
+                //$project->project_address_id        =  $addressid;
                 $project->forename                  =  $request['forename'];
                 $project->surname                   =  $request['surname'];
                 $project->project_name              =  $request['project_name'];
@@ -82,10 +75,72 @@ class CustomerController extends Controller
                 $project->Status                    =  'submitted_for_review';
             $project->save();
 
+
+            $address = new Projectaddresses();
+                $address->project_id        = $project->id;
+                $address->address_line_one  = $request['zipcode_selected_address_line_one'];
+                $address->address_line_two  = $request['zipcode_selected_address_line_two'];
+                $address->town_city         = $request['zipcode_selected_town_city'];
+                $address->postcode          = $request['zipcode_selected_postcode'];
+            $address->save();
+
+            $sessionmedia = Tempmedia::where('user_id',Auth::user()->id)->get();
+            if($sessionmedia){
+                foreach($sessionmedia as $row){
+                    $pfile = new Projectfile();
+                        $pfile->project_id          = $project->id;
+                        $pfile->file_type           = $row->file_type;
+                        $pfile->file_original_name  = $row->file_original_name;
+                        $pfile->filename            = $row->filename;
+                        $pfile->file_extension      = $row->file_extension;
+                        $pfile->url                 = $row->url;
+                        $pfile->url                 = $row->url;
+                    $pfile->save();
+
+                    Tempmedia::where('id',$row->id)->delete();
+                }
+            }
+
             return redirect()->back()->with('message', 'Project added successfully.');
 
         }else{
+            $project = new Project();
+                $project->user_id                   =  Auth::user()->id;
+                //$project->project_address_id        =  $addressid;
+                $project->forename                  =  $request['forename'];
+                $project->surname                   =  $request['surname'];
+                $project->project_name              =  $request['project_name'];
+                $project->description               =  $request['description'];
+                $project->contact_mobile_no         =  $request['contact_mobile_no'];
+                $project->contact_home_phone        =  $request['contact_home_phone'];
+                $project->contact_email             =  $request['contact_email'];
+                $project->Status                    =  'submitted_for_review';
+            $project->save();
 
+            $address = new Projectaddresses();
+                $address->project_id        = $project->id;
+                $address->address_line_one  = $request['address_line_one'];
+                $address->address_line_two  = $request['address_line_two'];
+                $address->town_city         = $request['town_city'];
+                $address->postcode          = $request['postcode'];
+            $address->save();
+
+            $sessionmedia = Tempmedia::where('user_id',Auth::user()->id)->get();
+            if($sessionmedia){
+                foreach($sessionmedia as $row){
+                    $pfile = new Projectfile();
+                        $pfile->project_id          = $project->id;
+                        $pfile->file_type           = $row->file_type;
+                        $pfile->file_original_name  = $row->file_original_name;
+                        $pfile->filename            = $row->filename;
+                        $pfile->file_extension      = $row->file_extension;
+                        $pfile->url                 = $row->url;
+                        $pfile->url                 = $row->url;
+                    $pfile->save();
+
+                    Tempmedia::where('id',$row->id)->delete();
+                }
+            }
         }
     }
 
