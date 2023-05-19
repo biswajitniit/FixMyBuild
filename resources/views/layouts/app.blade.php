@@ -37,6 +37,7 @@
 
       <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
       <link href="{{ asset('frontend/customcss/custom.css') }}" rel="stylesheet">
+      {{-- <link rel="stylesheet" href="{{ asset('frontend/dropzone/dropzone.min.css') }}"> --}}
 
 
       <!-- Matomo -->
@@ -257,7 +258,7 @@
     <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
     <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
-
+    {{-- <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script> --}}
     <script>
     tinymce.init({
         selector: 'textarea#editor',
