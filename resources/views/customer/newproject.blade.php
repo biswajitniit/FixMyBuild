@@ -1,5 +1,7 @@
 @extends('layouts.app')
+@push('styles')
 
+@endpush
 @section('content')
 <!--Code area start-->
 <section>
@@ -403,7 +405,7 @@
                     <div class="col-md-6">
                         <form method="post" action="{{route('dropzonesave')}}" enctype="multipart/form-data" class="dropzone" id="dropzone">
                             @csrf
-                            <div class="text-center upload_wrap">
+                            <div class="text-center upload_wrap dz-message">
                                 <img src="{{ asset('frontend/img/upload.svg') }}" alt="">
                                 <p>Drag and drop files here</p>
                                 <h4>OR</h4>
@@ -416,7 +418,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light">Upload</button>
+                <button type="button" id="uploadfiles" class="btn btn-light">Upload</button>
             </div>
         </div>
         </div>
@@ -436,6 +438,87 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script language="JavaScript">
 
+    Dropzone.autoDiscover = false;
+    var currentFile = null;
+    var myDropzone = new Dropzone(".dropzone", {
+        maxFiles:10,
+        autoProcessQueue: false,
+        clickable: "#file_upload_btn",
+        dictDefaultMessage: "Drag and drop a file here",
+        parallelUploads: 10, // Number of files process at a time (default 2)
+        addRemoveLinks: true,
+        removedfile: function(file)
+        {
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this item?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var name = file.upload.filename;
+                    $.ajax({
+                        headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                        type: 'POST',
+                        url: '{{ url("dropzonedestroy") }}',
+                        data: {filename: name},
+                        success: function (data){
+                            //console.log("File has been successfully removed!!");
+                            //alert('File has been successfully removed!!'); return false;
+                            Swal.fire({
+                                //position: 'top-end',
+                                icon: 'warning',
+                                title: 'File has been successfully removed!!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        },
+                        error: function(e) {
+                            console.log(e);
+                        }});
+                        var fileRef;
+                        return (fileRef = file.previewElement) != null ?
+                        fileRef.parentNode.removeChild(file.previewElement) : void 0;
+                }
+            })
+        },
+         success: function (file, response) {
+            //console.log(response);
+
+            Swal.fire({
+                                //position: 'top-end',
+                                icon: 'success',
+                                title: 'File has been successfully uploaded!!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+            $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
+        },
+        uploadprogress: function(file, progress, bytesSent) {
+            if (file.previewElement) {
+                // var progressElement = file.previewElement.querySelector("[data-dz-uploadprogress]");
+                // progressElement.style.width = progress + "%";
+                // progressElement.querySelector(".progress-text").textContent = progress + "%";
+
+                swal.fire({
+                    title:"",
+                    text:"Loading...",
+                    icon: "{{ asset('frontend/dropzone/loading2.gif') }}",
+                });
+            }
+        },
+
+    });
+
+    $('#uploadfiles').click(function(){
+        myDropzone.processQueue();
+        $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
+    });
 
     $(document).ready(function(){
         $("#savenewproject").validate({
@@ -667,45 +750,6 @@
 
 
 
-
-    Dropzone.options.dropzone =
-    {
-        maxFilesize: 1024,
-        resizeQuality: 1.0,
-        //acceptedFiles: ".jpeg,.jpg,.png,.gif",
-        acceptedFiles: 'image/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.tsv,.ppt,.pptx,.pages,.odt,.rtf,video/x-ms-asf,video/x-ms-wmv,video/x-ms-wmx,video/x-ms-wm,video/avi,video/divx,video/x-flv,video/quicktime,video/mpeg,video/mp4,video/ogg,video/webm,video/x-matroska,video/3gpp,video/3gpp2,text/plain,text/csv,text/tab-separated-values,text/calendar,text/richtext,text/css,text/html,text/vtt,application/ttaf+xml,audio/mpeg,audio/aac,audio/x-realaudio,audio/wav,audio/ogg,audio/flac,audio/midi,audio/x-ms-wma,audio/x-ms-wax,audio/x-matroska,application/rtf,application/javascript,application/pdf,application/x-shockwave-flash,application/java,application/x-tar,application/zip,application/x-gzip,application/rar,application/x-7z-compressed,application/x-msdownload,application/octet-stream,application/octet-stream,application/msword,application/vnd.ms-powerpoint,application/vnd.ms-write,application/vnd.ms-excel,application/vnd.ms-access,application/vnd.ms-project,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-word.document.macroEnabled.12,application/vnd.openxmlformats-officedocument.wordprocessingml.template,application/vnd.ms-word.template.macroEnabled.12,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel.sheet.macroEnabled.12,application/vnd.ms-excel.sheet.binary.macroEnabled.12,application/vnd.openxmlformats-officedocument.spreadsheetml.template,application/vnd.ms-excel.template.macroEnabled.12,application/vnd.ms-excel.addin.macroEnabled.12,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-powerpoint.presentation.macroEnabled.12,application/vnd.openxmlformats-officedocument.presentationml.slideshow,application/vnd.ms-powerpoint.slideshow.macroEnabled.12,application/vnd.openxmlformats-officedocument.presentationml.template,application/vnd.ms-powerpoint.template.macroEnabled.12,application/vnd.ms-powerpoint.addin.macroEnabled.12,application/vnd.openxmlformats-officedocument.presentationml.slide,application/vnd.ms-powerpoint.slide.macroEnabled.12,application/onenote,application/oxps,application/vnd.ms-xpsdocument,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,application/vnd.oasis.opendocument.graphics,application/vnd.oasis.opendocument.chart,application/vnd.oasis.opendocument.database,application/vnd.oasis.opendocument.formula,application/wordperfect,application/vnd.apple.keynote,application/vnd.apple.numbers,application/vnd.apple.pages',
-        addRemoveLinks: true,
-        timeout: 60000,
-        clickable: "#file_upload_btn",
-        removedfile: function(file)
-        {
-            var name = file.upload.filename;
-            //alert(name); return false;
-            $.ajax({
-                headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                type: 'POST',
-                url: '{{ url("dropzonedestroy") }}',
-                data: {filename: name},
-                success: function (data){
-                    console.log("File has been successfully removed!!");
-                    //alert('File has been successfully removed!!'); return false;
-                },
-                error: function(e) {
-                    console.log(e);
-                }});
-                var fileRef;
-                return (fileRef = file.previewElement) != null ?
-                fileRef.parentNode.removeChild(file.previewElement) : void 0;
-        },
-        success: function (file, response) {
-            console.log(response);
-        },
-        error: function (file, response) {
-            return false;
-        }
-    };
 
 
 
