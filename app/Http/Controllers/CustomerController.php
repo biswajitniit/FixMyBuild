@@ -256,7 +256,8 @@ class CustomerController extends Controller
     function update_avatar(Request $request){
         try{
             $user = Auth::user();
-            $oldImage = $user->profile_image;
+            $oldImage = explode('/',$user->profile_image);
+            $oldImage = end($oldImage);
             $image = $request->file('file');
             $imageName = $request->file('file')->getClientOriginalName();
             $extension = $image->getClientOriginalExtension();
@@ -266,7 +267,7 @@ class CustomerController extends Controller
             $user = Auth::user();
             $user->profile_image = $path;
             $user->update();
-            // Storage::disk('s3')->delete('');
+            Storage::disk('s3')->delete('Testfolder/'. $oldImage);
             Auth::setUser($user);
             return response()->json(['image_link'=>$user->profile_image]);
         } catch(\Exception $e) {

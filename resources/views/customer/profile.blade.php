@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
-@push('styles')
-    <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
-@endpush
+
 
 @section('content')
  <!--Code area start-->
