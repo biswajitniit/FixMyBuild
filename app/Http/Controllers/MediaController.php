@@ -30,6 +30,7 @@ class MediaController extends Controller
         $tempmedia->user_id           = Auth::user()->id;
         $tempmedia->filename          = $filename_with_extention;
         $tempmedia->file_extension    = 'mkv';
+        $tempmedia->file_type         = "Video";
         $tempmedia->url               = $spath;
         $tempmedia->file_created_date = date('Y-m-d');
         $tempmedia->save();
@@ -64,6 +65,7 @@ class MediaController extends Controller
         $tempmedia = new Tempmedia();
         $tempmedia->user_id         = Auth::user()->id;
         $tempmedia->filename        = $fileName;
+        $tempmedia->file_type       = "image";
         $tempmedia->file_extension  = 'png';
         $tempmedia->url             = $spath;
         $tempmedia->file_created_date = date('Y-m-d');
@@ -105,6 +107,7 @@ class MediaController extends Controller
         $tempmedia->user_id         = Auth::user()->id;
         $tempmedia->filename        = $filename;
         $tempmedia->file_extension  = $extension;
+        $tempmedia->file_type       = "Document";
         $tempmedia->url             = $path;
         $tempmedia->file_created_date = date('Y-m-d');
         $tempmedia->save();
