@@ -25,9 +25,12 @@ use League\Flysystem\File;
 
 class CustomerController extends Controller
 {
-    //
     public function customer_newproject(Request $request){
-        return view("customer/newproject");
+        if(Auth::user()->is_email_verified == 0){
+            return view("customer/profile");
+        }else{
+            return view("customer/newproject");
+        }
     }
     public function customer_profile(Request $request){
         return view("customer/profile");

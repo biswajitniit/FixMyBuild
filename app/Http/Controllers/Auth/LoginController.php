@@ -56,14 +56,14 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
-		if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password, 'is_email_verified' => 1])) {
+		if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])) {
             if (Auth::user()->customer_or_tradesperson == "Customer")
             {
                 if(Auth::user()->status == 'Active'){
                     return redirect()->intended('/');
                 }else{
                     $errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
-		            return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
+                    return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
                 }
                 // The user is logged in Customer...
                // return redirect()->intended('/customer/profile');
