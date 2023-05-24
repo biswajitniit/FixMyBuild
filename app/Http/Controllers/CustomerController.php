@@ -42,40 +42,35 @@ class CustomerController extends Controller
     // }
     public function customer_storeproject(Request $request){
 
+        $this->validate($request, [
+            'forename'                        => 'required',
+            'surname'                         => 'required',
+            'project_name'                    => 'required',
+            'contact_mobile_no'               => 'required',
+            'contact_email'                   => 'required',
+        ],[
+            'forename.required'          => 'Please enter forename',
+            'surname.required'           => 'Please enter surname',
+            'project_name.required'      => 'Please enter project name',
+            'contact_mobile_no.required' => 'Please enter mobile',
+            'contact_email.required'     => 'Please enter contact email',
+        ]);
+
+
+        $project = new Project();
+            $project->user_id                   =  Auth::user()->id;
+            //$project->project_address_id        =  $addressid;
+            $project->forename                  =  $request['forename'];
+            $project->surname                   =  $request['surname'];
+            $project->project_name              =  $request['project_name'];
+            $project->description               =  $request['description'];
+            $project->contact_mobile_no         =  $request['contact_mobile_no'];
+            $project->contact_home_phone        =  $request['contact_home_phone'];
+            $project->contact_email             =  $request['contact_email'];
+            $project->Status                    =  'submitted_for_review';
+        $project->save();
+
         if($request->addresstype == 1){ // Enter your postcode
-
-            // $this->validate($request, [
-            //     'name'                          => 'required',
-            //     'email'                         => 'required|unique:users|max:191',
-            //     'phone'                         => 'required',
-            //     'password'                      => 'required|min:6|confirmed',
-            //     'password_confirmation'         => 'required|min:6',
-            //     'customer_or_tradesperson'      => 'required',
-            // ],[
-            //     'name.required' => 'Please enter your name',
-            //     'email.required' => 'Please enter your email',
-            //     'phone.required' => 'Please enter your phone',
-            //     'password.required' => 'Please enter your password',
-            //     'password_confirmation.required' => 'Please enter your confirm password',
-            //     'customer_or_tradesperson.required' => 'Please choose whether you are a Customer or a Tradeperson',
-            // ]);
-
-
-
-            $project = new Project();
-                $project->user_id                   =  Auth::user()->id;
-                //$project->project_address_id        =  $addressid;
-                $project->forename                  =  $request['forename'];
-                $project->surname                   =  $request['surname'];
-                $project->project_name              =  $request['project_name'];
-                $project->description               =  $request['description'];
-                $project->contact_mobile_no         =  $request['contact_mobile_no'];
-                $project->contact_home_phone        =  $request['contact_home_phone'];
-                $project->contact_email             =  $request['contact_email'];
-                $project->Status                    =  'submitted_for_review';
-            $project->save();
-
-
             $address = new Projectaddresses();
                 $address->project_id        = $project->id;
                 $address->address_line_one  = $request['zipcode_selected_address_line_one'];
@@ -83,40 +78,7 @@ class CustomerController extends Controller
                 $address->town_city         = $request['zipcode_selected_town_city'];
                 $address->postcode          = $request['zipcode_selected_postcode'];
             $address->save();
-
-            $sessionmedia = Tempmedia::where('user_id',Auth::user()->id)->get();
-            if($sessionmedia){
-                foreach($sessionmedia as $row){
-                    $pfile = new Projectfile();
-                        $pfile->project_id          = $project->id;
-                        $pfile->file_type           = $row->file_type;
-                        $pfile->file_original_name  = $row->file_original_name;
-                        $pfile->filename            = $row->filename;
-                        $pfile->file_extension      = $row->file_extension;
-                        $pfile->url                 = $row->url;
-                        $pfile->url                 = $row->url;
-                    $pfile->save();
-
-                    Tempmedia::where('id',$row->id)->delete();
-                }
-            }
-
-            return redirect()->back()->with('message', 'Project added successfully.');
-
         }else{
-            $project = new Project();
-                $project->user_id                   =  Auth::user()->id;
-                //$project->project_address_id        =  $addressid;
-                $project->forename                  =  $request['forename'];
-                $project->surname                   =  $request['surname'];
-                $project->project_name              =  $request['project_name'];
-                $project->description               =  $request['description'];
-                $project->contact_mobile_no         =  $request['contact_mobile_no'];
-                $project->contact_home_phone        =  $request['contact_home_phone'];
-                $project->contact_email             =  $request['contact_email'];
-                $project->Status                    =  'submitted_for_review';
-            $project->save();
-
             $address = new Projectaddresses();
                 $address->project_id        = $project->id;
                 $address->address_line_one  = $request['address_line_one'];
@@ -124,24 +86,26 @@ class CustomerController extends Controller
                 $address->town_city         = $request['town_city'];
                 $address->postcode          = $request['postcode'];
             $address->save();
+        }
 
-            $sessionmedia = Tempmedia::where('user_id',Auth::user()->id)->get();
-            if($sessionmedia){
-                foreach($sessionmedia as $row){
-                    $pfile = new Projectfile();
-                        $pfile->project_id          = $project->id;
-                        $pfile->file_type           = $row->file_type;
-                        $pfile->file_original_name  = $row->file_original_name;
-                        $pfile->filename            = $row->filename;
-                        $pfile->file_extension      = $row->file_extension;
-                        $pfile->url                 = $row->url;
-                        $pfile->url                 = $row->url;
-                    $pfile->save();
+        $sessionmedia = Tempmedia::where('user_id',Auth::user()->id)->get();
+        if($sessionmedia){
+            foreach($sessionmedia as $row){
+                $pfile = new Projectfile();
+                    $pfile->project_id          = $project->id;
+                    $pfile->file_type           = $row->file_type;
+                    $pfile->file_original_name  = $row->file_original_name;
+                    $pfile->filename            = $row->filename;
+                    $pfile->file_extension      = $row->file_extension;
+                    $pfile->url                 = $row->url;
+                    $pfile->url                 = $row->url;
+                $pfile->save();
 
-                    Tempmedia::where('id',$row->id)->delete();
-                }
+                Tempmedia::where('id',$row->id)->delete();
             }
         }
+
+        return redirect()->back()->with('message', 'Project added successfully.');
     }
 
     function getcustomermediafiles(){
