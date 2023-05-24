@@ -91,7 +91,7 @@ class ReviewerController extends Controller
             $projectnotes->notes       =  $request->post('notes_for_tradespeople');
         $projectnotes->save();
 
-        return redirect()->route('final-review', [$request->post('projectid')]);
+        return redirect()->route('final-review', [Hashids_encode($request->post('projectid'))]);
 
     }
 
@@ -102,7 +102,7 @@ class ReviewerController extends Controller
 
     public function awaiting_your_review_final_save(Request $request){
         $data = array(
-            'reviewer_status'          => 'Approve'
+            //'reviewer_status'          => 'Approve'
         );
         Project::where('id', $request->projectid)->update($data);
         return redirect()->route('admin/project/awaiting-your-review');
