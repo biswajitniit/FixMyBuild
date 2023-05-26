@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminloginController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
@@ -16,6 +15,7 @@ use App\Http\Controllers\Tradepersion\TradepersionDashboardController;
 use App\Http\Controllers\Admin\Reviewer\ReviewerController;
 use App\Http\Controllers\Admin\Terms\TermsController;
 use App\Http\Controllers\Admin\Builder\BuildercategoryController;
+use App\Http\Controllers\Admin\Builder\BuildersubcategoryController;
 use App\Http\Controllers\Admin\Cms\CmsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationController;
@@ -138,13 +138,13 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
 
 
-        Route::get('getbuildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@getbuildercategory')->name('getbuildercategory');
-        Route::delete('getbuildercategory/delete', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@delete')->name('getbuildercategory.delete');
-        Route::resource('buildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController');
+        Route::get('getbuildercategory', [BuildercategoryController::class,'getbuildercategory'])->name('getbuildercategory');
+        Route::delete('getbuildercategory/delete', [BuildercategoryController::class,'delete'])->name('getbuildercategory.delete');
+        Route::resource('buildercategory', BuildercategoryController::class);
 
-        Route::get('getbuildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController@getbuildersubcategory')->name('getbuildersubcategory');
-        Route::delete('getbuildersubcategory/delete', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController@delete')->name('getbuildersubcategory.delete');
-        Route::resource('buildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController');
+        Route::get('getbuildersubcategory', [BuildersubcategoryController::class,'getbuildersubcategory'])->name('getbuildersubcategory');
+        Route::delete('getbuildersubcategory/delete', [BuildersubcategoryController::class,'delete'])->name('getbuildersubcategory.delete');
+        Route::resource('buildersubcategory', BuildersubcategoryController::class);
 
 
         Route::resource('admin/cms', 'App\Http\Controllers\Admin\Cms\CmsController');
@@ -196,4 +196,6 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
     });
 
     Route::delete('/users/users-delete_account', [UserController::class,'delete_account'])->name('user.user-delete-account');
+    Route::post('/users/verify-email', [UserController::class,'verify_mail'])->name('user.verify_mail');
+
 });

@@ -181,7 +181,7 @@
                                             @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
                                              <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
                                              <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
+                                             <li><a class="dropdown-item" @if(Auth::user()->is_email_verified == 0) href="javascript:void(0)" @else href="{{ route('customer.newproject') }}" @endif>New project</a></li>
                                              <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                              @endif
                                              @if(Auth::user()->customer_or_tradesperson == 'Tradepersion' && Auth::user()->status == 'Active')

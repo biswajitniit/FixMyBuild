@@ -1,5 +1,7 @@
 @extends('layouts.app')
+@push('styles')
 
+@endpush
 @section('content')
 <!--Code area start-->
 <section>
@@ -123,11 +125,6 @@
                                 </div>
                             </div>
                             <div class="col-md-6 last_ua">
-                                {{-- <div class="form-check mb-2">
-                                    <input type="radio" class="form-check-input mb" id="radio1" name="choseaddresstype" value="choseexistaddress" checked />
-                                    <h5>Last used address</h5>
-                                </div>
-                                <p>2972 Westheimer Rd. Santa Ana, Illinois 85486</p> --}}
                                 <div class="form-check mt-3">
                                     <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="2"/>
                                     <h5>Or type your address</h5>
@@ -150,7 +147,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="postcode" placeholder="Postcode" name="postcode"/>
+                                            <input type="text" class="form-control" id="address_type_postcode" placeholder="Postcode" name="postcode"/>
                                         </div>
                                     </div>
                                 </div>
@@ -260,7 +257,7 @@
                                     <div class="col-md-4">
                                         <div class="row">
 
-                                            <div class="col-9 pl-0"><input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="phone"/></div>
+                                            <div class="col-9 pl-0"><input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no"/></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -270,7 +267,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="email" name="contact_email" class="form-control" id="" placeholder="Email" />
+                                            <input type="email" name="contact_email" class="form-control" id="contact_email" placeholder="Email" />
                                         </div>
                                     </div>
                                 </div>
@@ -403,7 +400,7 @@
                     <div class="col-md-6">
                         <form method="post" action="{{route('dropzonesave')}}" enctype="multipart/form-data" class="dropzone" id="dropzone">
                             @csrf
-                            <div class="text-center upload_wrap">
+                            <div class="text-center upload_wrap dz-message">
                                 <img src="{{ asset('frontend/img/upload.svg') }}" alt="">
                                 <p>Drag and drop files here</p>
                                 <h4>OR</h4>
@@ -416,7 +413,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light">Upload</button>
+                <button type="button" id="uploadfiles" class="btn btn-light">Upload</button>
             </div>
         </div>
         </div>
@@ -436,6 +433,87 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script language="JavaScript">
 
+    Dropzone.autoDiscover = false;
+    var currentFile = null;
+    var myDropzone = new Dropzone(".dropzone", {
+        maxFiles:10,
+        autoProcessQueue: false,
+        clickable: "#file_upload_btn",
+        dictDefaultMessage: "Drag and drop a file here",
+        parallelUploads: 10, // Number of files process at a time (default 2)
+        addRemoveLinks: true,
+        removedfile: function(file)
+        {
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this item?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var name = file.upload.filename;
+                    $.ajax({
+                        headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                        type: 'POST',
+                        url: '{{ url("dropzonedestroy") }}',
+                        data: {filename: name},
+                        success: function (data){
+                            //console.log("File has been successfully removed!!");
+                            //alert('File has been successfully removed!!'); return false;
+                            Swal.fire({
+                                //position: 'top-end',
+                                icon: 'warning',
+                                title: 'File has been successfully removed!!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        },
+                        error: function(e) {
+                            console.log(e);
+                        }});
+                        var fileRef;
+                        return (fileRef = file.previewElement) != null ?
+                        fileRef.parentNode.removeChild(file.previewElement) : void 0;
+                }
+            })
+        },
+         success: function (file, response) {
+            //console.log(response);
+
+                Swal.fire({
+                        //position: 'top-end',
+                        icon: 'success',
+                        title: 'File has been successfully uploaded!!',
+                        showConfirmButton: false,
+                        timer: 1500
+                });
+            $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
+        },
+        uploadprogress: function(file, progress, bytesSent) {
+            if (file.previewElement) {
+                // var progressElement = file.previewElement.querySelector("[data-dz-uploadprogress]");
+                // progressElement.style.width = progress + "%";
+                // progressElement.querySelector(".progress-text").textContent = progress + "%";
+
+                swal.fire({
+                    title:"",
+                    text:"Loading...",
+                    icon: "{{ asset('frontend/dropzone/loading2.gif') }}",
+                });
+            }
+        },
+
+    });
+
+    $('#uploadfiles').click(function(){
+        myDropzone.processQueue();
+        $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
+    });
 
     $(document).ready(function(){
         $("#savenewproject").validate({
@@ -444,16 +522,24 @@
                 forename: "required",
                 surname: "required",
                 project_name: "required",
+                contact_mobile_no: "required",
+                contact_email: "required",
             },
             messages: {
                 fullname: {
                     forename: "Please enter forename",
                 },
                 surname: {
-                    forename: "Please enter surname",
+                    surname: "Please enter surname",
                 },
-                surname: {
+                project_name: {
                     project_name: "Please enter project name",
+                },
+                contact_mobile_no: {
+                    contact_mobile_no: "Please enter mobile",
+                },
+                contact_email: {
+                    contact_email: "Please enter contact email",
                 },
             },
 
@@ -470,8 +556,8 @@
 
         $("#zipcode_selected_address_line_one").attr('value',zipcode.split(",")[0]);
         $("#zipcode_selected_address_line_two").attr('value',zipcode.split(",")[1]);
-        $("#zipcode_selected_town_city").attr('value',zipcode.split(",")[2]);
-        $("#zipcode_selected_postcode").attr('value',zipcode.split(",")[3]);
+        $("#zipcode_selected_town_city").attr('value',zipcode.split(",")[2]+','+ zipcode.split(",")[3]);
+        $("#zipcode_selected_postcode").attr('value',$("#postcode").val());
 
         $("#selected_post_code_html").html(zipcode);
         $('#exampleModal').modal('toggle');
@@ -527,7 +613,6 @@
                     //url: 'https://api.getAddress.io/find/'+$postcode+'?api-key=8IiS7wYTGUGowt0cbGIWeA37601',
                     url: 'https://api.getAddress.io/find/'+$postcode+'?api-key=8IiS7wYTGUGowt0cbGIWeA37601&expand=true',
                     success: function(data){
-
                         var  addresshtml ='';
                         var counter = 1;
                         $.each(data.addresses, function(index, value) {
@@ -552,12 +637,29 @@
                         $(".zipcode-modal-body").html('<div class="wrap"><div class="search"><button type="submit" class="searchButton"><svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.59174 2.00025C7.01698 2.00025 5.50672 2.68507 4.3932 3.90406C3.27968 5.12305 2.65411 6.77635 2.65411 8.50025C2.65411 10.2242 3.27968 11.8775 4.3932 13.0964C5.50672 14.3154 7.01698 15.0003 8.59174 15.0003C10.1665 15.0003 11.6768 14.3154 12.7903 13.0964C13.9038 11.8775 14.5294 10.2242 14.5294 8.50025C14.5294 6.77635 13.9038 5.12305 12.7903 3.90406C11.6768 2.68507 10.1665 2.00025 8.59174 2.00025ZM0.827148 8.50025C0.827254 7.14485 1.12345 5.80912 1.69102 4.60451C2.25859 3.3999 3.08109 2.36135 4.08988 1.57549C5.09867 0.789633 6.2645 0.279263 7.49012 0.0869618C8.71573 -0.10534 9.96558 0.0260029 11.1354 0.470032C12.3052 0.914061 13.3611 1.6579 14.2149 2.63949C15.0687 3.62108 15.6957 4.81196 16.0435 6.11277C16.3914 7.41358 16.4501 8.7866 16.2147 10.1173C15.9792 11.448 15.4565 12.6977 14.6901 13.7623L18.0262 17.4143C18.1926 17.6029 18.2846 17.8555 18.2826 18.1177C18.2805 18.3799 18.1844 18.6307 18.015 18.8161C17.8457 19.0015 17.6166 19.1066 17.377 19.1089C17.1375 19.1112 16.9068 19.0104 16.7345 18.8283L13.3985 15.1763C12.2535 16.1642 10.8776 16.7794 9.42823 16.9514C7.97884 17.1233 6.5145 16.8451 5.20281 16.1485C3.89112 15.4519 2.78506 14.3651 2.01123 13.0126C1.2374 11.66 0.827051 10.0962 0.827148 8.50025ZM7.67826 5.00025C7.67826 4.73504 7.7745 4.48068 7.94581 4.29315C8.11712 4.10561 8.34947 4.00025 8.59174 4.00025C9.68195 4.00025 10.7275 4.47436 11.4984 5.31827C12.2693 6.16219 12.7024 7.30678 12.7024 8.50025C12.7024 8.76547 12.6062 9.01982 12.4348 9.20736C12.2635 9.3949 12.0312 9.50025 11.7889 9.50025C11.5466 9.50025 11.3143 9.3949 11.143 9.20736C10.9717 9.01982 10.8754 8.76547 10.8754 8.50025C10.8754 7.83721 10.6348 7.20133 10.2066 6.73249C9.77828 6.26365 9.19741 6.00025 8.59174 6.00025C8.34947 6.00025 8.11712 5.8949 7.94581 5.70736C7.7745 5.51982 7.67826 5.26547 7.67826 5.00025Z" fill="#6D717A"/></svg></button><input type="text" id="Search" onkeyup="Searchpostcode()"  class="searchTerm" placeholder="Search your address"></div></div><div class="div_checked">'+addresshtml+'<div>');
                         $("#exampleModal").modal('show');
                         return false;
+
+                    },
+                    error: function (error) {
+                        //alert(error.responseText);
+                        if(error.status == 400){
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Bad Request: Invalid postcode!!',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            $("#postcode").val('');
+                        }
                     }
                 });
                 return false;
             }else{
-                //alert("Before submit enter your postcode."); return false;
-                $("#errormsg").html('Before submit enter your postcode.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Before submit enter your postcode.!!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
             }
 
         });
@@ -662,50 +764,53 @@
                 }
             })
         });
+
+
+        // addresstype
+        var addresstype = $('input[name="addresstype"]:checked').val();
+        if(addresstype == 1){
+            $("#address_line_one").attr('disabled',true);
+            $("#address_line_two").attr('disabled',true);
+            $("#town_city").attr('disabled',true);
+            $("#address_type_postcode").attr('disabled',true);
+        }
+
+        if(addresstype == 2){
+            $("#address_line_one").attr('disabled',false);
+            $("#address_line_two").attr('disabled',false);
+            $("#town_city").attr('disabled',false);
+            $("#address_type_postcode").attr('disabled',false);
+        }
+
+
+
+        $("input[name='addresstype']").change(function(e){
+            var addresstype = $('input[name="addresstype"]:checked').val();
+            if(addresstype == 1){
+                $("#address_line_one").attr('disabled',true);
+                $("#address_line_two").attr('disabled',true);
+                $("#town_city").attr('disabled',true);
+                $("#address_type_postcode").attr('disabled',true);
+            }
+
+            if(addresstype == 2){
+                $("#address_line_one").attr('disabled',false);
+                $("#address_line_two").attr('disabled',false);
+                $("#town_city").attr('disabled',false);
+                $("#address_type_postcode").attr('disabled',false);
+
+                $("#postcode").attr('disabled',true);
+                $("#postcode").attr('required',true);
+            }
+
+        });
+
+
     });
 
 
 
 
-
-    Dropzone.options.dropzone =
-    {
-        maxFilesize: 1024,
-        resizeQuality: 1.0,
-        //acceptedFiles: ".jpeg,.jpg,.png,.gif",
-        acceptedFiles: 'image/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.tsv,.ppt,.pptx,.pages,.odt,.rtf,video/x-ms-asf,video/x-ms-wmv,video/x-ms-wmx,video/x-ms-wm,video/avi,video/divx,video/x-flv,video/quicktime,video/mpeg,video/mp4,video/ogg,video/webm,video/x-matroska,video/3gpp,video/3gpp2,text/plain,text/csv,text/tab-separated-values,text/calendar,text/richtext,text/css,text/html,text/vtt,application/ttaf+xml,audio/mpeg,audio/aac,audio/x-realaudio,audio/wav,audio/ogg,audio/flac,audio/midi,audio/x-ms-wma,audio/x-ms-wax,audio/x-matroska,application/rtf,application/javascript,application/pdf,application/x-shockwave-flash,application/java,application/x-tar,application/zip,application/x-gzip,application/rar,application/x-7z-compressed,application/x-msdownload,application/octet-stream,application/octet-stream,application/msword,application/vnd.ms-powerpoint,application/vnd.ms-write,application/vnd.ms-excel,application/vnd.ms-access,application/vnd.ms-project,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-word.document.macroEnabled.12,application/vnd.openxmlformats-officedocument.wordprocessingml.template,application/vnd.ms-word.template.macroEnabled.12,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel.sheet.macroEnabled.12,application/vnd.ms-excel.sheet.binary.macroEnabled.12,application/vnd.openxmlformats-officedocument.spreadsheetml.template,application/vnd.ms-excel.template.macroEnabled.12,application/vnd.ms-excel.addin.macroEnabled.12,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-powerpoint.presentation.macroEnabled.12,application/vnd.openxmlformats-officedocument.presentationml.slideshow,application/vnd.ms-powerpoint.slideshow.macroEnabled.12,application/vnd.openxmlformats-officedocument.presentationml.template,application/vnd.ms-powerpoint.template.macroEnabled.12,application/vnd.ms-powerpoint.addin.macroEnabled.12,application/vnd.openxmlformats-officedocument.presentationml.slide,application/vnd.ms-powerpoint.slide.macroEnabled.12,application/onenote,application/oxps,application/vnd.ms-xpsdocument,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,application/vnd.oasis.opendocument.graphics,application/vnd.oasis.opendocument.chart,application/vnd.oasis.opendocument.database,application/vnd.oasis.opendocument.formula,application/wordperfect,application/vnd.apple.keynote,application/vnd.apple.numbers,application/vnd.apple.pages',
-        addRemoveLinks: true,
-        timeout: 60000,
-        clickable: "#file_upload_btn",
-        removedfile: function(file)
-        {
-            var name = file.upload.filename;
-            //alert(name); return false;
-            $.ajax({
-                headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                type: 'POST',
-                url: '{{ url("dropzonedestroy") }}',
-                data: {filename: name},
-                success: function (data){
-                    console.log("File has been successfully removed!!");
-                    //alert('File has been successfully removed!!'); return false;
-                },
-                error: function(e) {
-                    console.log(e);
-                }});
-                var fileRef;
-                return (fileRef = file.previewElement) != null ?
-                fileRef.parentNode.removeChild(file.previewElement) : void 0;
-        },
-        success: function (file, response) {
-            console.log(response);
-        },
-        error: function (file, response) {
-            return false;
-        }
-    };
 
 
 
