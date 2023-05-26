@@ -18,13 +18,82 @@
          </div>
       </section>
       <!--Code area end-->
-      <!--Code area start-->     
+
+      <!--Code area start-->
       <section class="pb-5">
          <div class="container">
             <form action="#" method="post">
+                @php
+                    $status=$projects->status;
+                    $formatted_status = str_replace('_', ' ', $status);
+                    $formatted_status = ucfirst(trans($formatted_status));
+                @endphp
+
+                {{-- Project Timeline Widgets Starts --}}
+                @if ($status == 'project_started' || $status == 'awaiting_your_review')
+                    <div class="row mb-5">
+                        <div class="col-md-10 offset-md-1">
+                        <div class="bs-wizard row">
+                            <div class="col bs-wizard-step complete">
+                                <div class="text-center bs-wizard-stepnum">Submitted <br> for review</div>
+                                <div class="progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <a href="#" class="bs-wizard-dot"></a>
+                                <div class="bs-wizard-info text-center">25-12-22</div>
+                            </div>
+                            <div class="col bs-wizard-step complete">
+                                <!-- complete -->
+                                <div class="text-center bs-wizard-stepnum">View <br>estimates</div>
+                                <div class="progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <a href="#" class="bs-wizard-dot"></a>
+                                <div class="bs-wizard-info text-center">30-12-22</div>
+                            </div>
+                            @if($status == 'awaiting_your_review')
+                                <div class="col bs-wizard-step complete">
+                            @else
+                                <div class="col bs-wizard-step closed">
+                            @endif
+                                <!-- complete -->
+                                <div class="text-center bs-wizard-stepnum">Project started</div>
+                                <div class="progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <a href="#" class="bs-wizard-dot"></a>
+                                <div class="bs-wizard-info text-center">05-01-23</div>
+                            </div>
+                            @if($status == 'awaiting_your_review')
+                                <div class="col bs-wizard-step closed">
+                            @else
+                                <div class="col bs-wizard-step disabled">
+                            @endif
+                                <!-- active -->
+                                <div class="text-center bs-wizard-stepnum">Milestones <br>completed</div>
+                                <div class="progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <a href="#" class="bs-wizard-dot"></a>
+                                <div class="bs-wizard-info text-center"></div>
+                            </div>
+                            <div class="col bs-wizard-step disabled">
+                                <!-- active -->
+                                <div class="text-center bs-wizard-stepnum">Project <br>completed</div>
+                                <div class="progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <a href="#" class="bs-wizard-dot"></a>
+                                <div class="bs-wizard-info text-center"></div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                @endif
+                {{-- Project Timeline Widgets Ends --}}
                <div class="row mb-5">
                   <div class="col-md-10 offset-md-1">
-                     <div class="tell_about pl-details">                    
+                     <div class="tell_about pl-details">
                         <div class="row">
                             <div class="col-md-6"><h5>Customer’s project name</h5></div>
                             <div class="col-md-6"><h2>{{$projects->project_name}}</h2></div>
@@ -37,101 +106,160 @@
                   </div>
                </div>
                <!--// END-->
-               @php
-                 $status=$projects->status;
-                 $status = str_replace('_', ' ', $status);
-                 $status = ucfirst(trans($status));
-                 @endphp
-               <div class="row">
-                  <div class="col-md-10 offset-md-1">
-                     <div class="card card-wrap">
-                        <div class="card-header">Details</div>
-                        <div class="card-body">
-                           <div class="row mb-3">
-                              <div class="col-md-8"><h6>Status: <span class="text-info">{{$status}}</h6></div>
-                              <div class="col-md-4 text-right"><h6>Posted on: <span class="date_time">{{ $projects->created_at->format('d M Y,  H:i A') }}</span> </h6></div>
-                           </div>
-                           
-                           <div class="row">
-                              <div class="col-md-12">
-                                    {!!$projects->description!!}
-                              </div>
-                           </div>
-                           <div class="col-md-12">
-                              <h3>Photo(s)/Video(s)</h3>
-                              <div class="row">
-                                 <div class="pv_top">
-                                 @foreach($doc as $docs)
-                                 @if($docs->file_type=='video'||$docs->file_type=='image')
-                                 
-                                 <a href="#" data-bs-toggle="modal" data-bs-target="#profile_pics"><img src="{{$docs->url}}" alt=""  width="150" height="0"  /></a>
-                                 
-                                 
-                                 <!-- The Modal Change profile photo-->
-                            <div class="modal fade select_address" id="profile_pics" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header pb-0">
-                                        
-                                            <h5 class="modal-title" id="exampleModalLabel"></h5>
-                                            
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                                                        fill="black"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-md-12 supported_">                              
-                                                    <div>
-                                                        <img src="{{$docs->url}}" alt="" />   
+
+                {{-- Dynamic Details Starts --}}
+                {{-- <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <div class="card card-wrap">
+                            <div class="card-header">Details</div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-8"><h6>Status: <span class="text-info">{{$status}}</h6></div>
+                                    <div class="col-md-4 text-right"><h6>Posted on: <span class="date_time">{{ $projects->created_at->format('d M Y,  H:i A') }}</span> </h6></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                            {!!$projects->description!!}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <h3>Photo(s)/Video(s)</h3>
+                                    <div class="row">
+                                        <div class="pv_top">
+                                            @foreach($doc as $docs)
+                                                @if($docs->file_type=='video'||$docs->file_type=='image')
+
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#profile_pics"><img src="{{$docs->url}}" alt=""  width="150" height="0"  /></a>
+
+
+                                                    <!-- The Modal Change profile photo-->
+                                                    <div class="modal fade select_address" id="profile_pics" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header pb-0">
+
+                                                                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                            <path
+                                                                                d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
+                                                                                fill="black"
+                                                                            />
+                                                                        </svg>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 supported_">
+                                                                            <div>
+                                                                                <img src="{{$docs->url}}" alt="" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
+                                                    <!-- The Modal Change profile photo END-->
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mt-4">
+                                    <h3>Files(s)</h3>
+
+                                    <div class="row">
+                                        <div class="mt-2">
+                                            @foreach($doc as $docs)
+                                                @if($docs->file_type=='document')
+                                                    <div class="d-inline mr-4 img-text"><a href="{{$docs->url}}" target="_blank"><img src="" alt="">{{$docs->filename}}</a></div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 mt-5 text-center">
+                            <a href="{{url('/customer/projects')}}" class="btn btn-primary">Back</a>
+                        </div>
+                    </div>
+                </div> --}}
+                {{-- Dynamic Details Ends --}}
+
+               {{-- Different Tabs Starts --}}
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <div class="row mb-5">
+                            <div class="col-12 tab_wrap milestone_">
+                                <div class="card card-wrap">
+                                    <div class="card-header">
+                                    <nav>
+                                        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                            @if ($status == 'submitted_for_review')
+                                                <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                            @elseif ($status == 'estimation')
+                                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                                <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
+                                            @elseif ($status == 'project_started' || $status == 'awaiting_your_review')
+                                                <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
+                                                <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
+                                                <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
+                                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">About company</a>
+                                                <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                            @endif
+                                        </div>
+                                    </nav>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content" id="nav-tabContent">
+                                            {{-- Dynamic Div Starts --}}
+                                            @include('customer.tabs.nav-details')
+                                            @if ($status == 'estimation')
+                                                @include('customer.tabs.nav-estimates')
+                                            @elseif ($status == 'project_started' || $status == 'awaiting_your_review')
+                                                @include('customer.tabs.nav-milestones')
+                                                @include('customer.tabs.nav-estimates')
+                                                @include('customer.tabs.nav-profile')
+                                                @include('customer.tabs.nav-chat')
+                                            @endif
+                                            {{-- Dynamic Div Ends --}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- The Modal Change profile photo END-->
+                        </div>
+                        {{-- Buttons Starts --}}
+                        <div class="form-group col-md-12 mt-5 text-center pre_">
+                            @if ($status == 'estimation')
+                                <a href="#" class="btn btn-light mr-3">Cancel project</a>
+                                <a href="{{url('/customer/projects')}}" class="btn btn-primary">Back</a>
+                            @else
+                                <a href="{{url('/customer/projects')}}" class="btn btn-light mr-3">Back</a>
                             @endif
-                           @endforeach
-                                    </div>
-                              </div>
-                           </div>
-                           <div class="col-md-12 mt-4">
-                              <h3>Files(s)</h3>
-                              
-                              <div class="row">
-                                 <div class="mt-2">
-                                 @foreach($doc as $docs)
-                                 @if($docs->file_type=='document')
-                                 
-                                    <div class="d-inline mr-4 img-text"><a href="{{$docs->url}}" target="_blank"><img src="" alt="">{{$docs->filename}}</a></div>
-                                    @endif
-                                    @endforeach
-                                 </div>
-                              </div>
-                              
-                           </div>
-                        </div> 
-                      </div>
-                     <div class="form-group col-md-12 mt-5 text-center">
-                        <a href="{{url('/customer/projects')}}" class="btn btn-primary">Back</a>
-                     </div>
-                  </div>
-               </div>
+                            @if ($status == 'project_started')
+                                <a href="project-details-view-estimates.html" class="btn btn-light mr-3">Pause project </a>
+                                <a href="#" class="btn btn-primary">Pay all</a>
+                            @endif
+                            @if ($status == 'awaiting_your_review')
+                                <a href="#" class="btn btn-primary">Review</a>
+                            @endif
+                        </div>
+                        {{-- Buttons Ends --}}
+                    </div>
+                </div>
+               {{-- Different Tabs Ends --}}
                <!--// END-->
             </form>
          </div>
-         
+
       </section>
-      
+
 
       <!--Code area end-->
-      @endsection
-      
-      
+@endsection
+
