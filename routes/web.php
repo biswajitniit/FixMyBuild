@@ -163,6 +163,16 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::post('save-bank-registration', [TradepersionDashboardController::class,'saveregistrationstepthree'])->name('tradepersion.savebankregistration');
         Route::get('get-company-details', [TradepersionDashboardController::class, 'get_companydetails']);
         Route::get('get-company-vat-details', [TradepersionDashboardController::class, 'get_company_vat_details']);
-
+        Route::get('dashboard', [TradepersionDashboardController::class, 'dashboard'])->name('tradepersion.dashboard');
+        Route::post('updateTraderName', [TradepersionDashboardController::class, 'updateTraderName']);
+        Route::post('updateTraderDesc', [TradepersionDashboardController::class, 'updateTraderDesc']);
+        Route::post('updateTraderContactInfo', [TradepersionDashboardController::class, 'updateTraderContactInfo']);
+        Route::post('updateVatInfo', [TradepersionDashboardController::class, 'updateVatInfo']);
+        Route::post('updateContingency', [TradepersionDashboardController::class, 'updateContingency']);
+        Route::post('updateAccount', [TradepersionDashboardController::class, 'updateAccount']);
+        Route::post('updateWorkType', [TradepersionDashboardController::class, 'updateWorkType']);
+        Route::post('updateTraderArea', [TradepersionDashboardController::class, 'updateTraderArea']);
+        Route::get('projects', [TradepersionDashboardController::class, 'projects'])->name('tradepersion.projects');
+        Route::get('settings', [TradepersionDashboardController::class, 'settings'])->name('tradepersion.settings');
     });
 });

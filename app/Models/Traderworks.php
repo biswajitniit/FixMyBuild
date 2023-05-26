@@ -12,4 +12,14 @@ class Traderworks extends Model
         'user_id',
         'buildersubcategory_id'
     ];
+
+    /**
+     * Get the user associated with the Traderworks
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function buildersubcategory()
+    {
+        return $this->hasOne(Buildersubcategory::class, 'id', 'buildersubcategory_id');
+    }
 }

@@ -4,6 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       <title>FixMyBuild</title>
+      <meta name="csrf-token" content="{{ csrf_token() }}">
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <!-- Favicon -->
@@ -105,18 +106,18 @@
                                           <hr class="dropdown-divider">
                                           </hr>
                                           </li>
+                                          
                                           @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
                                           <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
                                           <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
                                           <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
-                                          <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                           @endif
-                                          @if(Auth::user()->customer_or_tradesperson == 'Tradepersion' && Auth::user()->status == 'Active')
-                                          <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
-                                          <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
-                                          <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
-                                          <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                          @if(Auth::user()->customer_or_tradesperson == 'Tradesperson' && Auth::user()->status == 'Active')
+                                          <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My profile</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My projects</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">New project</a></li>
                                           @endif
+                                          <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                         </ul>
                                     </div>
                                 @endif
@@ -169,14 +170,13 @@
                                              <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
                                              <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
                                              <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                              @endif
-                                             @if(Auth::user()->customer_or_tradesperson == 'Tradepersion' && Auth::user()->status == 'Active')
-                                             <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                             @if(Auth::user()->customer_or_tradesperson == 'Tradesperson' && Auth::user()->status == 'Active')
+                                             <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My profile</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My projects</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">New project</a></li>
                                              @endif
+                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                         </ul>
                                     </div>
                                 @endif

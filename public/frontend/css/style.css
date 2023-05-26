@@ -14181,3 +14181,10 @@ table.table {
     margin-left: 0px;
   }
 }
+
+.error{
+  color: #a43d21;
+}
+.success{
+  color: #17ad6a;
+}
