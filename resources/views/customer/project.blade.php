@@ -63,8 +63,28 @@
                                                 <td>{{$count}}</td>
                                                 <td>{{$row->forename.' '.$row->surname}}</td>
                                                 <td>{{ date('d/m/Y',strtotime($row->created_at))}} <br> <em> {{ date('h:i a',strtotime($row->created_at))}} </em> </td>
-                                                <td class="text-success">Project started</td>
-                                                <td><a href="#"><img src="{{ asset('frontend/img/chat-info.svg') }}" alt=""></a></td>
+                                                @switch($row->status)
+                                                    @case('submitted_for_review')
+                                                        <td class="text-info">Submitted for review</td>
+                                                        @break
+                                                    @case('returned_for_review')
+                                                        <td class="text-dark">Returned for review</td>
+                                                        @break
+                                                    @case('estimation')
+                                                        <td class="text-primary">View estimates</td>
+                                                        @break
+                                                    @case('project_started')
+                                                        <td class="text-success">Project started</td>
+                                                        @break
+                                                    @case('awaiting_your_review')
+                                                        <td class="text-awaiting">Awaiting your review</td>
+                                                        @break
+                                                @endswitch
+                                                <td>
+                                                    @if ($row->status === 'project_started')
+                                                        <a href="#"><img src="{{ asset('frontend/img/chat-info.svg') }}" alt=""></a>
+                                                    @endif
+                                                </td>
                                                 <td><a href="{{route('customer.project_details',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a></td>
                                             </tr>
                                             @php
