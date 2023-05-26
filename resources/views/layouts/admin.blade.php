@@ -143,7 +143,12 @@
                     </a>
                 </li>
 
-
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('terms.index') }}">
+                      <i class="mdi mdi-file-document-box menu-icon"></i>
+                      <span class="menu-title">Terms Page</span>
+                    </a>
+                </li>
           @endif
 
           @if (Auth::guard('admin')->user()->type == "reviewer")

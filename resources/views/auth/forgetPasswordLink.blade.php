@@ -17,7 +17,7 @@
       <!--slick min css-->
       <link rel="stylesheet" href="{{ asset('frontend/css/slick.css') }}">
       <!--magnific popup min css-->
-      <link rel="stylesheet" href="{{ asset('frontend/css/magnific-popup.css') }}">
+      {{-- <link rel="stylesheet" href="{{ asset('frontend/css/magnific-popup.css') }}"> --}}
       <!--font awesome css-->
       <link rel="stylesheet" href="{{ asset('frontend/css/font.awesome.css') }}">
       <!--ionicons min css-->
@@ -34,6 +34,27 @@
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
       <!-- Custom styles for this template -->
       <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
+
+      <style>
+        #password-strength-status, #password-strength-status-one {
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .medium-password {
+            background-color: #fd0;
+        }
+
+        .weak-password {
+            background-color: #FBE1E1;
+        }
+
+        .strong-password {
+            background-color: #D5F9D5;
+        }
+    </style>
+
    </head>
    <body>
       <div class="main-contain">
@@ -50,23 +71,29 @@
          </section>
          <section class="content">
             <header>
-               <a href="" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
+               <a href="{{url('/')}}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
             </header>
             <div class="auth-content">
                <div>
                 <div class="row">
                     <div class="input-field col-md-12">
                         <h2 class="heading1 mb-2 text-left color-blue">Set New password</h2>
-                        <p class="heading3 text-left">
+                        {{-- <p class="heading3 text-left">
                             <strong>Instruction:</strong>
                         </p>
                         <h6><i class="fa fa-check"></i> 8-32 character</h6>
                         <h6><i class="fa fa-check"></i> One upper case</h6>
                         <h6><i class="fa fa-check"></i> One lower case</h6>
                         <h6><i class="fa fa-times"></i> One special character</h6>
-                        <h6><i class="fa fa-circle"></i> One numeric character</h6>
+                        <h6><i class="fa fa-circle"></i> One numeric character</h6> --}}
                     </div>
                 </div>
+
+                @if (Session::has('error'))
+                        <div class="alert alert-danger" role="alert">
+                        {{ Session::get('error') }}
+                    </div>
+                @endif
 
                 <form action="{{ route('reset.password.post') }}" method="post">
                     @csrf
@@ -74,7 +101,7 @@
 
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
-                            <input type="text" id="email_address" class="form-control" name="email" placeholder="Email"  required autofocus>
+                            <input type="text" id="email_address" class="form-control" name="email" placeholder="Email"  required autofocus pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$">
                             @if ($errors->has('email'))
                                 <span class="text-danger">{{ $errors->first('email') }}</span>
                             @endif
@@ -83,23 +110,24 @@
 
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
-                            <input type="password" id="password" class="form-control" name="password" placeholder="Password" required autofocus>
-                            <em>
-                                <a href="#"><i class="fa fa-eye-slash"></i></a>
+                            <input type="password" id="password" class="form-control" name="password" placeholder="Password" required autofocus onkeyup="checkPasswordStrength();" onChange="Chkpassword_and_conpassword()">
+                            <em onclick="tooglepassword()">
+                                <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
                             </em>
 
                             @if ($errors->has('password'))
                                 <span class="text-danger">{{ $errors->first('password') }}</span>
                             @endif
-
-
                         </div>
                     </div>
+
+                    <div id="password-strength-status"></div>
+
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
-                            <input type="password" id="password-confirm" class="form-control" name="password_confirmation" placeholder="Retype password" required autofocus>
-                            <em>
-                                <a href="#"><i class="fa fa-eye"></i></a>
+                            <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" placeholder="Retype password" required autofocus onkeyup="checkPasswordStrength_One();" onChange="Chkpassword_and_conpassword()">
+                            <em onclick="tooglepasswordconfirm()">
+                                <a href="#"><i class="fa fa-eye-slash" id="eyeconfirm"></i></a>
                             </em>
                             @if ($errors->has('password_confirmation'))
                                 <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
@@ -107,6 +135,7 @@
 
                         </div>
                     </div>
+                    <div id="password-strength-status-one"></div>
 
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 text-center forget_">
@@ -122,9 +151,107 @@
          </section>
       </div>
       <!-- Bootstrap core JavaScript -->
-      <<script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
+      <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
       {{-- <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
       <script src="assets/js/particles.js"></script>
       <script src="assets/js/app.js"></script> --}}
+
+
+      <script>
+        var input = document.querySelector("#phone");
+        window.intlTelInput(input, {
+            separateDialCode: true,
+            preferredCountries: ["gb"]
+        });
+
+       // $(document).ready(function(){
+       //     $("#userregistration").validationEngine();
+       // });
+
+       function Chkpassword_and_conpassword() {
+            const password = document.querySelector('input[name=password]');
+            const confirm = document.querySelector('input[name=password_confirmation]');
+            if (confirm.value === password.value) {
+                confirm.setCustomValidity('');
+            } else {
+                confirm.setCustomValidity('Passwords do not match');
+            }
+        }
+
+
+       function tooglepassword(){
+           var x = document.getElementById("password");
+           if (x.type === "password") {
+               x.type = "text";
+               $("#eye").removeClass("fa fa-eye-slash");
+               $("#eye").addClass("fa fa-eye");
+           } else {
+               x.type = "password";
+               $("#eye").removeClass("fa fa-eye");
+               $("#eye").addClass("fa fa-eye-slash");
+           }
+       }
+       function tooglepasswordconfirm(){
+           var x = document.getElementById("password_confirmation");
+           if (x.type === "password") {
+               x.type = "text";
+               $("#eyeconfirm").removeClass("fa fa-eye-slash");
+               $("#eyeconfirm").addClass("fa fa-eye");
+           } else {
+               x.type = "password";
+               $("#eyeconfirm").removeClass("fa fa-eye");
+               $("#eyeconfirm").addClass("fa fa-eye-slash");
+           }
+       }
+
+       function checkPasswordStrength() {
+           var number = /([0-9])/;
+           var alphabets = /([a-zA-Z])/;
+           var special_characters = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+           var password = $('#password').val().trim();
+           if(password.length<6) {
+               $('#password-strength-status').removeClass();
+               $('#password-strength-status').addClass('weak-password');
+               $('#password-strength-status').html("Weak (should be atleast 6 characters.)");
+           } else {
+               if(password.match(number) && password.match(alphabets) && password.match(special_characters)) {
+                   $('#password-strength-status').removeClass();
+                   $('#password-strength-status').addClass('strong-password');
+                   $('#password-strength-status').html("Strong");
+               }
+               else {
+                   $('#password-strength-status').removeClass();
+                   $('#password-strength-status').addClass('medium-password');
+                   $('#password-strength-status').html("Medium (should include alphabets, numbers and special characters.)");
+               }
+           }
+       }
+
+       function checkPasswordStrength_One(){
+        var number = /([0-9])/;
+           var alphabets = /([a-zA-Z])/;
+           var special_characters = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+           var password = $('#password_confirmation').val().trim();
+           if(password.length<6) {
+               $('#password-strength-status-one').removeClass();
+               $('#password-strength-status-one').addClass('weak-password');
+               $('#password-strength-status-one').html("Weak (should be atleast 6 characters.)");
+           } else {
+               if(password.match(number) && password.match(alphabets) && password.match(special_characters)) {
+                   $('#password-strength-status-one').removeClass();
+                   $('#password-strength-status-one').addClass('strong-password');
+                   $('#password-strength-status-one').html("Strong");
+               }
+               else {
+                   $('#password-strength-status-one').removeClass();
+                   $('#password-strength-status-one').addClass('medium-password');
+                   $('#password-strength-status-one').html("Medium (should include alphabets, numbers and special characters.)");
+               }
+           }
+       }
+     </script>
+
+
+
    </body>
 </html>

@@ -1,22 +1,24 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminloginController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\MicrosoftController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\LogoutController;
-//use App\Http\Controllers\Dashboard\UserdashboardController;
 use App\Http\Controllers\LogoutsController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Tradepersion\TradepersionDashboardController;
 use App\Http\Controllers\Admin\Reviewer\ReviewerController;
+use App\Http\Controllers\Admin\Terms\TermsController;
 use App\Http\Controllers\Admin\Builder\BuildercategoryController;
+use App\Http\Controllers\Admin\Builder\BuildersubcategoryController;
 use App\Http\Controllers\Admin\Cms\CmsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\NotificationController;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -71,11 +73,16 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
     Route::post('/user/loginpost', [LoginController::class,'loginpost'])->name('user.loginpost');
     Route::get('/user/registration', [HomeController::class,'registration'])->name('user.registration');
     Route::post('/user/save-user', [HomeController::class,'save_user'])->name('user.save-user');
+    Route::get('account/verify/{token}', [HomeController::class, 'verifyAccount'])->name('user.verify');
+
+
 
     Route::get('/about-us', [HomeController::class,'about_us'])->name('about-us');
     Route::get('/contact-us', [HomeController::class,'contact_us'])->name('contact-us');
     Route::get('/privacy-policy', [HomeController::class,'privacy_policy'])->name('privacy-policy');
-    Route::get('/terms', [HomeController::class,'terms'])->name('terms');
+    Route::get('/termspage/{pageid}', [HomeController::class,'termspage'])->name('termspage');
+    Route::get('/terms-of-service', [HomeController::class,'terms_of_service'])->name('terms-of-service');
+
 
     Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
     Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
@@ -85,25 +92,30 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
 
 
-    // Route::get('/auth/google', [GoogleController::class,'loginwithgoogle'])->name('login');
-    // Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
-
-    // Route::get('/dashboard', function () {
-    //     return view('Dashboard/dashboard');
-    // })->name('dashboard');
+    Route::get('/auth/google', [GoogleController::class,'redirect'])->name('google-auth');
+    Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
 
 
-    // Route::get('/auth/redirect', function () {
-    //     return Socialite::driver('google')->redirect();
-    // });
+    Route::get('/auth/microsoft', [MicrosoftController::class,'redirect'])->name('microsoft-auth');
+    Route::get('/microsoft/callback', [GoogleController::class,'callbackFromMicrosoft'])->name('microsoftcallback');
 
-    // Route::get('/auth/callback', function () {
-    //     $user = Socialite::driver('google')->user();
-    // });
 
-    // Route::group(['prefix' => 'admin','middleware' => 'auth:admin'], function () {
+    Route::get('/dashboard', function () {
+        return view('Dashboard/dashboard');
+    })->name('dashboard');
 
-    // });
+
+    Route::get('/auth/redirect', function () {
+        return Socialite::driver('google')->redirect();
+    });
+
+    Route::get('/auth/callback', function () {
+        $user = Socialite::driver('google')->user();
+    });
+
+    Route::group(['prefix' => 'admin','middleware' => 'auth:admin'], function () {
+
+    });
 
 
     Route::group(['middleware' => ['auth:admin']], function() {
@@ -113,7 +125,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/admin/users', [UserController::class, 'users'])->name('admin/users');
         Route::any('/admin/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
 
-        Route::resource('reviewer', 'ReviewerController');
+        Route::resource('reviewer', ReviewerController::class);
         Route::get('/admin/project/awaiting-your-review', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
         Route::get('/admin/project/awaiting-your-review-show/{projectid}', [ReviewerController::class, 'awaiting_your_review_show'])->name('awaiting-your-review-show');
         Route::post('/awaiting-your-review-save', [ReviewerController::class, 'awaiting_your_review_save'])->name('awaiting-your-review-save');
@@ -122,13 +134,17 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/admin/project/final-review/{projectid}', [ReviewerController::class,'final_review'])->name('final-review');
 
 
-        Route::get('getbuildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@getbuildercategory')->name('getbuildercategory');
-        Route::delete('getbuildercategory/delete', 'App\Http\Controllers\Admin\Builder\BuildercategoryController@delete')->name('getbuildercategory.delete');
-        Route::resource('buildercategory', 'App\Http\Controllers\Admin\Builder\BuildercategoryController');
+        Route::resource('terms', TermsController::class);
 
-        Route::get('getbuildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController@getbuildersubcategory')->name('getbuildersubcategory');
-        Route::delete('getbuildersubcategory/delete', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController@delete')->name('getbuildersubcategory.delete');
-        Route::resource('buildersubcategory', 'App\Http\Controllers\Admin\Builder\BuildersubcategoryController');
+
+
+        Route::get('getbuildercategory', [BuildercategoryController::class,'getbuildercategory'])->name('getbuildercategory');
+        Route::delete('getbuildercategory/delete', [BuildercategoryController::class,'delete'])->name('getbuildercategory.delete');
+        Route::resource('buildercategory', BuildercategoryController::class);
+
+        Route::get('getbuildersubcategory', [BuildersubcategoryController::class,'getbuildersubcategory'])->name('getbuildersubcategory');
+        Route::delete('getbuildersubcategory/delete', [BuildersubcategoryController::class,'delete'])->name('getbuildersubcategory.delete');
+        Route::resource('buildersubcategory', BuildersubcategoryController::class);
 
 
         Route::resource('admin/cms', 'App\Http\Controllers\Admin\Cms\CmsController');
@@ -141,14 +157,27 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
 
         Route::get('profile', [CustomerController::class,'customer_profile'])->name('customer.profile');
-        Route::get('project', [CustomerController::class,'customer_project'])->name('customer.project');
-        Route::get('notifications', [CustomerController::class,'customer_notifications'])->name('customer.notifications');
+        Route::get('projects', [CustomerController::class,'customer_project'])->name('customer.project');
         Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
+
+        Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
 
 
         Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
         Route::post('deletecustomermediafiles', [CustomerController::class,'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
+
+        // Notification Route
+        Route::get('/notification', [NotificationController::class,'index'])->name('customer.notifications.index');
+        Route::post('/notification/data_store', [NotificationController::class,'data_store'])->name('notifications.data_store');
+        Route::post('/notification/data_fetch', [NotificationController::class,'get_notification_data'])->name('notifications.data_fetch');
+
+        Route::put('updatecustomeravatar', [CustomerController::class,'update_avatar'])->name('customer.updateavatar');
+        Route::put('updatecustomername', [CustomerController::class,'update_name'])->name('customer.updatename');
+        Route::post('changecustomerpassword', [CustomerController::class,'change_password'])->name('customer.changepassword');
+        Route::put('updatecustomerphone', [CustomerController::class,'update_phone'])->name('customer.updatephone');
+
+
         /**
         * Logout Route
         */
@@ -175,4 +204,8 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('projects', [TradepersionDashboardController::class, 'projects'])->name('tradepersion.projects');
         Route::get('settings', [TradepersionDashboardController::class, 'settings'])->name('tradepersion.settings');
     });
+
+    Route::delete('/users/users-delete_account', [UserController::class,'delete_account'])->name('user.user-delete-account');
+    Route::post('/users/verify-email', [UserController::class,'verify_mail'])->name('user.verify_mail');
+
 });

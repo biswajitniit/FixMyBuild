@@ -322,6 +322,7 @@ class TradepersionDashboardController extends Controller
 
     public function settings()
     {
+        
         return view('tradepersion.settings');
     }
 }

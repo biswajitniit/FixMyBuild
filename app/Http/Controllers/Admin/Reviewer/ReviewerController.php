@@ -33,11 +33,14 @@ class ReviewerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function awaiting_your_review_show(Request $request, $projectid){
-        $project = Project::where('id',$projectid)->first();
-        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
-        $projectmedia = Projectfile::where('project_id',$projectid)->get();
+      //echo Hashids_decode($projectid); die;
+        $project = Project::where('id',Hashids_decode($projectid))->first();
+        //dd($project);
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',Hashids_decode($projectid))->get();
+        $projectmedia = Projectfile::where('project_id',Hashids_decode($projectid))->get();
         $buildercategory = Buildercategory::where('status','Active')->get();
-        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
+
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',Hashids_decode($projectid))->get();
         return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory','projectnotesandcommend'));
     }
 
@@ -61,6 +64,8 @@ class ReviewerController extends Controller
             );
             Project::where('id', $request->projectid)->update($data);
        }
+       // if record exist in then delete
+        Projectnotesandcommend::where('project_id',$request->post('projectid'))->delete();
 
         // Notes for Internal
         $projectnotes = new Projectnotesandcommend();
@@ -86,18 +91,18 @@ class ReviewerController extends Controller
             $projectnotes->notes       =  $request->post('notes_for_tradespeople');
         $projectnotes->save();
 
-        return redirect()->route('final-review', [$request->post('projectid')]);
+        return redirect()->route('final-review', [Hashids_encode($request->post('projectid'))]);
 
     }
 
     public function final_review($projectid){
-        $projectnotesandcommend = Projectnotesandcommend::where('project_id',$projectid)->get();
+        $projectnotesandcommend = Projectnotesandcommend::where('project_id',Hashids_decode($projectid))->get();
         return view("admin.reviewer.final-review",compact('projectnotesandcommend'));
     }
 
     public function awaiting_your_review_final_save(Request $request){
         $data = array(
-            'reviewer_status'          => 'Approve'
+            //'reviewer_status'          => 'Approve'
         );
         Project::where('id', $request->projectid)->update($data);
         return redirect()->route('admin/project/awaiting-your-review');

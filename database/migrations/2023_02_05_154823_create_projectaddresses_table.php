@@ -15,13 +15,13 @@ class CreateProjectaddressesTable extends Migration
     {
         Schema::create('projectaddresses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('project_id')->unsigned();
             $table->string('address_line_one')->nullable();
             $table->string('address_line_two')->nullable();
             $table->string('town_city')->nullable();
             $table->string('postcode')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
 

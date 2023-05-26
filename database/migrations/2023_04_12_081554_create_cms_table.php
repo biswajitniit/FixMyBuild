@@ -17,7 +17,7 @@ class CreateCmsTable extends Migration
             $table->id();
             $table->string('cms_pagename');
             $table->string('cms_heading')->nullable();
-            $table->string('cms_description')->nullable();
+            $table->longText('cms_description')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->comment('Active,Inactive');
             $table->timestamps();
             $table->softDeletes();
