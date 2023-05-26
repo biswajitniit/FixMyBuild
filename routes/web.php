@@ -196,4 +196,6 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
     });
 
     Route::delete('/users/users-delete_account', [UserController::class,'delete_account'])->name('user.user-delete-account');
+    Route::post('/users/verify-email', [UserController::class,'verify_mail'])->name('user.verify_mail');
+
 });

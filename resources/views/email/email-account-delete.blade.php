@@ -54,7 +54,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <h2 style="font-size: 24px;">Hello, {{ $name }},</h2>
+                                                        <h2 style="font-size: 24px;">Hi {{ $user->name }},</h2>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -66,7 +66,7 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
-                                        <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">{{ $name }} has successfully deleted the account with the reason {{ $account_deletion_reason }}</h5>
+                                        <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">You have successfully deleted your account with the reason "{{ $user->account_deletion_reason }}".</h5>
                                         <p style="font-size: 20px; margin-top: 20px;">
                                             If you have any questions, reach out to us at <br />
                                             <a href="#" style="font-size: 20px; text-decoration: none; color: #ee5719;">support@fixmybuild.com</a>
