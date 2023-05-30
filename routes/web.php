@@ -41,7 +41,9 @@ Route::get('/clear-cache', function() {
 });
 
 Route::post('/capture-video-streaming', [MediaController::class,'capture_video_streaming'])->name('capture-video-streaming');
+Route::post('/capture-video-streaming-project-return-for-review', [MediaController::class,'capture_video_streaming_project_return_for_review'])->name('capture-video-streaming-project-return-for-review');
 Route::post('/capture-photo', [MediaController::class,'capture_photo'])->name('capture-photo');
+Route::post('/capture-photo-project-return-for-review', [MediaController::class,'capture_photo_project_return_for_review'])->name('capture-photo-project-return-for-review');
 
 Route::get('/dropzoneupload', [MediaController::class,'dropzoneupload'])->name('dropzoneupload');
 Route::post('/dropzonesave', [MediaController::class,'dropzonesave'])->name('dropzonesave');
@@ -162,9 +164,12 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
 
         Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
-
+        Route::get('project-return-for-review/{id}', [CustomerController::class,'project_return_for_review'])->name('customer.project-return-for-review');
+        Route::post('editproject-return-for-review/{projectid}', [CustomerController::class,'customer_editproject'])->name('customer.editproject-return-for-review');
 
         Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
+        Route::post('getprojectmediafiles', [CustomerController::class,'getprojectmediafiles'])->name('customer.getprojectmediafiles');
+
         Route::post('deletecustomermediafiles', [CustomerController::class,'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
 
         // Notification Route
