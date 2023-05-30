@@ -12,12 +12,12 @@
                     <th style="width:300px;">
                         Customer Feedback <br>
                         <div class="point_">P</div> <div class="point_">W</div> <div class="point_">T</div> <div class="point_">A</div>
-                        <div class="popup" onclick="myFunction()">?
+                        <div class="popup" id="customer_feedback_tooltip">?
                             <span class="popuptext" id="myPopup">
                                 <div class="col-12 mb-2"><span class="cf_rating bg-success">A</span> 75% - 100% <span class="ml-3">P - Punctuality</span></div>
-                                <div class="col-12 mb-2"><span class="cf_rating bg-primary">b</span> 50% - 74% <span class="ml-3">W - Workmanship</span></div>
+                                <div class="col-12 mb-2"><span class="cf_rating bg-primary">B</span> 50% - 74% <span class="ml-3">W - Workmanship</span></div>
                                 <div class="col-12 mb-2"><span class="cf_rating bg-warning">C</span> 25% - 49% <span class="ml-3">T - Tidiness</span></div>
-                                <div class="col-12"><span class="cf_rating bg-danger">B</span> 0% - 24% <span class="ml-3">P - Price accuracy</span></div>
+                                <div class="col-12"><span class="cf_rating bg-danger">D</span> 0% - 24% <span class="ml-3">P - Price accuracy</span></div>
                             </span>
                         </div>
                     </th>
@@ -28,14 +28,35 @@
                     @forelse ($estimates as $key=> $estimate)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td>{{ $estimate->tradesPersonName() }} </td>
+                            <td>{{ $estimate->tradesperson->name }} </td>
                             <td>£ {{ $estimate->taskTotalAmount() }}</td>
                             <td>{{ $estimate->total_time }} {{ strtolower($estimate->total_time_type) }}</td>
                             <td class="text-info">
-                                <span class="cf_rating bg-success">A</span>
-                                <span class="cf_rating bg-danger">B</span>
-                                <span class="cf_rating bg-success">A</span>
-                                <span class="cf_rating bg-primary">C</span>
+                                @if (!$estimate->tradesperson->totalRatings())
+                                    No Reviews Found
+                                @else
+                                    @php
+                                        $ratings = [
+                                            $estimate->tradesperson->punctualityPercentage(),
+                                            $estimate->tradesperson->workmanshipPercentage(),
+                                            $estimate->tradesperson->tidinessPercentage(),
+                                            $estimate->tradesperson->priceAccuracy(),
+                                        ];
+                                    @endphp
+
+                                    @foreach ($ratings as $rating)
+                                        @if ($rating >= 75)
+                                            <span class="cf_rating bg-success">A</span>
+                                        @elseif ($rating >= 50 && $rating < 75)
+                                            <span class="cf_rating bg-primary">B</span>
+                                        @elseif ($rating >= 25 && $rating < 50)
+                                            <span class="cf_rating bg-primary">C</span>
+                                        @else
+                                            <span class="cf_rating bg-danger">D</span>
+                                        @endif
+                                    @endforeach
+
+                                @endif
                             </td>
                             <td><a href="#" class="btn btn-view">View</a></td>
                         </tr>

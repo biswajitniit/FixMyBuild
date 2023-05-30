@@ -33,8 +33,6 @@ class CreateEstimatesTable extends Migration
             $table->text('terms_and_conditions');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->unique(['project_id', 'project_awarded']);
         });
     }
 
