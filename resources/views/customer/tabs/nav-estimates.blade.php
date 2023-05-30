@@ -25,84 +25,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                    <td>01</td>
-                    <td>AAA. Pvt. Ltd <a href="#" class="ml-3"><img src="assets/img/chat-info.svg" alt=""></a></td>
-                    <td>£2300</td>
-                    <td>40 hours</td>
-                    <td class="text-info">
-                        <span class="cf_rating bg-success">A</span>
-                        <span class="cf_rating bg-warning">B</span>
-                        <span class="cf_rating bg-success">A</span>
-                        <span class="cf_rating bg-primary">C</span>
-                    </td>
-                    <td><a href="project-details-builder-quote.html" class="btn btn-view">View</a></td>
-                    </tr>
-                    <tr>
-                    <td>02</td>
-                    <td>AAA. Pvt. Ltd </td>
-                    <td>£2300</td>
-                    <td>40 hours</td>
-                    <td class="text-info">
-                        <span class="cf_rating bg-success">A</span>
-                        <span class="cf_rating bg-danger">B</span>
-                        <span class="cf_rating bg-danger">A</span>
-                        <span class="cf_rating bg-primary">C</span>
-                    </td>
-                    <td><a href="project-details-builder-quote.html" class="btn btn-view">View</a></td>
-                    </tr>
-                    <tr>
-                    <td>03</td>
-                    <td>AAA. Pvt. Ltd <a href="#" class="ml-3"><img src="assets/img/chat-info.svg" alt=""></a></td>
-                    <td>£2300</td>
-                    <td>40 hours</td>
-                    <td class="text-info">
-                        <span class="cf_rating bg-warning">A</span>
-                        <span class="cf_rating bg-warning">B</span>
-                        <span class="cf_rating bg-danger">A</span>
-                        <span class="cf_rating bg-primary">C</span>
-                    </td>
-                    <td><a href="project-details-builder-quote.html" class="btn btn-view">View</a></td>
-                    </tr>
-                    <tr>
-                    <td>04</td>
-                    <td>AAA. Pvt. Ltd </td>
-                    <td>£2300</td>
-                    <td>40 hours</td>
-                    <td class="text-info">
-                        <span class="cf_rating bg-primary">A</span>
-                        <span class="cf_rating bg-warning">B</span>
-                        <span class="cf_rating bg-danger">D</span>
-                        <span class="cf_rating bg-primary">C</span>
-                    </td>
-                    <td><a href="project-details-builder-quote.html" class="btn btn-view">View</a></td>
-                    </tr>
-                    <tr>
-                    <td>05</td>
-                    <td>AAA. Pvt. Ltd </td>
-                    <td>£2300</td>
-                    <td>40 hours</td>
-                    <td class="text-info">
-                        <span class="cf_rating bg-success">A</span>
-                        <span class="cf_rating bg-danger">B</span>
-                        <span class="cf_rating bg-success">A</span>
-                        <span class="cf_rating bg-primary">C</span>
-                    </td>
-                    <td><a href="project-details-builder-quote.html" class="btn btn-view">View</a></td>
-                    </tr>
-                    <tr>
-                    <td>06</td>
-                    <td>AAA. Pvt. Ltd </td>
-                    <td>£2300</td>
-                    <td>40 hours</td>
-                    <td class="text-info">
-                        <span class="cf_rating bg-success">A</span>
-                        <span class="cf_rating bg-warning">B</span>
-                        <span class="cf_rating bg-success">A</span>
-                        <span class="cf_rating bg-primary">C</span>
-                    </td>
-                    <td><a href="project-details-builder-quote.html" class="btn btn-view">View</a></td>
-                    </tr>
+                    @forelse ($estimates as $key=> $estimate)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td>{{ $estimate->tradesPersonName() }} </td>
+                            <td>£ {{ $estimate->taskTotalAmount() }}</td>
+                            <td>{{ $estimate->total_time }} {{ strtolower($estimate->total_time_type) }}</td>
+                            <td class="text-info">
+                                <span class="cf_rating bg-success">A</span>
+                                <span class="cf_rating bg-danger">B</span>
+                                <span class="cf_rating bg-success">A</span>
+                                <span class="cf_rating bg-primary">C</span>
+                            </td>
+                            <td><a href="#" class="btn btn-view">View</a></td>
+                        </tr>
+                    @empty
+                        <tr><td colspan='6' class="text-center text-danger">No Data Found<td></tr>
+                    @endforelse
                 </tbody>
             </table>
             <p><img src="assets/img/in-addition.svg" class="mr-2" alt=""> In addition, we're currently waiting on estimates from 10 tradespeople.</p>

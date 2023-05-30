@@ -7,6 +7,7 @@ use App\Models\Projectaddresses;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\Projectfile;
+use App\Models\{Estimate, Task};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
@@ -138,9 +139,14 @@ class CustomerController extends Controller
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
                 $doc= projectfile::where('project_id', $id)->get();
 
+                if($projects->status == 'estimation') {
+                    $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
 
-                return view('customer/project_details',compact('projects','projectaddress','doc'));
-            }else{
+                    return view('customer.project_details',compact('projects','projectaddress','doc', 'estimates'));
+                }
+
+                return view('customer.project_details',compact('projects','projectaddress','doc'));
+            } else {
                 return redirect('/customer/projects');
             }
         } catch (\Exception $e){
