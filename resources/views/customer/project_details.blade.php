@@ -246,7 +246,7 @@
                                 <a href="#" class="btn btn-primary">Pay all</a>
                             @endif
                             @if ($status == 'awaiting_your_review')
-                                <a href="#" class="btn btn-primary">Review</a>
+                                <a href="{{ route('customer.project_review',[Hashids_encode($project_id)]) }}" class="btn btn-primary">Review</a>
                             @endif
                         </div>
                         {{-- Buttons Ends --}}

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Projectfile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use App\Models\ProjectReview;
 
 use Illuminate\Support\Facades\Hash;
 // use Illuminate\Support\Facades\Validator;
@@ -137,9 +138,9 @@ class CustomerController extends Controller
             if(Auth::user()->id == $projects->user_id){
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
                 $doc= projectfile::where('project_id', $id)->get();
+                $project_id=$id;
 
-
-                return view('customer/project_details',compact('projects','projectaddress','doc'));
+                return view('customer/project_details',compact('projects','projectaddress','doc','project_id'));
             }else{
                 return redirect('/customer/projects');
             }
@@ -242,4 +243,63 @@ class CustomerController extends Controller
         }
     }
 
+    public function project_review(Request $request)
+    {
+        try{
+            $project_id = Hashids_decode($request->project_id)[0];
+            return view("customer.review", ['project_id' => $project_id]);
+
+        } catch(\Exception $e) {
+            return 'error';
+        }
+
+    }
+
+    public function review(Request $request)
+    {
+        $request->validate([
+            'optradio1' => 'required',
+            'optradio2' => 'required',
+            'optradio3' => 'required',
+            'optradio4' => 'required',
+            'optradio5' => 'required',
+        ]);
+        try {
+            $review = ProjectReview::where('user_id','=', Auth::user()->id)
+                ->where('project_id', '=', $request->project_id)
+                ->where('tradesperson_id', '=', $request->tradesperson_id)
+                ->get();
+            if (!$review) {
+                $review = new ProjectReview();
+                $review->user_id = Auth::user()->id;
+                $review->tradesperson_id = $request->tradesperson_id;
+                $review->project_id = $request->project_id;
+                $review->punctuality = $request->optradio1;
+                $review->workmanship = $request->optradio2;
+                $review->tidiness = $request->optradio3;
+                $review->price_accuracy = $request->optradio4;
+                $review->detailed_review = $request->optradio5;
+                $review->description = $request->detailed_review;
+                $review->save();
+                return 'Saved';
+            } else {
+                $review = DB::table('project_reviews')
+                ->where('user_id', '=', Auth::user()->id,)
+                ->where('project_id','=', $request->project_id)
+                ->where('tradesperson_id','=', $request->tradesperson_id)
+                ->update([
+                    'punctuality' => $request->optradio1,
+                    'workmanship' => $request->optradio2,
+                    'tidiness' => $request->optradio3,
+                    'price_accuracy' => $request->optradio4,
+                    'detailed_review' => $request->optradio5,
+                    'description' => $request->detailed_review
+                ]);
+                return 'Review Updated';
+            }
+
+        } catch(\Exception $e) {
+            return 'error';
+        }
+    }
 }
