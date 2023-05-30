@@ -1,4 +1,4 @@
-<div class="tab-pane fade @if ($status == 'submitted_for_review') active show @endif" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+<div class="tab-pane fade @if ($status == 'submitted_for_review')active show @endif" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
     <div class="row mb-3">
         <div class="col-md-8">
             @if ($status == 'project_started' || $status == 'awaiting_your_review')
@@ -47,62 +47,52 @@
         </div>
     </div>
 
+    @php $is_media_present = false; @endphp
     <div class="col-md-12">
         <h3>Photo(s)/Video(s)</h3>
         <div class="row">
             <div class="pv_top">
                 @foreach($doc as $docs)
-                    @if($docs->file_type=='video'|| $docs->file_type=='image' )
-
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#profile_pics"><img src="{{$docs->url}}" alt=""  width="150" height="0"  /></a>
-
-
-                        <!-- The Modal Change profile photo-->
-                        <div class="modal fade select_address" id="profile_pics" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header pb-0">
-
-                                        <h5 class="modal-title" id="exampleModalLabel"></h5>
-
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                                                    fill="black"
-                                                />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-12 supported_">
-                                                <div>
-                                                    <img src="{{$docs->url}}" alt="" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    @if (strtolower($docs->file_type) == 'image')
+                        @php $is_media_present = true; @endphp
+                        <a href="javascript:void(0);">
+                            <img src="{{ $docs->url }}" />
+                        </a>
+                    @endif
+                    @if (strtolower($docs->file_type) == 'video')
+                        @php $is_media_present = true; @endphp
+                        <div class="video-mask">
+                            <a href="javascript:void(0);">
+                                <video width="100" height="69"> <source src="{{ $docs->url }}"> </video>
+                            </a>
                         </div>
-                        <!-- The Modal Change profile photo END-->
                     @endif
                 @endforeach
+
+                @if(!$is_media_present)
+                    No photo/video is uploaded
+                @endif
             </div>
         </div>
     </div>
 
+    @php $is_document_present = false; @endphp
     <div class="col-md-12 mt-4">
-        <h3>Files(s)</h3>
-
+        <h3>File(s)</h3>
         <div class="row">
             <div class="mt-2">
                 @foreach($doc as $docs)
-                    @if($docs->file_type=='document')
-                        <div class="d-inline mr-4 img-text"><a href="{{$docs->url}}" target="_blank"><img src="" alt="">{{$docs->filename}}</a></div>
+                    @if(strtolower($docs->file_type) == 'document')
+                        @php $is_document_present=true; @endphp
+                        <div class="d-inline mr-4 img-text">
+                            <a href="{{$docs->url}}" target="_blank"><img src="" alt="">{{$docs->filename}}</a>
+                        </div>
                     @endif
                 @endforeach
+
+                @if(!$is_document_present)
+                    No file is uploaded
+                @endif
             </div>
         </div>
     </div>
