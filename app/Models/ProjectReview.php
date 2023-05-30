@@ -9,6 +9,8 @@ class ProjectReview extends Model
 {
     use HasFactory;
 
+    protected $table = 'project_reviews';
+
     protected $fillable = [
         'user_id',
         'project_id',

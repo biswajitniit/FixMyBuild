@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminloginController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
@@ -34,24 +35,24 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     Artisan::call('config:clear');
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
 
-Route::post('/capture-video-streaming', [MediaController::class,'capture_video_streaming'])->name('capture-video-streaming');
-Route::post('/capture-photo', [MediaController::class,'capture_photo'])->name('capture-photo');
+Route::post('/capture-video-streaming', [MediaController::class, 'capture_video_streaming'])->name('capture-video-streaming');
+Route::post('/capture-photo', [MediaController::class, 'capture_photo'])->name('capture-photo');
 
-Route::get('/dropzoneupload', [MediaController::class,'dropzoneupload'])->name('dropzoneupload');
-Route::post('/dropzonesave', [MediaController::class,'dropzonesave'])->name('dropzonesave');
-Route::post('/dropzonedestroy', [MediaController::class,'dropzonedestroy'])->name('dropzonedestroy');
+Route::get('/dropzoneupload', [MediaController::class, 'dropzoneupload'])->name('dropzoneupload');
+Route::post('/dropzonesave', [MediaController::class, 'dropzonesave'])->name('dropzonesave');
+Route::post('/dropzonedestroy', [MediaController::class, 'dropzonedestroy'])->name('dropzonedestroy');
 
 
- Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login');
- Route::post('/admin/login', [AdminLoginController::class, 'postlogin'])->name('adminLoginPost');
-    // Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
-    // Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
+Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login');
+Route::post('/admin/login', [AdminLoginController::class, 'postlogin'])->name('adminLoginPost');
+// Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
+// Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
 
 
 
@@ -63,25 +64,25 @@ Route::post('/dropzonedestroy', [MediaController::class,'dropzonedestroy'])->nam
 //     Auth::routes();
 // });
 
-Route::group(['middleware' => 'prevent-back-history'],function(){
+Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::get('/', function () {
         return view('welcome');
     })->name('home');
 
     //user section
-    Route::get('/login', [LoginController::class,'login'])->name('login');
-    Route::post('/user/loginpost', [LoginController::class,'loginpost'])->name('user.loginpost');
-    Route::get('/user/registration', [HomeController::class,'registration'])->name('user.registration');
-    Route::post('/user/save-user', [HomeController::class,'save_user'])->name('user.save-user');
+    Route::get('/login', [LoginController::class, 'login'])->name('login');
+    Route::post('/user/loginpost', [LoginController::class, 'loginpost'])->name('user.loginpost');
+    Route::get('/user/registration', [HomeController::class, 'registration'])->name('user.registration');
+    Route::post('/user/save-user', [HomeController::class, 'save_user'])->name('user.save-user');
     Route::get('account/verify/{token}', [HomeController::class, 'verifyAccount'])->name('user.verify');
 
 
 
-    Route::get('/about-us', [HomeController::class,'about_us'])->name('about-us');
-    Route::get('/contact-us', [HomeController::class,'contact_us'])->name('contact-us');
-    Route::get('/privacy-policy', [HomeController::class,'privacy_policy'])->name('privacy-policy');
-    Route::get('/termspage/{pageid}', [HomeController::class,'termspage'])->name('termspage');
-    Route::get('/terms-of-service', [HomeController::class,'terms_of_service'])->name('terms-of-service');
+    Route::get('/about-us', [HomeController::class, 'about_us'])->name('about-us');
+    Route::get('/contact-us', [HomeController::class, 'contact_us'])->name('contact-us');
+    Route::get('/privacy-policy', [HomeController::class, 'privacy_policy'])->name('privacy-policy');
+    Route::get('/termspage/{pageid}', [HomeController::class, 'termspage'])->name('termspage');
+    Route::get('/terms-of-service', [HomeController::class, 'terms_of_service'])->name('terms-of-service');
 
 
     Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
@@ -92,12 +93,12 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
 
 
 
-    Route::get('/auth/google', [GoogleController::class,'redirect'])->name('google-auth');
-    Route::get('/google/callback', [GoogleController::class,'callbackFromGoogle'])->name('callback');
+    Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google-auth');
+    Route::get('/google/callback', [GoogleController::class, 'callbackFromGoogle'])->name('callback');
 
 
-    Route::get('/auth/microsoft', [MicrosoftController::class,'redirect'])->name('microsoft-auth');
-    Route::get('/microsoft/callback', [GoogleController::class,'callbackFromMicrosoft'])->name('microsoftcallback');
+    Route::get('/auth/microsoft', [MicrosoftController::class, 'redirect'])->name('microsoft-auth');
+    Route::get('/microsoft/callback', [GoogleController::class, 'callbackFromMicrosoft'])->name('microsoftcallback');
 
 
     Route::get('/dashboard', function () {
@@ -113,12 +114,11 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         $user = Socialite::driver('google')->user();
     });
 
-    Route::group(['prefix' => 'admin','middleware' => 'auth:admin'], function () {
-
+    Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     });
 
 
-    Route::group(['middleware' => ['auth:admin']], function() {
+    Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
         Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
 
@@ -130,72 +130,70 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::get('/admin/project/awaiting-your-review-show/{projectid}', [ReviewerController::class, 'awaiting_your_review_show'])->name('awaiting-your-review-show');
         Route::post('/awaiting-your-review-save', [ReviewerController::class, 'awaiting_your_review_save'])->name('awaiting-your-review-save');
         Route::post('/awaiting-your-review-final-save', [ReviewerController::class, 'awaiting_your_review_final_save'])->name('awaiting-your-review-final-save');
-        Route::post('/get-builder-subcategory-list', [ReviewerController::class,'get_builder_subcategory_list'])->name('get-builder-subcategory-list');
-        Route::get('/admin/project/final-review/{projectid}', [ReviewerController::class,'final_review'])->name('final-review');
+        Route::post('/get-builder-subcategory-list', [ReviewerController::class, 'get_builder_subcategory_list'])->name('get-builder-subcategory-list');
+        Route::get('/admin/project/final-review/{projectid}', [ReviewerController::class, 'final_review'])->name('final-review');
 
 
         Route::resource('terms', TermsController::class);
 
 
 
-        Route::get('getbuildercategory', [BuildercategoryController::class,'getbuildercategory'])->name('getbuildercategory');
-        Route::delete('getbuildercategory/delete', [BuildercategoryController::class,'delete'])->name('getbuildercategory.delete');
+        Route::get('getbuildercategory', [BuildercategoryController::class, 'getbuildercategory'])->name('getbuildercategory');
+        Route::delete('getbuildercategory/delete', [BuildercategoryController::class, 'delete'])->name('getbuildercategory.delete');
         Route::resource('buildercategory', BuildercategoryController::class);
 
-        Route::get('getbuildersubcategory', [BuildersubcategoryController::class,'getbuildersubcategory'])->name('getbuildersubcategory');
-        Route::delete('getbuildersubcategory/delete', [BuildersubcategoryController::class,'delete'])->name('getbuildersubcategory.delete');
+        Route::get('getbuildersubcategory', [BuildersubcategoryController::class, 'getbuildersubcategory'])->name('getbuildersubcategory');
+        Route::delete('getbuildersubcategory/delete', [BuildersubcategoryController::class, 'delete'])->name('getbuildersubcategory.delete');
         Route::resource('buildersubcategory', BuildersubcategoryController::class);
 
 
         Route::resource('admin/cms', 'App\Http\Controllers\Admin\Cms\CmsController');
-
-
-
     });
 
-    Route::group(['prefix' => 'customer','middleware' => 'auth'], function () {
+    Route::group(['prefix' => 'customer', 'middleware' => 'auth'], function () {
 
 
-        Route::get('profile', [CustomerController::class,'customer_profile'])->name('customer.profile');
-        Route::get('projects', [CustomerController::class,'customer_project'])->name('customer.project');
-        Route::get('newproject', [CustomerController::class,'customer_newproject'])->name('customer.newproject');
-        Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
+        Route::get('profile', [CustomerController::class, 'customer_profile'])->name('customer.profile');
+        Route::get('projects', [CustomerController::class, 'customer_project'])->name('customer.project');
+        Route::get('newproject', [CustomerController::class, 'customer_newproject'])->name('customer.newproject');
+        Route::post('storeproject', [CustomerController::class, 'customer_storeproject'])->name('customer.storeproject');
 
-        Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
+        Route::get('project/{id}', [CustomerController::class, 'details'])->name('customer.project_details');
 
 
-        Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
-        Route::post('deletecustomermediafiles', [CustomerController::class,'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
+        Route::post('getcustomermediafiles', [CustomerController::class, 'getcustomermediafiles'])->name('customer.getcustomermediafiles');
+        Route::post('deletecustomermediafiles', [CustomerController::class, 'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
 
         // Notification Route
-        Route::get('/notification', [NotificationController::class,'index'])->name('customer.notifications.index');
-        Route::post('/notification/data_store', [NotificationController::class,'data_store'])->name('notifications.data_store');
-        Route::post('/notification/data_fetch', [NotificationController::class,'get_notification_data'])->name('notifications.data_fetch');
+        Route::get('/notification', [NotificationController::class, 'index'])->name('customer.notifications.index');
+        Route::post('/notification/data_store', [NotificationController::class, 'data_store'])->name('notifications.data_store');
+        Route::post('/notification/data_fetch', [NotificationController::class, 'get_notification_data'])->name('notifications.data_fetch');
 
-        Route::put('updatecustomeravatar', [CustomerController::class,'update_avatar'])->name('customer.updateavatar');
-        Route::put('updatecustomername', [CustomerController::class,'update_name'])->name('customer.updatename');
-        Route::post('changecustomerpassword', [CustomerController::class,'change_password'])->name('customer.changepassword');
-        Route::put('updatecustomerphone', [CustomerController::class,'update_phone'])->name('customer.updatephone');
+        Route::put('updatecustomeravatar', [CustomerController::class, 'update_avatar'])->name('customer.updateavatar');
+        Route::put('updatecustomername', [CustomerController::class, 'update_name'])->name('customer.updatename');
+        Route::post('changecustomerpassword', [CustomerController::class, 'change_password'])->name('customer.changepassword');
+        Route::put('updatecustomerphone', [CustomerController::class, 'update_phone'])->name('customer.updatephone');
 
 
         /**
-        * Logout Route
-        */
-        Route::get('/logout', [LogoutsController::class,'logout'])->name('logout');
+         * Logout Route
+         */
+        Route::get('/logout', [LogoutsController::class, 'logout'])->name('logout');
     });
 
 
-    Route::group(['prefix' => 'tradeperson','middleware' => 'auth'], function () {
-        Route::get('company-registration', [TradepersionDashboardController::class,'registrationsteptwo'])->name('tradepersion.compregistration');
-        Route::post('save-company-registration', [TradepersionDashboardController::class,'saveregistrationsteptwo'])->name('tradepersion.savecompregistration');
-        Route::get('bank-registration', [TradepersionDashboardController::class,'registrationstepthree'])->name('tradepersion.bankregistration');
-        Route::post('save-bank-registration', [TradepersionDashboardController::class,'saveregistrationstepthree'])->name('tradepersion.savebankregistration');
+    Route::group(['prefix' => 'tradeperson', 'middleware' => 'auth'], function () {
+        Route::get('company-registration', [TradepersionDashboardController::class, 'registrationsteptwo'])->name('tradepersion.compregistration');
+        Route::post('save-company-registration', [TradepersionDashboardController::class, 'saveregistrationsteptwo'])->name('tradepersion.savecompregistration');
+        Route::get('bank-registration', [TradepersionDashboardController::class, 'registrationstepthree'])->name('tradepersion.bankregistration');
+        Route::post('save-bank-registration', [TradepersionDashboardController::class, 'saveregistrationstepthree'])->name('tradepersion.savebankregistration');
         Route::get('get-company-details', [TradepersionDashboardController::class, 'get_companydetails']);
         Route::get('get-company-vat-details', [TradepersionDashboardController::class, 'get_company_vat_details']);
-
     });
 
-    Route::delete('/users/users-delete_account', [UserController::class,'delete_account'])->name('user.user-delete-account');
-    Route::post('/users/verify-email', [UserController::class,'verify_mail'])->name('user.verify_mail');
+    Route::delete('/users/users-delete_account', [UserController::class, 'delete_account'])->name('user.user-delete-account');
+    Route::post('/users/verify-email', [UserController::class, 'verify_mail'])->name('user.verify_mail');
 
+    Route::get('project/submit-review/{project_id}', [CustomerController::class, 'project_review'])->name('customer.project_review');
+    Route::post('project/submit-review', [CustomerController::class, 'review'])->name('customer.review');
 });
