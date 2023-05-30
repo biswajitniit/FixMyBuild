@@ -160,7 +160,6 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('newproject', [CustomerController::class, 'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class, 'customer_storeproject'])->name('customer.storeproject');
 
-<<<<<<< HEAD
         Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
         Route::get('project-return-for-review/{id}', [CustomerController::class,'project_return_for_review'])->name('customer.project-return-for-review');
         Route::post('editproject-return-for-review/{projectid}', [CustomerController::class,'customer_editproject'])->name('customer.editproject-return-for-review');
@@ -169,13 +168,6 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('getprojectmediafiles', [CustomerController::class,'getprojectmediafiles'])->name('customer.getprojectmediafiles');
 
         Route::post('deletecustomermediafiles', [CustomerController::class,'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
-=======
-        Route::get('project/{id}', [CustomerController::class, 'details'])->name('customer.project_details');
-
-
-        Route::post('getcustomermediafiles', [CustomerController::class, 'getcustomermediafiles'])->name('customer.getcustomermediafiles');
-        Route::post('deletecustomermediafiles', [CustomerController::class, 'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
->>>>>>> 1b208eb3f3a8c2e52a5e116a9ab87c60446946b0
 
         // Notification Route
         Route::get('/notification', [NotificationController::class, 'index'])->name('customer.notifications.index');
