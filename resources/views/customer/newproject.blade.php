@@ -429,6 +429,8 @@
 @push('scripts')
 
 <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
+<script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
+<script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script language="JavaScript">

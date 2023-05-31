@@ -124,12 +124,86 @@ class CustomerController extends Controller
         }
     }
 
-    function deletecustomermediafiles(Request $request){
+    function getprojectmediafiles(Request $request){
+        $getcustomerfiles = Projectfile::where('project_id',Hashids_decode($request->projectid))->get();
+        if($getcustomerfiles){
+            $html = '';
+            foreach($getcustomerfiles as $row){
+                $html .= '<div class="d-inline mr-3">'.$row->filename.'<a onclick="deletetempmediafile('.$row->id.')"> ('. getRemoteFileSize($row->url) .') <img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+            }
+            echo $html;
+        }
+    }
 
+    function deletecustomermediafiles(Request $request){
         $filename = Tempmedia::where('id',$request->deleteid)->first()->filename;
         Tempmedia::where('id',$request->deleteid)->delete();
         Storage::disk('s3')->delete('Testfolder/'. $filename);
     }
+
+
+    public function project_return_for_review(Request $request, $id){
+        $project = Project::where('id',Hashids_decode($id))->first();
+        $projectaddresses = Projectaddresses::where('project_id',Hashids_decode($id))->first();
+        $projectfile = Projectfile::where('project_id',Hashids_decode($id))->first();
+        return view("customer/project-returned-for-review",compact('project','projectaddresses','projectfile'));
+    }
+
+    public function customer_editproject(Request $request, $projectid){
+
+        $this->validate($request, [
+            'forename'                        => 'required',
+            'surname'                         => 'required',
+            'project_name'                    => 'required',
+            'contact_mobile_no'               => 'required',
+            'contact_email'                   => 'required',
+        ],[
+            'forename.required'          => 'Please enter forename',
+            'surname.required'           => 'Please enter surname',
+            'project_name.required'      => 'Please enter project name',
+            'contact_mobile_no.required' => 'Please enter mobile',
+            'contact_email.required'     => 'Please enter contact email',
+        ]);
+
+        $data = array(
+            'forename'                 => $request['forename'],
+            'surname'                  => $request['surname'],
+            'project_name'             => $request['project_name'],
+            'description'              => $request['description'],
+            'contact_mobile_no'        => $request['contact_mobile_no'],
+            'contact_home_phone'       => $request['contact_home_phone'],
+            'contact_email'            => $request['contact_email'],
+            'status'                   => 'submitted_for_review',
+            'reviewer_status'          => ''
+        );
+        Project::where('id', Hashids_decode($projectid))->update($data);
+
+
+        if($request->addresstype == 1){ // Enter your postcode
+            $datapostcode = array(
+                'address_line_one'      => $request['zipcode_selected_address_line_one'],
+                'address_line_two'      => $request['zipcode_selected_address_line_two'],
+                'town_city'             => $request['zipcode_selected_town_city'],
+                'postcode'              => $request['zipcode_selected_postcode']
+            );
+            Projectaddresses::where('id', Hashids_decode($projectid))->update($datapostcode);
+
+        }elseif($request->addresstype == 2){ // type your address
+            $datapostcode = array(
+                'address_line_one'      => $request['address_line_one'],
+                'address_line_two'      => $request['address_line_two'],
+                'town_city'             => $request['town_city'],
+                'postcode'              => $request['postcode']
+            );
+            Projectaddresses::where('id', Hashids_decode($projectid))->update($datapostcode);
+        }
+
+
+
+        return redirect()->back()->with('message', 'Project return for review send successfully.');
+    }
+
+
 
     function details(Request $request){
         $id=Hashids_decode($request->id);

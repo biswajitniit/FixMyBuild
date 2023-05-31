@@ -38,11 +38,6 @@ class Estimate extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function tradesPersonName()
-    {
-        return $this->tradesperson->name;
-    }
-
     public function taskTotalAmount()
     {
         $amount = 0;

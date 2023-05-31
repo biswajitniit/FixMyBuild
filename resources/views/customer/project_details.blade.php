@@ -332,10 +332,20 @@
 
     });
 
-    // When the user clicks on div, open the popup
-    function myFunction() {
-        var popup = document.getElementById("myPopup");
-        popup.classList.toggle("show");
+    function customerFeedbackInfo() {
+        if ($('#myPopup').hasClass( "show" )){
+            $('#myPopup').hide();
+        } else {
+            $('#myPopup').show();
+        }
+
+        $('#myPopup').toggleClass("show");
     }
+
+    // When the user hovers on tooltip, open the popup
+    $('#customer_feedback_tooltip').hover(function(e) {
+        customerFeedbackInfo();
+    });
+
 </script>
 @endpush
