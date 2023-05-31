@@ -268,12 +268,14 @@ class CustomerController extends Controller
         try {
             $review = ProjectReview::where('user_id','=', Auth::user()->id)
                 ->where('project_id', '=', $request->project_id)
-                ->where('tradesperson_id', '=', $request->tradesperson_id)
                 ->get();
-            if (!$review) {
+            $tradeperson = Estimate::where('project_id', $request->project_id)
+                ->where('project_awarded', 1)
+                ->value('tradesperson_id');
+            if (count($review)==0) {
                 $review = new ProjectReview();
                 $review->user_id = Auth::user()->id;
-                $review->tradesperson_id = $request->tradesperson_id;
+                $review->tradesperson_id = $tradeperson;
                 $review->project_id = $request->project_id;
                 $review->punctuality = $request->optradio1;
                 $review->workmanship = $request->optradio2;
@@ -287,7 +289,7 @@ class CustomerController extends Controller
                 $review = DB::table('project_reviews')
                 ->where('user_id', '=', Auth::user()->id,)
                 ->where('project_id','=', $request->project_id)
-                ->where('tradesperson_id','=', $request->tradesperson_id)
+                ->where('tradesperson_id','=', $tradeperson)
                 ->update([
                     'punctuality' => $request->optradio1,
                     'workmanship' => $request->optradio2,
