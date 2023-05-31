@@ -21,6 +21,8 @@ Route::namespace('Api')->group(function() {
     Route::post('/forgot-password', 'PasswordController@forgot_password');
     Route::post('/verify-otp', 'PasswordController@verify_otp');
     Route::post('/create-password', 'PasswordController@create_password');
+    
+
 
     Route::middleware('auth:sanctum')->group(function() {
       Route::post('/change-password', 'UserController@change_password');

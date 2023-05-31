@@ -45,7 +45,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'required|string|max:50|unique:users',
             'password' => 'required|string|min:5|confirmed',
-            'customer_or_tradesperson' => 'required|string',
+            'user_type' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -57,7 +57,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'customer_or_tradesperson'=>$request->customer_or_tradesperson,
+            'user_type'=>$request->user_type,
             'verification_code'=>strval($random)
         ]);
 
@@ -117,7 +117,7 @@ class AuthController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
 
-        return response()->json(['otp' => $random,"curl_response"=>$response], 201);
+        return response()->json(['otp' => $random,"message"=>'Otp sent to your email'], 201);
     }
     public function verify_email(Request $request){
         $validator = Validator::make($request->all(), [
@@ -136,6 +136,5 @@ class AuthController extends Controller
         }
         
         return response()->json(['message'=>'User registered successfully'],200);
-
     }
 }
