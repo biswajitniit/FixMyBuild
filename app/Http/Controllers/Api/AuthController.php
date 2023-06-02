@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -22,8 +23,8 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        $user = User::where('email', $request->email)->first();
+        try{
+            $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages(['errors' => ['email' => ['The provided credentials are incorrect!']]], 422);
@@ -36,6 +37,9 @@ class AuthController extends Controller
             'user_type'=> $user->customer_or_tradesperson,
             'token_type' => 'Bearer',
         ], 200);
+        } catch(Exception $e){
+            return response()->json($e->getMessage(),500);
+        }
     }
 
     public function signup(Request $request)
