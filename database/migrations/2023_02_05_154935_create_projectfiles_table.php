@@ -15,8 +15,10 @@ class CreateProjectfilesTable extends Migration
     {
         Schema::create('projectfiles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('project_id')->unsigned();
+            $table->unsignedBigInteger('project_id');
+            $table->string('file_type', 10);
             $table->string('filename')->nullable();
+            $table->string('file_original_name')->nullable();
             $table->string('file_extension')->nullable();
             $table->string('url')->nullable();
             $table->timestamps();

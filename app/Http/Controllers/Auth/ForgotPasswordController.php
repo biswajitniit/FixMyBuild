@@ -199,12 +199,19 @@ class ForgotPasswordController extends Controller
               'password_confirmation' => 'required'
           ]);
 
-          $updatePassword = DB::table('password_resets')
-                              ->where([
-                                'email' => $request->email,
-                                'token' => $request->token
-                              ])
-                              ->first();
+        //   $updatePassword = DB::table('password_resets')
+        //                       ->where([
+        //                         'email' => $request->email,
+        //                         'token' => $request->token
+        //                       ])
+        //                       ->first();
+
+        $updatePassword = DB::table('password_resets')
+                            ->where('email', '=', $request->email)
+                            ->where('token', '=', $request->token)
+                            ->where('created_at', '>', Carbon::now()->subHours(2))
+                            ->first();
+
 
           if(!$updatePassword){
               return back()->withInput()->with('error', 'Invalid token!');

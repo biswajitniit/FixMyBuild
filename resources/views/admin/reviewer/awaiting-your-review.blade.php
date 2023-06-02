@@ -34,9 +34,9 @@
                                 <thead>
                                     <tr class="bg-primary text-white">
                                         <th>Name</th>
-                                        {{-- <th>Category</th> --}}
                                         <th>Posting date</th>
                                         <th>Status</th>
+                                        <th>Reviewer Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -44,10 +44,10 @@
                                     @foreach ($project as $projects)
                                     <tr>
                                         <td>{{ $projects->forename.' '.$projects->surname }}</td>
-                                        {{-- <td>{{ $projects->forename.' '.$projects->surname }}</td> --}}
                                         <td>{{ date('d/m/Y h:i a',strtotime($projects->created_at)) }}</td>
                                         <td>{{ str_replace("_", " ", $projects->status) }}</td>
-                                        <td><a href="{{route('awaiting-your-review-show',[$projects->id])}}" title="View Projects"><i class="mdi mdi-eye"></i></a></td>
+                                        <td> @if($projects->reviewer_status == "Refer") <p class="btn btn-danger">Refer</p> @elseif($projects->reviewer_status == "Approve") <p class="btn btn-success">Approve</p> @else <p class="btn btn-warning active">Pending</p> @endif </td>
+                                        <td><a href="{{route('awaiting-your-review-show',[Hashids_encode($projects->id)])}}" title="View Projects"><i class="mdi mdi-eye"></i></a></td>
                                     </tr>
                                     @endforeach
                                 </tbody>

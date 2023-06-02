@@ -34,8 +34,7 @@
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
       <!-- Custom styles for this template -->
       <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
-
-
+      <link href="{{ asset('frontend/customcss/custom.css') }}" rel="stylesheet">
    </head>
    <body>
       <div class="main-contain">
@@ -57,7 +56,7 @@
             </header>
             <div class="auth-content">
                <div>
-                  <div class='row'>
+                  <div class='row mb-3'>
                      <div class='input-field col-md-12'>
                         <h2 class="heading1 mb-2 text-center color-blue">Sign in</h2>
                         <p  class="heading2">
@@ -77,35 +76,44 @@
                         </div>
                     @endif
 
-                  <form action="{{route('user.loginpost')}}" method="post" name="login">
+                    @if(session()->has('message'))
+                        <div class="alert alert-success mt-15">
+                            {{ session()->get('message') }}
+                        </div>
+                    @endif
+
+
+                  <form action="{{route('user.loginpost')}}" method="post" name="login" id="login">
                     @csrf
                      <div class="row">
-                        <div class="form-group  col-md-12 mt-5">
-                           <input type="email" name="email"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="John.abc@gmail.com" required value="{{old('email')}}">
+                        <div class="form-group  col-md-12">
+                           <input type="email" name="email" id="email" class="form-control"  aria-describedby="emailHelp" placeholder="Email*" required  value="{{old('email')}}" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$">
                         </div>
                      </div>
 
-                     {{-- <div class="row">
-                        <div class="form-group col-md-12 mt-4 pw_">
-                           <input type="password" name="password" class="form-control" id="id_password" placeholder="Password*" required >
-                           <em><a href="#"><i class="fa fa-eye"  id="togglePassword"></i></a></em>
-                        </div>
-                     </div> --}}
-
                      <div class="row">
+                        <div class="form-group col-md-12 mt-4 pw_">
+                           <input type="password" name="password" class="form-control" id="password" placeholder="Password*" required >
+                           <em onclick="tooglepassword()">
+                             <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
+                           </em>
+                        </div>
+                     </div>
+
+                     {{--<div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
                             <div class="input-group">
                                 <input class="form-control" name="password" type="password"  placeholder="Password*" required/>
-                                {{-- <div class="input-group-append"> --}}
+                                {{-- <div class="input-group-append">
                                     <span class="input-group-text">
                                         <a href="#" class="toggle_hide_password">
                                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
                                         </a>
                                     </span>
-                                {{-- </div> --}}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </div>--}}
 
                      <div class="form-check mt-3">
                         <label class="form-check-label">
@@ -139,10 +147,45 @@
       </div>
       <!-- Bootstrap core JavaScript -->
       <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
+      <script src="{{ asset('frontend/validatejs/jquery.validate.js') }}"></script>
       {{-- <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
       <script src="{{ asset('frontend/js/particles.js') }}"></script>
       <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
       <script>
+        $(document).ready(function(){
+            $("#login").validate({
+                // Specify validation rules
+                rules: {
+                    email: "required",
+                    password: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    email: {
+                        required: "Please enter email address",
+                        email: "Please enter a valid email address.",
+                    },
+                    password: {
+                        email: "Please enter password",
+                    },
+                },
+
+            });
+        });
+        function tooglepassword(){
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+                x.type = "text";
+                $("#eye").removeClass("fa fa-eye-slash");
+                $("#eye").addClass("fa fa-eye");
+            } else {
+                x.type = "password";
+                $("#eye").removeClass("fa fa-eye");
+                $("#eye").addClass("fa fa-eye-slash");
+            }
+        }
+
         $( document ).ready(function() {
             $('input').attr('autocomplete','off');
 
