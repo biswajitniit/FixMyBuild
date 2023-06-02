@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Awaiting your review')
+@section('title', 'Projects')
 @section('content')
 
 
 <div class="main-panel">
     <div class="content-wrapper pb-0">
         <div class="page-header">
-            <h3 class="page-title">Awaiting your review</h3>
+            <h3 class="page-title">Projects</h3>
             <div class="header-right d-flex flex-wrap mt-2 mt-sm-0">
                 {{-- <button type="button"  class="btn btn-primary mt-2 mt-sm-0 btn-icon-text">
                   <i class="mdi mdi-plus-circle"></i> Submitted For Review </button> --}}
@@ -26,7 +26,7 @@
 
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Awaiting your review</h4>
+                <h4 class="card-title">Projects</h4>
                 <div class="row">
                     <div class="col-12">
                         <div class="table-responsive">
@@ -43,9 +43,25 @@
                                 <tbody>
                                     @foreach ($project as $projects)
                                     <tr>
-                                        <td>{{ $projects->forename.' '.$projects->surname }}</td>
+                                        <td>{{ $projects->project_name }}</td>
                                         <td>{{ date('d/m/Y h:i a',strtotime($projects->created_at)) }}</td>
-                                        <td>{{ str_replace("_", " ", $projects->status) }}</td>
+                                            @switch($projects->status)
+                                            @case('submitted_for_review')
+                                                <td class="text-info">Submitted for review</td>
+                                                @break
+                                            @case('returned_for_review')
+                                                <td class="text-dark">Returned for review</td>
+                                                @break
+                                            @case('estimation')
+                                                <td class="text-primary">View estimates</td>
+                                                @break
+                                            @case('project_started')
+                                                <td class="text-success">Project started</td>
+                                                @break
+                                            @case('awaiting_your_review')
+                                                <td class="text-awaiting">Awaiting your feedback</td>
+                                                @break
+                                            @endswitch
                                         <td> @if($projects->reviewer_status == "Refer") <p class="btn btn-danger">Refer</p> @elseif($projects->reviewer_status == "Approve") <p class="btn btn-success">Approve</p> @else <p class="btn btn-warning active">Pending</p> @endif </td>
                                         <td><a href="{{route('awaiting-your-review-show',[Hashids_encode($projects->id)])}}" title="View Projects"><i class="mdi mdi-eye"></i></a></td>
                                     </tr>

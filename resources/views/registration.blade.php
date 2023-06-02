@@ -92,7 +92,7 @@
 
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <input type="text" name="name" id="fullname" class="form-control" placeholder="Full Name"  required value="{{old('name')}}"/>
+                        <input type="text" name="fullname" id="fullname" class="form-control" placeholder="Full Name"  required value="{{old('name')}}"/>
                     </div>
                 </div>
 
@@ -140,7 +140,7 @@
 
                 <div class="form-check mt-4">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif required/> I have read and agree to FixMyBuild's
+                        <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif onclick="checkBox()" required/> I have read and agree to FixMyBuild's
 
                         <a href="{{ url('/terms-of-service') }}">Terms of Service</a> and <a href="{{ url('/privacy-policy') }}">Privacy Policy</a>.
                     </label>
@@ -148,7 +148,7 @@
 
                 <div class="row">
                     <div class="form-group col-md-12 mt-4">
-                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="submit" id="register" class="btn btn-primary" disabled>Register</button>
                     </div>
                 </div>
 
@@ -190,9 +190,22 @@
         $("#userregistration").validate({
             // Specify validation rules
             rules: {
-                fullname: "required",
-                email: "required",
+                fullname: {
+                    required: true,
+                },
+                email: {
+                    required: true,
+                },
                 password: {
+                    required: true,
+                },
+                password_confirmation: {
+                    required: true,
+                },
+                phone: {
+                    required: true,
+                },
+                customer_or_tradesperson: {
                     required: true,
                 }
             },
@@ -202,10 +215,18 @@
                 },
                 email: {
                     required: "Please enter email address",
-                    email: "Please enter a valid email address.",
                 },
                 password: {
                     required: "Please enter password",
+                },
+                password_confirmation: {
+                    required: "Please confirm password",
+                },
+                phone: {
+                    required: "Please enter phone number",
+                },
+                customer_or_tradesperson: {
+                    required: "Are you a customer or tradeperson?",
                 },
             },
 
@@ -318,7 +339,16 @@
         }
     }
 
-
+    function checkBox() {
+            const checkbox = document.getElementById("terms_of_service");
+            const button  = document.getElementById("register");
+            if (checkbox.checked == false) {
+                button.disabled = true;
+            }
+            else{
+                  button.disabled = false;
+            }
+    }
   </script>
 
 </body>

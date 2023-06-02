@@ -113,16 +113,20 @@ class CustomerController extends Controller
         return redirect()->back()->with('message', 'Project added successfully.');
     }
 
+
     function getcustomermediafiles(){
         $getcustomerfiles = Tempmedia::where('file_created_date',date('Y-m-d'))->where('user_id',Auth::user()->id)->get();
+
         if($getcustomerfiles){
             $html = '';
             foreach($getcustomerfiles as $row){
-                $html .= '<div class="d-inline mr-3">'.$row->filename.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+                // $html .= '<div class="d-inline mr-3">'.$row->filename.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+                $html .= '<div class="d-inline mr-3">'.'<img src="https://fmbstaging.s3.eu-west-2.amazonaws.com/Testfolder/'.$row->filename.'" alt="" width="50" "/>'.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
             }
             echo $html;
         }
     }
+
 
     function getprojectmediafiles(Request $request){
         $getcustomerfiles = Projectfile::where('project_id',Hashids_decode($request->projectid))->get();

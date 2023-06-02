@@ -99,7 +99,7 @@
                                                         <td class="text-success">Project started</td>
                                                         @break
                                                     @case('awaiting_your_review')
-                                                        <td class="text-awaiting">Awaiting your review</td>
+                                                        <td class="text-awaiting">Awaiting your feedback</td>
                                                         @break
                                                 @endswitch
                                                 <td>
@@ -107,8 +107,8 @@
                                                         <a href="#"><img src="{{ asset('frontend/img/chat-info.svg') }}" alt=""></a>
                                                     @endif
                                                 </td>
-                                                {{-- <td><a href="{{route('customer.project_details',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a></td> --}}
-                                                <td><a href="{{route('customer.project-return-for-review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a></td>
+                                                <td><a href="{{route('customer.project_details',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a></td>
+                                                {{-- <td><a href="{{route('customer.project-return-for-review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a></td> --}}
                                             </tr>
                                             @php
                                                 $count++;
