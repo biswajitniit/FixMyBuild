@@ -253,13 +253,8 @@
     <script src="{{ asset('frontend/js/plugins.js') }}"></script>
     <!-- Main JS -->
     <script src="{{ asset('frontend/js/main.js') }}"></script>
-    <!-- Video JS -->
-    <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
-    <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
-    {{-- <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script> --}}
     <script>
     tinymce.init({
         selector: 'textarea#editor',

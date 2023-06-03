@@ -107,7 +107,8 @@
                                                         <a href="#"><img src="{{ asset('frontend/img/chat-info.svg') }}" alt=""></a>
                                                     @endif
                                                 </td>
-                                                <td><a href="{{route('customer.project_details',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a></td>
+                                                {{-- <td><a href="{{route('customer.project_details',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a></td> --}}
+                                                <td><a href="{{route('customer.project-return-for-review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a></td>
                                             </tr>
                                             @php
                                                 $count++;

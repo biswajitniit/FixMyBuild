@@ -14510,6 +14510,33 @@ h2.company-name a:hover svg path {
     opacity:0.7;
 }
 
+#nav-details .pv_top{
+    display: flex;
+    gap: 1rem;
+}
+
+#nav-details .pv_top img{
+    width: 100px;
+    height: 69px;
+    border-radius: 10px;
+}
+
+#nav-details .pv_top .video-mask{
+    width: 100px;
+    height: 69px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+#nav-details .pv_top .video-mask video{
+    object-fit: cover;
+}
+
+#project_media_modal .modal-body img{
+    width: 100%;
+}
+
 /* mobile Responsive  */
 
 @media screen and (max-width: 1920px) {

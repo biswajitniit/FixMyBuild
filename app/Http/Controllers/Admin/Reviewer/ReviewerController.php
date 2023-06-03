@@ -58,11 +58,27 @@ class ReviewerController extends Controller
                 'subcategories'            => implode(',',$request->post('builder_subcategory'))
             );
             Project::where('id', $request->projectid)->update($data);
+
+            if($request->post('your_decision') == "Approve"){ //
+                $data = array(
+                    'status'          => 'estimation'
+                );
+                Project::where('id', $request->projectid)->update($data);
+            }
+
        }else{
             $data = array(
                 'reviewer_status'          => $request->post('your_decision')
             );
             Project::where('id', $request->projectid)->update($data);
+
+            if($request->post('your_decision') == "Approve"){ //
+                $data = array(
+                    'status'          => 'estimation'
+                );
+                Project::where('id', $request->projectid)->update($data);
+            }
+
        }
        // if record exist in then delete
         Projectnotesandcommend::where('project_id',$request->post('projectid'))->delete();
