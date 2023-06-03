@@ -12556,7 +12556,7 @@ p {
 }
 .iti--separate-dial-code .iti__selected-flag,
 .iti--allow-dropdown .iti__flag-container:hover .iti__selected-flag {
-  background-color: transparent;
+  background-color: transparent !important;
 }
 .dashboard_sidebar li {
   margin-bottom: 12px;

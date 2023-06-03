@@ -117,7 +117,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-link" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-light" onclick="Get_zipcode()">Save</button>
+                                                    <button type="button" class="btn btn-light" onclick="Get_zipcode()">Choose</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -228,18 +228,14 @@
                                       Upload files
                                    </a>
                                 </div>
-
                              </div>
-
-                            <div class="col-md-6 mt-2" id="getfilesformdb">
-
-                                {{-- <div class="d-inline mr-3">
-                                    abc.doc (3MB) <a href="#"><img src="{{ asset('frontend/img/crose-btn.svg') }}" alt="" /> </a>
-                                </div> --}}
-
+                            <div class="row">
+                                <div class="col-md-2 mt-2" id="getfilesformdb">
+                                    {{-- <div class="d-inline mr-3" id="getfilesformdb">
+                                        abc.doc (3MB) <a href="#"><img src="{{ asset('frontend/img/crose-btn.svg') }}" alt="" /> </a>
+                                    </div> --}}
+                                </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -343,35 +339,21 @@
                     {{-- <form method="POST" action="{{ route('capture-photo') }}" enctype="multipart/form-data"> --}}
                     <form id="capturephoto">
                         @csrf
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div id="my_camera"></div>
-                                        <input type="button" class="btn btn-outline-danger btn-block" value="Take Snapshot" onClick="take_snapshot()">
-                                        <input type="hidden" name="image" class="image-tag" >
-                                    </div>
-                                    <div class="col-md-6 ml-100">
-                                        {{-- <div id="results">Your captured image will appear here...</div> --}}
-                                        <div id="results"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                {{-- <button class="btn btn-danger">Submit</button> --}}
-                                <button class="btn btn-primary" type="submit">Submit</button>
-                            </div>
-                        </div>
+
+                            <div id="my_camera"></div>
+                            <input type="button" class="btn btn-outline-danger" value="Take Snapshot" onClick="take_snapshot()">
+                            <input type="hidden" name="image" class="image-tag" multiple>
+                            <div id="results" class="row"></div>
+
+                    </div>
+                    <div class="modal-footer">
+                            {{-- <button class="btn btn-danger">Submit</button> --}}
+                            <button class="btn btn-light" type="submit">Submit</button>
+                        <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
+                    </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
-
-                </div>
             </div>
-        </div>
     </div>
     <!-- The Modal Upload Photo file END-->
 
@@ -580,13 +562,36 @@
         })
         .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
     }
-
+    let imagesArray = []
     function take_snapshot() {
         Webcam.snap( function(data_uri) {
             $(".image-tag").val(data_uri);
-            document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+            imagesArray.push(data_uri)
+            document.getElementById('results').innerHTML = '<img src="'+data_uri+'" class="rounded"/>';
         } );
+        const form  = document.getElementById('capturephoto');
+        var formData = new FormData(form);
+            for (let i = 0; i < imagesArray; i++) {
+                formData.append('image' + i, imagesArray[i]);
+            }
+
+        displayImages()
     }
+    function displayImages() {
+        let images = ""
+        output=document.getElementById('results')
+        for (i = 0; i < imagesArray.length; i++){
+            images += `<div class="col-2 col-sm-2 col-md-2 mt-2 image">
+                        <img src="${imagesArray[i]}" alt="image" class="rounded">
+                        <span onclick="deleteImage(${i})">&times;</span>
+                    </div>`
+        }
+        output.innerHTML = images
+        }
+        function deleteImage(index) {
+        imagesArray.splice(index, 1)
+        displayImages()
+        }
 
     gUMbtn2 = id('gUMbtn2'),
     gUMbtn2.onclick = e => {
@@ -658,7 +663,7 @@
             }else{
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Before submit enter your postcode.!!',
+                    title: 'Enter your postcode.!!',
                     showConfirmButton: false,
                     timer: 2000
                 });
@@ -730,6 +735,8 @@
     $(document).ready(function(){
         $("form#capturephoto").submit(function(e){
             e.preventDefault();
+            var success=1
+            var images = document.getElementById('image');
             var formData = new FormData(this);
             Swal.fire({
             title: 'Are you sure?',
@@ -741,6 +748,7 @@
             confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    for (i = 0; i < imagesArray.length; i++){
                     $.ajax({
                         url: '{{ route("capture-photo") }}',
                         type: 'POST',
@@ -748,21 +756,26 @@
                         cache: false,
                         contentType: false,
                         processData: false,
-                        data: formData,
+                        data: {image:'images[i]'},
                         success: (response) => {
                             // success
-                            Swal.fire({
+                            success='1'
+                        },
+                        error: (response) => {
+                            console.log(response);
+                            success=response
+                        }
+                    });}
+                    if(success=='1'){
+                         Swal.fire({
                                 //position: 'top-end',
                                 icon: 'success',
                                 title: 'Image uploaded successfully.',
                                 showConfirmButton: false,
                                 timer: 1500
                             })
-                        },
-                        error: (response) => {
-                            console.log(response);
-                        }
-                    });
+                    } else{console.log(success);}
+
                 }
             })
         });

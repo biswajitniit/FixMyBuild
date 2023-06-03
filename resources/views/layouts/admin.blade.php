@@ -155,7 +155,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('admin/project/awaiting-your-review') }}">
                   <i class="mdi mdi-view-dashboard menu-icon"></i>
-                  <span class="menu-title">Awaiting your review</span>
+                  <span class="menu-title">Projects</span>
                 </a>
             </li>
 

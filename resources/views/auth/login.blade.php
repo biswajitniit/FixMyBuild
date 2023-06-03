@@ -164,10 +164,9 @@
                 messages: {
                     email: {
                         required: "Please enter email address",
-                        email: "Please enter a valid email address.",
                     },
                     password: {
-                        email: "Please enter password",
+                        required: "Please enter password",
                     },
                 },
 

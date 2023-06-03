@@ -2,21 +2,33 @@
 .error{
     color: red;
   }
-
+/*
   label.error{
     color: var(--color_gray);
     background-color: #FBE1E1;
     padding: 3px 5px;
     margin-top: 2px;
+  } */
+  label.error{
+    color: #F00;
+    padding: 3px 5px;
+    margin-top: 2px;
   }
-
 #password-strength-status, #password-strength-status-confirm {
     padding: 5px 10px;
     border-radius: 4px;
     margin-top: 5px;
 }
-
 .medium-password {
+    color: #ffb100;
+}
+.strong-password {
+    color: #0f8f2c;
+}
+.weak-password {
+    color: #f00;
+}
+/* .medium-password {
     background-color: #fd0;
 }
 
@@ -27,4 +39,5 @@
 .strong-password {
     background-color: #D5F9D5;
 }
+*/
 /* end  Registration page css */

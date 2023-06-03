@@ -23,7 +23,7 @@ class ReviewerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function awaiting_your_review(){
-        $project = Project::where('Status','submitted_for_review')->get();
+        $project = Project::all();
         return view("admin.reviewer.awaiting-your-review",compact('project'));
     }
 
