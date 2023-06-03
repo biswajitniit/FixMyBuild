@@ -11,9 +11,11 @@ use App\Models\TraderDetail;
 use App\Models\Traderareas;
 use App\Models\Traderworks;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Http;
 use Auth;
 use Redirect;
+use stdClass;
 
 class TradepersionDashboardController extends Controller
 {
@@ -34,7 +36,7 @@ class TradepersionDashboardController extends Controller
             'phone_code'        => 'required',
             'phone_number'      => 'required',
             'email'             => 'required',
-            'designation'       => 'required',
+            'company_role'       => 'required',
             'vat_reg'           => 'required',
             'subworktype'       => 'required',
             'subareacovers'     => 'required',
@@ -48,7 +50,7 @@ class TradepersionDashboardController extends Controller
             'phone_code.required'       => 'Please select your phone code',
             'phone_number.required'     => 'Please enter your phone number',
             'email.required'            => 'Please enter your email',
-            'designation.required'      => 'Please enter your designation',
+            'company_role.required'     => 'Please select your role in the company',
             'vat_reg.required'          => 'Please enter your vat number and validate',
             'subworktype.required'      => 'Please select work you do',
             'subareacovers.required'    => 'Please select area do you cover',
@@ -123,19 +125,26 @@ class TradepersionDashboardController extends Controller
         $traderdetails->bnk_account_name = $request->bnk_account_name;
         $traderdetails->bnk_sort_code = $request->bnk_sort_code;
         $traderdetails->bnk_account_number = $request->bnk_account_number;
-        $traderdetails->builder_amendment = $request->builder_amendment;
-        $traderdetails->noti_new_quotes = $request->noti_new_quotes;
-        $traderdetails->noti_quote_accepted = $request->noti_quote_accepted;
-        $traderdetails->noti_project_stopped = $request->noti_project_stopped;
-        $traderdetails->noti_quote_rejected = $request->noti_quote_rejected;
-        $traderdetails->noti_project_cancelled = $request->noti_project_cancelled;
         if($traderdetails->save()){
+            $notification = new stdClass();
+            $notification->builder_amendment = $request->builder_amendment ? $request->builder_amendment : 0;
+            $notification->noti_new_quotes = $request->noti_new_quotes ? $request->noti_new_quotes : 0;
+            $notification->noti_quote_accepted = $request->noti_quote_accepted ? $request->noti_quote_accepted : 0;
+            $notification->noti_project_stopped = $request->noti_project_stopped ? $request->noti_project_stopped : 0;
+            $notification->noti_quote_rejected = $request->noti_quote_rejected ? $request->noti_quote_rejected : 0;
+            $notification->noti_project_cancelled = $request->noti_project_cancelled ? $request->noti_project_cancelled : 0;
+            $notijson = json_encode($notification);
+            $notify = new Notification();
+            $notify->user_id = Auth::user()->id;
+            $notify->settings = $notijson;
+            $notify->save();
             $userstatus = User::where('id', Auth::user()->id)->update(['steps_completed' => "3"]);
             return Redirect::back()->with('status', 'success');
         }else{
             $errors = new MessageBag(['submiterror' => ['Something went wrong please try again.']]);
-		    return Redirect::back()->withErrors($errors)->withInput();
+            return Redirect::back()->withErrors($errors)->withInput();
         }
+        
     }
 
     function get_companydetails(Request $request){
