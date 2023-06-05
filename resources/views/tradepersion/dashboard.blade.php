@@ -403,11 +403,16 @@
                      <div class="col-md-8 col-8">
                         <h2>
                            <input type="text" value="{{$trader_details->vat_no}}" id="editVatno">
+                           <input type="hidden" name="vat_comp_name" id="vat_comp_nameid" value="">
+                           <input type="hidden" name="vat_comp_address" id="vat_comp_addressid" value="">
                         </h2>
+                        <div id="compavatdetails">
+
+                        </div>
                         <p id="editTraderVatResp"></p>
                      </div>
                      <div class="col-md-2 col-4 vat-edit">
-                        <a href="javascript:void(0)" onclick="updateVat()">
+                        <a href="javascript:void(0)" onclick="verifyCompanyVat()">
                            <svg width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M18.8737 2.29199L6.3737 14.792L0.644531 9.06283L2.11328 7.59408L6.3737 11.8441L17.4049 0.823242L18.8737 2.29199Z" fill="#061A48" />
                            </svg>
@@ -934,6 +939,35 @@
                location.reload();
             }
          });
+   }
+   function verifyCompanyVat(){
+      var vat_number = $('#editVatno').val();
+      if(vat_number){
+         vat_number = vat_number.replace(/\s+/g, "");
+         vat_number = vat_number.replace(/\D/g,'');
+         $.ajax
+         ({
+            type: "GET",
+            url: "get-company-vat-details",
+            data: {vat_number: vat_number},
+            success: function (data){
+               data = JSON.parse(data);
+               if(data.target){
+                  var comp_name = data.target.name;
+                  var comp_addr = data.target.address.line1+', '+data.target.address.line2+', '+data.target.address.postcode;
+                  $('#compavatdetails').html('<p><b>Company name:</b> '+comp_name+'</p><p><b>Company address:</b> '+comp_addr+'</p>');
+                  $('#vat_comp_nameid').val(comp_name);
+                  $('#vat_comp_addressid').val(comp_addr); 
+                  updateVat();
+               }else{
+                  $('#compavatdetails').html('<p style="color:red">Provided UK VAT does not match a registered company</p>');
+                  $('#vat_comp_nameid').val('');
+                  $('#vat_comp_addressid').val(''); 
+               }
+            }
+         });
+      }
+         
    }
 
 </script>

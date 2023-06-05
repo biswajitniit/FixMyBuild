@@ -646,6 +646,12 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script type="text/javascript">
+   var input = document.querySelector("#phone");
+         window.intlTelInput(input, {
+             separateDialCode: true,
+            //  excludeCountries: ["gb"],
+             preferredCountries: ["gb"]
+         });
    $(document).ready(function(){
       var selectedtel = $(".iti__selected-dial-code").text();
       $('#phone_code').val(selectedtel);
