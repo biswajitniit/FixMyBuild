@@ -162,6 +162,4 @@
 </section>
 <!--Code area end-->
 
-
-
 @endsection

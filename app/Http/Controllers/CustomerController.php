@@ -121,5 +121,9 @@ class CustomerController extends Controller
         
     }
 
+    function review(Request $request){
+        return view("customer/project_review");
+    }
+
 
 }

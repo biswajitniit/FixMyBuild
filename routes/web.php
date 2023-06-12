@@ -162,6 +162,8 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         Route::post('storeproject', [CustomerController::class,'customer_storeproject'])->name('customer.storeproject');
 
         Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
+        
+
 
 
         Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
@@ -176,7 +178,7 @@ Route::group(['middleware' => 'prevent-back-history'],function(){
         */
         Route::get('/logout', [LogoutsController::class,'logout'])->name('logout');
     });
-
+    Route::get('review', [CustomerController::class,'review']);
 
     Route::group(['prefix' => 'tradeperson','middleware' => 'auth'], function () {
         Route::get('company-registration', [TradepersionDashboardController::class,'registrationsteptwo'])->name('tradepersion.compregistration');
