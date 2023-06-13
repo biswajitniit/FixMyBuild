@@ -44,6 +44,7 @@ class ProjectController extends Controller
         }
         try{
             $result = Project::create([
+                'user_id'=> $request->user()->id,
                 'project_address_id' => $request->project_address_id,
                 'forename' => $request->forename,
                 'surname' => $request->surname,
@@ -51,13 +52,14 @@ class ProjectController extends Controller
                 'description' => $request->description,
                 'contact_mobile_no' => $request->contact_mobile_no,
                 'contact_email' => $request->contact_email,
+                'notes'=> $request->notes
             ]);
             if (!$result) {
                 throw ValidationException::withMessages(['message' => 'Something went wrong, please try again!'], 400);
             }
-            return response()->json(['message'=>'Address saved successfully'],200);
+            return response()->json(['message'=>'Project saved successfully'],200);
         } catch(Exception $e){
-            return response()->json($e,500);
+            return response()->json($e->getMessage(),500);
         }
     }
 

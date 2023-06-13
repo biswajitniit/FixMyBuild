@@ -8,6 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
+    protected $fillable =[
+        'user_id',
+        'project_address_id',
+        'forename',
+        'surname',
+        'project_name',
+        'description',
+        'contact_mobile_no',
+        'contact_email',
+        'notes'
+    ];
 
     /**
      * A Project has a project address id
