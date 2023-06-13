@@ -4,8 +4,10 @@
       <meta charset="utf-8">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       <title>FixMyBuild</title>
+      <meta name="csrf-token" content="{{ csrf_token() }}">
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="csrf-token" content="{{ csrf_token() }}">
       <!-- Favicon -->
       <!-- <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico"> -->
       <!--bootstrap min css-->
@@ -29,30 +31,34 @@
 
       <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
-      {{-- <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet"> --}}
-      <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 
-      <!--modernizr min js here-->
-      <script src="{{ asset('frontend/js/vendor/modernizr-3.7.1.min.js') }}"></script>
+      @if(Request::segment(1) != '')
+      <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
+      @endif
+
+      <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
       <link href="{{ asset('frontend/customcss/custom.css') }}" rel="stylesheet">
-        <!-- Matomo -->
-        <script>
-            var _paq = window._paq = window._paq || [];
-            /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-            _paq.push(['requireConsent']);
-            _paq.push(['requireCookieConsent']);
-            _paq.push(['trackPageView']);
-            _paq.push(['enableLinkTracking']);
-            (function() {
-           // var u="//localhost/webdev/FixMyBuild/matomo/";
-           var u="//localhost/webdev/FixMyBuild/matomo/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '1']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-            })();
-        </script>
-        <!-- End Matomo Code -->
+      {{-- <link rel="stylesheet" href="{{ asset('frontend/dropzone/dropzone.min.css') }}"> --}}
+
+
+      <!-- Matomo -->
+      <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['requireConsent']);
+        _paq.push(['requireCookieConsent']);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        // var u="//localhost/webdev/FixMyBuild/matomo/";
+        var u="//localhost/webdev/FixMyBuild/matomo/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+      </script>
+    <!-- End Matomo Code -->
 
    </head>
    @if(Request::segment(1) == '')
@@ -97,7 +103,11 @@
                                 @else
                                     <div class="dropdown">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                                            <img src="{{ asset('frontend/img/user_.png') }}" alt="">
+                                            @if (auth()->user()->profile_image)
+                                                <img src="{{ auth()->user()->profile_image }}" alt="" />
+                                            @else
+                                                <img src="{{ asset('images/user.png') }}" alt="" />
+                                            @endif
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                           <li><a class="dropdown-item" href="#">{{ Auth::user()->name }}<em>{{ Auth::user()->customer_or_tradesperson }}</em></a></li>
@@ -105,18 +115,18 @@
                                           <hr class="dropdown-divider">
                                           </hr>
                                           </li>
+                                          
                                           @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
                                           <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
                                           <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
                                           <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
-                                          <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                           @endif
-                                          @if(Auth::user()->customer_or_tradesperson == 'Tradepersion' && Auth::user()->status == 'Active')
-                                          <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
-                                          <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
-                                          <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
-                                          <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                          @if(Auth::user()->customer_or_tradesperson == 'Tradesperson' && Auth::user()->status == 'Active')
+                                          <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My profile</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My projects</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">New project</a></li>
                                           @endif
+                                          <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                         </ul>
                                     </div>
                                 @endif
@@ -157,7 +167,11 @@
                                 @else
                                    <div class="dropdown">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                                            <img src="{{ asset('frontend/img/user_.png') }}" alt="">
+                                            @if (auth()->user()->profile_image)
+                                                <img src="{{ auth()->user()->profile_image }}" alt="" />
+                                            @else
+                                                <img src="{{ asset('images/user.png') }}" alt="" />
+                                            @endif
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                             <li><a class="dropdown-item" href="#">{{ Auth::user()->name }}<em>{{ Auth::user()->customer_or_tradesperson}}</em></a></li>
@@ -168,15 +182,15 @@
                                             @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
                                              <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
                                              <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
+                                             <li><a class="dropdown-item" @if(Auth::user()->is_email_verified == 0) href="javascript:void(0)" @else href="{{ route('customer.newproject') }}" @endif>New project</a></li>
                                              <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                              @endif
-                                             @if(Auth::user()->customer_or_tradesperson == 'Tradepersion' && Auth::user()->status == 'Active')
-                                             <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                             @if(Auth::user()->customer_or_tradesperson == 'Tradesperson' && Auth::user()->status == 'Active')
+                                             <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My profile</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My projects</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">New project</a></li>
                                              @endif
+                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                         </ul>
                                     </div>
                                 @endif
@@ -215,22 +229,16 @@
      </footer>
      <!--footer area end-->
 
-     {{-- <div class="cookies-wrap">
-        <p>We use a privacy-focused product called Matomo on our website to analyze traffic and improve your user experience. The tool processes your IP address and stores cookies on your browser for 13 months. This data is processed by us and our web hosting platform. We do not share this data with the creators of Matomo themselves or any other 3rd parties. If you are comfortable with this please click "Accept".  Otherwise, or if you are under 18 years old, please click "Decline".
-           <a href="#">Learn more about our Privacy policy</a>.
-        </p>
-        <div class="text-center pre_ mt-2">
-           <a class="btn btn-light" href="#">Accept</a>
-           <a class="btn btn-light" href="#">Decline</a>
-        </div>
-     </div> --}}
      @include('cookieConsent::index')
 
 
-     <!-- <script></script> -->
+    <!--modernizr min js here-->
+    <script src="{{ asset('frontend/js/vendor/modernizr-3.7.1.min.js') }}"></script>
     <!-- JS ============================================ -->
     <!--jquery min js-->
     <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ asset('frontend/validatejs/jquery.validate.js') }}"></script>
+    <script src="{{ asset('frontend/js/jquery.ui.js') }}"></script>
     <!--popper min js-->
     <script src="{{ asset('frontend/js/popper.js') }}"></script>
     <!--bootstrap min js-->
@@ -241,19 +249,12 @@
     <script src="{{ asset('frontend/js/owl.carousel.min.js') }}"></script>
     <!--slick min js-->
     <script src="{{ asset('frontend/js/slick.min.js') }}"></script>
-    <!--jquery ui min js-->
-    <script src="{{ asset('frontend/js/jquery.ui.js') }}"></script>
     <!-- Plugins JS -->
     <script src="{{ asset('frontend/js/plugins.js') }}"></script>
     <!-- Main JS -->
     <script src="{{ asset('frontend/js/main.js') }}"></script>
-    <!-- Video JS -->
-    <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
-    <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
-    <script src="{{ asset('frontend/validatejs/jquery.validate.js') }}"></script>
     <script>
     tinymce.init({
         selector: 'textarea#editor',
@@ -266,11 +267,11 @@
     });
 
     var input = document.querySelector("#phone");
-    window.intlTelInput(input, {
-        separateDialCode: true,
-        //  excludeCountries: ["gb"],
-        preferredCountries: ["gb"]
-    });
+    // window.intlTelInput(input, {
+    //     separateDialCode: true,
+    //     //  excludeCountries: ["gb"],
+    //     preferredCountries: ["gb"],
+    // });
     </script>
 
 

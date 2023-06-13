@@ -44,8 +44,9 @@
 <!--Code area start-->
 <section class="pb-5">
     <div class="container">
-        <form action="{{route('customer.storeproject')}}" method="post" name="savenewproject" id="savenewproject">
+        <form action="{{route('customer.editproject-return-for-review',[Hashids_encode($project->id)])}}" method="post" name="savenewproject" id="savenewproject">
             @csrf
+            <input type="hidden" name="globalprojectid" id="globalprojectid" value="{{ $project->projectid }}">
             <div class="row">
                 <div class="col-md-10 offset-md-1">
                     <div class="tell_about">
@@ -53,12 +54,12 @@
                         <div class="row form_wrap mt-3">
                             <div class="col-md-6">
                                 <div class="form-group col-md-12">
-                                    <input type="text" class="form-control" id="forename" placeholder="Forename" name="forename" value=""/>
+                                    <input type="text" class="form-control" id="forename" placeholder="Forename" name="forename" value="{{ $project->forename }}"/>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group col-md-12">
-                                    <input type="text" class="form-control" id="surname" placeholder="Surname" name="surname" value=""/>
+                                    <input type="text" class="form-control" id="surname" placeholder="Surname" name="surname" value="{{ $project->surname }}"/>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +88,7 @@
 
                                 {{-- <h5>Enter your postcode:</h5> --}}
                                 <div class="form-check mt-3 last_ua">
-                                    <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="1" checked />
+                                    <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="1" />
                                     <h5>Enter your postcode:</h5>
                                 </div>
 
@@ -125,6 +126,12 @@
                                 </div>
                             </div>
                             <div class="col-md-6 last_ua">
+                                <div class="form-check mb-2">
+                                    <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="3" checked>
+                                    <h5>Last used address</h5>
+                                 </div>
+                                 <p>{{ $projectaddresses->address_line_one }}, {{ $projectaddresses->address_line_two }}, {{ $projectaddresses->town_city }}, {{ $projectaddresses->postcode }} </p>
+
                                 <div class="form-check mt-3">
                                     <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="2"/>
                                     <h5>Or type your address</h5>
@@ -166,7 +173,7 @@
                             </div>
                             <div class="col-md-12 mb-4">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="project_name" placeholder="Type your project name" name="project_name"/>
+                                    <input type="text" class="form-control" id="project_name" placeholder="Type your project name" name="project_name" value="{{$project->project_name}}"/>
                                 </div>
                             </div>
                             <div class="col-md-12 mb-4">
@@ -176,17 +183,13 @@
                                 <p>If you're unsure of what to write here you might find our advice on this page useful: <a href="#" class="sugg_">Suggestions</a></p>
                             </div>
                             <div class="col-md-12 mb-4">
-                                {{-- <div id="summernote"></div> --}}
-                                <textarea name="description" id="summernote"></textarea>
-
+                                <textarea name="description" id="summernote">{!! $project->description !!}</textarea>
                             </div>
+
                             <div class="col-md-12 mb-4">
                                 <h3>Please upload at least one photo, video or design of the work to be undertaken.</h3>
                                 <p>For example if you are replacing a door lock please take a photo of the existing lock.</p>
                             </div>
-
-
-
 
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -232,14 +235,10 @@
                              </div>
 
                             <div class="col-md-6 mt-2" id="getfilesformdb">
-
                                 {{-- <div class="d-inline mr-3">
                                     abc.doc (3MB) <a href="#"><img src="{{ asset('frontend/img/crose-btn.svg') }}" alt="" /> </a>
                                 </div> --}}
-
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -257,17 +256,17 @@
                                     <div class="col-md-4">
                                         <div class="row">
 
-                                            <div class="col-9 pl-0"><input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no"/></div>
+                                            <div class="col-9 pl-0"><input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no" value="{{$project->contact_mobile_no}}"/></div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="text" name="contact_home_phone" class="form-control" id="" placeholder="Home phone" />
+                                            <input type="text" name="contact_home_phone" class="form-control" id="" placeholder="Home phone" value="{{$project->contact_home_phone}}"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="email" name="contact_email" class="form-control" id="contact_email" placeholder="Email" />
+                                            <input type="email" name="contact_email" class="form-control" id="contact_email" placeholder="Email" value="{{$project->contact_email}}" />
                                         </div>
                                     </div>
                                 </div>
@@ -350,6 +349,7 @@
                                         <div id="my_camera"></div>
                                         <input type="button" class="btn btn-outline-danger btn-block" value="Take Snapshot" onClick="take_snapshot()">
                                         <input type="hidden" name="image" class="image-tag" >
+                                        <input type="hidden" name="projectid" value="{{ $project->id }}">
                                     </div>
                                     <div class="col-md-6 ml-100">
                                         {{-- <div id="results">Your captured image will appear here...</div> --}}
@@ -430,7 +430,7 @@
 
 <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
-<script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
+<script src="{{ asset('frontend/webcamjs/video-project-return-for-review.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script language="JavaScript">
@@ -703,8 +703,8 @@
     function FetchfilesData(){
         $.ajax({
             type:'POST',
-            url:'{{ route("customer.getcustomermediafiles") }}',
-            data:{_token: '{{csrf_token()}}'},
+            url:'{{ route("customer.getprojectmediafiles") }}',
+            data:{projectid:'{{ Hashids_encode($project->id) }}', _token: '{{csrf_token()}}'},
             success:function(result){
                 $("#getfilesformdb").html(result);
             }
@@ -742,7 +742,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '{{ route("capture-photo") }}',
+                        url: '{{ route("capture-photo-project-return-for-review") }}',
                         type: 'POST',
                         contentType: 'multipart/form-data',
                         cache: false,
@@ -784,7 +784,13 @@
             $("#address_type_postcode").attr('disabled',false);
         }
 
-
+        if(addresstype == 3){
+            $("#address_line_one").attr('disabled',true);
+            $("#address_line_two").attr('disabled',true);
+            $("#town_city").attr('disabled',true);
+            $("#address_type_postcode").attr('disabled',true);
+            $("#postcode").attr('disabled',true);
+        }
 
         $("input[name='addresstype']").change(function(e){
             var addresstype = $('input[name="addresstype"]:checked').val();
@@ -793,6 +799,7 @@
                 $("#address_line_two").attr('disabled',true);
                 $("#town_city").attr('disabled',true);
                 $("#address_type_postcode").attr('disabled',true);
+                $("#postcode").attr('disabled',false);
             }
 
             if(addresstype == 2){
@@ -805,20 +812,20 @@
                 $("#postcode").attr('required',true);
             }
 
+            if(addresstype == 3){
+                $("#address_line_one").attr('disabled',true);
+                $("#address_line_two").attr('disabled',true);
+                $("#town_city").attr('disabled',true);
+                $("#address_type_postcode").attr('disabled',true);
+                $("#postcode").attr('disabled',true);
+            }
+
+
+
         });
 
 
     });
-
-
-
-
-
-
-
-
-
-
 
 </script>
 @endpush

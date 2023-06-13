@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Admin\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserVerify;
+use Illuminate\Support\Str;
 use DataTables;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Stringable;
 
 class UserController extends Controller
 {
@@ -64,10 +68,84 @@ class UserController extends Controller
 
         try {
             $user = User::find(auth()->user()->id);
+            $user->account_deletion_reason=$request->account_delete;
+            $user->delete_permanently=$request->delete_permanently;
+            $user->save();
             $user->delete();
-            return redirect()->route('home');
+
+           $html = view('email.email-account-delete')->with('user', $user)->render();
+
+                $postdata = array(
+                                'From'          => 'support@fixmybuild.com',
+                                'To'            =>  $user->email,
+                                'Subject'       => 'Fixmybuild Account Deletion',
+                                'HtmlBody'      =>  $html,
+                                'MessageStream' => 'outbound'
+                            );
+
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                  CURLOPT_URL => 'https://api.postmarkapp.com/email',
+                  CURLOPT_RETURNTRANSFER => true,
+                  CURLOPT_ENCODING => '',
+                  CURLOPT_MAXREDIRS => 10,
+                  CURLOPT_TIMEOUT => 0,
+                  CURLOPT_FOLLOWLOCATION => true,
+                  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                  CURLOPT_CUSTOMREQUEST => 'POST',
+                  CURLOPT_POSTFIELDS =>json_encode($postdata),
+                  CURLOPT_HTTPHEADER => array(
+                    'X-Postmark-Server-Token: 397dcd71-2e20-4a1d-b1fd-24bac29255dc',
+                    'Content-Type: application/json'
+                  ),
+                ));
+
+                $response = curl_exec($curl);
+                curl_close($curl);
+
+               return redirect()->route('home');
         } catch (Exception $e) {
             $request->session()->flash('alert-danger', $e->getMessage());
+
+            echo $e->getMessage();
+        }
+    }
+
+    public function verify_mail(Request $request, User $user)
+    {
+        try{
+            $token = Str::random(64);
+            $data = DB::table('users_verify')->where('user_id', '=', Auth::user()->id)->update(array('token' => $token,'updated_at'=>now()));
+            $html = view('email.email-verification-mail')->with('token', $token)->render();
+                $postdata = array(
+                        'From'          => 'support@fixmybuild.com',
+                        'To'            => Auth::user()->email,
+                        'Subject'       => 'Verify Email',
+                        'HtmlBody'      => $html,
+                        'MessageStream' => 'outbound'
+                );
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.postmarkapp.com/email',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS =>json_encode($postdata),
+                CURLOPT_HTTPHEADER => array(
+                    'X-Postmark-Server-Token: 397dcd71-2e20-4a1d-b1fd-24bac29255dc',
+                    'Content-Type: application/json'
+                ),
+                ));
+                $response = curl_exec($curl);
+                curl_close($curl);
+                return 'Please check your inbox for email verification .';
+        } catch (Exception $e) {
+            return "error";
         }
     }
 }

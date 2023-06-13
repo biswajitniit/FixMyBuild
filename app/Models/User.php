@@ -46,12 +46,74 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-        /**
-     * @return HasOne
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      * @description get the detail associated with the post
      */
     public function customer()
     {
         return $this->hasOne(Customer::class);
+    }
+
+    public function estimates()
+    {
+        return $this->hasMany(Estimate::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @description get the reviews given to a Tradesperson
+     */
+    public function reviews()
+    {
+        return $this->hasMany(ProjectReview::class);
+    }
+
+    /**
+     * @description get the total number of reviews obtained by a Tradesperson
+     */
+    public function totalRatings()
+    {
+        return $query = ProjectReview::where('tradesperson_id', $this->id)->count();
+    }
+
+    /**
+     * @description get the percentage based on workmanship obtained by a Tradesperson
+     */
+    public function workmanshipPercentage()
+    {
+        $query = ProjectReview::where('tradesperson_id', $this->id);
+
+        return $query->count() ? (($query->sum('workmanship')/(2 * $query->count())) * 100) : null;
+    }
+
+    /**
+     * @description get the percentage based on punctuality obtained by a Tradesperson
+     */
+    public function punctualityPercentage()
+    {
+        $query = ProjectReview::where('tradesperson_id', $this->id);
+
+        return $query->count() ? (  $query->sum('punctuality') / $query->count()) * 100 : null;
+    }
+
+    /**
+     * @description get the percentage based on tidiness obtained by a Tradesperson
+     */
+    public function tidinessPercentage()
+    {
+        $query = ProjectReview::where('tradesperson_id', $this->id);
+
+        return $query->count() ? (  $query->sum('tidiness') / $query->count()) * 100 : null;
+    }
+
+    /**
+     * @description get the percentage based on price_accuracy obtained by a Tradesperson
+     */
+    public function priceAccuracy()
+    {
+        $query = ProjectReview::where('tradesperson_id', $this->id);
+
+        return $query->count() ? (  $query->sum('price_accuracy') / $query->count()) * 100 : null;
     }
 }

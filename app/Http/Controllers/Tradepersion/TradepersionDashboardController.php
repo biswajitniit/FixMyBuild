@@ -161,4 +161,168 @@ class TradepersionDashboardController extends Controller
            return $response;
         }
     }
+    public function dashboard()
+    {
+        $works = Buildercategory::where('status', 'Active')->get();
+        $areas = AreaCover::where('status', 1)->get();
+        $trader_details = TraderDetail::where('user_id', Auth::user()->id)->first();
+        $trader_work = Traderworks::with('buildersubcategory')->where('user_id', Auth::user()->id)->get();
+        $trader_area = Traderareas::with('subareas')->where('user_id', Auth::user()->id)->get();
+        return view('tradepersion.dashboard', compact('works', 'areas', 'trader_details', 'trader_work', 'trader_area'));
+    }
+
+    function updateTraderName(Request $request)
+    {
+        $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
+        $traderdetails->trader_name = $request->tradername;
+        if($traderdetails->save()){
+            $data = array(
+                'status' => 1,
+                'message' => "Trading name has been successfully updated"
+            );
+        }else{
+            $data = array(
+                'status' => 0,
+                'message' => "Oops! Something went wrong. Please try again"
+            );
+        }
+        return $data;
+    }
+    public function updateTraderDesc(Request $request)
+    {
+        $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
+        $traderdetails->comp_description = $request->traderdesc;
+        if($traderdetails->save()){
+            $data = array(
+                'status' => 1,
+                'message' => "Description has been successfully updated"
+            );
+        }else{
+            $data = array(
+                'status' => 0,
+                'message' => "Oops! Something went wrong. Please try again"
+            );
+        }
+        return $data;
+    }
+    public function updateTraderContactInfo(Request $request)
+    {
+        $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
+        $traderdetails->name = $request->contactName;
+        $traderdetails->phone_number = $request->contactMobile;
+        $traderdetails->phone_office = $request->contactOfficeMobile;
+        $traderdetails->email = $request->contactEmail;
+        if($traderdetails->save()){
+            $data = array(
+                'status' => 1,
+                'message' => "Contacts has been successfully updated"
+            );
+        }else{
+            $data = array(
+                'status' => 0,
+                'message' => "Oops! Something went wrong. Please try again"
+            );
+        }
+        return $data;
+    }
+    public function updateVatInfo(Request $request)
+    {
+        $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
+        $traderdetails->vat_no = $request->vatno;
+        if($traderdetails->save()){
+            $data = array(
+                'status' => 1,
+                'message' => "Vat Number has been successfully updated"
+            );
+        }else{
+            $data = array(
+                'status' => 0,
+                'message' => "Oops! Something went wrong. Please try again"
+            );
+        }
+        return $data;
+    }
+    public function updateContingency(Request $request)
+    {
+        $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
+        $traderdetails->contingency = $request->contigencyval;
+        if($traderdetails->save()){
+            $data = array(
+                'status' => 1,
+                'message' => "Contingency has been successfully updated"
+            );
+        }else{
+            $data = array(
+                'status' => 0,
+                'message' => "Oops! Something went wrong. Please try again"
+            );
+        }
+        return $data;
+    }
+    public function updateAccount(Request $request)
+    {
+        $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
+        $traderdetails->bnk_account_type = $request->accountType;
+        $traderdetails->bnk_account_name = $request->accountHolder;
+        $traderdetails->bnk_sort_code = $request->accountCode;
+        $traderdetails->bnk_account_number = $request->accountNum;
+        if($traderdetails->save()){
+            $data = array(
+                'status' => 1,
+                'message' => "Account Information has been successfully updated"
+            );
+        }else{
+            $data = array(
+                'status' => 0,
+                'message' => "Oops! Something went wrong. Please try again"
+            );
+        }
+        return $data;
+    }
+    public function updateWorkType(Request $request)
+    {
+        $list = $request->worktype;
+        $deletetrader = Traderworks::where('user_id', Auth::user()->id)->delete();
+        foreach($list as $w){
+            $traderwork = new Traderworks();
+            $traderwork->user_id = Auth::user()->id;
+            $traderwork->buildersubcategory_id = $w;
+            $traderwork->save();
+        }
+       
+        $data = array(
+            'status' => 1,
+            'message' => "Type of work undertaken has been successfully updated"
+        );
+        return $data;
+    }
+
+    public function updateTraderArea(Request $request)
+    {
+        $list = $request->areatype;
+        $deletetrader = Traderareas::where('user_id', Auth::user()->id)->delete();
+        foreach($list as $a){
+            $traderarea = new Traderareas();
+            $traderarea->user_id = Auth::user()->id;
+            $traderarea->sub_area_cover_id = $a;
+            $traderarea->save();
+        }
+       
+        $data = array(
+            'status' => 1,
+            'message' => "Area covered has been successfully updated"
+        );
+        return $data;
+    }
+
+    public function projects()
+    {
+        return view('tradepersion.projects');
+    }
+
+    public function settings()
+    {
+        
+        return view('tradepersion.settings');
+    }
 }

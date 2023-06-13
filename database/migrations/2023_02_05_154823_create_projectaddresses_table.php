@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProjectfilesTable extends Migration
+class CreateProjectaddressesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateProjectfilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('projectfiles', function (Blueprint $table) {
+        Schema::create('projectaddresses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('project_id');
-            $table->string('file_type', 10);
-            $table->string('filename')->nullable();
-            $table->string('file_original_name')->nullable();
-            $table->string('file_extension')->nullable();
-            $table->string('url')->nullable();
+            $table->unsignedBigInteger('project_id')->unsigned();
+            $table->string('address_line_one')->nullable();
+            $table->string('address_line_two')->nullable();
+            $table->string('town_city')->nullable();
+            $table->string('postcode')->nullable();
             $table->timestamps();
-            $table->softDeletes();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
@@ -34,6 +32,6 @@ class CreateProjectfilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projectfiles');
+        Schema::dropIfExists('projectaddresses');
     }
 }

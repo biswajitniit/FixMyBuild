@@ -16,6 +16,28 @@
     </div>
  </section>
  <!--Code area end-->
+@if( Auth::user()->is_email_verified === 0 )
+    <section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="alert alert-warning" role="alert">
+                    <span>
+                        <svg width="33" height="29" viewBox="0 0 33 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.4987 0.916992L0.457031 28.6253H32.5404M16.4987 6.75033L27.4799 25.7087H5.51745M15.0404 12.5837V18.417H17.957V12.5837M15.0404 21.3337V24.2503H17.957V21.3337" fill="#EE5719"></path>
+                        </svg>
+                    </span>
+                    Please Verify Your Email.
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary" id="verify_mail">Resend Verification Link</button>
+            </div>
+        </div>
+    </div>
+    </section>
+@else
+@endif
  <!--Code area start-->
  <section class="pb-5">
     <div class="container">
@@ -24,9 +46,9 @@
           <div class="row">
            <div class="col-md-3 dashboard_sidebar">
                <ul>
-                <li class="active"><a href="{{ route('customer.profile') }}">Profile</a></li>
+                <li><a href="{{ route('customer.profile') }}">Profile</a></li>
                 <li><a href="{{ route('customer.project') }}">Projects</a></li>
-                <li><a href="{{ route('customer.notifications.index') }}">Notifications</a></li>
+                <li class="active"><a href="{{ route('customer.notifications.index') }}">Notifications</a></li>
                 <li><a href="{{ route('logout') }}">Logout</a></li>
                </ul>
            </div>
@@ -109,7 +131,7 @@
                          <p>Once your account is closed all of your information including the details of all of your projects will be permanently deleted.</p>
                          <h5>Please select the main reason for closing your account (Optional)</h5>
                          <div>
-                            <select class="form-select">
+                            <select class="form-select" name="account_delete" required="">
                                <option>I'm not using this account anymore</option>
                                <option>I have another account</option>
                                <option>I want to create a new account</option>
@@ -119,11 +141,11 @@
                                <option>I have open issues with Fix my build</option>
                              </select>
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="check1" name="option1" required="">
+                            <input class="form-check-input" type="checkbox" id="delete_permanently" value="1" name="delete_permanently" onclick="clickCheckBox()" required="">
                             <label class="form-check-label">Yes, I want to permanently close my Fix my build account and delete my data.</label>
                           </div>
                           <div class="form-group pre_ col-md-5 mt-3">
-                            <button type="submit" class="btn btn-light">Close your account</button>
+                            <button type="submit" id="submitted" class="btn btn-light" disabled>Close your account</button>
                           </div>
                          </form>
                         </div>
@@ -142,6 +164,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function(){
         $.ajax({
@@ -186,5 +209,33 @@
             }
         })
     }
+
+    function clickCheckBox() {
+            const checkbox = document.getElementById("delete_permanently");
+            const button  = document.getElementById("submitted");
+            if (checkbox.checked == false) {
+                button.disabled = true;
+            }
+            else{
+                  button.disabled = false;
+            }
+
+    }
+$("#verify_mail").click(function(){
+        $.ajax({
+            url: '{{ route('user.verify_mail')}}',
+                    data: {'_token': "{{ csrf_token() }}"},
+                    method: 'POST',
+                    success: function(data){
+                        //alert(data);
+                        Swal.fire({
+                                //position: 'top-end',
+                                icon: 'success',
+                                title: data,
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                }});
+    });
 </script>
 @endpush
