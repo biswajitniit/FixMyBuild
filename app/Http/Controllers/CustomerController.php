@@ -229,6 +229,10 @@ class CustomerController extends Controller
 
     }
 
+    function review(Request $request){
+        return view("customer/project_review");
+    }
+
 
     function update_name(Request $request) {
         if($request->ajax()){

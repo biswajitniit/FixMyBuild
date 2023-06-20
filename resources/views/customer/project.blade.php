@@ -205,6 +205,8 @@
 </section>
 <!--Code area end-->
 
+<<<<<<< HEAD
+=======
 @push('scripts')
 <script>
 $("#verify_mail").click(function(){
@@ -219,4 +221,5 @@ $("#verify_mail").click(function(){
 </script>
 @endpush
 
+>>>>>>> 650141ace24b7fdc05859d96ebec66d322b9831b
 @endsection

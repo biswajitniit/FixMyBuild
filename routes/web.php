@@ -161,8 +161,14 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('storeproject', [CustomerController::class, 'customer_storeproject'])->name('customer.storeproject');
 
         Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
+<<<<<<< HEAD
+        
+
+
+=======
         Route::get('project-return-for-review/{id}', [CustomerController::class,'project_return_for_review'])->name('customer.project-return-for-review');
         Route::post('editproject-return-for-review/{projectid}', [CustomerController::class,'customer_editproject'])->name('customer.editproject-return-for-review');
+>>>>>>> 650141ace24b7fdc05859d96ebec66d322b9831b
 
         Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
         Route::post('getprojectmediafiles', [CustomerController::class,'getprojectmediafiles'])->name('customer.getprojectmediafiles');
@@ -185,7 +191,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
          */
         Route::get('/logout', [LogoutsController::class, 'logout'])->name('logout');
     });
-
+    Route::get('review', [CustomerController::class,'review']);
 
     Route::group(['prefix' => 'tradeperson', 'middleware' => 'auth'], function () {
         Route::get('company-registration', [TradepersionDashboardController::class, 'registrationsteptwo'])->name('tradepersion.compregistration');
