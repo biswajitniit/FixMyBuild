@@ -27,7 +27,7 @@
  </section>
  <section class="pb-5">
     <div class="container">
-      
+
       @if($errors->any())
          <div class="alert alert-danger">
             <ul>
@@ -54,7 +54,7 @@
                         <h2 class="alert-heading">Great</h2>
                         <p>Your request has been successfully received.</p>
                         <hr>
-                        <p class="mb-1">Your registration will be reviewd and our team will contact you if we need more information.</p>
+                        <p class="mb-1">Your registration will be reviewed and our team will contact you if we need more information.</p>
                         <p><a href="{{route('home')}}" class="btn btn-primary">Continue</a></p>
                      </div>
                   </div>
@@ -73,7 +73,7 @@
                          <h6>Default contingency</h6>
                       </div>
                       <div class="col-2">
-                         <input type="text" name="contingency" class="form-control text-center font-24"  placeholder="20">
+                         <input type="text" name="contingency" class="form-control text-center font-24"  value="20">
                       </div>
                       <div class="col-2">
                          <h6 class="font-44">%</h6>
@@ -132,7 +132,7 @@
                          <div class="row mt-3">
                             <div class="col-md-12">
                                <div class="form-check">
-                                  <input class="form-check-input" type="checkbox" value="1" id="check1" name="builder_amendment">
+                                  <input class="form-check-input" type="checkbox" value="1" id="builder_amendment" name="builder_amendment">
                                   <label class="form-check-label">Builder registration page amendment</label>
                                </div>
                             </div>
@@ -159,7 +159,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch1" name="noti_new_quotes" value="1">
+                                     <input type="checkbox" id="switch1" name="noti_new_quotes" value="1" checked>
                                      <label for="switch1">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When new quotes are requested</label>
@@ -169,7 +169,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch2" name="noti_quote_accepted" value="1">
+                                     <input type="checkbox" id="switch2" name="noti_quote_accepted" value="1" checked>
                                      <label for="switch2">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When your quote is accepted and, where applicable, upfront payment received</label>
@@ -179,7 +179,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch3" name="noti_project_stopped" value="1">
+                                     <input type="checkbox" id="switch3" name="noti_project_stopped" value="1" checked>
                                      <label for="switch3">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When a project is stopped</label>
@@ -189,7 +189,7 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch4" name="noti_quote_rejected" value="1">
+                                     <input type="checkbox" id="switch4" name="noti_quote_rejected" value="1" checked>
                                      <label for="switch4">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When your quote is rejected</label>
@@ -199,13 +199,13 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch5" name="noti_project_cancelled" value="1">
+                                     <input type="checkbox" id="switch5" name="noti_project_cancelled" value="1" checked>
                                      <label for="switch5">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When a project is cancelled before it starts</label>
                                </div>
                             </div>
-                            <!--//-->                                 
+                            <!--//-->
                          </div>
                       </div>
                    </div>
@@ -213,13 +213,13 @@
                 <!--//-->
                 <div class="col-md-12 justify-content-center d-flex mt-4">
                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="check1" name="option1">
-                      <label class="form-check-label">Please confirm you have read and agree to our <a href="#">Terms & Conditions</a>.</label>
+                      <input class="form-check-input" type="checkbox" id="terms_and_condition" name="option1">
+                      <label class="form-check-label">Please confirm you have read and agree to our <a href="{{ route('termspage', 1) }}">Terms & Conditions</a>.</label>
                    </div>
                 </div>
                 <div class="form-group col-md-12 mt-4 mb-4 text-center pre_">
-                   <button type="submit" class="btn btn-light">Previous</button>
-                   <button type="submit" class="btn btn-primary">Submit</button>
+                   {{-- <a href="{{ route('tradepersion.compregistration') }}" class="btn btn-light">Previous</a> --}}
+                   <button type="submit" class="btn btn-primary" id="form-submit-btn">Submit</button>
                 </div>
              </div>
           </div>
@@ -228,6 +228,22 @@
     </div>
  </section>
 @push('scripts')
+<script>
+    $(document).ready(function(){
+        allowFormSubmission();
+    });
 
+    $("#terms_and_condition").change(function(){
+        allowFormSubmission();
+    });
+
+    function allowFormSubmission() {
+        if ($("#terms_and_condition").is(':checked')){
+            $('#form-submit-btn').attr("disabled", false);
+        } else {
+            $('#form-submit-btn').attr("disabled", true);
+        }
+    }
+</script>
 @endpush
 @endsection

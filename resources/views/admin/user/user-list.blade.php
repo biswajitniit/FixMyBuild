@@ -107,13 +107,7 @@
                                 }
                             },
                         },
-                       {
-                            data: 'action',
-                            render: function (data, type, row){
-                                return '<a href="" title="Edit User"><i class="mdi mdi-table-edit"></i></a>';
-                            },
-                        },
-
+                       {data: 'action'},
                 ]
             });
         });

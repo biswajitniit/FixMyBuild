@@ -12376,7 +12376,7 @@ button.btn-close:hover {
   overflow-y: scroll;
 }
 .tab_cont {
-  height: 350px;
+  max-height: 350px;
   overflow-y: scroll;
 }
 .nav-sidebar ul.nav.tabs li {
@@ -14451,6 +14451,7 @@ h2.company-name a:hover svg path {
 
 #avatar_dropzone .dz-image-preview .dz-image img{
     border-radius: 50%;
+    transition: none;
 }
 
 .reg_ img {
@@ -14535,6 +14536,31 @@ h2.company-name a:hover svg path {
 
 #project_media_modal .modal-body img{
     width: 100%;
+}
+
+.secondary-font-color{
+    color: var(--secondary_color) !important;
+}
+
+.dropzone-preview-thumbnail {
+    border-radius: "5%";
+    transition: "none";
+}
+
+.clr-bg{
+    background-color: transparent !important;
+}
+
+.dropzone-progress-bar{
+    display: "block";
+    position: "relative";
+}
+
+.rectangle-img{
+    width: 100px;
+    height: 69px;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 /* mobile Responsive  */
