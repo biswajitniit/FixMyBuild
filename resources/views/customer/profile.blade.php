@@ -301,7 +301,7 @@
             allowDropdown: false,
         });
         iti.setNumber(phone_num);
-        let phone_field = $('.num_change').find('.form-control:disabled').css('background-color', 'transparent');
+        let phone_field = $('.num_change').find('.form-control:disabled').addClass('clr-bg');
         password_validation();
 
 
@@ -627,26 +627,26 @@
                 });
 
                 this.on("thumbnail", function(file, dataUrl) {
-                    $("#avatar_dropzone").find(".dz-message").css("display", "none");
-                    $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
+                    $("#avatar_dropzone").find(".dz-message").hide();
+                    $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
                     updateUploadButton();
                 });
 
                 this.on("sending", function(file, xhr, formData) {
-                    $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
+                    // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
                     uploadButton.prop("disabled", true);
                 });
 
                 this.on("uploadprogress", function(file, progress) {
                     if (file.upload) {
-                        $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
+                        // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
                         uploadButton.prop("disabled", true);
                     }
                 });
 
                 this.on("success", function(file, response) {
-                    $(file.previewElement).find(".dz-progress").css("display", "none");
-                    $(file.previewElement).find(".dz-success-mark").css("display", "block");
+                    $(file.previewElement).find(".dz-progress").hide();
+                    $(file.previewElement).find(".dz-success-mark").show();
                     $('.profile_pics > img').attr('src', response.image_link);
                     $('.reg_ img').attr('src', response.image_link);
 
@@ -654,9 +654,9 @@
                 });
 
                 this.on("error", function(file, errorMessage) {
-                    $(file.previewElement).find(".dz-progress").css("display", "none");
-                    $(file.previewElement).find(".dz-error-message").text(errorMessage).css("display", "block");
-                    $(file.previewElement).find(".dz-error-mark").css("display", "block");
+                    $(file.previewElement).find(".dz-progress").hide();
+                    $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
+                    $(file.previewElement).find(".dz-error-mark").show();
                     updateUploadButton();
                 });
 
@@ -686,7 +686,7 @@
                                 $('.dz-success-mark').empty();
                                 $('.dz-error-mark').empty();
                                 $('.dz-details').empty();
-                                $('.dz-message').css("display", "block");
+                                $('.dz-message').show();
                                 errorMessage.push("Invalid file type. Please select a valid file.");
                             } else{
 
@@ -713,7 +713,7 @@
                 });
 
                 $("#profile_pics").on("hidden.bs.modal", function() {
-                    $("#avatar_dropzone").find(".dz-message").css("display", "block");
+                    $("#avatar_dropzone").find(".dz-message").show();
                     $("#profile_pics .supported_ .invalid-file").empty();
                     dz.removeAllFiles();
                 });
@@ -725,7 +725,7 @@
     });
 
 
-    
+
     $("#verify_mail").click(function(){
         $.ajax({
             url: '{{ route('user.verify_mail')}}',

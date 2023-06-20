@@ -322,7 +322,7 @@ class CustomerController extends Controller
             Auth::setUser($user);
             return response()->json(['image_link'=>$user->profile_image]);
         } catch(\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch data'],500);
+            return response()->json(['error' => 'Failed to update data'],500);
         }
     }
 
@@ -338,7 +338,7 @@ class CustomerController extends Controller
 
     }
 
-    public function review(Request $request)
+    public function submit_review(Request $request)
     {
         $request->validate([
             'optradio1' => 'required',

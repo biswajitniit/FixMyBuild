@@ -13,6 +13,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Tradepersion\TradepersionDashboardController;
+use App\Http\Controllers\Tradepersion\TradespersonFileController;
 use App\Http\Controllers\Admin\Reviewer\ReviewerController;
 use App\Http\Controllers\Admin\Terms\TermsController;
 use App\Http\Controllers\Admin\Builder\BuildercategoryController;
@@ -126,6 +127,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
         Route::get('/admin/users', [UserController::class, 'users'])->name('admin/users');
         Route::any('/admin/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
+        Route::get('/admin/user/{id}', [UserController::class, 'user_detail_page'])->name('admin.user-detail');
+        Route::patch('/admin/verify-account/{id}', [UserController::class, 'verify_account'])->name('admin.verify-account');
 
         Route::resource('reviewer', ReviewerController::class);
         Route::get('/admin/project/awaiting-your-review', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
@@ -161,14 +164,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('storeproject', [CustomerController::class, 'customer_storeproject'])->name('customer.storeproject');
 
         Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
-<<<<<<< HEAD
-        
-
-
-=======
         Route::get('project-return-for-review/{id}', [CustomerController::class,'project_return_for_review'])->name('customer.project-return-for-review');
         Route::post('editproject-return-for-review/{projectid}', [CustomerController::class,'customer_editproject'])->name('customer.editproject-return-for-review');
->>>>>>> 650141ace24b7fdc05859d96ebec66d322b9831b
 
         Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
         Route::post('getprojectmediafiles', [CustomerController::class,'getprojectmediafiles'])->name('customer.getprojectmediafiles');
@@ -193,7 +190,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     });
     Route::get('review', [CustomerController::class,'review']);
 
-    Route::group(['prefix' => 'tradeperson', 'middleware' => 'auth'], function () {
+    Route::group(['prefix' => 'tradeperson', 'middleware' => ['auth', 'steps_completed']], function () {
         Route::get('company-registration', [TradepersionDashboardController::class, 'registrationsteptwo'])->name('tradepersion.compregistration');
         Route::post('save-company-registration', [TradepersionDashboardController::class, 'saveregistrationsteptwo'])->name('tradepersion.savecompregistration');
         Route::get('bank-registration', [TradepersionDashboardController::class, 'registrationstepthree'])->name('tradepersion.bankregistration');
@@ -201,21 +198,33 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('get-company-details', [TradepersionDashboardController::class, 'get_companydetails']);
         Route::get('get-company-vat-details', [TradepersionDashboardController::class, 'get_company_vat_details']);
         Route::get('dashboard', [TradepersionDashboardController::class, 'dashboard'])->name('tradepersion.dashboard');
-        Route::post('updateTraderName', [TradepersionDashboardController::class, 'updateTraderName']);
-        Route::post('updateTraderDesc', [TradepersionDashboardController::class, 'updateTraderDesc']);
-        Route::post('updateTraderContactInfo', [TradepersionDashboardController::class, 'updateTraderContactInfo']);
         Route::post('updateVatInfo', [TradepersionDashboardController::class, 'updateVatInfo']);
         Route::post('updateContingency', [TradepersionDashboardController::class, 'updateContingency']);
-        Route::post('updateAccount', [TradepersionDashboardController::class, 'updateAccount']);
-        Route::post('updateWorkType', [TradepersionDashboardController::class, 'updateWorkType']);
-        Route::post('updateTraderArea', [TradepersionDashboardController::class, 'updateTraderArea']);
         Route::get('projects', [TradepersionDashboardController::class, 'projects'])->name('tradepersion.projects');
         Route::get('settings', [TradepersionDashboardController::class, 'settings'])->name('tradepersion.settings');
+
+        Route::group(['as' => 'tradesperson.'], function () {
+            Route::post('updateTraderName', [TradepersionDashboardController::class, 'updateTraderName'])->name('updateTraderName');
+            Route::post('updateTraderDesc', [TradepersionDashboardController::class, 'updateTraderDesc'])->name('updateTraderDesc');
+            Route::post('updateTraderContactInfo', [TradepersionDashboardController::class, 'updateTraderContactInfo'])->name('updateTraderContactInfo');
+            Route::post('updateWorkType', [TradepersionDashboardController::class, 'updateWorkType'])->name('updateWorkType');
+            Route::post('updateTraderArea', [TradepersionDashboardController::class, 'updateTraderArea'])->name('updateTraderArea');
+            Route::post('updateAccount', [TradepersionDashboardController::class, 'updateAccount'])->name('updateAccount');
+            Route::put('updateCompanyLogo', [TradepersionDashboardController::class, 'updateCompanyLogo'])->name('updateCompLogo');
+            Route::post('deleteTraderFile', [TradepersionDashboardController::class, 'deleteTraderFile'])->name('deleteTraderFile');
+            Route::post('storeTraderFile', [TradepersionDashboardController::class, 'storeTraderFile'])->name('storeTraderFile');
+            Route::post('upload-company-logo', [TradespersonFileController::class, 'storeLogo'])->name('storeLogo');
+            Route::post('upload-public-liability-insurance', [TradespersonFileController::class, 'storePLI'])->name('storePLI');
+            Route::post('upload-trader-img', [TradespersonFileController::class, 'storeTraderImg'])->name('storeTraderImg');
+            Route::post('upload-comp-addrs', [TradespersonFileController::class, 'storeCompAddr'])->name('storeCompAddr');
+            Route::post('upload-prev-projs', [TradespersonFileController::class, 'storePrevProj'])->name('storePrevProj');
+            Route::post('uploadTeamPhoto', [TradespersonFileController::class, 'storeTempTeamPhoto'])->name('storeTeamPhoto');
+        });
     });
 
     Route::delete('/users/users-delete_account', [UserController::class, 'delete_account'])->name('user.user-delete-account');
     Route::post('/users/verify-email', [UserController::class, 'verify_mail'])->name('user.verify_mail');
 
     Route::get('project/submit-review/{project_id}', [CustomerController::class, 'project_review'])->name('customer.project_review');
-    Route::post('project/submit-review', [CustomerController::class, 'review'])->name('customer.review');
+    Route::post('project/submit-review', [CustomerController::class, 'submit_review'])->name('customer.review');
 });

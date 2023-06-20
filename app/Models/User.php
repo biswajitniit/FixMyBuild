@@ -70,6 +70,13 @@ class User extends Authenticatable
     }
 
     /**
+     * @description get the files uploaded by a tradesperson
+     */
+    public function tradespersonFiles() {
+        return $this->hasMany(TradespersonFile::class);
+    }
+
+    /**
      * @description get the total number of reviews obtained by a Tradesperson
      */
     public function totalRatings()

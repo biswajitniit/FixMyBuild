@@ -118,7 +118,7 @@
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#category" aria-expanded="false" aria-controls="apps">
                         <i class="mdi mdi-menu menu-icon"></i>
-                        <span class="menu-title">Builders</span>
+                        <span class="menu-title">Tradesperson</span>
                         <i class="menu-arrow"></i>
                     </a>
                     <div class="collapse" id="category">
@@ -181,7 +181,7 @@
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_settings-panel.html -->
-        <div id="settings-trigger"><i class="mdi mdi-settings"></i></div>
+        {{-- <div id="settings-trigger"><i class="mdi mdi-settings"></i></div> --}}
         <div id="theme-settings" class="settings-panel">
           <i class="settings-close mdi mdi-close"></i>
           <p class="settings-heading">SIDEBAR SKINS</p>
@@ -222,7 +222,7 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item preview-item">
                     <div class="preview-thumbnail">
-                      <img src="../assets/images/faces/face1.jpg" alt="image" class="profile-pic">
+                      <img src="{{ asset('adminpanel/assets/images/faces/face1.jpg') }}" alt="image" class="profile-pic">
                     </div>
                     <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                       <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
@@ -232,7 +232,7 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item preview-item">
                     <div class="preview-thumbnail">
-                      <img src="../assets/images/faces/face6.jpg" alt="image" class="profile-pic">
+                      <img src="{{ asset('adminpanel/assets/images/faces/face6.jpg') }}" alt="image" class="profile-pic">
                     </div>
                     <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                       <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
@@ -242,7 +242,7 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item preview-item">
                     <div class="preview-thumbnail">
-                      <img src="../assets/images/faces/face7.jpg" alt="image" class="profile-pic">
+                      <img src="{{ asset('adminpanel/assets/images/faces/face7.jpg') }}" alt="image" class="profile-pic">
                     </div>
                     <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                       <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
