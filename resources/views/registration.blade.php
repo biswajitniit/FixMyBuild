@@ -9,8 +9,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('frontend/img/favicon.ico') }}">
 
-     <!-- CSS
-    ========================= -->
+     <!-- CSS ========================= -->
      <!--bootstrap min css-->
     <link rel="stylesheet" href="{{ asset('frontend/css/bootstrap.min.css') }}">
     <!--owl carousel min css-->

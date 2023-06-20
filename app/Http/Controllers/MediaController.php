@@ -30,6 +30,7 @@ class MediaController extends Controller
         $tempmedia = new Tempmedia();
         $tempmedia->user_id           = Auth::user()->id;
         $tempmedia->filename          = $filename_with_extention;
+        $tempmedia->sessionid         = Session::getId();
         $tempmedia->file_extension    = 'mkv';
         $tempmedia->file_type         = "Video";
         $tempmedia->url               = $spath;
@@ -56,6 +57,7 @@ class MediaController extends Controller
             //$videomedia->project_id        = $request->projectid;
             $videomedia->project_id        = 1;
             $videomedia->filename          = $filename_with_extention;
+            $tempmedia->sessionid         = Session::getId();
             $videomedia->file_extension    = 'mkv';
             $videomedia->file_type         = "Video";
             $videomedia->url               = $spath;
@@ -67,10 +69,12 @@ class MediaController extends Controller
 
 
     public function capture_photo(Request $request){
-
-         $img = $request->image;
+        
+        //dd($request);
+        for($i=0; $i<$request->image_count;$i++){
+         $img_var = 'image_'.$i;
+         $img = $request->{$img_var};
          $folderPath = "uploads/";
-
          $image_parts = explode(";base64,", $img);
          $image_type_aux = explode("image/", $image_parts[0]);
          $image_type = $image_type_aux[1];
@@ -92,6 +96,7 @@ class MediaController extends Controller
         $tempmedia = new Tempmedia();
         $tempmedia->user_id         = Auth::user()->id;
         $tempmedia->filename        = $fileName;
+        $tempmedia->sessionid       = Session::getId();
         $tempmedia->file_type       = "image";
         $tempmedia->file_extension  = 'png';
         $tempmedia->url             = $spath;
@@ -100,6 +105,7 @@ class MediaController extends Controller
 
         // unlink from local storage
         @unlink($file_path);
+        }
         return redirect()->back()->with('message', 'Photo added successfully.');
 
     }

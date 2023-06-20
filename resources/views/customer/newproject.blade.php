@@ -178,16 +178,11 @@
                             <div class="col-md-12 mb-4">
                                 {{-- <div id="summernote"></div> --}}
                                 <textarea name="description" id="summernote"></textarea>
-
                             </div>
                             <div class="col-md-12 mb-4">
                                 <h3>Please upload at least one photo, video or design of the work to be undertaken.</h3>
                                 <p>For example if you are replacing a door lock please take a photo of the existing lock.</p>
                             </div>
-
-
-
-
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <a data-bs-toggle="modal" data-bs-target="#exampleModal4" id="gUMbtn1" class="btn btn-outline-danger btn-block">
@@ -214,9 +209,7 @@
                                         Take video
                                     </a>
                                 </div>
-                                <div>
-                                    <ul  class="list-unstyled" id='ul'></ul>
-                                </div>
+                                
                             </div>
 
                             <div class="col-md-3">
@@ -251,9 +244,8 @@
                             <div class="col-md-12">
                                 <div class="row form_wrap mt-3">
                                     <div class="col-md-4">
-                                        <div class="row">
-
-                                            <div class="col-9 pl-0"><input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no"/></div>
+                                      <div class="form-group">
+                                        <input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -281,7 +273,7 @@
 
     <!-- The Modal Upload Video file-->
     <div class="modal fade select_address" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Take video</h5>
@@ -310,8 +302,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                      <ul class="list-unstyled" id='video-captutes'></ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-light" type="button" id="upload_video">Upload</button>
                     <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -321,38 +317,35 @@
 
     <!-- The Modal Upload Photo file-->
     <div class="modal fade select_address" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Take photo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                                fill="black"
-                            />
-                        </svg>
-                    </button>
+                  <h5 class="modal-title" id="exampleModalLabel">Take photo</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                              d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
+                              fill="black"
+                          />
+                      </svg>
+                  </button>
                 </div>
-                <div class="modal-body">
-
+                <form id="capturephoto">
+                  @csrf
+                  <div class="modal-body">
                     {{-- <form method="POST" action="{{ route('capture-photo') }}" enctype="multipart/form-data"> --}}
-                    <form id="capturephoto">
-                        @csrf
-
-                            <div id="my_camera"></div>
-                            <input type="button" class="btn btn-outline-danger" value="Take Snapshot" onClick="take_snapshot()">
-                            <input type="hidden" name="image" class="image-tag" multiple>
-                            <div id="results" class="row"></div>
-
-                    </div>
-                    <div class="modal-footer">
-                            {{-- <button class="btn btn-danger">Submit</button> --}}
-                            <button class="btn btn-light" type="submit">Submit</button>
-                        <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
-                    </div>
-                    </form>
-                </div>
+                    <div id="my_camera"></div>
+                    <input type="button" class="btn btn-outline-danger" value="Take Snapshot" onClick="take_snapshot()">
+                    <input type="hidden" name="image_count" id="image_count" class="image-tag">
+                    <div id="results" class="row"></div>
+                  </div>
+                  <div class="modal-footer">
+                    {{-- <button class="btn btn-danger">Submit</button> --}}
+                    <button class="btn btn-light" type="submit">Upload</button>
+                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </form>
+              </div>
             </div>
     </div>
     <!-- The Modal Upload Photo file END-->
@@ -549,64 +542,67 @@
 
     gUMbtn1 = id('gUMbtn1'),
     gUMbtn1.onclick = e => {
-        var constraints = { audio: true, video: true };
-        navigator.mediaDevices.getUserMedia(constraints)
-        .then(function(mediaStream) {
-                Webcam.set({
-                    width: 300,
-                    height: 250,
-                    image_format: 'jpeg',
-                    jpeg_quality: 100
-                });
-                Webcam.attach( '#my_camera' );
-        })
-        .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+      var constraints = { audio: true, video: true };
+      navigator.mediaDevices.getUserMedia(constraints)
+      .then(function(mediaStream) {
+        Webcam.set({
+            width: 450,
+            height: 350,
+            image_format: 'jpeg',
+            jpeg_quality: 100
+        });
+        Webcam.attach( '#my_camera' );
+      })
+      .catch(function(err) { console.log(err.name + ": " + err.message); }); 
     }
     let imagesArray = []
     function take_snapshot() {
-        Webcam.snap( function(data_uri) {
-            $(".image-tag").val(data_uri);
-            imagesArray.push(data_uri)
-            document.getElementById('results').innerHTML = '<img src="'+data_uri+'" class="rounded"/>';
-        } );
-        const form  = document.getElementById('capturephoto');
-        var formData = new FormData(form);
-            for (let i = 0; i < imagesArray; i++) {
-                formData.append('image' + i, imagesArray[i]);
-            }
-
-        displayImages()
+      Webcam.snap( function(data_uri) {
+        //$(".image-tag").val(data_uri);
+        imagesArray.push(data_uri)
+        //document.getElementById('results').innerHTML = '<img src="'+data_uri+'" class="rounded"/>';
+      } );
+      const form  = document.getElementById('capturephoto');
+      var formData = new FormData(form);
+      formData.append('image_count',  imagesArray.length);
+      for (let i = 0; i < imagesArray; i++) {
+        formData.append('image_' + i, imagesArray[i]);
+      }
+      displayImages()
     }
     function displayImages() {
-        let images = ""
-        output=document.getElementById('results')
-        for (i = 0; i < imagesArray.length; i++){
-            images += `<div class="col-2 col-sm-2 col-md-2 mt-2 image">
-                        <img src="${imagesArray[i]}" alt="image" class="rounded">
-                        <span onclick="deleteImage(${i})">&times;</span>
-                    </div>`
-        }
-        output.innerHTML = images
-        }
-        function deleteImage(index) {
-        imagesArray.splice(index, 1)
-        displayImages()
-        }
+      let images = ""
+      output=document.getElementById('results')
+      for (i = 0; i < imagesArray.length; i++){
+        images += `<div class="col-4 col-sm-6 col-md-4 mt-2 image">
+          <img src="${imagesArray[i]}" alt="image" class="rounded">
+          <input type="hidden" name="image_${i}" class="image-tag" value="${imagesArray[i]}">
+          <div class="capture-image-level">Image Capture ${i+1}
+            <span class="capture-image-delete" onclick="deleteImage(${i})">&times;</span>
+          </div>
+        </div>`
+      }
+      output.innerHTML = images
+      $("#image_count").val(imagesArray.length);
+    }
+    function deleteImage(index) {
+      imagesArray.splice(index, 1)
+      displayImages()
+    }
 
     gUMbtn2 = id('gUMbtn2'),
     gUMbtn2.onclick = e => {
         var constraints = { audio: true, video: true };
         navigator.mediaDevices.getUserMedia(constraints)
         .then(function(mediaStream) {
-
-                Webcam.set({
-                    width: 300,
-                    height: 250,
-                    image_format: 'jpeg',
-                    jpeg_quality: 90
-                });
-
-                Webcam.attach( '#my_camera_video' );
+            Webcam.set({
+                width: 450,
+                height: 350,
+                image_format: 'jpeg',
+                jpeg_quality: 90
+            });
+            Webcam.attach( '#my_camera_video' );
+            $("#gUMbtn").click();
         })
         .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
     }
@@ -704,7 +700,7 @@
         tabsize: 2,
         height: 200
     });
-    setInterval(function() { FetchfilesData(); }, 5000);
+    //setInterval(function() { FetchfilesData(); }, 5000);
     function FetchfilesData(){
         $.ajax({
             type:'POST',
@@ -736,8 +732,8 @@
         $("form#capturephoto").submit(function(e){
             e.preventDefault();
             var success=1
-            var images = document.getElementById('image');
-            var formData = new FormData(this);
+            // var images = document.getElementById('image');
+            // var formData = new FormData(this);
             Swal.fire({
             title: 'Are you sure?',
             text: "You want to upload this image?",
@@ -748,33 +744,34 @@
             confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    for (i = 0; i < imagesArray.length; i++){
+                    //for (i = 0; i < imagesArray.length; i++){
+                    var formData = new FormData($("#capturephoto")[0]);
                     $.ajax({
-                        url: '{{ route("capture-photo") }}',
-                        type: 'POST',
-                        contentType: 'multipart/form-data',
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        data: {image:'images[i]'},
-                        success: (response) => {
-                            // success
-                            success='1'
-                        },
-                        error: (response) => {
-                            console.log(response);
-                            success=response
-                        }
-                    });}
+                      data: formData,
+                      async: false,
+                      url: '{{ route("capture-photo") }}',
+                      type: 'POST',
+                      cache: false,
+                      contentType: false,
+                      processData: false,
+                      dataType: "json",
+                      success: (response) => {
+                          success='1'
+                      },
+                      error: (response) => {
+                        console.log(response);
+                        success=response
+                      }
+                    });
                     if(success=='1'){
-                         Swal.fire({
-                                //position: 'top-end',
-                                icon: 'success',
-                                title: 'Image uploaded successfully.',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                    } else{console.log(success);}
+                      Swal.fire({
+                      //position: 'top-end',
+                      icon: 'success',
+                      title: 'Image uploaded successfully.',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+                  } else{console.log(success);}
 
                 }
             })
@@ -819,23 +816,7 @@
             }
 
         });
-
-
     });
-
-
-
-
-
-
-
-
-
-
-
 </script>
 @endpush
-
-
-
 @endsection
