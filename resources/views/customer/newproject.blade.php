@@ -250,6 +250,11 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
+                                            <input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
                                             <input type="text" name="contact_home_phone" class="form-control" id="" placeholder="Home phone" />
                                         </div>
                                     </div>
@@ -496,27 +501,37 @@
         $("#savenewproject").validate({
             // Specify validation rules
             rules: {
-                forename: "required",
-                surname: "required",
-                project_name: "required",
-                contact_mobile_no: "required",
-                contact_email: "required",
-            },
-            messages: {
-                fullname: {
-                    forename: "Please enter forename",
+                forename: {
+                    required: true,
                 },
                 surname: {
-                    surname: "Please enter surname",
+                    required: true,
                 },
                 project_name: {
-                    project_name: "Please enter project name",
+                    required: true,
                 },
                 contact_mobile_no: {
-                    contact_mobile_no: "Please enter mobile",
+                    required: true,
                 },
                 contact_email: {
-                    contact_email: "Please enter contact email",
+                    required: true,
+                }
+            },
+            messages: {
+                forename: {
+                    required: "Please enter forename",
+                },
+                surname: {
+                    required: "Please enter surname",
+                },
+                project_name: {
+                    required: "Please enter project name",
+                },
+                contact_mobile_no: {
+                    required: "Please enter mobile",
+                },
+                contact_email: {
+                    required: "Please enter contact email",
                 },
             },
 

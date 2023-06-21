@@ -91,7 +91,7 @@
 
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <input type="text" name="fullname" id="fullname" class="form-control" placeholder="Full Name"  required value="{{old('name')}}"/>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Full Name"  required value="{{old('name')}}"/>
                     </div>
                 </div>
 
@@ -128,7 +128,7 @@
                 <div class="form-check mt-4 pl-0 mb-2">
                     <label class="form-check-label">Are you a customer or tradesperson?</label>
                 </div>
-
+                <div class="form-group col-md-12 mt-4">
                 <div class="form-check-inline">
                     <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2"   @if(old('customer_or_tradesperson') == 'Customer') checked @endif name="optradio"  required/>Customer </label>
                 </div>
@@ -136,7 +136,7 @@
                 <div class="form-check-inline">
                     <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" @if(old('customer_or_tradesperson') == 'Tradesperson') checked @endif name="optradio"  required/>Tradesperson </label>
                 </div>
-
+                </div>
                 <div class="form-check mt-4">
                     <label class="form-check-label">
                         <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif onclick="checkBox()" required/> I have read and agree to FixMyBuild's
@@ -189,7 +189,7 @@
         $("#userregistration").validate({
             // Specify validation rules
             rules: {
-                fullname: {
+                name: {
                     required: true,
                 },
                 email: {
@@ -209,7 +209,7 @@
                 }
             },
             messages: {
-                fullname: {
+                name: {
                     required: "Please enter full name",
                 },
                 email: {

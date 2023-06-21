@@ -93,7 +93,11 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
     Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
-
+    Route::get('verify-otp', [ForgotPasswordController::class, 'otpVerifyPage'])->name('otpVerify.get');
+    Route::post('send-otp', [ForgotPasswordController::class, 'generateOtp'])->name('generateOtp');
+    Route::post('resend-otp', [ForgotPasswordController::class, 'resendOtp'])->name('resendOtp');
+    Route::post('verify-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('otpVerify.post');
+    Route::post('resetPassword', [ForgotPasswordController::class, 'resetPasswordusingOTP'])->name('reset.password-mobile-otp');
 
 
     Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google-auth');
@@ -131,10 +135,10 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::patch('/admin/verify-account/{id}', [UserController::class, 'verify_account'])->name('admin.verify-account');
 
         Route::resource('reviewer', ReviewerController::class);
-        Route::get('/admin/project/awaiting-your-review', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
-        Route::get('/admin/project/awaiting-your-review-show/{projectid}', [ReviewerController::class, 'awaiting_your_review_show'])->name('awaiting-your-review-show');
-        Route::post('/awaiting-your-review-save', [ReviewerController::class, 'awaiting_your_review_save'])->name('awaiting-your-review-save');
-        Route::post('/awaiting-your-review-final-save', [ReviewerController::class, 'awaiting_your_review_final_save'])->name('awaiting-your-review-final-save');
+        Route::get('/admin/project', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
+        Route::get('/admin/project/{projectid}', [ReviewerController::class, 'awaiting_your_review_show'])->name('awaiting-your-review-show');
+        Route::post('/review-save', [ReviewerController::class, 'awaiting_your_review_save'])->name('awaiting-your-review-save');
+        Route::post('/review-final-save', [ReviewerController::class, 'awaiting_your_review_final_save'])->name('awaiting-your-review-final-save');
         Route::post('/get-builder-subcategory-list', [ReviewerController::class, 'get_builder_subcategory_list'])->name('get-builder-subcategory-list');
         Route::get('/admin/project/final-review/{projectid}', [ReviewerController::class, 'final_review'])->name('final-review');
 
@@ -220,6 +224,12 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::post('upload-prev-projs', [TradespersonFileController::class, 'storePrevProj'])->name('storePrevProj');
             Route::post('uploadTeamPhoto', [TradespersonFileController::class, 'storeTempTeamPhoto'])->name('storeTeamPhoto');
         });
+        Route::get('project-estimate/{project_id}', [TradepersionDashboardController::class, 'project_estimate'])->name('tradepersion.project_estimate');
+        Route::post('project-estimate', [TradepersionDashboardController::class, 'projectestimate'])->name('tradepersion.p_estimate');
+        Route::get('project-details/{project_id}', [TradepersionDashboardController::class, 'details'])->name('tradeperson.project_details');
+        Route::post('update-milestone-price', [TradepersionDashboardController::class, 'update_milestone_price'])->name('tradeperson.update-milestone-price');
+        Route::post('update-task-status', [TradepersionDashboardController::class, 'update_task_status'])->name('tradeperson.update-task-status');
+
     });
 
     Route::delete('/users/users-delete_account', [UserController::class, 'delete_account'])->name('user.user-delete-account');
