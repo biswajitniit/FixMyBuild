@@ -28,6 +28,13 @@
 .weak-password {
     color: #f00;
 }
+#customer_or_tradesperson-error {
+    position: absolute;
+    margin-top: 24px;
+}
+.remove-row {
+    cursor: pointer;
+}
 /* .medium-password {
     background-color: #fd0;
 }

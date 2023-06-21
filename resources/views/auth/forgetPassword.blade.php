@@ -53,7 +53,7 @@
          </section>
          <section class="content">
             <header>
-               <a href="" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
+               <a href="{{ route('login') }}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
             </header>
             <div class="auth-content">
                <div>
@@ -67,7 +67,7 @@
                   </div>
 
                   @if (Session::has('message'))
-                  <div class="alert alert-success" role="alert">
+                  <div class="alert alert-warning" role="alert">
                      {{ Session::get('message') }}
                   </div>
                   @endif
@@ -93,23 +93,27 @@
                        </div>
                      </div>
                   </form>
-                  {{-- <form action="set-password.html" method="post" class="fwrap">
+                  <form action="{{ route('generateOtp') }}" method="post" class="fwrap">
+                    @csrf
                     <div class="row">
-                      <div class="card mt-5">
+                      <div class="card mt-3">
                          <div class="input-group">
                            <div class="col-md-10 col-10 p-4">
                                <label>Send a message to</label>
-                               <input type="tel" required class="form-control" placeholder="Phone number">
+                               <input type="tel" required class="form-control" placeholder="Phone number" name="phone">
+                                @if ($errors->has('phone'))
+                                    <span class="text-danger">{{ $errors->first('phone') }}</span>
+                                @endif
                            </div>
                            <div class="input-group-append col-md-2 p-0 fget_">
                              <span class="input-group-text">
-                               <button type="submit" <i class="fa fa-long-arrow-right"></i></button>
+                               <button type="submit"><i class="fa fa-long-arrow-right"></i></button>
                              </span>
                            </div>
                          </div>
                       </div>
                     </div>
-                 </form> --}}
+                 </form>
                </div>
             </div>
             <p class="font-14px text-center mt-5">Copyright &copy; <?php echo date('Y') ?> FixMyBuild. All Rights Reserved.</p>

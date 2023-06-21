@@ -9499,7 +9499,13 @@ button.btn-style:hover {
   font-size: 15px;
   margin: 0;
 }
-
+.description-ms_ td{
+padding: 30px !important;
+background: #ece7db;
+color: #061A48!important;
+font-weight: 500;
+font-size: 14px!important;
+}
 .variants_size h2,
 .variants_color h2 {
   font-size: 13px;
@@ -11364,6 +11370,8 @@ video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  width: 100px;
+  margin-top: 15px;
 }
 
 .vid {
@@ -12546,9 +12554,9 @@ button.btn-close:hover {
 }
 p {
   color: #6d717a;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 20px;
+  /* font-weight: 500; */
+  font-size: 22px;
+  line-height: 25px;
   margin-bottom: 12px;
 }
 .iti {
@@ -13441,7 +13449,19 @@ table.table {
 .review_wp p {
   margin-bottom: 13px;
 }
-
+textarea#detailed_review {
+    width: 100%;
+    height: 150px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+#my_camera video {
+    width: 93%;
+    height: 80%;
+    position: absolute;
+    object-fit: cover;
+    top: -20px;
+}
 .trd_wp p {
   font-weight: 700;
   font-size: 18px;

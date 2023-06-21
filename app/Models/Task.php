@@ -14,6 +14,12 @@ class Task extends Model
         'description',
         'price',
         'estimate_id',
+        'contingency',
+        'max_contingency',
+        'payment_status',
+        'status',
+        'payment_transaction_id',
+        'payment_date',
     ];
 
     public function estimate() {

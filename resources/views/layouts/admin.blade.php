@@ -153,7 +153,7 @@
 
           @if (Auth::guard('admin')->user()->type == "reviewer")
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/project/awaiting-your-review') }}">
+                <a class="nav-link" href="{{ url('admin/project') }}">
                   <i class="mdi mdi-view-dashboard menu-icon"></i>
                   <span class="menu-title">Projects</span>
                 </a>
