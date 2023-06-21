@@ -15,7 +15,11 @@ use App\Models\{
   User,
   Notification,
   tempmedia,
-  TradespersonFile
+  TradespersonFile,
+  Project,
+  Projectfile,
+  Estimate,
+  Task
 };
 use Illuminate\Support\Facades\{
     Http,
@@ -25,6 +29,7 @@ use Illuminate\Support\Facades\{
 use Auth;
 use Redirect;
 use stdClass;
+use DB;
 
 
 
@@ -279,7 +284,7 @@ class TradepersionDashboardController extends Controller
             $errors = new MessageBag(['submiterror' => ['Something went wrong please try again.']]);
             return Redirect::back()->withErrors($errors)->withInput();
         }
-        
+
     }
 
     function get_companydetails(Request $request){
