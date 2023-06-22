@@ -629,6 +629,7 @@ class TradepersionDashboardController extends Controller
                 $insert_estimate->contingency = 0;
                 $insert_estimate->initial_payment = 0;
                 $insert_estimate->initial_payment_type = null;
+                $insert_estimate->project_start_date_type = null;
                 $insert_estimate->project_start_date = null;
                 $insert_estimate->total_time = '';
                 $insert_estimate->total_time_type = '';
@@ -667,7 +668,7 @@ class TradepersionDashboardController extends Controller
             }else{
                 $insert_estimate->contingency = $request->contingency;
             }
-
+            $insert_estimate->project_start_date_type = $request->for_start_date;
             $insert_estimate->project_start_date = $request->project_start_date;
             $insert_estimate->total_time = $request->total_time;
             $insert_estimate->total_time_type = $request->total_time_type;
@@ -762,6 +763,7 @@ class TradepersionDashboardController extends Controller
     {
         try {
             Task::where('id', $request->task_id)->update(['status' => $request->status]);
+            return response()->json(['status' => $request->input('status')]);
         } catch (Exception $e) {
 
         }

@@ -115,7 +115,7 @@
                                           <hr class="dropdown-divider">
                                           </hr>
                                           </li>
-                                          
+
                                           @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
                                           <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
                                           <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
@@ -189,8 +189,8 @@
                                              <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My profile</a></li>
                                              <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My projects</a></li>
                                              <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">New project</a></li>
-                                             @endif
                                              <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                             @endif
                                         </ul>
                                     </div>
                                 @endif

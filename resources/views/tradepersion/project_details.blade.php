@@ -146,7 +146,9 @@
                         let displayVal = $(e).closest('td').find('.displayVal');
                         let inpVal = $(e).closest('td').find('.inputValue');
                         inpVal.addClass('d-none');
-                        displayVal.text(response.contingency);
+                        var contingency = response.contingency;
+                        var formattedContingency = parseFloat(contingency).toFixed(2);
+                        displayVal.text(formattedContingency);
                         displayVal.removeClass('d-none');
 
                         $(e).addClass('d-block');
@@ -166,6 +168,9 @@
         $('.toggle-class').on('change',function(){
             let task_id = $(this).closest('tr').attr('data-id');
             let status = $(this).prop('checked') ? 'Active' : 'Inactive';
+            let pencil = $('#pencil'+task_id);
+            // let pencil=document.getElementById('pencil'+task_id);
+            $(this).prop('checked') ?pencil.addClass('d-none'):pencil.removeClass('d-none');
             $.ajax({
                 url: '{{ route('tradeperson.update-task-status') }}',
                 type: 'post',
@@ -181,6 +186,6 @@
 
         });
 
-    
+
     </script>
 @endpush

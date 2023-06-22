@@ -64,11 +64,11 @@
                         </div>
                         @if($estimate->initial_payment_type == 'Percentage')
                             <div class="col-6">
-                                <span>{{ number_format($initial_payment_percentage, 2) }}({{ $estimate->initial_payment }}%)</span>
+                                    <span>{{ $initial_payment_percentage }}({{ $estimate->initial_payment }}%)</span>
                             </div>
                         @else
                         <div class="col-6">
-                            <span>£{{ number_format($estimate->initial_payment, 2) }}</span>
+                                <span>£{{ number_format($estimate->initial_payment) }}</span>
                         </div>
                         @endif
                     </div>
@@ -79,31 +79,62 @@
                             Milestone {{ $key+1 }}
                         </div>
                         <div class="col-6 mt-2">
-                            <span>£{{ number_format($task->price, 2) }}</span>
+                            @if (intval($task->price) == $task->price)
+                                <span>£{{ intval($task->price) }}</span>
+                            @else
+                                <span>£{{ number_format($task->price, 2) }}</span>
+                            @endif
                         </div>
                     @endforeach
                 </div>
              </div>
              <div class="col-md-6 offset-md-1 mt-4 total-price">
                 <h6>Total price excluding contingency</h6>
-                <div class="mb-5 price_ec">{{ $taskTotalAmount }}</div>
+                @if (intval($taskTotalAmount) == $taskTotalAmount)
+                    <div class="mb-5 price_ec">£{{ intval($taskTotalAmount) }}</div>
+                @else
+                    <div class="mb-5 price_ec">£{{ $taskTotalAmount }}</div>
+                @endif
+
                 <h5>Contingency: {{ $estimate->contingency }}%</h5>
                 <h6>Total price including contingency</h6>
-                <div class="price_ec">£{{ $taskAmountWithContingency }}</div>
+                @if (intval($taskAmountWithContingency) == $taskAmountWithContingency)
+                    <div class="price_ec">£{{ intval($taskAmountWithContingency) }}</div>
+                @else
+                    <div class="price_ec">£{{ $taskAmountWithContingency }}</div>
+                @endif
+
                 @if( $estimate->apply_vat == 1)
                     <h6 class="mt-5">Total price including contingency and VAT</h6>
-                    <div class="mb-5 price_ec">£{{ $taskAmountWithContingencyAndVat }}</div>
+                    @if (intval($taskAmountWithContingencyAndVat) == $taskAmountWithContingencyAndVat)
+                        <div class="price_ec">£{{ intval($taskAmountWithContingencyAndVat) }}</div>
+                    @else
+                        <div class="mb-5 price_ec">£{{ $taskAmountWithContingencyAndVat }}</div>
+                    @endif
                 @else
                 @endif
             </div>
           </div>
-          <h3>Estimated time required to complete the project:</h3>
-          <small>{{ $estimate->total_time_type }}</small>
-          <div class="price_ec">{{ $estimate->total_time }}</div>
-          <h3>Terms and conditions</h3>
-          <div class="col-md-12">
-            {{ $estimate->terms_and_conditions }}
-        </div>
+            <h3>Estimated time required to complete the project:</h3>
+            <div class="row">
+                <div class="col-3 mt-2">
+                    <small>{{ $estimate->total_time_type }}</small>
+                    <div class="price_ec">{{ $estimate->total_time }}</div>
+                </div>
+
+                <div class="col-6 mt-2">
+                    <small>Available to start</small>
+                    @if($estimate->project_start_date == null)
+                        <div class="price_ec">{{ $estimate->project_start_date_type }}</div>
+                    @else
+                        <div class="price_ec">{{ date('d-m-Y',strtotime($estimate->project_start_date)) }}</div>
+                    @endif
+                </div>
+            </div>
+            <h3>Terms and conditions</h3>
+                <div class="col-md-12">
+                    <p>{{ $estimate->terms_and_conditions }}</p>
+                </div>
        </div>
     </div>
 </div>
