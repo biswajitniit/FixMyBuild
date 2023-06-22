@@ -130,10 +130,11 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
         Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
 
-        Route::get('/admin/users', [AdminUserController::class, 'users'])->name('admin/users');
+        Route::get('/admin/users', [AdminUserController::class, 'users'])->name('admin.users');
         Route::any('/admin/users-list-datatable', [AdminUserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
         Route::get('/admin/user/{id}', [AdminUserController::class, 'user_detail_page'])->name('admin.user-detail');
         Route::patch('/admin/verify-account/{id}', [AdminUserController::class, 'verify_account'])->name('admin.verify-account');
+        Route::patch('/admin/change-account-status/{id}', [AdminUserController::class, 'toggle_user_status'])->name('admin.toggle-status');
 
         Route::resource('reviewer', ReviewerController::class);
         Route::get('/admin/project', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');

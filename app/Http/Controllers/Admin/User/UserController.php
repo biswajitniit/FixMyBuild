@@ -52,10 +52,10 @@ class UserController extends Controller
             return $customer_or_tradesperson;
         })
         ->addColumn('status', function ($query) {
-            return $query->status;
+            return [$query->status, Hashids_encode($query->id)];
         })
         ->addColumn('action', function ($query) {
-            return '<a href=" '. route('admin.user-detail', Hashids_encode($query->id) ) .' " title="Edit User"><i class="mdi mdi-table-edit"></i></a>';
+            return '<a href=" '. route('admin.user-detail', Hashids_encode($query->id) ) .' " title="View User"><i class="mdi mdi-eye"></i></a>';
         })->rawColumns(['action'])
         ->make('true');
 
@@ -64,23 +64,36 @@ class UserController extends Controller
 
     public function user_detail_page(Request $request, $id)
     {
-        $user = User::where('id', Hashids_decode($id))->firstOrFail();
+        try{
+            $user = User::where('id', Hashids_decode($id))->firstOrFail();
 
-        // if (strtolower($user->customer_or_tradesperson) == 'customer')
-        //     return view('admin.user.user-detail', compact('user'));
+            $trader_detail = TraderDetail::where('user_id', Hashids_decode($id))->first();
+            $trader_files  = TradespersonFile::where('tradesperson_id', Hashids_decode($id))->orderBy('file_related_to', 'asc')->get()->groupBy('file_related_to');
+            $trader_areas  = Traderareas::where('user_id', Hashids_decode($id))->with('subareas')->get();
+            // $trader_areas  = Traderareas::where('user_id', Hashids_decode($id))
+            //                             ->with('subareas')
+            //                             ->get()
+            //                             ->groupBy(function($query){
+            //                                 return $query->subareas->area_type_id;
+            //                             });
+            $trader_works  = Traderworks::where('user_id', Hashids_decode($id))->with('buildersubcategory')->get();
 
-        $trader_detail = TraderDetail::where('user_id', Hashids_decode($id))->first();
-        $trader_files  = TradespersonFile::where('tradesperson_id', Hashids_decode($id))->orderBy('file_related_to', 'asc')->get()->groupBy('file_related_to');
-        $trader_areas  = Traderareas::where('user_id', Hashids_decode($id))->with('subareas')->get();
-        // $trader_areas  = Traderareas::where('user_id', Hashids_decode($id))
-        //                             ->with('subareas')
-        //                             ->get()
-        //                             ->groupBy(function($query){
-        //                                 return $query->subareas->area_type_id;
-        //                             });
-        $trader_works  = Traderworks::where('user_id', Hashids_decode($id))->with('buildersubcategory')->get();
+            return view('admin.user.user-detail', compact('user', 'trader_detail', 'trader_files', 'trader_areas', 'trader_works'));
+        } catch (Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
 
-        return view('admin.user.user-detail', compact('user', 'trader_detail', 'trader_files', 'trader_areas', 'trader_works'));
+            echo $e->getMessage();
+        }
+    }
+
+    public function toggle_user_status(Request $request, $id) {
+        try {
+            User::where('id', Hashids_decode($id))->update(['status' => $request->status]);
+            return response()->json(['status'=>$request->status]);
+        } catch (Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            echo $e->getMessage();
+        }
     }
 
     public function verify_account(Request $request, $id) {

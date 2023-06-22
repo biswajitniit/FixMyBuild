@@ -219,7 +219,13 @@ class CustomerController extends Controller
                 $doc= projectfile::where('project_id', $id)->get();
                 $project_id=$id;
 
-                return view('customer/project_details',compact('projects','projectaddress','doc','project_id'));
+                if($projects->status == 'estimation') {
+                    $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
+
+                    return view('customer.project_details',compact('projects','projectaddress','doc','project_id','estimates'));
+                }
+
+                return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
             }else{
                 return redirect('/customer/projects');
             }

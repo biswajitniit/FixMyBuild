@@ -130,7 +130,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/admin/users') }}">
+                    <a class="nav-link" href="{{ route('admin.users') }}">
                         <i class="mdi mdi-account-multiple-outline menu-icon"></i>
                         <span class="menu-title">Users</span>
                     </a>

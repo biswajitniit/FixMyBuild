@@ -33,6 +33,11 @@ class Estimate extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class, 'project_id');
+    }
+
     public function tasks()
     {
         return $this->hasMany(Task::class);
