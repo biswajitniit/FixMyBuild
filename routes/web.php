@@ -6,11 +6,12 @@ use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\MicrosoftController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\LogoutsController;
 use App\Http\Controllers\MediaController;
-use App\Http\Controllers\Admin\User\UserController;
+use App\Http\Controllers\Admin\User\UserController as AdminUserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Tradepersion\TradepersionDashboardController;
 use App\Http\Controllers\Tradepersion\TradespersonFileController;
@@ -69,15 +70,15 @@ Route::post('/admin/login', [AdminLoginController::class, 'postlogin'])->name('a
 
 Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::get('/', function () {
-        return view('welcome');
+      return view('welcome');
     })->name('home');
 
     //user section
     Route::get('/login', [LoginController::class, 'login'])->name('login');
     Route::post('/user/loginpost', [LoginController::class, 'loginpost'])->name('user.loginpost');
-    Route::get('/user/registration', [HomeController::class, 'registration'])->name('user.registration');
-    Route::post('/user/save-user', [HomeController::class, 'save_user'])->name('user.save-user');
-    Route::get('account/verify/{token}', [HomeController::class, 'verifyAccount'])->name('user.verify');
+    Route::get('/user/registration', [UserController::class, 'registration'])->name('user.registration');
+    Route::post('/user/save-user', [UserController::class, 'save_user'])->name('user.save-user');
+    Route::get('account/verify/{token}', [UserController::class, 'verifyAccount'])->name('user.verify');
 
 
 
@@ -129,10 +130,11 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
         Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
 
-        Route::get('/admin/users', [UserController::class, 'users'])->name('admin/users');
-        Route::any('/admin/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
-        Route::get('/admin/user/{id}', [UserController::class, 'user_detail_page'])->name('admin.user-detail');
-        Route::patch('/admin/verify-account/{id}', [UserController::class, 'verify_account'])->name('admin.verify-account');
+        Route::get('/admin/users', [AdminUserController::class, 'users'])->name('admin.users');
+        Route::any('/admin/users-list-datatable', [AdminUserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
+        Route::get('/admin/user/{id}', [AdminUserController::class, 'user_detail_page'])->name('admin.user-detail');
+        Route::patch('/admin/verify-account/{id}', [AdminUserController::class, 'verify_account'])->name('admin.verify-account');
+        Route::patch('/admin/change-account-status/{id}', [AdminUserController::class, 'toggle_user_status'])->name('admin.toggle-status');
 
         Route::resource('reviewer', ReviewerController::class);
         Route::get('/admin/project', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
@@ -161,6 +163,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
     Route::group(['prefix' => 'customer', 'middleware' => 'auth'], function () {
 
+        Route::delete('/users/users-delete_account', [UserController::class, 'delete_account'])->name('customer.user-delete-account');
+        Route::post('/users/verify-email', [UserController::class, 'resend_verification_email'])->name('customer.resend_verification_email');
 
         Route::get('profile', [CustomerController::class, 'customer_profile'])->name('customer.profile');
         Route::get('projects', [CustomerController::class, 'customer_project'])->name('customer.project');
@@ -231,9 +235,6 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('update-task-status', [TradepersionDashboardController::class, 'update_task_status'])->name('tradeperson.update-task-status');
 
     });
-
-    Route::delete('/users/users-delete_account', [UserController::class, 'delete_account'])->name('user.user-delete-account');
-    Route::post('/users/verify-email', [UserController::class, 'verify_mail'])->name('user.verify_mail');
 
     Route::get('project/submit-review/{project_id}', [CustomerController::class, 'project_review'])->name('customer.project_review');
     Route::post('project/submit-review', [CustomerController::class, 'submit_review'])->name('customer.review');

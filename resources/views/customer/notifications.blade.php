@@ -125,7 +125,7 @@
                       </div>
                       <div class="row">
                        <div class="col-md-12">
-                         <form id="account_delete" action="{{ route('user.user-delete-account')}}" method="post">
+                         <form id="account_delete" action="{{ route('customer.user-delete-account')}}" method="post">
                             @csrf
                             @method('DELETE')
                          <p>Once your account is closed all of your information including the details of all of your projects will be permanently deleted.</p>
@@ -223,7 +223,7 @@
     }
 $("#verify_mail").click(function(){
         $.ajax({
-            url: '{{ route('user.verify_mail')}}',
+            url: "{{ route('customer.resend_verification_email')}}",
                     data: {'_token': "{{ csrf_token() }}"},
                     method: 'POST',
                     success: function(data){

@@ -88,7 +88,6 @@
 
             <form action="{{ route('user.save-user') }}" name="userregistration" id="userregistration" class="contact-form" method="POST">
                 @csrf
-
                 <div class="row">
                     <div class="form-group col-md-12">
                         <input type="text" name="name" id="name" class="form-control" placeholder="Full Name"  required value="{{old('name')}}"/>
@@ -96,12 +95,12 @@
                 </div>
 
                 <div class="form-group col-md-12 mt-4">
-                    <input type="email" name="email" id="email" class="form-control" placeholder="Email" id="email" value="{{old('email')}}" required pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"/>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email" id="email" value="{{old('email')}}" required pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" autocomplete="off"/>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-12 mt-4 pw_">
-                        <input type="password" name="password" id="password" class="form-control" placeholder="Password*" onkeyup="checkPasswordStrength();" onChange="Chkpassword_and_conpassword()" required />
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" onkeyup="checkPasswordStrength();" onChange="Chkpassword_and_conpassword()" required autocomplete="off"/>
                         <em onclick="tooglepassword()">
                             <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
                         </em>
@@ -233,16 +232,26 @@
     });
 
     $(document).ready(function(){
-        $("#fullname").bind("keypress", function (event) {
-            if (event.charCode!=0) {
-                var regex = new RegExp("^[a-zA-Z ]+$");
-                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-                if (!regex.test(key)) {
-                    event.preventDefault();
-                    return false;
-                }
-            }
-        });
+      var input = document.querySelector("#phone");
+      var iti = window.intlTelInput(input, {
+          separateDialCode: true,
+          hiddenInput: "full_phone",
+          preferredCountries: ["gb"]
+      });
+      $("#fullname").bind("keypress", function (event) {
+          if (event.charCode!=0) {
+              var regex = new RegExp("^[a-zA-Z ]+$");
+              var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+              if (!regex.test(key)) {
+                  event.preventDefault();
+                  return false;
+              }
+          }
+      });
+      // $('#phone').blur(function(){
+      //   console.log('hi');
+      //   $('#full_phone').val(iti.getNumber()+234234);
+      // });
     });
 
     function Chkpassword_and_conpassword() {
@@ -257,11 +266,7 @@
 
 
 
-     var input = document.querySelector("#phone");
-     window.intlTelInput(input, {
-         separateDialCode: true,
-         preferredCountries: ["gb"]
-     });
+     
 
     // $(document).ready(function(){
     //     $("#userregistration").validationEngine();

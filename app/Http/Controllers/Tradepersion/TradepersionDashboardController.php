@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tradepersion;
 
 use App\Http\Controllers\Controller;
+use App\Models\UkTown;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use App\Models\{
@@ -48,8 +49,9 @@ class TradepersionDashboardController extends Controller
         $temp_team_imgs = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'team_img'])->get();
         $temp_prev_projs = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'prev_project_img'])->get();
 
+        $counties = UkTown::distinct()->pluck('county');
 
-        return view('tradepersion.registrationtwo', compact('works', 'areas', 'temp_company_logo', 'temp_pli', 'temp_addr', 'temp_trader_img', 'temp_team_imgs', 'temp_prev_projs'));
+        return view('tradepersion.registrationtwo', compact('works', 'areas', 'counties', 'temp_company_logo', 'temp_pli', 'temp_addr', 'temp_trader_img', 'temp_team_imgs', 'temp_prev_projs'));
     }
 
     public function saveregistrationsteptwo(Request $request){
@@ -587,7 +589,9 @@ class TradepersionDashboardController extends Controller
 
     public function projects()
     {
-        return view('tradepersion.projects');
+        // Projects for which the Tradesperson has written an estimate
+        $estimate_projects = Estimate::where('tradesperson_id', Auth::user()->id)->with('project')->get();
+        return view('tradepersion.projects', compact('estimate_projects'));
     }
 
     public function settings()

@@ -728,7 +728,7 @@
 
     $("#verify_mail").click(function(){
         $.ajax({
-            url: '{{ route('user.verify_mail')}}',
+            url: "{{ route('customer.resend_verification_email')}}",
                     data: {'_token': "{{ csrf_token() }}"},
                     method: 'POST',
                     success: function(data){

@@ -92,7 +92,17 @@
                                     {{-- VAT DETAILS --}}
                                     @if (isset($trader_detail->vat_reg) && $trader_detail->vat_reg == 1)
                                         <div class="col-sm-6 mb-3">
-                                            <h4>VAT Number</h4>
+                                            <h4>VAT Number
+                                                @if(!empty($trader_detail->vat_comp_name) && !empty($trader_detail->vat_comp_address))
+                                                    <small class="text-success ms-2">
+                                                        <i class="mdi mdi-check-decagram"></i> Verified
+                                                    </small>
+                                                @else
+                                                    <small class="text-muted ms-2">
+                                                        <i class="mdi mdi-check-decagram"></i> Unverified
+                                                    </small>
+                                                @endif
+                                            </h4>
                                             {{ $trader_detail->vat_no }}
                                         </div>
                                         @if (isset($trader_detail->vat_comp_name) && !empty($trader_detail->vat_comp_name))
@@ -245,10 +255,10 @@
                                         </h4>
                                         <div class="mb-3">
                                             @foreach ($files as $file)
-                                                <span class="me-3 badge badge-primary">
+                                                <span class="me-3">
                                                     <a href="{{ $file->url }}" target="_blank"
                                                         class="text-white text-decoration-none">
-                                                        {{ Str::limit($file->file_name, 15, '...') }}
+                                                        <img src="{{ $file->url }}" alt="" class="rectangle-img">
                                                     </a>
                                                 </span>
                                             @endforeach
