@@ -129,6 +129,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::any('/admin/users-list-datatable', [UserController::class, 'ajax_users_list_datatable'])->name('admin.user-list-datatable');
         Route::get('/admin/user/{id}', [UserController::class, 'user_detail_page'])->name('admin.user-detail');
         Route::patch('/admin/verify-account/{id}', [UserController::class, 'verify_account'])->name('admin.verify-account');
+        Route::patch('/admin/change-account-status/{id}', [UserController::class, 'toggle_user_status'])->name('admin.toggle-status');
 
         Route::resource('reviewer', ReviewerController::class);
         Route::get('/admin/project/awaiting-your-review', [ReviewerController::class, 'awaiting_your_review'])->name('admin/project/awaiting-your-review');
