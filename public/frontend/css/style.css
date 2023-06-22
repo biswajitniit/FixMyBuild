@@ -12919,6 +12919,7 @@ table.table {
 }
 .table th {
   vertical-align: bottom;
+  padding-top: 0;
 }
 .tab_wrap th {
   color: var(--primary_color);
