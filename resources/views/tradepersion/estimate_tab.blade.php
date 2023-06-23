@@ -90,26 +90,26 @@
              </div>
              <div class="col-md-6 offset-md-1 mt-4 total-price">
                 <h6>Total price excluding contingency</h6>
-                @if (intval($taskTotalAmount) == $taskTotalAmount)
-                    <div class="mb-5 price_ec">£{{ intval($taskTotalAmount) }}</div>
+                @if ($taskTotalAmount == (int) $taskTotalAmount)
+                    <div class="mb-5 price_ec">£{{ (int) $taskTotalAmount }}</div>
                 @else
-                    <div class="mb-5 price_ec">£{{ $taskTotalAmount }}</div>
+                    <div class="mb-5 price_ec">£{{ number_format($taskTotalAmount, 2) }}</div>
                 @endif
 
                 <h5>Contingency: {{ $estimate->contingency }}%</h5>
                 <h6>Total price including contingency</h6>
-                @if (intval($taskAmountWithContingency) == $taskAmountWithContingency)
-                    <div class="price_ec">£{{ intval($taskAmountWithContingency) }}</div>
+                @if ($taskAmountWithContingency == (int) $taskAmountWithContingency)
+                    <div class="price_ec">£{{ (int) $taskAmountWithContingency }}</div>
                 @else
-                    <div class="price_ec">£{{ $taskAmountWithContingency }}</div>
+                    <div class="price_ec">£{{ number_format($taskAmountWithContingency, 2) }}</div>
                 @endif
 
                 @if( $estimate->apply_vat == 1)
                     <h6 class="mt-5">Total price including contingency and VAT</h6>
-                    @if (intval($taskAmountWithContingencyAndVat) == $taskAmountWithContingencyAndVat)
-                        <div class="price_ec">£{{ intval($taskAmountWithContingencyAndVat) }}</div>
+                    @if ($taskAmountWithContingencyAndVat == (int) $taskAmountWithContingencyAndVat)
+                        <div class="price_ec">£{{ (int) $taskAmountWithContingencyAndVat }}</div>
                     @else
-                        <div class="mb-5 price_ec">£{{ $taskAmountWithContingencyAndVat }}</div>
+                        <div class="mb-5 price_ec">£{{ number_format($taskAmountWithContingencyAndVat, 2) }}</div>
                     @endif
                 @else
                 @endif
@@ -125,7 +125,7 @@
                 <div class="col-6 mt-2">
                     <small>Available to start</small>
                     @if($estimate->project_start_date == null)
-                        <div class="price_ec">{{ $estimate->project_start_date_type }}</div>
+                        <div class="price_ec">{{ ucwords($estimate->project_start_date_type) }}</div>
                     @else
                         <div class="price_ec">{{ date('d-m-Y',strtotime($estimate->project_start_date)) }}</div>
                     @endif
