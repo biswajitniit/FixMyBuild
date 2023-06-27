@@ -62,7 +62,8 @@ class TradespersonFileController extends Controller
             $image = $request->file('file');
             $fileName = $request->file('file')->getClientOriginalName();
             $extension = $image->getClientOriginalExtension();
-            $s3FileName = \Str::of($fileName)->basename('.'.$extension).'_'.now()->format('Y_m_d_H_i_s').'_'.rand(1000,9999).'.'.$image->getClientOriginalExtension();
+            // $s3FileName = \Str::of($fileName)->basename('.'.$extension).'_'.now()->format('Y_m_d_H_i_s').'_'.rand(1000,9999).'.'.$image->getClientOriginalExtension();
+            $s3FileName = \Str::uuid().'.'.$image->getClientOriginalExtension();
             $path = Storage::disk('s3')->put('Testfolder/'.$s3FileName,file_get_contents($image->getRealPath(),'public'));
             $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
 
@@ -104,13 +105,13 @@ class TradespersonFileController extends Controller
             $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
 
             $fileType = '';
-            if($extension == 'pdf')
-                $fileType = 'document';
-            else
+            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
                 $fileType = 'image';
+            else
+                $fileType = 'document';
 
             // Delete Old File
-            Tempmedia::where(['user_id'=>$user, 'file_related_to' => $request->file_related_to])->delete();
+            // Tempmedia::where(['user_id'=>$user, 'file_related_to' => $request->file_related_to])->delete();
 
             $temp_media = new Tempmedia();
             $temp_media->user_id           = $user;
@@ -147,13 +148,13 @@ class TradespersonFileController extends Controller
             $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
 
             $fileType = '';
-            if($extension == 'pdf')
-                $fileType = 'document';
-            else
+            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
                 $fileType = 'image';
+            else
+                $fileType = 'document';
 
             // Delete Old Logo
-            Tempmedia::where(['user_id'=>$user, 'file_related_to' => $request->file_related_to])->delete();
+            // Tempmedia::where(['user_id'=>$user, 'file_related_to' => $request->file_related_to])->delete();
 
             $temp_media = new Tempmedia();
             $temp_media->user_id           = Auth::user()->id;
@@ -190,13 +191,13 @@ class TradespersonFileController extends Controller
             $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
 
             $fileType = '';
-            if($extension == 'pdf')
-                $fileType = 'document';
-            else
+            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
                 $fileType = 'image';
+            else
+                $fileType = 'document';
 
             // Delete Old File
-            Tempmedia::where(['user_id'=>$user, 'file_related_to' => $request->file_related_to])->delete();
+            // Tempmedia::where(['user_id'=>$user, 'file_related_to' => $request->file_related_to])->delete();
 
             $temp_media = new Tempmedia();
             $temp_media->user_id           = $user;
@@ -233,10 +234,10 @@ class TradespersonFileController extends Controller
             $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
 
             $fileType = '';
-            if($extension == 'pdf')
-                $fileType = 'document';
-            else
+            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
                 $fileType = 'image';
+            else
+                $fileType = 'document';
 
             $temp_media = new Tempmedia();
             $temp_media->user_id           = $user;

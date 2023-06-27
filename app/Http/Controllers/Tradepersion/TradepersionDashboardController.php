@@ -43,15 +43,15 @@ class TradepersionDashboardController extends Controller
 
         // If the Form Validation Fails then load the files from temp_media
         $temp_company_logo = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'company_logo'])->first();
-        $temp_pli = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'public_liability_insurance'])->first();
-        $temp_addr = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'company_address'])->first();
-        $temp_trader_img = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'trader_img'])->first();
+        $temp_public_liability_insurances = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'public_liability_insurance'])->get();
+        $temp_comp_addresses = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'company_address'])->get();
+        $temp_trader_images = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'trader_img'])->get();
         $temp_team_imgs = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'team_img'])->get();
         $temp_prev_projs = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'prev_project_img'])->get();
 
         $counties = UkTown::distinct()->pluck('county');
 
-        return view('tradepersion.registrationtwo', compact('works', 'areas', 'counties', 'temp_company_logo', 'temp_pli', 'temp_addr', 'temp_trader_img', 'temp_team_imgs', 'temp_prev_projs'));
+        return view('tradepersion.registrationtwo', compact('works', 'areas', 'counties', 'temp_company_logo', 'temp_public_liability_insurances', 'temp_comp_addresses', 'temp_trader_images', 'temp_team_imgs', 'temp_prev_projs'));
     }
 
     public function saveregistrationsteptwo(Request $request){
@@ -85,7 +85,7 @@ class TradepersionDashboardController extends Controller
         // ]);
 
         $rules = [
-            'comp_reg_no'       => 'required',
+            'comp_reg_no'       => 'required|unique:'.TraderDetail::class,
             'comp_name'         => 'required',
             'trader_name'       => 'required',
             'comp_description'  => 'required',
@@ -133,6 +133,10 @@ class TradepersionDashboardController extends Controller
         }
 
         // $validatedData = $this->validate($request, $rules, $messages);
+        if (TraderDetail::where('user_id', Auth::user()->id)->first() != null) {
+            $errors = new MessageBag(['submiterror' => ['You have already registered a company in our platform.']]);
+		    return Redirect::back()->withErrors($errors)->withInput();
+        }
 
         $traderdetails = new TraderDetail();
         $traderdetails->user_id = Auth::user()->id;
@@ -145,7 +149,7 @@ class TradepersionDashboardController extends Controller
         $traderdetails->name = $request->name;
         $traderdetails->phone_code = $request->phone_code;
         $traderdetails->phone_number = $request->phone_number;
-        $traderdetails->phone_office = $request->phone_office;
+        $traderdetails->phone_office = $request->phone_office_with_dial_code;
         $traderdetails->email = $request->email;
         $traderdetails->company_role = $request->company_role;
         $traderdetails->designation = $request->designation;
@@ -156,7 +160,7 @@ class TradepersionDashboardController extends Controller
         if($traderdetails->save()){
             $user = Auth::user()->id;
             $session = session()->getId();
-            $single_file_uploads = ['company_logo', 'trader_img', 'company_address'];
+            $single_file_uploads = ['company_logo'];
 
             $temp_medias = Tempmedia::where(['user_id'=>$user, 'sessionid'=>$session])->get();
             $old_files = [];
@@ -326,7 +330,58 @@ class TradepersionDashboardController extends Controller
         $trader_area = Traderareas::with('subareas')->where('user_id', Auth::user()->id)->get();
         return view('tradepersion.dashboard', compact('works', 'areas', 'trader_details', 'trader_work', 'trader_area', 'company_logo', 'public_liability_insurances', 'team_images', 'prev_project_images'));
     }
+    function storeTempTraderFile(Request $request)
+    {
 
+        try{
+            $user = Auth::user()->id;
+
+            $this->validate($request, [
+                'file_related_to' => 'required|string',
+            ]);
+
+            $file = $request->file('file');
+            $fileName = $request->file('file')->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $s3FileName = \Str::uuid().'.'.$extension;
+            Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
+            $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+
+            $single_file_uploads = ['company_logo'];
+
+            if( in_array($request->file_related_to, $single_file_uploads)){
+                $delete_medias_after_save = tempmedia::where(['file_related_to'=> $request->file_related_to, 'media_type'=> 'tradesperson', 'user_id' => $user])->get();
+            }
+
+            $fileType = '';
+            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
+                $fileType = 'image';
+            else
+                $fileType = 'document';
+
+            $temp_media = new Tempmedia();
+            $temp_media->user_id           = $user;
+            $temp_media->sessionid         = session()->getId();
+            $temp_media->file_type         = $fileType;
+            $temp_media->media_type        = 'tradesperson';
+            $temp_media->file_related_to   = $request->file_related_to;
+            $temp_media->filename          = $fileName;
+            $temp_media->file_extension    = $extension;
+            $temp_media->url               = $path;
+            $temp_media->file_created_date = now()->toDateString();
+            $temp_media->save();
+
+            if (isset($delete_medias_after_save) && !empty($delete_medias_after_save)) {
+                $delete_medias_after_save->each(function ($media) {
+                    $media->delete();
+                });
+            }
+
+            return response()->json(['image_link'=>$path, 'file_name'=>$fileName]);
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Failed to store data'],500);
+        }
+    }
     function updateTraderName(Request $request)
     {
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
@@ -558,10 +613,10 @@ class TradepersionDashboardController extends Controller
             $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
 
             $fileType = '';
-            if($extension == 'pdf')
-                $fileType = 'document';
-            else
+            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
                 $fileType = 'image';
+            else
+                $fileType = 'document';
 
             // $tradesperson_file = new TradespersonFile();
             // $tradesperson_file->tradesperson_id   = Auth::user()->id;
@@ -574,7 +629,7 @@ class TradepersionDashboardController extends Controller
             $tradesperson_file = TradespersonFile::create([
                 'tradesperson_id' => Auth::user()->id,
                 'file_related_to' => $request->file_related_to,
-                'file_type'       => $request->file_type,
+                'file_type'       => $fileType,
                 'file_name'       => $fileName,
                 'file_extension'  => $extension,
                 'url'             => $path,

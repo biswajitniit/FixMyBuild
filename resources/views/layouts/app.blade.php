@@ -29,7 +29,8 @@
       <!-- Plugins CSS -->
       <link rel="stylesheet" href="{{ asset('frontend/css/plugins.css') }}">
 
-      <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+      {{-- <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/> --}}
+      <link rel="stylesheet" href="{{ asset('frontend/css/intlTelInput.css') }}"/>
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
 
       @if(Request::segment(1) != '')
@@ -115,7 +116,7 @@
                                           <hr class="dropdown-divider">
                                           </hr>
                                           </li>
-                                          
+
                                           @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
                                           <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
                                           <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
@@ -254,7 +255,8 @@
     <!-- Main JS -->
     <script src="{{ asset('frontend/js/main.js') }}"></script>
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    {{-- <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script> --}}
+    <script src="{{ asset('frontend/js/intlTelInput.min.js') }}"></script>
     <script>
     tinymce.init({
         selector: 'textarea#editor',

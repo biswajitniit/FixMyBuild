@@ -25,22 +25,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($estimates as $key=> $estimate)
+                    @forelse ($estimates as $key=>$estimate)
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $estimate->tradesperson->name }} </td>
-                            <td>£ {{ $estimate->taskTotalAmount() }}</td>
+                            {{-- <td>£ {{ $estimate->taskTotalAmount() }}</td> --}}
+                            <td>£
+                                @if($estimate->price - floor($estimate->price) > 0)
+                                    {{ number_format($estimate->price, 2) }}
+                                @else
+                                    {{ number_format($estimate->price, 0) }}
+                                @endif
+                                {{-- {{ $estimate->price }} --}}
+                            </td>
                             <td>{{ $estimate->total_time }} {{ strtolower($estimate->total_time_type) }}</td>
                             <td class="text-info">
-                                @if (!$estimate->tradesperson->totalRatings())
+                                {{-- @if (!$estimate->tradesperson->totalRatings()) --}}
+                                @if (!$estimate->totalRatings)
                                     No Reviews Found
                                 @else
                                     @php
+                                        // $ratings = [
+                                        //     $estimate->tradesperson->punctualityPercentage(),
+                                        //     $estimate->tradesperson->workmanshipPercentage(),
+                                        //     $estimate->tradesperson->tidinessPercentage(),
+                                        //     $estimate->tradesperson->priceAccuracy(),
+                                        // ];
                                         $ratings = [
-                                            $estimate->tradesperson->punctualityPercentage(),
-                                            $estimate->tradesperson->workmanshipPercentage(),
-                                            $estimate->tradesperson->tidinessPercentage(),
-                                            $estimate->tradesperson->priceAccuracy(),
+                                            $estimate->punctualityPercentage,
+                                            $estimate->workmanshipPercentage,
+                                            $estimate->tidinessPercentage,
+                                            $estimate->priceAccuracy,
                                         ];
                                     @endphp
 
