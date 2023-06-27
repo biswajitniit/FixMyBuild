@@ -4,6 +4,79 @@
 
 @section('content')
  <!--Code area start-->
+ {{-- Avatar Upload Modal Starts --}}
+<div class="modal fade select_address" id="companyLogoModal" tabindex="-1" aria-labelledby="companyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="companyModalLabel">Change profile photo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
+                            fill="black"
+                        />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 supported_">
+                        <h5>
+                            Supported file type list:
+                            <div class="ext_">.gif .heic .jpeg, .jpg .png .svg .webp</div>
+                        </h5>
+                        <form method="post" enctype="multipart/form-data" id="single_file_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
+                            @csrf
+                            <div class="dz-default dz-message" id="single-file-upload-logo">
+                                <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
+                                <p>Drag and drop files here</p>
+                                <h4>OR</h4>
+                                <button type="button" id="single_file_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
+                            </div>
+
+                            <div class="files d-none" id="singleFilePreview">
+                                <div id="singleFileTemplate" class="dz-image-preview">
+                                    <div class="card clr-bg clr-border">
+                                        <img class="card-img rounded-img" data-dz-thumbnail />
+                                        <div class="card-img-overlay">
+                                            <div class="progress progress-bar-striped active center-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                <div class="progress-bar bg-success" style="width:0%;" data-dz-uploadprogress></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="name" data-dz-name></p>
+                                        <small class="error text-danger" data-dz-errormessage></small>
+                                    </div>
+                                    {{-- <div>
+                                        <button data-dz-remove class="btn text-orange delete">
+                                            <span>Delete</span>
+                                        </button>
+                                    </div> --}}
+                                </div>
+                            </div>
+
+                            {{-- <div>
+                                <p>Drag and drop files here</p>
+                                <h4>OR</h4>
+                                <button type="button" id="single_file_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
+                            </div> --}}
+                        </form>
+                        <div class='invalid-file'></div>
+                        <div class="dropzone-messages"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-light" id="upload_single_file">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Avatar Upload Modal Ends --}}
+
  <section>
     <div class="container">
        <div class="row">
@@ -61,7 +134,8 @@
                             @else
                                 <img src="{{ asset('images/user.png') }}" alt="" />
                             @endif
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#profile_pics"><img src="{{ asset('frontend/img/edit-pics.svg') }}" alt="" class="edit-pics" /></a>
+                            {{-- <a href="#" data-bs-toggle="modal" data-bs-target="#profile_pics"><img src="{{ asset('frontend/img/edit-pics.svg') }}" alt="" class="edit-pics" /></a> --}}
+                            <a href="javascript:void(0);" onclick="avatar_upload()"><img src="{{ asset('frontend/img/edit-pics.svg') }}" alt="" class="edit-pics" /></a>
                             <!-- The Modal Change profile photo-->
                             {{-- <div class="modal fade select_address" id="profile_pics" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -106,7 +180,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="modal fade select_address" id="profile_pics" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            {{-- <div class="modal fade select_address" id="profile_pics" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header pb-0">
@@ -147,7 +221,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- The Modal Change profile photo END-->
                         </div>
@@ -304,6 +378,15 @@
         let phone_field = $('.num_change').find('.form-control:disabled').addClass('clr-bg');
         password_validation();
 
+        input.addEventListener("countrychange", function() {
+            if($('#phone').val().trim()){
+                if(iti.isValidNumber()){
+                    $('#save_').attr('disabled', false);
+                }else{
+                    $('#save_').attr('disabled', true);
+                }
+            }
+        });
 
         $(document).on("submit", "#changePasswordForm", function (e) {
             e.preventDefault();
@@ -548,6 +631,7 @@
             $('#save_').attr('hidden', false);
             $('#cancel_').attr('hidden', false);
             $("#phone").attr('disabled', false);
+            $("#phone").addClass('input-border');
             iti.destroy();
             iti = window.intlTelInput(input, {
                 separateDialCode: true,
@@ -563,11 +647,12 @@
                 url: "{{ route('customer.updatephone') }}",
                 data: {'phone' : iti.getNumber(), '_token' : '{{ csrf_token() }}'},
                 success: function (response) {
-                    $('#save_').attr('disabled', true);
+                    // $('#save_').attr('disabled', true);
                     $('#save_').attr('hidden', true);
                     $('#cancel_').attr('hidden', true);
-                    $('#cancel_').attr('disabled', true);
+                    // $('#cancel_').attr('disabled', true);
                     $("#phone").attr('disabled', true);
+                    $("#phone").removeClass('input-border');
                     $('.num_change .num-edit').attr('hidden', false);
                     iti.destroy();
                     iti = window.intlTelInput(input, {
@@ -587,6 +672,7 @@
             $('#cancel_').attr('hidden', true);
             $('.num_change .num-edit').attr('hidden', false);
             $("#phone").attr('disabled', true);
+            $("#phone").removeClass('input-border');
             iti.destroy();
             iti = window.intlTelInput(input, {
                 separateDialCode: true,
@@ -597,134 +683,292 @@
         // Update Phone Number Ends
 
 
-        // Dropzone Js Starts
         Dropzone.autoDiscover = false;
-        let dropzone = new Dropzone("#avatar_dropzone", {
-            url: "{{ route('customer.updateavatar') }}",
-            uploadMultiple: false,
-            maxFiles: 1,
-            maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-            acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
-            thumbnailWidth: 240,
-            thumbnailHeight: 240,
-            autoProcessQueue: false,
-            previewsContainer: ".dropzone",
-            clickable: "#file_upload_btn",
-            dictDefaultMessage: "Drag and drop a file here",
-            init: function() {
-                let dz = this;
-                let uploadButton = $("#upload_avatar");
+        // // Dropzone Js Starts
+        // let dropzone = new Dropzone("#avatar_dropzone", {
+        //     url: "{{ route('customer.updateavatar') }}",
+        //     uploadMultiple: false,
+        //     maxFiles: 1,
+        //     // maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
+        //     // acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
+        //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
+        //     acceptedFiles: "{{ config('const.dropzone_accepted_image') }}",
+        //     thumbnailWidth: 240,
+        //     thumbnailHeight: 240,
+        //     autoProcessQueue: false,
+        //     previewsContainer: ".dropzone",
+        //     clickable: "#file_upload_btn",
+        //     dictDefaultMessage: "Drag and drop a file here",
+        //     init: function() {
+        //         let dz = this;
+        //         let uploadButton = $("#upload_avatar");
 
-                this.on("addedfile", function(file) {
-                    if (this.files.length > 1) {
-                        dz.removeFile(this.files[0]);
-                    }
-                    updateUploadButton();
-                });
+        //         this.on("addedfile", function(file) {
+        //             if (this.files.length > 1) {
+        //                 dz.removeFile(this.files[0]);
+        //             }
+        //             updateUploadButton();
+        //         });
 
-                this.on("removedfile", function(file) {
-                    updateUploadButton();
-                });
+        //         this.on("removedfile", function(file) {
+        //             updateUploadButton();
+        //         });
 
-                this.on("thumbnail", function(file, dataUrl) {
-                    $("#avatar_dropzone").find(".dz-message").hide();
-                    $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-                    updateUploadButton();
-                });
+        //         this.on("thumbnail", function(file, dataUrl) {
+        //             $("#avatar_dropzone").find(".dz-message").hide();
+        //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
+        //             updateUploadButton();
+        //         });
 
-                this.on("sending", function(file, xhr, formData) {
-                    // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-                    uploadButton.prop("disabled", true);
-                });
+        //         this.on("sending", function(file, xhr, formData) {
+        //             // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
+        //             uploadButton.prop("disabled", true);
+        //         });
 
-                this.on("uploadprogress", function(file, progress) {
-                    if (file.upload) {
-                        // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-                        uploadButton.prop("disabled", true);
-                    }
-                });
+        //         this.on("uploadprogress", function(file, progress) {
+        //             if (file.upload) {
+        //                 // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
+        //                 uploadButton.prop("disabled", true);
+        //             }
+        //         });
 
-                this.on("success", function(file, response) {
-                    $(file.previewElement).find(".dz-progress").hide();
-                    $(file.previewElement).find(".dz-success-mark").show();
-                    $('.profile_pics > img').attr('src', response.image_link);
-                    $('.reg_ img').attr('src', response.image_link);
+        //         this.on("success", function(file, response) {
+        //             $(file.previewElement).find(".dz-progress").hide();
+        //             $(file.previewElement).find(".dz-success-mark").show();
+        //             $('.profile_pics > img').attr('src', response.image_link);
+        //             $('.reg_ img').attr('src', response.image_link);
 
-                    updateUploadButton();
-                });
+        //             updateUploadButton();
+        //         });
 
-                this.on("error", function(file, errorMessage) {
-                    $(file.previewElement).find(".dz-progress").hide();
-                    $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
-                    $(file.previewElement).find(".dz-error-mark").show();
-                    updateUploadButton();
-                });
+        //         this.on("error", function(file, errorMessage) {
+        //             $(file.previewElement).find(".dz-progress").hide();
+        //             $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
+        //             $(file.previewElement).find(".dz-error-mark").show();
+        //             updateUploadButton();
+        //         });
 
-                function updateUploadButton() {
-                    let maxFileSize = dz.options.maxFilesize ? dz.options.maxFilesize * 1024 * 1024 : (2 * 1024 * 1024);
-                    // let acceptedFileTypes = dz.options.acceptedFiles ? dz.options.acceptedFiles.split(',').map(type => type.trim()) : ['.gif', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.heic'];
-                    let acceptedFileTypes = dz.options.acceptedFiles;
-                    $('.supported_ .invalid-file').empty();
+        //         function updateUploadButton() {
+        //             let maxFileSize = dz.options.maxFilesize ? dz.options.maxFilesize * 1024 * 1024 : (2 * 1024 * 1024);
+        //             // let acceptedFileTypes = dz.options.acceptedFiles ? dz.options.acceptedFiles.split(',').map(type => type.trim()) : ['.gif', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.heic'];
+        //             let acceptedFileTypes = dz.options.acceptedFiles;
+        //             $('.supported_ .invalid-file').empty();
 
-                    let file = dz.files[0];
-                    if(file)
-                        console.log(file.type);
+        //             let file = dz.files[0];
+        //             if(file)
+        //                 console.log(file.type);
 
-                    if (dz.files.length > 0) {
-                        let file = dz.files[0];
-                        if (file.size <= maxFileSize && acceptedFileTypes.includes(file.type)) {
-                            uploadButton.prop("disabled", false);
-                        } else {
-                            let errorMessage = [];
-                            let errorMessages = '<ul>';
-                            if (file.size > maxFileSize) {
-                                errorMessage.push("File size exceeds the maximum limit.");
-                            }
-                            if(!(acceptedFileTypes.includes(file.type))) {
-                                $('.supported_ .invalid-file').empty();
-                                $('.dz-error-message').empty();
-                                $('.dz-success-mark').empty();
-                                $('.dz-error-mark').empty();
-                                $('.dz-details').empty();
-                                $('.dz-message').show();
-                                errorMessage.push("Invalid file type. Please select a valid file.");
-                            } else{
+        //             if (dz.files.length > 0) {
+        //                 let file = dz.files[0];
+        //                 if (file.size <= maxFileSize && acceptedFileTypes.includes(file.type)) {
+        //                     uploadButton.prop("disabled", false);
+        //                 } else {
+        //                     let errorMessage = [];
+        //                     let errorMessages = '<ul>';
+        //                     if (file.size > maxFileSize) {
+        //                         errorMessage.push("File size exceeds the maximum limit.");
+        //                     }
+        //                     if(!(acceptedFileTypes.includes(file.type))) {
+        //                         $('.supported_ .invalid-file').empty();
+        //                         $('.dz-error-message').empty();
+        //                         $('.dz-success-mark').empty();
+        //                         $('.dz-error-mark').empty();
+        //                         $('.dz-details').empty();
+        //                         $('.dz-message').show();
+        //                         errorMessage.push("Invalid file type. Please select a valid file.");
+        //                     } else{
 
-                            }
-                            $.each(errorMessage, function(key, errorMessage) {
-                                errorMessages += `<li> ${errorMessage} </li>`;
-                            });
+        //                     }
+        //                     $.each(errorMessage, function(key, errorMessage) {
+        //                         errorMessages += `<li> ${errorMessage} </li>`;
+        //                     });
 
-                            errorMessages += '</ul>';
-                            $('.supported_ .invalid-file').html(errorMessages);
-                            uploadButton.prop("disabled", true);
-                        }
-                    } else {
-                        uploadButton.prop("disabled", true);
-                    }
-                }
+        //                     errorMessages += '</ul>';
+        //                     $('.supported_ .invalid-file').html(errorMessages);
+        //                     uploadButton.prop("disabled", true);
+        //                 }
+        //             } else {
+        //                 uploadButton.prop("disabled", true);
+        //             }
+        //         }
 
 
 
-                uploadButton.click(function() {
-                    if (dz.files.length > 0) {
-                        dz.processQueue();
-                    }
-                });
+        //         uploadButton.click(function() {
+        //             if (dz.files.length > 0) {
+        //                 dz.processQueue();
+        //             }
+        //         });
 
-                $("#profile_pics").on("hidden.bs.modal", function() {
-                    $("#avatar_dropzone").find(".dz-message").show();
-                    $("#profile_pics .supported_ .invalid-file").empty();
-                    dz.removeAllFiles();
-                });
-            }
+        //         $("#profile_pics").on("hidden.bs.modal", function() {
+        //             $("#avatar_dropzone").find(".dz-message").show();
+        //             $("#profile_pics .supported_ .invalid-file").empty();
+        //             dz.removeAllFiles();
+        //         });
+        //     }
 
-        });
-        // Dropzone Js Ends
+        // });
+        // // Dropzone Js Ends
 
     });
 
+    // PreviewTemplate For Single File dropzone Starts
+    var singleFilePreviewNode = document.querySelector("#singleFileTemplate");
+    singleFilePreviewNode.id = "";
+    var singleFilepreviewTemplate = singleFilePreviewNode.parentNode.innerHTML;
+    singleFilePreviewNode.parentNode.removeChild(singleFilePreviewNode);
+    // PreviewTemplate For Single File dropzone Starts
 
+    // Dropzone Js For Single File Upload Starts
+    function singleFileDropzone(url, params, acceptedFiles="{{ config('const.dropzone_accepted_file') }}", maxFileSize={{ config('const.dropzone_max_file_size') }}, modalId="#singleFileModal") {
+        var singleFileDropzoneElement = document.querySelector("#single_file_dropzone");
+        var singleFileDropzone = singleFileDropzoneElement.dropzone;
+        var thumbnailMapping = {
+            'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
+            'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.png') }}",
+        };
+
+        // If a Dropzone instance doesn't exist, create a new one
+        if (!singleFileDropzone) {
+            singleFileDropzone = new Dropzone(singleFileDropzoneElement, {
+                url: url,
+                params: params,
+                uploadMultiple: false,
+                maxFiles: 1,
+                maxFilesize: maxFileSize,
+                acceptedFiles: acceptedFiles,
+                thumbnailWidth: 240,
+                thumbnailHeight: 240,
+                previewTemplate: singleFilepreviewTemplate,
+                autoQueue: false,
+                previewsContainer: "#singleFilePreview",
+                clickable: "#single_file_upload_btn",
+                init: function() {
+                    let dz = this;
+
+                    this.on("addedfile", function(file) {
+                        if (this.files.length > 1) {
+                            dz.removeFile(this.files[0]);
+                        }
+                    });
+                }
+            });
+        }
+
+        // If a Dropzone instance exists, update the old instance
+        singleFileDropzone.options.url = url;
+        singleFileDropzone.options.params = params;
+
+        singleFileDropzone.on("addedfile", function(file) {
+            var videoElement   = $(file.previewElement).find('video[data-dz-video]');
+            var imageElement   = $(file.previewElement).find('img[data-dz-thumbnail]');
+            var uploadProgress = $(file.previewElement).find('.progress');
+
+            uploadProgress.hide();
+
+            if (file.type.startsWith('image/')) {
+                videoElement.hide();
+                imageElement.show();
+                singleFileDropzone.emit("thumbnail", file, file.thumbnail);
+            } else if (file.type.startsWith('video/')) {
+                imageElement.hide();
+                videoElement.show();
+                var videoUrl = URL.createObjectURL(file);
+                videoElement.attr('src', videoUrl);
+            } else {
+                videoElement.hide();
+                imageElement.show();
+                var thumbnailUrl = thumbnailMapping[file.type] || "{{ asset('frontend/img/file_logo.png') }}";
+                singleFileDropzone.emit("thumbnail", file, thumbnailUrl);
+            }
+            $('#single-file-upload-logo').hide();
+            $('#singleFilePreview').removeClass('d-none');
+            // $('#single_file_dropzone.cpp_wrap').addClass('uploading');
+        });
+
+        // Update the total progress bar
+        singleFileDropzone.on("totaluploadprogress", function(progress) {
+            // document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+        });
+
+        singleFileDropzone.on("uploadprogress", function(file, progress) {
+            if (progress == 100) {
+                $(file.previewElement).find('.progress').hide();
+            }
+        });
+
+        singleFileDropzone.on("sending", function(file) {
+            // Show the total progress bar when upload starts
+            // document.querySelector("#total-progress").style.opacity = "1";
+            // And disable the start button
+            // file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+            $(file.previewElement).find('.progress').show();
+        });
+
+        singleFileDropzone.on("queuecomplete", function(progress) {
+            // document.querySelector("#total-progress").style.opacity = "0";
+            // $('#previews.files').find('.progress').hide();
+            // $('#multiModal').modal('hide');
+
+        });
+
+        singleFileDropzone.on("removedfile", function(file) {
+            if(singleFileDropzone.files.length == 0) {
+                $('#single-file-upload-logo').show();
+                $('#singleFilePreview').addClass('d-none');
+                // $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
+            }
+        });
+
+        // Setup the buttons for all transfers
+        // The "add files" button doesn't need to be setup because the config
+        // `clickable` has already been specified.
+        document.querySelector("#upload_single_file").onclick = function() {
+            singleFileDropzone.enqueueFiles(singleFileDropzone.getFilesWithStatus(Dropzone.ADDED));
+        };
+
+        // document.querySelector("#cancel_multiple_file_upload").onclick = function() {
+        //     singleFileDropzone.removeAllFiles(true);
+        // };
+
+        $(modalId).on('hidden.bs.modal', function(e){
+            singleFileDropzone.removeAllFiles(true);
+        });
+
+        return singleFileDropzone;
+    }
+    // Dropzone Js For Single File Upload Ends
+
+    // Dropzone Js For Avatar Upload Starts
+    function avatar_upload() {
+        var url = "{{ route('customer.updateavatar') }}";
+        var params = {
+            file_type: 'image',
+            _method: 'PUT',
+        };
+        var html = ` .gif .heic .jpeg, .jpg .png .svg .webp`;
+        var acceptedFiles = "{{ config('const.dropzone_accepted_image') }}";
+        var maxFileSize = {{ config('const.dropzone_max_file_size') }};
+        var modal = "#companyLogoModal";
+
+        $(modal+' .ext_').html(html);
+        $(modal).modal('show');
+
+        var dropzone = singleFileDropzone(url, params, acceptedFiles, maxFileSize, modal);
+
+        dropzone.on("success", function(file, response) {
+            $('.profile_pics > img').attr('src', response.image_link);
+            $('.reg_ img').attr('src', response.image_link);
+        });
+
+        // dropzone.on("error", function(file, errorMessage, xhr) {
+        //     console.log(file);
+        //     console.log(errorMessage);
+        //     console.log(xhr);
+        // });
+    }
+    // Dropzone Js For Avatar Upload Ends
 
     $("#verify_mail").click(function(){
         $.ajax({
@@ -735,5 +979,5 @@
                         alert(data);
                 }});
     });
-    </script>
+</script>
 @endpush

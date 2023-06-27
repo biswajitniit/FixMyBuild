@@ -124,7 +124,7 @@
         function toggleStatus(e, data_id)
         {
             let status = "active";
-            if ($(e).text().toLowerCase() == status)
+            if ($(e).text().trim().toLowerCase() == status)
                 status = "Inactive";
             else
                 status = "Active";

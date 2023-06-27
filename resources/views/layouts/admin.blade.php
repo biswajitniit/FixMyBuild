@@ -51,7 +51,9 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('adminpanel/assets/images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
-
+    {{-- Page Level CSS --}}
+    @stack('styles')
+    {{-- Page Level CSS --}}
 
 </head>
   <body>

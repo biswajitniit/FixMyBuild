@@ -22,12 +22,12 @@
 </div>
 <!-- Delete Image Modal END -->
 
-{{-- Team Photos Upload Modal Starts --}}
-<div class="modal fade select_address" id="teamPhotoModal" tabindex="-1" aria-labelledby="teamPhotoModal" aria-hidden="true">
+{{-- Multiple File Upload Image Modal Starts --}}
+<div class="modal fade select_address" id="multiModal" tabindex="-1" aria-labelledby="multiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="teamPhotoModal">Upload files</h5>
+                <h5 class="modal-title" id="multiModalLabel">Upload files</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                 <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/>
@@ -38,130 +38,169 @@
                 <div class="row">
                 <div class="col-md-6 supported_">
                     <h4>Supported file type list:</h4>
-                    <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
+                    <div class="accepted-file-list"></div>
+                    {{-- <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
                     <h6><strong>Documents:</strong> .doc, .docx .key .odt .pdf .ppt, .pptx, .pps, .ppsx .xls, .xlsx</h6>
                     <h6><strong>Audio:</strong> .mp3 .m4a .ogg .wav</h6>
-                    <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6>
+                    <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6> --}}
                 </div>
                 <div class="col-md-6">
-                    {{-- <div class="text-center upload_wrap">
-                        <img src="{{ asset('frontend/img/upload.svg') }}" alt="">
-                        <p>Drag and drop files here</p>
-                        <h4>OR</h4>
-                        <button type="button" class="btn btn-light mt-3" style="width:180px;">Browse files</button>
-                    </div> --}}
-                    <form action="{{ route('tradesperson.storeTeamPhoto') }}" method="post" enctype="multipart/form-data" id="team_photo_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
+                    <form method="post" enctype="multipart/form-data" id="multi_file_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
                         @csrf
-                        <div class="dz-default dz-message">
+                        <div class="dz-default dz-message" id="file-upload-logo">
                             <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                            <p>Drag and drop a file here</p>
-                            <h4>OR</h4>
-                            <button type="button" id="team_photo_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
                         </div>
-                    </form>
-                </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light" id="upload_team_photo">Upload</button>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- Team Photos Upload Modal Ends --}}
 
-{{-- Previous Project Upload Modal Starts --}}
-<div class="modal fade select_address" id="prevProjModal" tabindex="-1" aria-labelledby="prevProjModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="prevProjModal">Upload files</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/>
-                </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                <div class="col-md-6 supported_">
-                    <h4>Supported file type list:</h4>
-                    <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
-                    <h6><strong>Documents:</strong> .doc, .docx .key .odt .pdf .ppt, .pptx, .pps, .ppsx .xls, .xlsx</h6>
-                    <h6><strong>Audio:</strong> .mp3 .m4a .ogg .wav</h6>
-                    <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6>
-                </div>
-                <div class="col-md-6">
-                    {{-- <div class="text-center upload_wrap">
-                        <img src="{{ asset('frontend/img/upload.svg') }}" alt="">
-                        <p>Drag and drop files here</p>
-                        <h4>OR</h4>
-                        <button type="button" class="btn btn-light mt-3" style="width:180px;">Browse files</button>
-                    </div> --}}
-                    <form action="{{ route('tradesperson.storePrevProj') }}" method="post" enctype="multipart/form-data" id="prev_proj_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
-                        @csrf
-                        <div class="dz-default dz-message">
-                            <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                            <p>Drag and drop a file here</p>
-                            <h4>OR</h4>
-                            <button type="button" id="prev_proj_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
-                        </div>
-                    </form>
-                </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light" id="upload_prev_proj">Upload</button>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- Previous Project Upload Modal Ends --}}
+                        <div class="files d-none" id="previews">
+                            <div id="template" class="dz-image-preview">
+                                {{-- <div>
+                                    <span class="preview d-inline mr-2">
+                                        <img class="rectangle-img" data-dz-thumbnail>
+                                        <video class="rectangle-video" data-dz-video src="" ></video>
+                                        <div class="progress progress-bar-striped active mx-auto center-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                            <div class="progress-bar bg-success" style="width:0%;" data-dz-uploadprogress></div>
+                                        </div>
+                                    </span>
+                                </div> --}}
 
-{{-- Public liability insurance Modal Starts --}}
-<div class="modal fade select_address" id="pliModal" tabindex="-1" aria-labelledby="pliModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="pliModalLabel">Upload files</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/>
-                </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                <div class="col-md-6 supported_">
-                    <h4>Supported file type list:</h4>
-                    <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
-                    <h6><strong>Documents:</strong> .doc, .docx .key .odt .pdf .ppt, .pptx, .pps, .ppsx .xls, .xlsx</h6>
-                    <h6><strong>Audio:</strong> .mp3 .m4a .ogg .wav</h6>
-                    <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6>
-                </div>
-                <div class="col-md-6">
-                    <form method="post" enctype="multipart/form-data" id="pli_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
-                        @csrf
-                        <div class="dz-default dz-message">
-                            <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                            <p>Drag and drop a file here</p>
+                                {{-- <div class="card">
+                                    <img class="card-img" data-dz-thumbnail>
+                                    <video class="card-img" data-dz-video src="" ></video>
+                                    <div class="card-img-overlay d-flex">
+                                        <div class="align-self-center mx-auto" >
+                                            <div class="progress progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                <div class="progress-bar bg-success" style="width:0%;" data-dz-uploadprogress="30"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </div> --}}
+
+                                 <div class="card">
+                                    <img class="card-img rectangle-img" data-dz-thumbnail />
+                                    <video class="rectangle-video" data-dz-video></video>
+                                    <div class="card-img-overlay">
+                                        <div class="progress progress-bar-striped active center-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                            <div class="progress-bar bg-success" style="width:0%;" data-dz-uploadprogress></div>
+                                        </div>
+                                    </div>
+                                  </div>
+
+                                <div>
+                                    {{-- <p class="name" data-dz-name></p> --}}
+                                    <small class="error text-danger" data-dz-errormessage></small>
+                                </div>
+                                <div>
+                                    {{-- <p class="size" data-dz-size></p> --}}
+                                    {{-- <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                    </div> --}}
+                                </div>
+                                 <div>
+                                {{--<button class="btn btn-primary start">
+                                        <i class="glyphicon glyphicon-upload"></i>
+                                        <span>Start</span>
+                                    </button>
+                                    <button data-dz-remove class="btn btn-warning cancel">
+                                        <i class="glyphicon glyphicon-ban-circle"></i>
+                                        <span>Cancel</span>
+                                    </button>--}}
+                                    <button data-dz-remove class="btn text-orange delete">
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p>Drag and drop files here</p>
                             <h4>OR</h4>
-                            <button type="button" id="pli_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
+                            <button type="button" id="multi_file_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
                         </div>
                     </form>
                 </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light" id="upload_pli">Upload</button>
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal" id="cancel_multiple_file_upload">Cancel</button>
+                <button type="button" class="btn btn-light" id="upload_multiple_file">Upload</button>
             </div>
         </div>
     </div>
 </div>
-{{-- Public liability insurance Upload Modal Ends --}}
+{{-- Multiple File Upload Image Modal Ends--}}
+
+{{-- Company Logo Upload Modal Starts --}}
+<div class="modal fade select_address" id="companyLogoModal" tabindex="-1" aria-labelledby="companyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="companyModalLabel">Change Company Logo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
+                            fill="black"
+                        />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 supported_">
+                        <h5>
+                            Supported file type list:
+                            <div class="ext_">.gif .heic .jpeg, .jpg .png .svg .webp</div>
+                        </h5>
+                        <form method="post" enctype="multipart/form-data" id="single_file_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
+                            @csrf
+                            <div class="dz-default dz-message" id="single-file-upload-logo">
+                                <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
+                                <p>Drag and drop files here</p>
+                                <h4>OR</h4>
+                                <button type="button" id="single_file_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
+                            </div>
+
+                            <div class="files d-none" id="singleFilePreview">
+                                <div id="singleFileTemplate" class="dz-image-preview">
+                                    <div class="card clr-bg clr-border">
+                                        <img class="card-img rounded-img" data-dz-thumbnail />
+                                        <div class="card-img-overlay">
+                                            <div class="progress progress-bar-striped active center-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                <div class="progress-bar bg-success" style="width:0%;" data-dz-uploadprogress></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="name" data-dz-name></p>
+                                        <small class="error text-danger" data-dz-errormessage></small>
+                                    </div>
+                                    {{-- <div>
+                                        <button data-dz-remove class="btn text-orange delete">
+                                            <span>Delete</span>
+                                        </button>
+                                    </div> --}}
+                                </div>
+                            </div>
+
+                            {{-- <div>
+                                <p>Drag and drop files here</p>
+                                <h4>OR</h4>
+                                <button type="button" id="single_file_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
+                            </div> --}}
+                        </form>
+                        <div class='invalid-file'></div>
+                        <div class="dropzone-messages"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-light" id="upload_single_file">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Company Logo Upload Modal Ends --}}
 
 <!--Code area start-->
 <section>
@@ -204,8 +243,9 @@
             <div class="blue-font-color mt-4 mb-5">
                <div class="row">
                   <div class="col-md-3 profile_pics">
-                     <img src="@if($company_logo) {{ $company_logo->url }} @endif" alt="">
-                     <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#profile_pics">
+                     <img src="@if($company_logo) {{ $company_logo->url }} @else {{ asset('images/user.png') }} @endif" alt="">
+                     {{-- <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#profile_pics"> --}}
+                     <a href="javascript:void(0)" onclick="comp_logo_upload()">
                         <img src="{{asset('frontend/img/edit-pics.svg')}}" alt="" class="edit-pics">
                      </a>
                      <!-- The Modal Change profile photo-->
@@ -241,7 +281,7 @@
                            </div>
                         </div>
                      </div> --}}
-                     <div class="modal fade select_address" id="profile_pics" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                     {{-- <div class="modal fade select_address" id="profile_pics" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header pb-0">
@@ -282,7 +322,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                      <!-- The Modal Change profile photo END-->
                   </div>
                   <div class="col-md-9">
@@ -387,13 +427,15 @@
                                  </a>
                               </div> --}}
                               <div class="d-inline mr-2" id="addTeamPhotos">
-                                 <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#teamPhotoModal">
+                                 {{-- <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#teamPhotoModal"> --}}
+                                <button class="btn p-0" onclick="team_photo_upload()">
                                     <div class="add_">
                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                           <path d="M10.334 23.3514V13.3554H0.333984V10.0234H10.334V0.0273438H13.6673V10.0234H23.6673V13.3554H13.6673V23.3514H10.334Z" fill="#EE5719" />
                                        </svg>
                                     </div>
-                                 </a>
+                                </button>
+                                 {{-- </a> --}}
                               </div>
                            </div>
                         </div>
@@ -415,13 +457,15 @@
                                 </div>
                             @endforeach
                               <div class="d-inline mr-2" id="addPrevProj">
-                                 <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#prevProjModal">
+                                 {{-- <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#prevProjModal"> --}}
+                                 <button class="btn p-0" onclick="prev_proj_upload()">
                                     <div class="add_">
                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                           <path d="M10.334 23.3514V13.3554H0.333984V10.0234H10.334V0.0273438H13.6673V10.0234H23.6673V13.3554H13.6673V23.3514H10.334Z" fill="#EE5719" />
                                        </svg>
                                     </div>
                                  </a>
+                                 {{-- </a> --}}
                               </div>
                            </div>
                         </div>
@@ -479,7 +523,8 @@
                            </svg>
                         </a>
                      </div> --}}
-                     <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#pliModal" id="addPLIdocs">Upload new file(s)</a>
+                     <a href="javascript:void(0)" onclick="pli_upload()" id="addPLIdocs">Upload new file(s)</a>
+                     {{-- <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#pliModal" id="addPLIdocs">Upload new file(s)</a> --}}
                   </div>
                </div>
             </div>
@@ -597,7 +642,24 @@
             <div class="tell_about ukvat-number mb-5">
                <div class="row">
                   <div class="col-md-12">
-                     <h5>UK VAT number</h5>
+                    <h5 class="d-inline-block">UK VAT number</h5>
+                    <span class="d-inline-block">
+                        @if(!empty($trader_details->vat_comp_name) && !empty($trader_details->vat_comp_address))
+                            <strong class="text-success ml-2 font-weight-bold">
+                                <svg class="mb-1" width="20" height="22" viewBox="0 0 35 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M34.375 19.625C34.375 30.0312 27.175 39.7625 17.5 42.125C7.825 39.7625 0.625 30.0312 0.625 19.625V8.375L17.5 0.875L34.375 8.375V19.625ZM17.5 38.375C24.5312 36.5 30.625 28.1375 30.625 20.0375V10.8125L17.5 4.9625L4.375 10.8125V20.0375C4.375 28.1375 10.4688 36.5 17.5 38.375ZM13.75 30.875L6.25 23.375L8.89375 20.7313L13.75 25.5688L26.1063 13.2125L28.75 15.875" fill="#27AE60"></path>
+                                 </svg>
+                                 Verified
+                            </strong>
+                        @else
+                            <strong class="text-muted ml-2 font-weight-bold">
+                                <svg class="mb-1" width="20" height="22" viewBox="0 0 35 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M34.375 19.625C34.375 30.0312 27.175 39.7625 17.5 42.125C7.825 39.7625 0.625 30.0312 0.625 19.625V8.375L17.5 0.875L34.375 8.375V19.625ZM17.5 38.375C24.5312 36.5 30.625 28.1375 30.625 20.0375V10.8125L17.5 4.9625L4.375 10.8125V20.0375C4.375 28.1375 10.4688 36.5 17.5 38.375ZM13.75 30.875L6.25 23.375L8.89375 20.7313L13.75 25.5688L26.1063 13.2125L28.75 15.875" fill="#6c757d"></path>
+                                 </svg> Unverified
+                            </strong>
+                        @endif
+                    </span>
+
                   </div>
                   <div class="col-md-12" id="vatno">
                      <h2>
@@ -932,6 +994,7 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
+<script src="{{ asset('frontend/js/utils.js') }}"></script>
 <script>
    $('#summernote').summernote({
         tabsize: 2,
@@ -966,6 +1029,25 @@
     // edit_iti.setNumber(`+${mobile_code} ${mobile_num}`);
     edit_iti.setCountry(iso2code);
     edit_iti.setNumber(mobile_num);
+
+    // Office Phone Number With Flag For Display
+    let office_mobile_num = "{{ $trader_details->phone_office }}"
+    let office_mobile = document.querySelector("#phone");
+    let disp_office_iti = window.intlTelInput(office_mobile, {
+        separateDialCode: true,
+        allowDropdown: false,
+        preferredCountries: ["gb"]
+    });
+    disp_office_iti.setNumber(office_mobile_num);
+
+    // Office Phone Number With Flag For Edit
+    let edit_office_mobile = document.querySelector("#editContactOfficeMobile");
+    let edit_office_mobile_iti = window.intlTelInput(edit_office_mobile, {
+        separateDialCode: true,
+        allowDropdown: true,
+        preferredCountries: ["gb"]
+    });
+    edit_office_mobile_iti.setNumber(office_mobile_num);
 
    function showTradernameEdit(){
       $('#tradername').hide();
@@ -1083,9 +1165,10 @@
       var countryCode = countryData.iso2;
       var contactName = $('#editContactName').val();
       var contactMobile = $('#editContactMobile').val();
-    //   console.log(contactMobile);
+      //   console.log(contactMobile);
       var contactEmail = $('#editContactEmail').val();
-      var contactOfficeMobile = $('#editContactOfficeMobile').val();
+    //   var contactOfficeMobile = $('#editContactOfficeMobile').val();
+      var contactOfficeMobile = edit_office_mobile_iti.getNumber();
       $.ajax
          ({
             type: "POST",
@@ -1100,7 +1183,8 @@
                   $('#trader-email').text(data.email);
                   disp_iti.setNumber(`${data.phone}`);
                   disp_iti.setCountry(`${data.phone_code}`);
-                  $('#phone').val(data.office_phone);
+                  //   $('#phone').val(data.office_phone);
+                  disp_office_iti.setNumber(`${data.office_phone}`);
                   $('#contactDetails').show();
                 //   setTimeout(function() {location.reload();}, 2000);
                }else{
@@ -1307,161 +1391,519 @@
 
    }
 
-    // Dropzone Js For Company Logo Upload Starts
     Dropzone.autoDiscover = false;
-    let dropzone = new Dropzone("#avatar_dropzone", {
-        url: "{{ route('tradesperson.updateCompLogo') }}",
-        uploadMultiple: false,
-        maxFiles: 1,
-        maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-        acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
-        thumbnailWidth: 240,
-        thumbnailHeight: 240,
-        autoProcessQueue: false,
-        previewsContainer: ".dropzone",
-        clickable: "#file_upload_btn",
-        dictDefaultMessage: "Drag and drop a file here",
-        init: function() {
-            let dz = this;
-            let uploadButton = $("#upload_avatar");
+    //
 
-            this.on("addedfile", function(file) {
-                if (this.files.length > 1) {
-                    dz.removeFile(this.files[0]);
-                }
-                updateUploadButton();
-            });
+    // let multiFileUpload = $('#multi_file_dropzone').dropzone({
+    //     url: "{{ route('tradesperson.updateCompLogo') }}",
+    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
+    //     acceptedFiles: "{{ config('const.dropzone_accepted_file') }}",
+    //     thumbnailWidth: 100,
+    //     thumbnailHeight: 69,
+    //     previewTemplate: previewTemplate,
+    //     autoProcessQueue: false,
 
-            this.on("removedfile", function(file) {
-                updateUploadButton();
-            });
+    // });
 
-            this.on("thumbnail", function(file, dataUrl) {
-                $("#avatar_dropzone").find(".dz-message").hide();
-                $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-                updateUploadButton();
-            });
+    var previewNode = document.querySelector("#template");
+    previewNode.id = "";
+    var previewTemplate = previewNode.parentNode.innerHTML;
+    previewNode.parentNode.removeChild(previewNode);
 
-            this.on("sending", function(file, xhr, formData) {
-                // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-                uploadButton.prop("disabled", true);
-            });
+    // PreviewTemplate For Single File dropzone Starts
+    var singleFilePreviewNode = document.querySelector("#singleFileTemplate");
+    singleFilePreviewNode.id = "";
+    var singleFilepreviewTemplate = singleFilePreviewNode.parentNode.innerHTML;
+    singleFilePreviewNode.parentNode.removeChild(singleFilePreviewNode);
+    // PreviewTemplate For Single File dropzone Starts
 
-            this.on("uploadprogress", function(file, progress) {
-                if (file.upload) {
-                    // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-                    uploadButton.prop("disabled", true);
-                }
-            });
+    // Dropzone Js For Single File Upload Starts
+    function singleFileDropzone(url, params, acceptedFiles="{{ config('const.dropzone_accepted_file') }}", maxFileSize={{ config('const.dropzone_max_file_size') }}, modalId="#singleFileModal") {
+        var singleFileDropzoneElement = document.querySelector("#single_file_dropzone");
+        var singleFileDropzone = singleFileDropzoneElement.dropzone;
+        var thumbnailMapping = {
+            'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
+            'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.png') }}",
+        };
 
-            this.on("success", function(file, response) {
-                $(file.previewElement).find(".dz-progress").hide();
-                $(file.previewElement).find(".dz-success-mark").show();
-                $('.profile_pics > img').attr('src', response.image_link);
-                $('.reg_ img').attr('src', response.image_link);
-                $('#profile_pics').modal('hide');
+        // If a Dropzone instance doesn't exist, create a new one
+        if (!singleFileDropzone) {
+            singleFileDropzone = new Dropzone(singleFileDropzoneElement, {
+                url: url,
+                params: params,
+                uploadMultiple: false,
+                maxFiles: 1,
+                maxFilesize: maxFileSize,
+                acceptedFiles: acceptedFiles,
+                thumbnailWidth: 240,
+                thumbnailHeight: 240,
+                previewTemplate: singleFilepreviewTemplate,
+                autoQueue: false,
+                previewsContainer: "#singleFilePreview",
+                clickable: "#single_file_upload_btn",
+                init: function() {
+                    let dz = this;
 
-                updateUploadButton();
-            });
-
-            this.on("error", function(file, errorMessage) {
-                $(file.previewElement).find(".dz-progress").hide();
-                $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
-                $(file.previewElement).find(".dz-error-mark").show();
-                updateUploadButton();
-            });
-
-            function updateUploadButton() {
-                let maxFileSize = dz.options.maxFilesize ? dz.options.maxFilesize * 1024 * 1024 : (2 * 1024 * 1024);
-                // let acceptedFileTypes = dz.options.acceptedFiles ? dz.options.acceptedFiles.split(',').map(type => type.trim()) : ['.gif', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.heic'];
-                let acceptedFileTypes = dz.options.acceptedFiles;
-                $('.supported_ .invalid-file').empty();
-
-                let file = dz.files[0];
-                if(file)
-                    // console.log(file.type);
-
-                if (dz.files.length > 0) {
-                    let file = dz.files[0];
-                    if (file.size <= maxFileSize && acceptedFileTypes.includes(file.type)) {
-                        uploadButton.prop("disabled", false);
-                    } else {
-                        let errorMessage = [];
-                        let errorMessages = '<ul>';
-                        if (file.size > maxFileSize) {
-                            errorMessage.push("File size exceeds the maximum limit.");
+                    this.on("addedfile", function(file) {
+                        if (this.files.length > 1) {
+                            dz.removeFile(this.files[0]);
                         }
-                        if(!(acceptedFileTypes.includes(file.type))) {
-                            $('.supported_ .invalid-file').empty();
-                            $('.dz-error-message').empty();
-                            $('.dz-success-mark').empty();
-                            $('.dz-error-mark').empty();
-                            $('.dz-details').empty();
-                            $('.dz-message').show();
-                            errorMessage.push("Invalid file type. Please select a valid file.");
-                        } else{
-
-                        }
-                        $.each(errorMessage, function(key, errorMessage) {
-                            errorMessages += `<li> ${errorMessage} </li>`;
-                        });
-
-                        errorMessages += '</ul>';
-                        $('.supported_ .invalid-file').html(errorMessages);
-                        uploadButton.prop("disabled", true);
-                    }
-                } else {
-                    uploadButton.prop("disabled", true);
+                    });
                 }
-            }
-
-
-
-            uploadButton.click(function() {
-                if (dz.files.length > 0) {
-                    dz.processQueue();
-                }
-            });
-
-            $("#profile_pics").on("hidden.bs.modal", function() {
-                $("#avatar_dropzone").find(".dz-message").show();
-                $("#profile_pics .supported_ .invalid-file").empty();
-                dz.removeAllFiles();
             });
         }
 
-    });
-    // Dropzone Js For Company Logo Upload Ends
+        // If a Dropzone instance exists, update the old instance
+        singleFileDropzone.options.url = url;
+        singleFileDropzone.options.params = params;
 
-   // Dropzone Js For Public liability insurance Starts
-    // let pli_dropzone = new Dropzone("#pli_dropzone", {
-    //     url: "{{ route('tradesperson.storeTraderFile') }}",
-    //     params: {
-    //         file_related_to: 'public_liability_insurance',
-    //         file_type: 'document',
-    //     },
+        singleFileDropzone.on("addedfile", function(file) {
+            var videoElement   = $(file.previewElement).find('video[data-dz-video]');
+            var imageElement   = $(file.previewElement).find('img[data-dz-thumbnail]');
+            var uploadProgress = $(file.previewElement).find('.progress');
+
+            uploadProgress.hide();
+
+            if (file.type.startsWith('image/')) {
+                videoElement.hide();
+                imageElement.show();
+                singleFileDropzone.emit("thumbnail", file, file.thumbnail);
+            } else if (file.type.startsWith('video/')) {
+                imageElement.hide();
+                videoElement.show();
+                var videoUrl = URL.createObjectURL(file);
+                videoElement.attr('src', videoUrl);
+            } else {
+                videoElement.hide();
+                imageElement.show();
+                var thumbnailUrl = thumbnailMapping[file.type] || "{{ asset('frontend/img/file_logo.png') }}";
+                singleFileDropzone.emit("thumbnail", file, thumbnailUrl);
+            }
+            $('#single-file-upload-logo').hide();
+            $('#singleFilePreview').removeClass('d-none');
+            // $('#single_file_dropzone.cpp_wrap').addClass('uploading');
+        });
+
+        // Update the total progress bar
+        singleFileDropzone.on("totaluploadprogress", function(progress) {
+            // document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+        });
+
+        singleFileDropzone.on("uploadprogress", function(file, progress) {
+            if (progress == 100) {
+                $(file.previewElement).find('.progress').hide();
+            }
+        });
+
+        singleFileDropzone.on("sending", function(file) {
+            // Show the total progress bar when upload starts
+            // document.querySelector("#total-progress").style.opacity = "1";
+            // And disable the start button
+            // file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+            $(file.previewElement).find('.progress').show();
+        });
+
+        singleFileDropzone.on("queuecomplete", function(progress) {
+            // document.querySelector("#total-progress").style.opacity = "0";
+            // $('#previews.files').find('.progress').hide();
+            // $('#multiModal').modal('hide');
+
+        });
+
+        singleFileDropzone.on("removedfile", function(file) {
+            if(singleFileDropzone.files.length == 0) {
+                $('#single-file-upload-logo').show();
+                $('#singleFilePreview').addClass('d-none');
+                // $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
+            }
+        });
+
+        // Setup the buttons for all transfers
+        // The "add files" button doesn't need to be setup because the config
+        // `clickable` has already been specified.
+        document.querySelector("#upload_single_file").onclick = function() {
+            singleFileDropzone.enqueueFiles(singleFileDropzone.getFilesWithStatus(Dropzone.ADDED));
+        };
+
+        // document.querySelector("#cancel_multiple_file_upload").onclick = function() {
+        //     singleFileDropzone.removeAllFiles(true);
+        // };
+
+        $(modalId).on('hidden.bs.modal', function(e){
+            singleFileDropzone.removeAllFiles(true);
+        });
+
+        return singleFileDropzone;
+    }
+    // Dropzone Js For Single File Upload Ends
+
+    // Dropzone Js For Company Logo Starts
+    function comp_logo_upload() {
+        var url = "{{ route('tradesperson.tempTraderMedia') }}";
+        var params = {
+            file_related_to: 'company_logo',
+            file_type: 'image',
+        };
+        var html = ` .gif .heic .jpeg, .jpg .png .svg .webp`;
+        var acceptedFiles = "{{ config('const.dropzone_accepted_image') }}";
+        var maxFileSize = {{ config('const.dropzone_max_file_size') }};
+        var modal = "#companyLogoModal";
+
+        $(modal+' .ext_').html(html);
+        $(modal).modal('show');
+
+        var dropzone = singleFileDropzone(url, params, acceptedFiles, maxFileSize, modal);
+
+        dropzone.on("success", function(file, response) {
+            $('.profile_pics > img').attr('src', response.image_link);
+            $('.reg_ img').attr('src', response.image_link);
+        });
+
+        // dropzone.on("error", function(file, errorMessage, xhr) {
+        //     console.log(file);
+        //     console.log(errorMessage);
+        //     console.log(xhr);
+        // });
+    }
+    // Dropzone Js For Company Logo Ends
+
+    /*
+    var myDropzone = new Dropzone("#multi_file_dropzone", {
+        url: "{{ route('tradesperson.storeTraderFile') }}",
+        params: {
+            file_related_to: 'public_liability_insurance',
+        },
+        thumbnailWidth: 100,
+        thumbnailHeight: 69,
+        previewTemplate: previewTemplate,
+        autoQueue: false,
+        previewsContainer: "#previews", // Define the container to display the previews
+        clickable: "#multi_file_upload_btn"
+    });
+
+    myDropzone.on("addedfile", function(file) {
+    // Hookup the start button
+    // file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+        $('#file-upload-logo').hide();
+        $('#previews').removeClass('d-none');
+        $('#multi_file_dropzone.cpp_wrap').addClass('uploading');
+    });
+
+    // Update the total progress bar
+    myDropzone.on("totaluploadprogress", function(progress) {
+        // document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+    });
+
+    myDropzone.on("sending", function(file) {
+        // Show the total progress bar when upload starts
+        // document.querySelector("#total-progress").style.opacity = "1";
+        // And disable the start button
+        // file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+    });
+
+    // Hide the total progress bar when nothing's uploading anymore
+    myDropzone.on("queuecomplete", function(progress) {
+        // document.querySelector("#total-progress").style.opacity = "0";
+    });
+
+    myDropzone.on("removedfile", function(file) {
+
+      if(myDropzone.files.length == 0) {
+        $('#file-upload-logo').show();
+        $('#previews').addClass('d-none');
+        $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
+      }
+    });
+
+    // Setup the buttons for all transfers
+    // The "add files" button doesn't need to be setup because the config
+    // `clickable` has already been specified.
+    document.querySelector("#upload_multiple_file").onclick = function() {
+        myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
+    };
+
+    document.querySelector("#cancel_multiple_file_upload").onclick = function() {
+        myDropzone.removeAllFiles(true);
+    };
+
+    $('#multiModal').on('hidden.bs.modal', function(e){
+        myDropzone.removeAllFiles(true);
+    });
+    */
+
+    function callDropzone(url, params, acceptedFiles="{{ config('const.dropzone_accepted_file') }}", maxFileSize={{ config('const.dropzone_max_file_size') }}) {
+        var multiFileDropzoneElement = document.querySelector("#multi_file_dropzone");
+        var multiFileDropzone = multiFileDropzoneElement.dropzone;
+        var thumbnailMapping = {
+            'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
+            'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.png') }}",
+        };
+
+        // If a Dropzone instance doesn't exist, create a new one
+        if (!multiFileDropzone) {
+            multiFileDropzone = new Dropzone(multiFileDropzoneElement, {
+                url: url,
+                params: params,
+                maxFilesize: maxFileSize,
+                acceptedFiles: acceptedFiles,
+                thumbnailWidth: 100,
+                thumbnailHeight: 69,
+                previewTemplate: previewTemplate,
+                autoQueue: false,
+                previewsContainer: "#previews",
+                clickable: "#multi_file_upload_btn",
+            });
+        }
+
+        // If a Dropzone instance exists, update the old instance
+        multiFileDropzone.options.url = url;
+        multiFileDropzone.options.params = params;
+
+        // var multiFileDropzone = new Dropzone("#multi_file_dropzone", {
+        //     url: url,
+        //     params: params,
+        //     thumbnailWidth: 100,
+        //     thumbnailHeight: 69,
+        //     previewTemplate: previewTemplate,
+        //     autoQueue: false,
+        //     previewsContainer: "#previews", // Define the container to display the previews
+        //     clickable: "#multi_file_upload_btn",
+        // });
+
+        multiFileDropzone.on("addedfile", function(file) {
+            // Hookup the start button
+            // file.previewElement.querySelector(".start").onclick = function() { multiFileDropzone.enqueueFile(file); };
+            // var videoElement = file.previewElement.querySelector('video[data-dz-video]');
+            // var imageElement = file.previewElement.querySelector('img[data-dz-thumbnail]');
+            var videoElement   = $(file.previewElement).find('video[data-dz-video]');
+            var imageElement   = $(file.previewElement).find('img[data-dz-thumbnail]');
+            var uploadProgress = $(file.previewElement).find('.progress');
+
+            uploadProgress.hide();
+
+            if (file.type.startsWith('image/')) {
+               //  videoElement.remove();
+                videoElement.hide();
+                imageElement.show();
+                multiFileDropzone.emit("thumbnail", file, file.thumbnail);
+            } else if (file.type.startsWith('video/')) {
+               //  imageElement.remove();
+                imageElement.hide();
+                videoElement.show();
+                var videoUrl = URL.createObjectURL(file);
+                //  videoElement.src = videoUrl;
+                videoElement.attr('src', videoUrl);
+               //  videoElement.load();
+               //  multiFileDropzone.emit("thumbnail", file, videoUrl);
+            } else {
+               //  videoElement.remove();
+                videoElement.hide();
+                imageElement.show();
+                var thumbnailUrl = thumbnailMapping[file.type] || "{{ asset('frontend/img/file_logo.png') }}";
+                multiFileDropzone.emit("thumbnail", file, thumbnailUrl);
+            }
+            $('#file-upload-logo').hide();
+            $('#previews').removeClass('d-none');
+            $('#multi_file_dropzone.cpp_wrap').addClass('uploading');
+        });
+
+        // Update the total progress bar
+        multiFileDropzone.on("totaluploadprogress", function(progress) {
+            // document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+        });
+
+        multiFileDropzone.on("uploadprogress", function(file, progress) {
+            if (progress == 100) {
+                $(file.previewElement).find('.progress').hide();
+            }
+        });
+
+        multiFileDropzone.on("sending", function(file) {
+            // Show the total progress bar when upload starts
+            // document.querySelector("#total-progress").style.opacity = "1";
+            // And disable the start button
+            // file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+            $(file.previewElement).find('.progress').show();
+        });
+
+        multiFileDropzone.on("queuecomplete", function(progress) {
+            // document.querySelector("#total-progress").style.opacity = "0";
+            // $('#previews.files').find('.progress').hide();
+            // $('#multiModal').modal('hide');
+
+        });
+
+        multiFileDropzone.on("removedfile", function(file) {
+            if(multiFileDropzone.files.length == 0) {
+                $('#file-upload-logo').show();
+                $('#previews').addClass('d-none');
+                $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
+            }
+        });
+
+        // Setup the buttons for all transfers
+        // The "add files" button doesn't need to be setup because the config
+        // `clickable` has already been specified.
+        document.querySelector("#upload_multiple_file").onclick = function() {
+            multiFileDropzone.enqueueFiles(multiFileDropzone.getFilesWithStatus(Dropzone.ADDED));
+        };
+
+        // document.querySelector("#cancel_multiple_file_upload").onclick = function() {
+        //     multiFileDropzone.removeAllFiles(true);
+        // };
+
+        $('#multiModal').on('hidden.bs.modal', function(e){
+            multiFileDropzone.removeAllFiles(true);
+        });
+
+        return multiFileDropzone;
+    }
+
+    function pli_upload() {
+        var url = "{{ route('tradesperson.storeTraderFile') }}";
+        var params = {
+            file_related_to: 'public_liability_insurance',
+        };
+        let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
+                    <h6><strong>Documents:</strong> .doc, .docx .odt .pdf .ppt, .pptx </h6>`;
+        var maxFileSize = {{ config('const.dropzone_max_file_size') }};
+        var acceptedFiles = "{{ config('const.trader_public_liability') }}";
+
+        $('#multiModal .accepted-file-list').html(html);
+        $('#multiModal').modal('show');
+
+        var dropzone = callDropzone(url, params, acceptedFiles);
+
+        dropzone.on("success", function(file, response) {
+            let html = `<div class="mb-3" id="publicLiabilityInsurance-${response.file.id}">
+                        <a href="${response.file.url}" class="btn-pli" target="_blank">
+                            ${truncateString(response.file.file_name, 15)}
+                            <svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" onclick="confirmDeletePopup(${response.file.id}, 'publicLiabilityInsurance-${response.file.id}')">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </a>
+                        </div>`;
+
+            $(html).insertBefore('#addPLIdocs');
+        });
+
+        dropzone.on("error", function(file, errorMessage, xhr) {
+            console.log(file);
+            console.log(errorMessage);
+            console.log(xhr);
+        });
+    }
+
+    function team_photo_upload() {
+        var url    = "{{ route('tradesperson.storeTraderFile') }}";
+        var params = {
+            file_related_to: 'team_img',
+        };
+        var maxFileSize = {{ config('const.dropzone_max_file_size') }};
+        var acceptedFiles = "{{ config('const.dropzone_accepted_image') }}";
+        let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>`;
+
+        $('#multiModal .accepted-file-list').html(html);
+        $('#multiModal').modal('show');
+
+        var dropzone = callDropzone(url, params, acceptedFiles, maxFileSize);
+
+        dropzone.on("success", function(file, response) {
+            let newElementId = `#teamImage-${response.file.id}`;
+            if ($(newElementId).length > 0) {
+                return;
+            }
+            let html = `<div class="d-inline mr-2" id="teamImage-${response.file.id}">
+                                <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.file.id}, 'teamImage-${response.file.id}')">
+                                   <img src="${response.file.url}" alt="" class="rectangle-img">
+                                   <div class="remove_img">
+                                      <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                         <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                                      </svg>
+                                   </div>
+                                </a>
+                            </div>`;
+            $(html).insertBefore('#addTeamPhotos');
+        });
+
+        // dropzone.on("error", function(file, errorMessage, xhr) {
+        //     console.log(file);
+        //     console.log(errorMessage);
+        //     console.log(xhr);
+        // });
+    }
+
+    function prev_proj_upload() {
+        var url    = "{{ route('tradesperson.storeTraderFile') }}";
+        var params = {
+            file_related_to: 'prev_project_img',
+        };
+        var maxFileSize = {{ config('const.dropzone_max_file_size') }};
+        var acceptedFiles = "{{ config('const.dropzone_accepted_image') }}";
+        let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>`;
+
+        $('#multiModal .accepted-file-list').html(html);
+        $('#multiModal').modal('show');
+
+        var dropzone = callDropzone(url, params, acceptedFiles, maxFileSize);
+
+        dropzone.on("success", function(file, response) {
+            let newElementId = `#prevProjectImage-${response.file.id}`;
+            if ($(newElementId).length > 0) {
+                return;
+            }
+            let html = `<div class="d-inline mr-2" id="prevProjectImage-${response.file.id}">
+                            <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.file.id}, 'prevProjectImage-${response.file.id}')">
+                            <img src="${response.file.url}" alt="" class="rectangle-img">
+                            <div class="remove_img">
+                                <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                                </svg>
+                            </div>
+                            </a>
+                        </div>`;
+
+            $(html).insertBefore('#addPrevProj');
+        });
+
+        // dropzone.on("error", function(file, errorMessage, xhr) {
+        //     console.log(file);
+        //     console.log(errorMessage);
+        //     console.log(xhr);
+        // });
+    }
+
+    //
+    // Dropzone Js For Company Logo Upload Starts
+    // let dropzone = new Dropzone("#avatar_dropzone", {
+    //     url: "{{-- route('tradesperson.updateCompLogo') --}}",
     //     uploadMultiple: false,
     //     maxFiles: 1,
-    //     maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-    //     acceptedFiles: "image/jpeg, image/png, image/svg+xml, image/webp, application/pdf",
+    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
+    //     acceptedFiles: "{{ config('const.dropzone_accepted_image') }}",
+    //     // maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
+    //     // acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
     //     thumbnailWidth: 240,
     //     thumbnailHeight: 240,
     //     autoProcessQueue: false,
-    //     previewsContainer: "#pli_dropzone",
-    //     clickable: "#pli_upload_btn",
-    //     dictDefaultMessage: "",
+    //     // previewsContainer: ".dropzone",
+    //     clickable: "#file_upload_btn",
+    //     dictDefaultMessage: "Drag and drop a file here",
     //     init: function() {
     //         let dz = this;
-    //         let uploadButton = $("#upload_pli");
+    //         let uploadButton = $("#upload_avatar");
 
     //         this.on("addedfile", function(file) {
     //             if (this.files.length > 1) {
     //                 dz.removeFile(this.files[0]);
     //             }
-    //             // $("#pli_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             $("#pli_dropzone").find(".dz-message").hide();
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
     //             updateUploadButton();
     //         });
 
@@ -1470,15 +1912,8 @@
     //         });
 
     //         this.on("thumbnail", function(file, dataUrl) {
-    //             // $("#pli_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-image img").css({
-    //             //     "border-radius": "5%",
-    //             //     "transition": "none"
-    //             // });
-    //             $("#pli_dropzone").find(".dz-message").hide();
+    //             $("#avatar_dropzone").find(".dz-message").hide();
     //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-    //             $(file.previewElement).find(".dz-image img").addClass('dropzone-preview-thumbnail');
     //             updateUploadButton();
     //         });
 
@@ -1495,20 +1930,16 @@
     //         });
 
     //         this.on("success", function(file, response) {
-    //             let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-success-mark").css("display", "block");
     //             $(file.previewElement).find(".dz-progress").hide();
     //             $(file.previewElement).find(".dz-success-mark").show();
-    //             $('#uploaded_pli').empty();
-    //             $('#uploaded_pli').append(html);
+    //             $('.profile_pics > img').attr('src', response.image_link);
+    //             $('.reg_ img').attr('src', response.image_link);
+    //             $('#profile_pics').modal('hide');
+
     //             updateUploadButton();
     //         });
 
     //         this.on("error", function(file, errorMessage) {
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-message").text(errorMessage).css("display", "block");
-    //             // $(file.previewElement).find(".dz-error-mark").css("display", "block");
     //             $(file.previewElement).find(".dz-progress").hide();
     //             $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
     //             $(file.previewElement).find(".dz-error-mark").show();
@@ -1517,11 +1948,13 @@
 
     //         function updateUploadButton() {
     //             let maxFileSize = dz.options.maxFilesize ? dz.options.maxFilesize * 1024 * 1024 : (2 * 1024 * 1024);
+    //             // let acceptedFileTypes = dz.options.acceptedFiles ? dz.options.acceptedFiles.split(',').map(type => type.trim()) : ['.gif', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.heic'];
     //             let acceptedFileTypes = dz.options.acceptedFiles;
     //             $('.supported_ .invalid-file').empty();
-    //             $('.supported_ .dropzone-messages').empty();
 
     //             let file = dz.files[0];
+    //             if(file)
+    //                 // console.log(file.type);
 
     //             if (dz.files.length > 0) {
     //                 let file = dz.files[0];
@@ -1535,14 +1968,14 @@
     //                     }
     //                     if(!(acceptedFileTypes.includes(file.type))) {
     //                         $('.supported_ .invalid-file').empty();
-    //                         $('.supported_ .dropzone-messages').empty();
     //                         $('.dz-error-message').empty();
     //                         $('.dz-success-mark').empty();
     //                         $('.dz-error-mark').empty();
     //                         $('.dz-details').empty();
-    //                         // $('.dz-message').css("display", "block");
     //                         $('.dz-message').show();
     //                         errorMessage.push("Invalid file type. Please select a valid file.");
+    //                     } else{
+
     //                     }
     //                     $.each(errorMessage, function(key, errorMessage) {
     //                         errorMessages += `<li> ${errorMessage} </li>`;
@@ -1557,158 +1990,25 @@
     //             }
     //         }
 
+
+
     //         uploadButton.click(function() {
     //             if (dz.files.length > 0) {
     //                 dz.processQueue();
     //             }
     //         });
 
-    //         $("#pliModal").on("hidden.bs.modal", function() {
-    //             // $("#pli_dropzone").find(".dz-message").css("display", "block");
-    //             $("#pli_dropzone").find(".dz-message").show();
-    //             $("#pli_dropzone .supported_ .invalid-file").empty();
-    //             $("#pli_dropzone .supported_ .dropzone-messages").empty();
+    //         $("#profile_pics").on("hidden.bs.modal", function() {
+    //             $("#avatar_dropzone").find(".dz-message").show();
+    //             $("#profile_pics .supported_ .invalid-file").empty();
     //             dz.removeAllFiles();
     //         });
     //     }
 
     // });
-    let pli_dropzone = new Dropzone("#pli_dropzone", {
-        url: "{{ route('tradesperson.storeTraderFile') }}",
-        params: {
-            file_related_to: 'public_liability_insurance',
-            file_type: 'document',
-        },
-        maxFiles: 6,
-        maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-        acceptedFiles: "image/jpeg, image/png, image/svg+xml, image/webp, application/pdf",
-        thumbnailWidth: 240,
-        thumbnailHeight: 240,
-        previewsContainer: "#pli_dropzone",
-        clickable: "#pli_upload_btn",
-        dictDefaultMessage: "",
-        init: function() {
-            let dz = this;
+    // Dropzone Js For Company Logo Upload Ends
 
-            $("#pliModal").on("hidden.bs.modal", function() {
-                $("#pli_dropzone").find(".dz-message").show();
-                $("#pli_dropzone .supported_ .invalid-file").empty();
-                $("#pli_dropzone .supported_ .dropzone-messages").empty();
-                dz.removeAllFiles();
-            });
-
-            this.on("success", function(file, response) {
-                let html = `<div class="mb-3" id="publicLiabilityInsurance-${response.file.id}">
-                        <a href="${response.file.url}" class="btn-pli" target="_blank">
-                            ${truncateString(response.file.file_name, 15)}
-                            <svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
-                           </svg>
-                        </a>
-                        <a href="javascript:void(0)" onclick="confirmDeletePopup(${response.file.id}, 'publicLiabilityInsurance-${response.file.id}')">
-                           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
-                           </svg>
-                        </a>
-                     </div>`;
-
-                $(html).insertBefore('#addPLIdocs');
-                $('#pliModal').modal('hide');
-            });
-        }
-
-    });
-    // Dropzone Js For Public liability insurance Ends
-
-    // Dropzone Js For Team Photo Upload Starts
-    let team_photo_dropzone = new Dropzone("#team_photo_dropzone", {
-        url: "{{ route('tradesperson.storeTraderFile') }}",
-        params: {
-            file_related_to: 'team_img',
-            file_type: 'image',
-        },
-        maxFiles: 6,
-        maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-        acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
-        thumbnailWidth: 240,
-        thumbnailHeight: 240,
-        previewsContainer: "#team_photo_dropzone",
-        clickable: "#team_photo_upload_btn",
-        init: function() {
-            let dz = this;
-
-            $("#teamPhotoModal").on("hidden.bs.modal", function() {
-                // $("#trader_img_dropzone").find(".dz-message").css("display", "block");
-                $("#trader_img_dropzone").find(".dz-message").show();
-                $("#trader_img_dropzone .supported_ .invalid-file").empty();
-                $("#trader_img_dropzone .supported_ .dropzone-messages").empty();
-                dz.removeAllFiles();
-            });
-
-            this.on("success", function(file, response) {
-                let html = `<div class="d-inline mr-2" id="teamImage-${response.file.id}">
-                                <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.file.id}, 'teamImage-${response.file.id}')">
-                                   <img src="${response.file.url}" alt="" class="rectangle-img">
-                                   <div class="remove_img">
-                                      <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                         <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
-                                      </svg>
-                                   </div>
-                                </a>
-                            </div>`;
-                $("#teamPhotoModal").modal('hide');
-                $(html).insertBefore('#addTeamPhotos');
-            });
-        }
-    });
-    // Dropzone Js For Team Photo Upload Ends
-
-
-    // Dropzone Js For Previous Project Upload Starts
-    let prev_proj_dropzone = new Dropzone("#prev_proj_dropzone", {
-        url: "{{ route('tradesperson.storeTraderFile') }}",
-        params: {
-            file_related_to: 'prev_project_img',
-            file_type: 'image',
-        },
-        maxFiles: 6,
-        maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-        acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
-        thumbnailWidth: 240,
-        thumbnailHeight: 240,
-        previewsContainer: "#prev_proj_dropzone",
-        clickable: "#prev_proj_upload_btn",
-        init: function() {
-            let dz = this;
-
-            $("#prevProjModal").on("hidden.bs.modal", function() {
-                // $("#prev_proj_dropzone").find(".dz-message").css("display", "block");
-                $("#prev_proj_dropzone").find(".dz-message").show();
-                $("#prev_proj_dropzone .supported_ .invalid-file").empty();
-                $("#prev_proj_dropzone .supported_ .dropzone-messages").empty();
-                dz.removeAllFiles();
-            });
-
-            this.on("success", function(file, response) {
-                let html = `<div class="d-inline mr-2" id="prevProjectImage-${response.file.id}">
-                                    <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.file.id}, 'prevProjectImage-${response.file.id}')">
-                                    <img src="${response.file.url}" alt="" class="rectangle-img">
-                                    <div class="remove_img">
-                                        <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
-                                        </svg>
-                                    </div>
-                                    </a>
-                                </div>`;
-
-                $(html).insertBefore('#addPrevProj');
-                $('#prevProjModal').modal('hide');
-            });
-        }
-    });
-    // Dropzone Js For Previous Project Upload Ends
-
-        // Show Checked Work Numbers on Tab sidebar
+    // Show Checked Work Numbers on Tab sidebar
     $("#work_tab .subworktypechk input[type='checkbox']").change( function() {
         let id = $(this).closest(".tab-pane").attr("id");
         let formatted_id = "#"+id;

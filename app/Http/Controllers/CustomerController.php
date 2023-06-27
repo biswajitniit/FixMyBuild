@@ -35,7 +35,7 @@ class CustomerController extends Controller
         }
     }
     public function customer_profile(Request $request){
-        return view("customer/profile");
+        return view("customer.profile");
     }
     public function customer_project(Request $request){
         $project = Project::where('user_id',Auth::user()->id)->get();
@@ -226,15 +226,42 @@ class CustomerController extends Controller
                 if($projects->status == 'estimation') {
                     $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
 
+                    foreach($estimates as $estimate) {
+                        $amount = $estimate->tasks->sum('price');
+                        $estimate->price = ($amount != 0) ? (($estimate->apply_vat == 0) ? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
+
+                        // $query = ProjectReview::where('tradesperson_id', $estimate->tradesperson->id);
+                        // $reviewCount = $query->count();
+
+                        // $estimate->totalRatings = $reviewCount;
+                        // $estimate->workmanshipPercentage = $reviewCount ? (($query->sum('workmanship') / (2 * $reviewCount)) * 100) : null;
+                        // $estimate->punctualityPercentage = $reviewCount ? ( $query->sum('punctuality') / $reviewCount) * 100 : null;
+                        // $estimate->tidinessPercentage = $reviewCount ? ( $query->sum('tidiness') / $reviewCount) * 100 : null;
+                        // $estimate->priceAccuracy = $reviewCount ? (  $query->sum('price_accuracy') / $reviewCount) * 100 : null;
+
+                        $query = ProjectReview::where('tradesperson_id', $estimate->tradesperson->id);
+                        $estimate->totalRatings = $query->count();
+
+                        if($estimate->totalRatings) {
+                            $reviewCount = $estimate->totalRatings;
+                            $estimate->workmanshipPercentage = ($query->sum('workmanship') / (2 * $reviewCount)) * 100;
+                            $estimate->punctualityPercentage = ($query->sum('punctuality') / $reviewCount) * 100;
+                            $estimate->tidinessPercentage    = ($query->sum('tidiness') / $reviewCount) * 100;
+                            $estimate->priceAccuracy         = ($query->sum('price_accuracy') / $reviewCount) * 100;
+                        }
+                    };
+
                     return view('customer.project_details',compact('projects','projectaddress','doc','project_id','estimates'));
                 }
 
                 return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
-            }else{
-                return redirect('/customer/projects');
+            } else{
+                // return redirect('/customer/projects');
+                return redirect()->route('customer.project');
             }
         } catch (\Exception $e){
-            return redirect('/customer/projects');
+            // return redirect('/customer/projects');
+            return redirect()->route('customer.project');
         }
 
     }
