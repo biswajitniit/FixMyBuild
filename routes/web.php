@@ -190,7 +190,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('changecustomerpassword', [CustomerController::class, 'change_password'])->name('customer.changepassword');
         Route::put('updatecustomerphone', [CustomerController::class, 'update_phone'])->name('customer.updatephone');
 
-
+        Route::get('project-estimate/{id}', [CustomerController::class, 'project_estimate'])->name('Customer.project-estimate');
         /**
          * Logout Route
          */
