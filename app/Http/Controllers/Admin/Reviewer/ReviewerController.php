@@ -68,43 +68,42 @@ class ReviewerController extends Controller
             $project = Project::where('id', $request->projectid)->first();
             $user = User::where('id', $project->user_id)->first();
 
+            // Check Notification settings
+            $notify_settings = Notification::where('user_id', $user->id)->first();
+            if ($notify_settings) {
+              if($notify_settings->settings != null){
+                $arr_notify_settings = json_decode($notify_settings->settings, true);$project_reviewed = $arr_notify_settings['reviewed'];
+              } else {
+                $project_reviewed = 1;
+              }
+            }
+            // Notification
+            $notes_for_customer = $request->input('notes_for_customer');
+            $project = Project::where('id', $request->projectid)->first();
 
             if($request->post('your_decision') == "Approve"){ //
-                $data = array(
-                    'status'          => 'estimation'
+              $data = array(
+                'status'          => 'estimation'
+              );
+              Project::where('id', $request->projectid)->update($data);
+              if($project_reviewed == 1){
+                $html = view('email.email-project-reviewed')
+                              ->with('data', [
+                                'notes_for_customer' => $notes_for_customer,
+                                'project_name'       => $project->project_name,
+                                'user_name'          => $user->name,
+                                'approve_or_refer'   =>$approve_or_refer
+                                ])
+                              ->render();
+                $emaildata = array(
+                    'From'          => 'support@fixmybuild.com',
+                    'To'            => $user->email,
+                    'Subject'       => 'Your Project Approved',
+                    'HtmlBody'      => $html,
+                    'MessageStream' => 'outbound'
                 );
-                Project::where('id', $request->projectid)->update($data);
-
-                $notes_for_customer = $request->input('notes_for_customer');
-                $project = Project::where('id', $request->projectid)->first();
-                $user = User::where('id', $project->user_id)->first();
-                $reviewed = Notification::where('user_id', $user->id)->first();
-                if ($reviewed) {
-                    if (is_string($reviewed->settings)) {
-                        $jsonArray = json_decode($reviewed->settings, true);
-                    } else {
-                        $jsonArray = $reviewed->settings;
-                    }
-                }
-                $firstIndex = $jsonArray['reviewed'];
-                if($firstIndex == 1){
-                    $html = view('email.email-project-reviewed')->with('data', [
-                                                                'notes_for_customer' => $notes_for_customer,
-                                                                'project_name'       => $project->project_name,
-                                                                'user_name'          => $user->name,
-                                                                'approve_or_refer'   =>$approve_or_refer
-                                                                ])
-                                                                ->render();
-                    $emaildata = array(
-                        'From'          => 'support@fixmybuild.com',
-                        'To'            => $user->email,
-                        'Subject'       => 'Approved Your Project',
-                        'HtmlBody'      => $html,
-                        'MessageStream' => 'outbound'
-                    );
-
-                    $email_sent = send_email($emaildata);
-                }
+                $email_sent = send_email($emaildata);
+                // Notificatin Insert in DB
                 $notificationDetail = new NotificationDetail();
                 $notificationDetail->user_id = $user->id;
                 $notificationDetail->from_user_id = Auth::user()->id;
@@ -114,44 +113,35 @@ class ReviewerController extends Controller
                 $notificationDetail->read_status = 0;
                 $notificationDetail->notification_text = 'Your project has been reviewed';
                 $notificationDetail->save();
+              }
             } else{
-                // if($updated){
-                    $reviewed = Notification::where('user_id', $user->id)->first();
-                    if ($reviewed) {
-                        if (is_string($reviewed->settings)) {
-                            $jsonArray = json_decode($reviewed->settings, true);
-                        } else {
-                            $jsonArray = $reviewed->settings;
-                        }
-                    }
-                    $firstIndex = $jsonArray['reviewed'];
-                    if($firstIndex == 1){
-                        $html = view('email.email-project-reviewed')->with('data', [
-                                                                    'notes_for_customer' => $notes_for_customer,
-                                                                    'project_name'       => $project->project_name,
-                                                                    'user_name'          => $user->name
-                                                                    ])
-                                                                    ->render();
-                        $emaildata = array(
-                            'From'          => 'support@fixmybuild.com',
-                            'To'            => $user->email,
-                            'Subject'       => 'Project Reviewed Mail',
-                            'HtmlBody'      => $html,
-                            'MessageStream' => 'outbound'
-                        );
-
-                        $email_sent = send_email($emaildata);
-                    }
-                    $notificationDetail = new NotificationDetail();
-                    $notificationDetail->user_id = $user->id;
-                    $notificationDetail->from_user_id = Auth::user()->id;
-                    $notificationDetail->from_user_type = 'reviewer';
-                    $notificationDetail->related_to = 'project';
-                    $notificationDetail->related_to_id = $project->id;
-                    $notificationDetail->read_status = 0;
-                    $notificationDetail->notification_text = 'Your project has been reviewed';
-                    $notificationDetail->save();
-                // }
+              if($project_reviewed == 1){
+                $html = view('email.email-project-reviewed')
+                            ->with('data', [
+                              'notes_for_customer' => $notes_for_customer,
+                              'project_name'       => $project->project_name,
+                              'user_name'          => $user->name
+                              ])
+                            ->render();
+                $emaildata = array(
+                  'From'          => 'support@fixmybuild.com',
+                  'To'            => $user->email,
+                  'Subject'       => 'Your Project Reviewed',
+                  'HtmlBody'      => $html,
+                  'MessageStream' => 'outbound'
+                );
+                $email_sent = send_email($emaildata);
+                // Notificatin Insert in DB
+                $notificationDetail = new NotificationDetail();
+                $notificationDetail->user_id = $user->id;
+                $notificationDetail->from_user_id = Auth::user()->id;
+                $notificationDetail->from_user_type = 'reviewer';
+                $notificationDetail->related_to = 'project';
+                $notificationDetail->related_to_id = $project->id;
+                $notificationDetail->read_status = 0;
+                $notificationDetail->notification_text = 'Your project has been reviewed';
+                $notificationDetail->save();
+              }
             }
 
        }else{
