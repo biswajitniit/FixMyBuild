@@ -5,6 +5,7 @@ use App\Models\Buildercategory;
 use App\Models\Buildersubcategory;
 use Illuminate\Support\Facades\Auth;
 use Hashids\Hashids;
+use Carbon\Carbon;
 
 if (! function_exists('Hashids_encode')) {
     function Hashids_encode($id) {
@@ -99,3 +100,19 @@ if (! function_exists('getRemoteFileSize')) {
       return $response;
     }
 }
+
+    function time_diff($created_at)
+    {
+        $now = Carbon::now();
+        $created = Carbon::parse($created_at);
+
+        if ($now->diffInMinutes($created) < 60) {
+            return $now->diffInMinutes($created) . ' minutes ago';
+        } elseif ($now->diffInHours($created) < 24) {
+            return $now->diffInHours($created) . ' hours ago';
+        } elseif ($now->diffInDays($created) == 1) {
+            return 'yesterday';
+        } else {
+            return date('F j, Y', strtotime($created));
+        }
+    }

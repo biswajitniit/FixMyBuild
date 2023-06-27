@@ -14812,3 +14812,9 @@ h2.company-name a:hover svg path {
 .success{
   color: #17ad6a;
 }
+.notification-user-img
+{
+    width: 60%;
+    background-color: #d1cabf;
+    border-radius: 50%;
+}

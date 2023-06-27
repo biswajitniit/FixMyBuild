@@ -174,7 +174,7 @@
                             <div class="mb-3 row">
                                 <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
                                 <div class="col-lg-9 mt-2">
-                                    <select>
+                                    <select name="approve_or_refer">
                                         <option value="approve">Approve</option>
                                         <option value="refer">Refer</option>
                                     </select>
