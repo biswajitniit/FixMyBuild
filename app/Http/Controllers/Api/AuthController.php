@@ -35,6 +35,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'user_type'=> $user->customer_or_tradesperson,
+            'user'=>$user,
             'token_type' => 'Bearer',
         ], 200);
         } catch(Exception $e){

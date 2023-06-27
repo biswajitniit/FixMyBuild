@@ -65,13 +65,13 @@ class ProjectController extends Controller
 
     public function update_project(Request $request){
         $validator = Validator::make($request->all(), [
-            'id' => 'required|string',
+            'project_id' => 'required|string',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
         try{
-            $project =Project::where('id',$request->id);
+            $project =Project::where('id',$request->project_id)->first();
             $project->project_address_id = $request->project_address_id;
             $project->forename = $request->forename;
             $project->surname = $request->surname;
@@ -84,7 +84,7 @@ class ProjectController extends Controller
             }
             return response()->json(['message'=>"Project updated successfully"], 200);
         } catch(Exception $e){
-            return response()->json($e, 500);
+            return response()->json($e->getMessage(), 500);
         }
     }
 
@@ -102,7 +102,7 @@ class ProjectController extends Controller
             }
             return response()->json($files, 200);
         }catch(Exception $e){
-            return response()->json($e, 500);
+            return response()->json($e->getMessage(), 500);
         }
     }
 
@@ -116,15 +116,19 @@ class ProjectController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        $projectFile = new Projectfile();
-        $projectFile->project_id = $request->project_id;
-        $projectFile->filename = $request->file_name;
-        $projectFile->file_extention = $request->file_extention;
-        $projectFile->url = $request->url;
-
-        if(!$projectFile->save()){
-            return response()->json(['message'=>'Unexpected error, please try after sometimes'],400);
+        try{
+            $projectFile = new Projectfile();
+            $projectFile->project_id = $request->project_id;
+            $projectFile->filename = $request->file_name;
+            $projectFile->file_extention = $request->file_extention;
+            $projectFile->url = $request->url;
+    
+            if(!$projectFile->save()){
+                return response()->json(['message'=>'Unexpected error, please try after sometimes'],400);
+            }
+            return response()->json(['message'=>"File uploaded successfully"], 200);
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
         }
-        return response()->json(['message'=>"File uploaded successfully"], 200);
     }
 }

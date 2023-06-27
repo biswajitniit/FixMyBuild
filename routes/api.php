@@ -31,6 +31,7 @@ Route::namespace('Api')->group(function() {
       Route::post('projects','ProjectController@add_project');
       Route::put('projects','ProjectController@update_project');
       Route::apiResource('address', 'AddressController',);
+      Route::get('/builder-category', 'BuilderController@get_builders');
     });
   });
 
