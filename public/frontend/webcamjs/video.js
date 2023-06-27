@@ -52,17 +52,26 @@ start.onclick = e => {
   chunks=[];
   $("#my_camera_video").append('<img class="video-record-loading" src="/images/video-record.gif" alt=""></img>');
   recorder.start();
+  console.log(recorder.state);
 }
 
 
 stop.onclick = e => {
   stop.disabled = true;
   recorder.stop();
+  //stopBothVideoAndAudio(stream);
+  //console.log(recorder.state);
   $(".video-record-loading").remove();
   start.removeAttribute('disabled');
 }
 
-
+// function stopBothVideoAndAudio(stream) {
+//   stream.getTracks().forEach((track) => {
+//     if (track.readyState == 'live') {
+//       track.stop();
+//     }
+//   });
+// }
 
 function makeLink(){
   let blob = new Blob(chunks, {type: media.type })
@@ -107,6 +116,8 @@ $(document).ready(function(){
       confirmButtonText: 'Yes'
       }).then((result) => {
         if (result.isConfirmed) {
+          $("#upload_video").html('<img class="video-upload-loading" src="/images/loading.gif" alt=""/> Upload');
+          $("#upload_video").disabled = true;
           const formData = new FormData();
           formData.append('_token',  $('meta[name="csrf-token"]').attr('content'));
           formData.append('video_count',  videoArray.length);
@@ -118,7 +129,16 @@ $(document).ready(function(){
             body: formData
           })
           .then(response => {
-              console.log(response);
+            console.log(response);
+            $("#upload_video").html('Upload');
+            $("#upload_video").disabled = false;
+            $('#close_video_modal').click();
+            FetchfilesData();
+            formData.forEach(function(val, key, fD){
+            // here you can add filtering conditions
+            formData.delete(key)
+            });
+            $('#video-captutes').html('');
           })
           .catch(error => {});
         }

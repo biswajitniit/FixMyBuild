@@ -177,7 +177,7 @@
                             </div>
                             <div class="col-md-12 mb-4">
                                 {{-- <div id="summernote"></div> --}}
-                                <textarea name="description" id="summernote"></textarea>
+                                <textarea name="description" class="description"></textarea>
                             </div>
                             <div class="col-md-12 mb-4">
                                 <h3>Please upload at least one photo, video or design of the work to be undertaken.</h3>
@@ -222,12 +222,7 @@
                                    </a>
                                 </div>
                              </div>
-                            <div class="row">
-                                <div class="col-md-2 mt-2" id="getfilesformdb">
-                                    {{-- <div class="d-inline mr-3" id="getfilesformdb">
-                                        abc.doc (3MB) <a href="#"><img src="{{ asset('frontend/img/crose-btn.svg') }}" alt="" /> </a>
-                                    </div> --}}
-                                </div>
+                            <div class="row" id="getfilesformdb">
                             </div>
                         </div>
                     </div>
@@ -246,11 +241,6 @@
                                     <div class="col-md-4">
                                       <div class="form-group">
                                         <input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -281,7 +271,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Take video</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Capture video</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -313,7 +303,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-light" type="button" id="upload_video">Upload</button>
-                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal" id="close_video_modal">Close</button>
                 </div>
             </div>
         </div>
@@ -347,7 +337,7 @@
                   <div class="modal-footer">
                     {{-- <button class="btn btn-danger">Submit</button> --}}
                     <button class="btn btn-light" type="submit">Upload</button>
-                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal" id="close_image_modal">Close</button>
                   </div>
                 </form>
               </div>
@@ -411,84 +401,82 @@
 <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
 <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script language="JavaScript">
 
     Dropzone.autoDiscover = false;
     var currentFile = null;
     var myDropzone = new Dropzone(".dropzone", {
-        maxFiles:10,
-        autoProcessQueue: false,
-        clickable: "#file_upload_btn",
-        dictDefaultMessage: "Drag and drop a file here",
-        parallelUploads: 10, // Number of files process at a time (default 2)
-        addRemoveLinks: true,
-        removedfile: function(file)
-        {
-            Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to delete this item?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var name = file.upload.filename;
-                    $.ajax({
-                        headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                        type: 'POST',
-                        url: '{{ url("dropzonedestroy") }}',
-                        data: {filename: name},
-                        success: function (data){
-                            //console.log("File has been successfully removed!!");
-                            //alert('File has been successfully removed!!'); return false;
-                            Swal.fire({
-                                //position: 'top-end',
-                                icon: 'warning',
-                                title: 'File has been successfully removed!!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        },
-                        error: function(e) {
-                            console.log(e);
-                        }});
-                        var fileRef;
-                        return (fileRef = file.previewElement) != null ?
-                        fileRef.parentNode.removeChild(file.previewElement) : void 0;
-                }
-            })
-        },
-         success: function (file, response) {
-            //console.log(response);
-
+      maxFiles:10,
+      autoProcessQueue: false,
+      clickable: "#file_upload_btn",
+      dictDefaultMessage: "Drag and drop a file here",
+      parallelUploads: 10, // Number of files process at a time (default 2)
+      addRemoveLinks: true,
+      removedfile: function(file)
+      {
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this item?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            var name = file.upload.filename;
+            $.ajax({
+              headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              type: 'POST',
+              url: '{{ url("dropzonedestroy") }}',
+              data: {filename: name},
+              success: function (data){
+                //console.log("File has been successfully removed!!");
+                //alert('File has been successfully removed!!'); return false;
                 Swal.fire({
-                        //position: 'top-end',
-                        icon: 'success',
-                        title: 'File has been successfully uploaded!!',
-                        showConfirmButton: false,
-                        timer: 1500
+                  //position: 'top-end',
+                  icon: 'warning',
+                  title: 'File has been successfully removed!!',
+                  showConfirmButton: false,
+                  timer: 1500
                 });
-            $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-        },
-        uploadprogress: function(file, progress, bytesSent) {
-            if (file.previewElement) {
-                // var progressElement = file.previewElement.querySelector("[data-dz-uploadprogress]");
-                // progressElement.style.width = progress + "%";
-                // progressElement.querySelector(".progress-text").textContent = progress + "%";
+              },
+              error: function(e) {
+                console.log(e);
+              }
+            });
+            var fileRef;
+            return (fileRef = file.previewElement) != null ?
+            fileRef.parentNode.removeChild(file.previewElement) : void 0;
+          }
+        })
+      },
+      success: function (file, response) {
+        Swal.fire({
+          //position: 'top-end',
+          icon: 'success',
+          title: 'File has been successfully uploaded!!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
+      },
+      uploadprogress: function(file, progress, bytesSent) {
+          if (file.previewElement) {
+              // var progressElement = file.previewElement.querySelector("[data-dz-uploadprogress]");
+              // progressElement.style.width = progress + "%";
+              // progressElement.querySelector(".progress-text").textContent = progress + "%";
 
-                swal.fire({
-                    title:"",
-                    text:"Loading...",
-                    icon: "{{ asset('frontend/dropzone/loading2.gif') }}",
-                });
-            }
-        },
+              swal.fire({
+                  title:"",
+                  text:"Loading...",
+                  icon: "{{ asset('frontend/dropzone/loading2.gif') }}",
+              });
+          }
+      },
 
     });
 
@@ -710,11 +698,12 @@
         }
     }
 
-    $('#summernote').summernote({
-        //placeholder: 'FixMyBuild',
-        tabsize: 2,
-        height: 200
-    });
+    // $('#summernote').summernote({
+    //     //placeholder: 'FixMyBuild',
+    //     tabsize: 2,
+    //     height: 200
+    // });
+     FetchfilesData();
     //setInterval(function() { FetchfilesData(); }, 5000);
     function FetchfilesData(){
         $.ajax({

@@ -115,13 +115,17 @@ class CustomerController extends Controller
 
 
     function getcustomermediafiles(){
-        $getcustomerfiles = Tempmedia::where('file_created_date',date('Y-m-d'))->where('user_id',Auth::user()->id)->get();
-
+        $getcustomerfiles = Tempmedia::where('sessionid',Session::getId())->get();
+        
         if($getcustomerfiles){
             $html = '';
             foreach($getcustomerfiles as $row){
                 // $html .= '<div class="d-inline mr-3">'.$row->filename.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
-                $html .= '<div class="d-inline mr-3">'.'<img src="https://fmbstaging.s3.eu-west-2.amazonaws.com/Testfolder/'.$row->filename.'" alt="" width="50" "/>'.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+                if($row->file_type == 'Video'){
+                  $html .= '<div class="col-md-3 mt-2"><video controls="" src="'.$row->url.'"></video>'.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+                }else{
+                $html .= '<div class="col-md-3 mt-2"><img src="'.$row->url.'" alt="" class="customer_img_project"/>'.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+                }
             }
             echo $html;
         }

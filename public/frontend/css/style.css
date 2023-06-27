@@ -12554,10 +12554,10 @@ button.btn-close:hover {
 }
 p {
   color: #6d717a;
-  /* font-weight: 500; */
-  font-size: 22px;
+   font-weight: 500; 
+  /*font-size: 22px;
   line-height: 25px;
-  margin-bottom: 12px;
+  margin-bottom: 12px;*/
 }
 .iti {
   width: 100%;
