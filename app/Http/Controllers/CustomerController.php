@@ -7,7 +7,7 @@ use App\Models\Projectaddresses;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\Projectfile;
-use App\Models\{Estimate, Task};
+use App\Models\{Estimate, Task, TraderDetail};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use App\Models\ProjectReview;
@@ -423,5 +423,44 @@ class CustomerController extends Controller
         } catch(\Exception $e) {
             return 'error';
         }
+    }
+
+    public function project_estimate(Request $request, $id)
+    {
+
+        $estimate = Estimate::where('id', $id)
+                            ->first();
+        $project = Project::where('id', $estimate->project_id)->first();
+        $projectid = Projectfile::where('project_id', $estimate->project_id)->get();
+        $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
+
+        $tasks = Task::where('estimate_id', $estimate->id)->get();
+        $amount = 0;
+            foreach ($tasks as $task) {
+                $price = $task->price;
+                $amount += $task->price;
+            }
+        $taskTotalAmount = ($amount != 0)? (($estimate->apply_vat == 0)? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
+        $taskAmountWithContingency = (($taskTotalAmount * $estimate->contingency)/100) + $taskTotalAmount;
+        $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * 20)/100) + $taskAmountWithContingency;
+        $initial_payment_percentage = $estimate->initial_payment;
+        $contingency_per_task = ($price * $estimate->contingency)/100;
+
+        if($estimate->apply_vat == 1){
+            if($estimate->initial_payment_type == 'Percentage'){
+                $initial_payment_percentage = ($taskAmountWithContingencyAndVat * $estimate->initial_payment)/100;
+            }
+        } elseif($estimate->apply_vat == 0){
+            $initial_payment_percentage = ($taskAmountWithContingency * $estimate->initial_payment)/100;
+        }
+        // for showing amounts in 2 decimal
+        $taskTotalAmount = round($taskTotalAmount, 2);
+        $taskAmountWithContingency = round($taskAmountWithContingency, 2);
+        $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
+        $initial_payment_percentage = number_format($initial_payment_percentage, 2);
+        $contingency_per_task = number_format($contingency_per_task, 2);
+
+        return view('customer.estimate_details',compact('projectid','project','trader_detail','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task'));
+
     }
 }

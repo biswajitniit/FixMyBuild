@@ -661,7 +661,7 @@
                 document.getElementById('project_start_date').style.display = 'block';
             } else {
                 document.getElementById('project_start_date').style.display = 'none';
-               
+
             }
         }
 

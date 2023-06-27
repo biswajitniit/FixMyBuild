@@ -790,10 +790,10 @@ class TradepersionDashboardController extends Controller
         } elseif($estimate->apply_vat == 0){
             $initial_payment_percentage = ($taskAmountWithContingency * $estimate->initial_payment)/100;
         }
-            // for showing amounts in 2 decimal
-        $taskTotalAmount = number_format($taskTotalAmount, 2);
-        $taskAmountWithContingency = number_format($taskAmountWithContingency, 2);
-        $taskAmountWithContingencyAndVat = number_format($taskAmountWithContingencyAndVat, 2);
+        // for showing amounts in 2 decimal
+        $taskTotalAmount = round($taskTotalAmount, 2);
+        $taskAmountWithContingency = round($taskAmountWithContingency, 2);
+        $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
         $initial_payment_percentage = number_format($initial_payment_percentage, 2);
         $contingency_per_task = number_format($contingency_per_task, 2);
 
