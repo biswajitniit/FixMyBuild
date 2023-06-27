@@ -1,0 +1,6 @@
+.rectangle-img{
+    width: 100px;
+    height: 69px;
+    object-fit: cover;
+    border-radius: 10px;
+}

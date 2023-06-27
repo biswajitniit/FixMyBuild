@@ -435,8 +435,7 @@
                                         <h3 class="mt-4">Available to start</h3>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <select name="for_start_date" class="form-control" id="for_start_date"
-                                                    onchange="getDate()">
+                                                <select name="for_start_date" class="form-control" id="for_start_date" onchange="getDate()">
                                                     <option value="now">Now</option>
                                                     <option value="one_week">Next one week</option>
                                                     <option value="two_three_weeks">2-3 weeks time</option>
@@ -446,9 +445,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <input type="date" class="form-control" id="project_start_date"
-                                                    name="project_start_date" placeholder="DD MM YYYY"
-                                                    style="display: none;">
+                                                <input type="date" class="form-control" id="project_start_date" name="project_start_date" placeholder="DD MM YYYY" style="display: none;">
                                             </div>
                                         </div>
                                         <h3 class="mt-4">Total time required to complete the project (including
@@ -664,24 +661,7 @@
                 document.getElementById('project_start_date').style.display = 'block';
             } else {
                 document.getElementById('project_start_date').style.display = 'none';
-                if (e.value === 'now') {
-                    futureDate = currentDate;
-                    project_start_date.value = futureDate;
-                } else if (e.value === 'one_week') {
-                    futureDate = new Date(new Date().setDate(date.getDate() + 7));
-                    let fDay = String(futureDate.getDate()).padStart(2, '0');
-                    let fMonth = String(futureDate.getMonth() + 1).padStart(2, "0");
-                    let fYear = futureDate.getFullYear();
-                    let fDate = `${fYear}-${fMonth}-${fDay}`;
-                    project_start_date.value = fDate;
-                } else if (e.value === 'two_three_weeks') {
-                    futureDate = new Date(new Date().setDate(date.getDate() + 21));
-                    let fDay = String(futureDate.getDate()).padStart(2, '0');
-                    let fMonth = String(futureDate.getMonth() + 1).padStart(2, "0");
-                    let fYear = futureDate.getFullYear();
-                    let fDate = `${fYear}-${fMonth}-${fDay}`;
-                    project_start_date.value = fDate;
-                }
+
             }
         }
 

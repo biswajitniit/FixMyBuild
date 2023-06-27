@@ -1,5 +1,8 @@
 @extends('layouts.admin')
 @section('title', 'View User')
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/css/custom.css') }}">
+@endpush
 @section('content')
 
     <div class="main-panel">
@@ -8,11 +11,11 @@
                 <h3 class="page-title">View User</h3>
                 <div class="header-right d-flex flex-wrap mt-2 mt-sm-0">
                     @if (strtolower($user->status) == 'active')
-                        <button type="button" class="badge badge-success px-3 py-2">
+                        <button type="button" class="badge badge-success px-3 py-2" onclick="toggleStatus(this)">
                             Active
                         </button>
                     @else
-                        <button type="button" class="badge badge-danger px-3 py-2">
+                        <button type="button" class="badge badge-danger px-3 py-2" onclick="toggleStatus(this)">
                             Inactive
                         </button>
                     @endif
@@ -288,4 +291,36 @@
         @include('admin.layout.footer')
     </div>
     <!-- main-panel ends -->
+    @push('scripts')
+    <script>
+    function toggleStatus(e)
+    {
+        let status = "active";
+        let data_id = "{{ request()->route()->parameter('id') }}";
+        if ($(e).text().trim().toLowerCase() == status)
+            status = "Inactive";
+        else
+            status = "Active";
+        $.ajax({
+            url: "{{route('admin.toggle-status', '')}}"+"/"+data_id,
+            type: "patch",
+            data: {
+                _token: "{{ csrf_token() }}",
+                status : status,
+            },
+            success: function(response) {
+                if(response.status.toLowerCase() == 'active'){
+                    $(e).removeClass('badge-danger');
+                    $(e).addClass('badge-success');
+                } else {
+                    $(e).removeClass('badge-success');
+                    $(e).addClass('badge-danger');
+                }
+                $(e).text(response.status);
+            }
+        });
+    }
+
+    </script>
+    @endpush
 @endsection

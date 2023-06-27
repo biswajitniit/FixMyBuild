@@ -29,7 +29,8 @@
       <!-- Plugins CSS -->
       <link rel="stylesheet" href="{{ asset('frontend/css/plugins.css') }}">
 
-      <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+      {{-- <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/css/intlTelInput.css"/> --}}
+      <link rel="stylesheet" href="{{ asset('frontend/css/intlTelInput.css') }}"/>
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
 
       @if(Request::segment(1) != '')
@@ -43,21 +44,21 @@
 
       <!-- Matomo -->
       <script>
-        var _paq = window._paq = window._paq || [];
+       // var _paq = window._paq = window._paq || [];
         /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(['requireConsent']);
-        _paq.push(['requireCookieConsent']);
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-        // var u="//localhost/webdev/FixMyBuild/matomo/";
-        var u="//localhost/webdev/FixMyBuild/matomo/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', '1']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
-      </script>
+      //   _paq.push(['requireConsent']);
+      //   _paq.push(['requireCookieConsent']);
+      //   _paq.push(['trackPageView']);
+      //   _paq.push(['enableLinkTracking']);
+      //   (function() {
+      //   // var u="//localhost/webdev/FixMyBuild/matomo/";
+      //   var u="//localhost/webdev/FixMyBuild/matomo/";
+      //   _paq.push(['setTrackerUrl', u+'matomo.php']);
+      //   _paq.push(['setSiteId', '1']);
+      //   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      //   g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      //   })();
+       </script>
     <!-- End Matomo Code -->
 
    </head>
@@ -115,7 +116,7 @@
                                           <hr class="dropdown-divider">
                                           </hr>
                                           </li>
-                                          
+
                                           @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
                                           <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
                                           <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
@@ -189,8 +190,8 @@
                                              <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My profile</a></li>
                                              <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My projects</a></li>
                                              <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">New project</a></li>
-                                             @endif
                                              <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                             @endif
                                         </ul>
                                     </div>
                                 @endif
@@ -254,7 +255,8 @@
     <!-- Main JS -->
     <script src="{{ asset('frontend/js/main.js') }}"></script>
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    {{-- <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script> --}}
+    <script src="{{ asset('frontend/js/intlTelInput.min.js') }}"></script>
     <script>
     tinymce.init({
         selector: 'textarea#editor',

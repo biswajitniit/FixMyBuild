@@ -36,10 +36,9 @@ class UserController extends Controller
         $user = new User();
         $user->name                      = $request['name'];
         $user->email                     = $request['email'];
-        $user->phone                     = $request['phone'];
+        $user->phone                     = $request['full_phone'];
         $user->password                  = Hash::make($request['password']);
         $user->customer_or_tradesperson  = $request['customer_or_tradesperson'];
-        $user->phone                     = $request['phone'];
         $user->steps_completed           = 1;
         $user->verified                  = 1;
         $user->locked                    = 1;
@@ -138,7 +137,7 @@ class UserController extends Controller
           'HtmlBody'      => $html,
           'MessageStream' => 'outbound'
         );
-        
+
         $email_sent = send_email($emaildata);
 
         return 'Please check your inbox for email verification .';

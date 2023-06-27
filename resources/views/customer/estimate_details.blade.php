@@ -53,8 +53,7 @@
                          <div class="card-header">
                             <nav>
                                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                    <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
-                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                </div>
@@ -62,7 +61,6 @@
                          </div>
                          <div class="card-body">
                             <div class="tab-content" id="nav-tabContent">
-                                @include('tradepersion.milestones')
                                 @include('tradepersion.estimate_tab')
                                 @include('tradepersion.details')
                                 @include('tradepersion.chat')
@@ -85,7 +83,6 @@
 @endsection
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-    <script src="{{ asset('frontend/js/chat.js') }}"></script>
     <script>
         $('#summernote').summernote({
         placeholder: '',

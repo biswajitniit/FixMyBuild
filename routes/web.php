@@ -43,6 +43,7 @@ Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
+Route::get('/get-video', [MediaController::class,'get_video'])->name('get-video');
 
 Route::post('/capture-video-streaming', [MediaController::class,'capture_video_streaming'])->name('capture-video-streaming');
 Route::post('/capture-video-streaming-project-return-for-review', [MediaController::class,'capture_video_streaming_project_return_for_review'])->name('capture-video-streaming-project-return-for-review');
@@ -191,7 +192,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('changecustomerpassword', [CustomerController::class, 'change_password'])->name('customer.changepassword');
         Route::put('updatecustomerphone', [CustomerController::class, 'update_phone'])->name('customer.updatephone');
 
-
+        Route::get('project-estimate/{id}', [CustomerController::class, 'project_estimate'])->name('Customer.project-estimate');
         /**
          * Logout Route
          */
@@ -222,12 +223,13 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::put('updateCompanyLogo', [TradepersionDashboardController::class, 'updateCompanyLogo'])->name('updateCompLogo');
             Route::post('deleteTraderFile', [TradepersionDashboardController::class, 'deleteTraderFile'])->name('deleteTraderFile');
             Route::post('storeTraderFile', [TradepersionDashboardController::class, 'storeTraderFile'])->name('storeTraderFile');
-            Route::post('upload-company-logo', [TradespersonFileController::class, 'storeLogo'])->name('storeLogo');
-            Route::post('upload-public-liability-insurance', [TradespersonFileController::class, 'storePLI'])->name('storePLI');
-            Route::post('upload-trader-img', [TradespersonFileController::class, 'storeTraderImg'])->name('storeTraderImg');
-            Route::post('upload-comp-addrs', [TradespersonFileController::class, 'storeCompAddr'])->name('storeCompAddr');
-            Route::post('upload-prev-projs', [TradespersonFileController::class, 'storePrevProj'])->name('storePrevProj');
-            Route::post('uploadTeamPhoto', [TradespersonFileController::class, 'storeTempTeamPhoto'])->name('storeTeamPhoto');
+            // Route::post('upload-company-logo', [TradespersonFileController::class, 'storeLogo'])->name('storeLogo');
+            // Route::post('upload-public-liability-insurance', [TradespersonFileController::class, 'storePLI'])->name('storePLI');
+            // Route::post('upload-trader-img', [TradespersonFileController::class, 'storeTraderImg'])->name('storeTraderImg');
+            // Route::post('upload-comp-addrs', [TradespersonFileController::class, 'storeCompAddr'])->name('storeCompAddr');
+            // Route::post('upload-prev-projs', [TradespersonFileController::class, 'storePrevProj'])->name('storePrevProj');
+            // Route::post('uploadTeamPhoto', [TradespersonFileController::class, 'storeTempTeamPhoto'])->name('storeTeamPhoto');
+            Route::post('temp-store-media', [TradepersionDashboardController::class, 'storeTempTraderFile'])->name('tempTraderMedia');
         });
         Route::get('project-estimate/{project_id}', [TradepersionDashboardController::class, 'project_estimate'])->name('tradepersion.project_estimate');
         Route::post('project-estimate', [TradepersionDashboardController::class, 'projectestimate'])->name('tradepersion.p_estimate');

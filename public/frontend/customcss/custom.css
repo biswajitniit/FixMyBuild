@@ -84,3 +84,23 @@
   font-size: 18px;
   cursor: pointer;
 }
+textarea.description{
+  width: 100%;
+  height: 200px;
+}
+video.customer-video{
+  margin-top:0;
+}
+.video-upload-loading{
+  width: 20%;
+  margin-top: -3px;
+}
+#getfilesformdb video{
+  width: 100%;
+  border-radius: 10px;
+}
+#getfilesformdb .customer_img_project{
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 15px;
+}

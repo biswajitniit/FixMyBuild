@@ -1,6 +1,4 @@
-<div class="card-body">
-    <div class="tab-content" id="nav-tabContent">
-       <div class="tab-pane fade show active" id="nav-milestones" role="tabpanel" aria-labelledby="nav-milestones-tab">
+        <div class="tab-pane fade show active" id="nav-milestones" role="tabpanel" aria-labelledby="nav-milestones-tab">
           <div class="row table_wrap">
              <div class="table-responsive">
                 <table class="table milestones">
@@ -16,7 +14,7 @@
                       </tr>
                    </thead>
                    <tbody>
-                        <tr data-id="{{ $estimate->id }}">
+                        {{-- <tr data-id="{{ $estimate->id }}">
                             <td>1</td>
                             <td>
                                 <a href="#">
@@ -78,10 +76,10 @@
                                </div>
                                </div>
                             </div><!-- Modal END -->
-                        </tr>
+                        </tr> --}}
                     @foreach($tasks as $key=>$task)
                         <tr data-id="{{ $task->id }}">
-                            <td>{{ $key+2 }}</td>
+                            <td>{{ $key+1 }}</td>
                             <td>
                                 <a href="javascript:void(0)" onclick="signChange(this,{{ $key }})" id="plus">
                                     <span class="plus-icon">
@@ -104,24 +102,28 @@
                                 @else
                                     <span class="displayVal">{{ sprintf("%.2f",$task->contingency) }}</span>
                                 @endif
-                                <input type="number" class="d-none inputValue" id="quantity" name="quantity" min="1" max="{{ sprintf("%.2f",(($task->price * $estimate->contingency)/100) + $task->price) }}">
+
+                                <input type="number" class="d-none inputValue" id="quantity" name="quantity" min="1" max="{{ sprintf("%.2f",(($task->price * $estimate->contingency)/100) + $task->price) }}" >
                                 <span class="max_">(Max. £{{ sprintf("%.2f",(($task->price * $estimate->contingency)/100) + $task->price) }})</span>
-                                <a href="javascript:void(0);">
-                                    <i class="fa fa-pencil ml-2 clickPencil" onclick="edit(this)"></i>
-                                </a>
-                                <a href="javascript:void(0);">
-                                    <i class="fa fa-check ml-2 d-none clickSave" onclick="save(this)"></i>
-                                </a>
+
+                                @if($task->status == null || $task->status == 'Inactive')
+                                    <a href="javascript:void(0);">
+                                        <i class="fa fa-pencil ml-2 clickPencil" id='pencil{{ $task->id }}' onclick="edit(this)"></i>
+                                    </a>
+                                    <a href="javascript:void(0);">
+                                        <i class="fa fa-check ml-2 d-none clickSave" onclick="save(this)"></i>
+                                    </a>
+                                @endif
                             </td>
 
                             {{-- <td>£{{ $contingency_per_task }} <span class="max_">(Max. £{{ $contingency_per_task }})</span> <a href="#"><i class="fa fa-pencil ml-2"></i></a></td> --}}
                             <td class="text-warning" id="status">Pending</td>
                             <td>
                                 <label class="form-check-label">
-                                @if($task->status == null)
+                                @if($task->status == null || $task->status == 'Inactive')
                                     <input type="checkbox" class="form-check-input toggle-class" value="">
                                 @else
-                                    <input type="checkbox" class="form-check-input toggle-class" checked value="">
+                                    <input type="checkbox" class="form-check-input toggle-class" checked disabled value="">
                                 @endif
                                 </label>
                             </td>
