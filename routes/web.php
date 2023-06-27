@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\Builder\BuildersubcategoryController;
 use App\Http\Controllers\Admin\Cms\CmsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ChatController;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
