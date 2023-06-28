@@ -15,8 +15,8 @@ class CreateTraderDetailsTable extends Migration
     {
         Schema::create('trader_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->string('comp_reg_no')->nullable();
+            $table->foreignId('user_id')->constrained('users')->unique();
+            $table->string('comp_reg_no')->nullable()->unique();
             $table->string('txt_comp_name')->nullable();
             $table->string('comp_name')->nullable();
             $table->text('comp_address')->nullable();
@@ -39,15 +39,12 @@ class CreateTraderDetailsTable extends Migration
             $table->string('bnk_sort_code')->nullable();
             $table->string('bnk_account_number')->nullable();
             $table->boolean('builder_amendment')->default(0)->change();
-            $table->boolean('noti_new_quotes')->default(1)->change();
-            $table->boolean('noti_quote_accepted')->default(1)->change();
-            $table->boolean('noti_project_stopped')->default(1)->change();
-            $table->boolean('noti_quote_rejected')->default(0)->change();
-            $table->boolean('noti_project_cancelled')->default(0)->change();
+            $table->json('email_notification')->nullable();
             $table->string('insurance_policy_name')->nullable();
             $table->date('insurance_policy_exp_date')->nullable();
             $table->boolean('insurance_status')->default(0)->change();
             $table->timestamps();
+            // $table->unique(['user_id', 'comp_reg_no']);
         });
     }
 

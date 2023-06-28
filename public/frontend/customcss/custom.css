@@ -1,0 +1,106 @@
+/* Start  Registration page css */
+.error{
+    color: red;
+  }
+/*
+  label.error{
+    color: var(--color_gray);
+    background-color: #FBE1E1;
+    padding: 3px 5px;
+    margin-top: 2px;
+  } */
+  label.error{
+    color: #F00;
+    padding: 3px 5px;
+    margin-top: 2px;
+  }
+#password-strength-status, #password-strength-status-confirm {
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+.medium-password {
+    color: #ffb100;
+}
+.strong-password {
+    color: #0f8f2c;
+}
+.weak-password {
+    color: #f00;
+}
+#customer_or_tradesperson-error {
+    position: absolute;
+    margin-top: 24px;
+}
+.remove-row {
+    cursor: pointer;
+}
+/* .medium-password {
+    background-color: #fd0;
+}
+
+.weak-password {
+    background-color: #FBE1E1;
+}
+
+.strong-password {
+    background-color: #D5F9D5;
+}
+*/
+/* end  Registration page css */
+#my_camera_video{
+  position: relative;
+}
+.video-record-loading{
+  position: absolute;
+  width: 10%;
+  left: 5px;
+  top: 10px;
+}
+#video-captutes li{
+  float: left;
+  width: 45%;
+  margin: 10px;
+}
+#video-captutes li video{
+  margin: 0;
+  border: 1px solid #000;
+  padding: 0;
+  width: 100%;
+  border-radius: 10px;
+}
+.capture-image-level{
+  color: #0d0d0d;
+  background: #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  padding: 1px 3px;
+  margin-top: 3px;
+}
+.capture-image-delete{
+  float: right;
+  padding: 0 2px;
+  border-left: 2px solid #e0e0e0;
+  font-size: 18px;
+  cursor: pointer;
+}
+textarea.description{
+  width: 100%;
+  height: 200px;
+}
+video.customer-video{
+  margin-top:0;
+}
+.video-upload-loading{
+  width: 20%;
+  margin-top: -3px;
+}
+#getfilesformdb video{
+  width: 100%;
+  border-radius: 10px;
+}
+#getfilesformdb .customer_img_project{
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 15px;
+}

@@ -1,14 +1,14 @@
 @extends('layouts.admin')
-@section('title', 'Awaiting your review')
+@section('title', 'Projects')
 @section('content')
 
 <div class="main-panel">
     <div class="content-wrapper">
       <div class="page-header">
-        <h3 class="page-title"> Awaiting your review </h3>
+        <h3 class="page-title"> Projects </h3>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin/project/awaiting-your-review')}}">Awaiting your review</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin/project/awaiting-your-review')}}">Projects</a></li>
             <li class="breadcrumb-item active" aria-current="page">View Review</li>
           </ol>
         </nav>
@@ -45,22 +45,35 @@
                 <div class="row">
                     <div class="col">
                         <div class="mb-3 row">
+                            <label class="col-lg-3 col-form-label" for="example-textarea">Forename</label>
+                            <div class="col-lg-9 mt-2">
+                                {{ $project->forename }}
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-lg-3 col-form-label" for="example-textarea">Surname</label>
+                            <div class="col-lg-9 mt-2">
+                                {{ $project->surname }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="simpleinput">Name of the project</label>
-                            <div class="col-lg-9">
-                                <input type="text" class="form-control" id="simpleinput" value="{{ $project->project_name }}" />
+                            <div class="col-lg-9 mt-2">
+                                {{ $project->project_name }}
                             </div>
                         </div>
 
                         <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="example-textarea">Description</label>
-                            <div class="col-lg-9">
-                                <textarea class="form-control" rows="5" id="editor-description">{{ $project->description }}</textarea>
+                            <div class="col-lg-9 mt-2">
+                                {{htmlspecialchars(trim(strip_tags($project->description )))}}
                             </div>
                         </div>
 
                         <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="simpleinput">Attachments</label>
-                            <div class="col-lg-9">
+                            <div class="col-lg-9 mt-2">
                                 <div class="row bg-light p-3">
 
                                     @if($projectmedia)
@@ -128,7 +141,7 @@
                         @if ($project->reviewer_status == 'Refer')
                             <div class="mb-3 row">
                                 <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
-                                <div class="col-lg-9">
+                                <div class="col-lg-9 mt-2">
                                     <div id="approve" style="display: none;">
                                         <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
                                     </div>
@@ -144,7 +157,7 @@
                         @if ($project->reviewer_status == 'Approve')
                             <div class="mb-3 row">
                                 <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
-                                <div class="col-lg-9">
+                                <div class="col-lg-9 mt-2">
                                     <div id="approve" style="display: block;">
                                         <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
                                     </div>
@@ -160,15 +173,20 @@
                         @if ($project->reviewer_status == '')
                             <div class="mb-3 row">
                                 <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
-                                <div class="col-lg-9">
-                                    <div id="approve">
+                                <div class="col-lg-9 mt-2">
+                                    <select>
+                                        <option value="approve">Approve</option>
+                                        <option value="refer">Refer</option>
+                                    </select>
+                                    {{-- <div id="approve">
                                         <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
                                     </div>
                                     <div id="refer" style="display: none;">
                                         <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
-                                    </div>
+                                    </div>--}}
 
                                     <input type="hidden" name="your_decision" id="your_decision" value="Approve">
+
                                 </div>
                             </div>
                         @endif
@@ -181,7 +199,7 @@
                                 @if($row->notes_for == 'customer')
                                     <div class="mb-3 row">
                                         <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                        <div class="col-lg-9">
+                                        <div class="col-lg-9 mt-3">
                                             <textarea class="form-control" name="notes_for_customer" rows="5">{{ $row->notes }}</textarea>
                                         </div>
                                     </div>
@@ -190,7 +208,7 @@
                                 @if($row->notes_for == 'internal')
                                     <div class="mb-3 row">
                                         <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                        <div class="col-lg-9">
+                                        <div class="col-lg-9 mt-3">
                                             <textarea class="form-control" name="notes_for_internal" rows="5">{{ $row->notes }}</textarea>
                                         </div>
                                     </div>
@@ -199,7 +217,7 @@
                                 @if($row->notes_for == 'tradespeople')
                                     <div class="mb-3 row">
                                         <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                        <div class="col-lg-9">
+                                        <div class="col-lg-9 mt-3">
                                             <textarea class="form-control" name="notes_for_tradespeople" rows="5" id="editor-description">{{ $row->notes }}</textarea>
                                         </div>
                                     </div>
@@ -210,21 +228,21 @@
 
                             <div class="mb-3 row">
                                 <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Internal</label>
-                                <div class="col-lg-9">
+                                <div class="col-lg-9 mt-3">
                                     <textarea class="form-control" name="notes_for_internal" rows="5"></textarea>
                                 </div>
                             </div>
 
                             <div class="mb-3 row">
                                 <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Customer</label>
-                                <div class="col-lg-9">
+                                <div class="col-lg-9 mt-3">
                                     <textarea class="form-control" name="notes_for_customer" rows="5"></textarea>
                                 </div>
                             </div>
 
                             <div class="mb-3 row">
                                 <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Tradespeople</label>
-                                <div class="col-lg-9">
+                                <div class="col-lg-9 mt-3">
                                     <textarea class="form-control" name="notes_for_tradespeople" rows="5"></textarea>
                                 </div>
                             </div>

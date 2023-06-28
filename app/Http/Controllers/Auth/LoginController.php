@@ -63,11 +63,11 @@ class LoginController extends Controller
                     return redirect()->intended('/');
                 }else{
                     $errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
-		            return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
+                    return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
                 }
                 // The user is logged in Customer...
                // return redirect()->intended('/customer/profile');
-               
+
             }else{
                 if(Auth::user()->steps_completed == 1){
                     return redirect()->intended('/tradeperson/company-registration');
@@ -81,7 +81,7 @@ class LoginController extends Controller
             $errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
 		    return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
         }
-		
+
     }
 
 }

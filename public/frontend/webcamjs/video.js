@@ -2,14 +2,15 @@
 
 let log = console.log.bind(console),
   id = val => document.getElementById(val),
-  ul = id('ul'),
+  ul = id('video-captutes'),
   gUMbtn = id('gUMbtn'),
   start = id('start'),
   stop = id('stop'),
   stream,
   recorder,
-  counter=1,
+  counter=0,
   chunks,
+  videoArray = [],
   media;
 
 
@@ -31,7 +32,7 @@ gUMbtn.onclick = e => {
       };
 //   media = mv.checked ? mediaOptions.video : mediaOptions.audio;
     media = mediaOptions.video;
-  navigator.mediaDevices.getUserMedia(media.gUM).then(_stream => {
+    navigator.mediaDevices.getUserMedia(media.gUM).then(_stream => {
     stream = _stream;
     id('gUMArea').style.display = 'none';
     id('btns').style.display = 'inherit';
@@ -49,42 +50,98 @@ start.onclick = e => {
   start.disabled = true;
   stop.removeAttribute('disabled');
   chunks=[];
+  $("#my_camera_video").append('<img class="video-record-loading" src="/images/video-record.gif" alt=""></img>');
   recorder.start();
+  console.log(recorder.state);
 }
 
 
 stop.onclick = e => {
   stop.disabled = true;
   recorder.stop();
+  //stopBothVideoAndAudio(stream);
+  //console.log(recorder.state);
+  $(".video-record-loading").remove();
   start.removeAttribute('disabled');
 }
 
-
+// function stopBothVideoAndAudio(stream) {
+//   stream.getTracks().forEach((track) => {
+//     if (track.readyState == 'live') {
+//       track.stop();
+//     }
+//   });
+// }
 
 function makeLink(){
   let blob = new Blob(chunks, {type: media.type })
     , url = URL.createObjectURL(blob)
     , li = document.createElement('li')
     , mt = document.createElement(media.tag)
-    , hf = document.createElement('a')
+    , hf = document.createElement('div')
   ;
+  li.id = "video_"+counter;
+  //console.log(blob);
   mt.controls = true;
   mt.src = url;
-  hf.href = url;
-  hf.download = `${counter++}${media.ext}`;
-  hf.innerHTML = `donwload ${hf.download}`;
+  //hf.href = url;
+  //hf.download = `${counter++}${media.ext}`;
+  hf.innerHTML = `<div class="capture-image-level">Video Capture ${counter+1}
+            <span class="capture-image-delete" onclick="deleteVideo(${counter++})">&times;</span>
+          </div>`;
+  
   li.appendChild(mt);
   li.appendChild(hf);
   ul.appendChild(li);
-  const formData = new FormData();
-  formData.append('_token',  $('meta[name="csrf-token"]').attr('content'));
-  formData.append('video', blob);
-  fetch('/capture-video-streaming', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => {
-      console.log(response);
-  })
-  .catch(error => {});
+  
+  //formData.append('_token',  $('meta[name="csrf-token"]').attr('content'));
+  //formData.append('video', blob);
+  videoArray.push(blob);
+  console.log(videoArray);
+  
 }
+function deleteVideo(index) {
+  videoArray.splice(index, 1)
+  $('#video_'+index).remove();
+}
+$(document).ready(function(){
+  $('#upload_video').click(function(){
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You want to upload this image?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $("#upload_video").html('<img class="video-upload-loading" src="/images/loading.gif" alt=""/> Upload');
+          $("#upload_video").disabled = true;
+          const formData = new FormData();
+          formData.append('_token',  $('meta[name="csrf-token"]').attr('content'));
+          formData.append('video_count',  videoArray.length);
+          for (let i = 0; i < videoArray.length; i++){
+            formData.append('video_'+i, videoArray[i]);
+          }
+          fetch('/capture-video-streaming', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => {
+            console.log(response);
+            $("#upload_video").html('Upload');
+            $("#upload_video").disabled = false;
+            $('#close_video_modal').click();
+            FetchfilesData();
+            formData.forEach(function(val, key, fD){
+            // here you can add filtering conditions
+            formData.delete(key)
+            });
+            $('#video-captutes').html('');
+          })
+          .catch(error => {});
+        }
+      });
+    });
+});

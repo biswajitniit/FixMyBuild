@@ -17,6 +17,10 @@ class CreateTempmediaTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->unsigned();
             $table->string('sessionid')->nullable();
+            $table->string('file_type', 10);
+            $table->string('media_type', 30)->nullable()->default('customer')->comment('customer,tradesperson,project,null');
+            $table->string('file_related_to', 50)->comment('company_logo,public_liability_insurance,trader_img,company_address,team_img,prev_project_img');
+            $table->string('file_original_name')->nullable();
             $table->string('filename')->nullable();
             $table->string('file_extension')->nullable();
             $table->string('url')->nullable();

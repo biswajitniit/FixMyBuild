@@ -34,6 +34,9 @@
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
       <!-- Custom styles for this template -->
       <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
+
+
+
    </head>
    <body>
       <div class="main-contain">
@@ -50,11 +53,11 @@
          </section>
          <section class="content">
             <header>
-               <a href="" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
+               <a href="{{ route('login') }}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
             </header>
             <div class="auth-content">
                <div>
-                  <div class='row'>
+                  <div class='row mb-3'>
                      <div class='input-field col-md-12'>
                         <h2 class="heading1 mb-2 text-left color-blue">Forgot password?</h2>
                         <p  class="heading3 text-left">
@@ -64,7 +67,7 @@
                   </div>
 
                   @if (Session::has('message'))
-                  <div class="alert alert-success" role="alert">
+                  <div class="alert alert-warning" role="alert">
                      {{ Session::get('message') }}
                   </div>
                   @endif
@@ -72,11 +75,11 @@
                   <form action="{{ route('forget.password.post') }}" method="post" class="fwrap">
                     @csrf
                      <div class="row">
-                       <div class="card mt-5">
+                       <div class="card mb-2">
                           <div class="input-group">
                             <div class="col-md-10 col-10 p-4">
                                 <label>Send an email to</label>
-                                <input type="email" id="email_address" name="email" required class="form-control" placeholder="Email">
+                                <input type="email" id="email_address" name="email" required class="form-control" placeholder="Email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" value="{{old('email')}}">
                                 @if ($errors->has('email'))
                                 <span class="text-danger">{{ $errors->first('email') }}</span>
                                 @endif
@@ -90,30 +93,36 @@
                        </div>
                      </div>
                   </form>
-                  {{-- <form action="set-password.html" method="post" class="fwrap">
+                  <form action="{{ route('generateOtp') }}" method="post" class="fwrap">
+                    @csrf
                     <div class="row">
-                      <div class="card mt-5">
+                      <div class="card mt-3">
                          <div class="input-group">
                            <div class="col-md-10 col-10 p-4">
                                <label>Send a message to</label>
-                               <input type="tel" required class="form-control" placeholder="Phone number">
+                               <input type="tel" required class="form-control" placeholder="Phone number" name="phone">
+                                @if ($errors->has('phone'))
+                                    <span class="text-danger">{{ $errors->first('phone') }}</span>
+                                @endif
                            </div>
                            <div class="input-group-append col-md-2 p-0 fget_">
                              <span class="input-group-text">
-                               <button type="submit" <i class="fa fa-long-arrow-right"></i></button>
+                               <button type="submit"><i class="fa fa-long-arrow-right"></i></button>
                              </span>
                            </div>
                          </div>
                       </div>
                     </div>
-                 </form> --}}
+                 </form>
                </div>
             </div>
             <p class="font-14px text-center mt-5">Copyright &copy; <?php echo date('Y') ?> FixMyBuild. All Rights Reserved.</p>
          </section>
       </div>
       <!-- Bootstrap core JavaScript -->
-      <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script>
+
+      <script src="{{ asset('frontend/js/jquery.min.js') }}"></script>
+      {{-- <script src="{{ asset('frontend/js/vendor/jquery-3.4.1.min.js') }}"></script> --}}
       {{-- <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
       <script src="assets/js/particles.js"></script>
       <script src="assets/js/app.js"></script> --}}

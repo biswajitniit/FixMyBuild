@@ -16,4 +16,8 @@ class Project extends Model
     {
         return $this->belongsTo(Projectaddresses::class, 'project_address_id');
     }
+
+    public function projectfile(){
+        return $this->belongsTo(Projectfile::class,'project_id');
+    }
 }

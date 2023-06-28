@@ -12,4 +12,14 @@ class Traderareas extends Model
         'user_id',
         'sub_area_cover_id'
     ];
+
+    /**
+     * Get the user associated with the Traderareas
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function subareas()
+    {
+        return $this->hasOne(SubAreaCover::class, 'id', 'sub_area_cover_id');
+    }
 }

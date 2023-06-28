@@ -39,9 +39,13 @@ class TraderDetail extends Model
         'noti_project_cancelled',
     ];
 
-    
+
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function files(){
+        return $this->hasMany(TradespersonFile::class, 'tradesperson_id', 'user_id');
     }
 }

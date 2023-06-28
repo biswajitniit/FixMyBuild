@@ -100,20 +100,14 @@
                         {
                             data: 'status',
                             render: function (data, type, row){
-                                if(data == "Active"){
-                                    return '<label class="badge badge-success">Active</label>';
+                                if(data[0] == "Active"){
+                                    return `<button type="button" class="badge badge-success" onclick="toggleStatus(this, '${data[1]}')">Active</button>`;
                                 }else{
-                                    return '<label class="badge badge-danger">Inactive</label>';
+                                    return `<button type="button" class="badge badge-danger" onclick="toggleStatus(this, '${data[1]}')">Inactive</button>`;
                                 }
                             },
                         },
-                       {
-                            data: 'action',
-                            render: function (data, type, row){
-                                return '<a href="" title="Edit User"><i class="mdi mdi-table-edit"></i></a>';
-                            },
-                        },
-
+                       {data: 'action'},
                 ]
             });
         });
@@ -125,6 +119,33 @@
                 return true;
             }
             e.preventDefault();
+        }
+
+        function toggleStatus(e, data_id)
+        {
+            let status = "active";
+            if ($(e).text().trim().toLowerCase() == status)
+                status = "Inactive";
+            else
+                status = "Active";
+            $.ajax({
+                url: "{{route('admin.toggle-status', '')}}"+"/"+data_id,
+                type: "patch",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    status : status,
+                },
+                success: function(response) {
+                    if(response.status.toLowerCase() == 'active'){
+                        $(e).removeClass('badge-danger');
+                        $(e).addClass('badge-success');
+                    } else {
+                        $(e).removeClass('badge-success');
+                        $(e).addClass('badge-danger');
+                    }
+                    $(e).text(response.status);
+                }
+            });
         }
 
 </script>

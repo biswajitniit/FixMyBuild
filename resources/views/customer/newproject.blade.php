@@ -1,5 +1,7 @@
 @extends('layouts.app')
+@push('styles')
 
+@endpush
 @section('content')
 <!--Code area start-->
 <section>
@@ -16,23 +18,29 @@
     </div>
 </section>
 <!--Code area end-->
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                @if($errors->any())
+                    <div class="alert alert-danger mt-15">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-@if($errors->any())
-    <div class="alert alert-danger mt-15">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+                @if(session()->has('message'))
+                    <div class="alert alert-success mt-15">
+                        {{ session()->get('message') }}
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
-@endif
-
-@if(session()->has('message'))
-    <div class="alert alert-success mt-15">
-        {{ session()->get('message') }}
-    </div>
-@endif
-
+</section>
 <!--Code area start-->
 <section class="pb-5">
     <div class="container">
@@ -74,15 +82,28 @@
                 <div class="col-md-10 offset-md-1">
                     <div class="white_bg mb-5">
                         <div class="row">
+                            <h3>Where is it happening?</h3>
                             <div class="col-md-6">
-                                <h3>Where is it happening?</h3>
-                                <h5>Enter your postcode:</h5>
+
+                                {{-- <h5>Enter your postcode:</h5> --}}
+                                <div class="form-check mt-3 last_ua">
+                                    <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="1" checked />
+                                    <h5>Enter your postcode:</h5>
+                                </div>
+
                                 <div class="col-md-10 post_code">
                                     <div class="form-control d-inline">
-                                        <input type="text" class="col-6" name="postcode" id="postcode" placeholder="Postcode" />
+                                        <input type="text" class="col-6 mt-2" name="postcode" id="postcode" placeholder="Postcode" />
+                                        <input type="hidden" name="zipcode_selected_address_line_one" id="zipcode_selected_address_line_one" value="">
+                                        <input type="hidden" name="zipcode_selected_address_line_two" id="zipcode_selected_address_line_two" value="">
+                                        <input type="hidden" name="zipcode_selected_town_city" id="zipcode_selected_town_city" value="">
+                                        <input type="hidden" name="zipcode_selected_postcode" id="zipcode_selected_postcode" value="">
                                         {{-- <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger col-4 pull-right">Find me</a> --}}
                                         <a class="btn btn-danger col-4 pull-right postcodefind">Find me</a>
                                     </div>
+                                    <div id="errormsg"></div>
+                                    <div id="postcodelist"></div>
+                                    <p id="selected_post_code_html"></p>
                                     <!-- The Modal -->
                                     <!-- Modal -->
                                     <div class="modal fade select_address" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -96,7 +117,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-link" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-light">Save</button>
+                                                    <button type="button" class="btn btn-light" onclick="Get_zipcode()">Choose</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -104,13 +125,8 @@
                                 </div>
                             </div>
                             <div class="col-md-6 last_ua">
-                                {{-- <div class="form-check mb-2">
-                                    <input type="radio" class="form-check-input mb" id="radio1" name="choseaddresstype" value="choseexistaddress" checked />
-                                    <h5>Last used address</h5>
-                                </div>
-                                <p>2972 Westheimer Rd. Santa Ana, Illinois 85486</p> --}}
-                                <div class="form-check mt-5">
-                                    <input type="radio" class="form-check-input mb" id="radio1" name="choseaddresstype" value="chosenewaddress" />
+                                <div class="form-check mt-3">
+                                    <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="2"/>
                                     <h5>Or type your address</h5>
                                 </div>
                                 <div class="col-md-12">
@@ -131,7 +147,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="postcode" placeholder="Postcode" name="postcode"/>
+                                            <input type="text" class="form-control" id="address_type_postcode" placeholder="Postcode" name="postcode"/>
                                         </div>
                                     </div>
                                 </div>
@@ -161,17 +177,12 @@
                             </div>
                             <div class="col-md-12 mb-4">
                                 {{-- <div id="summernote"></div> --}}
-                                <textarea name="description" id="summernote"></textarea>
-
+                                <textarea name="description" class="description"></textarea>
                             </div>
                             <div class="col-md-12 mb-4">
                                 <h3>Please upload at least one photo, video or design of the work to be undertaken.</h3>
                                 <p>For example if you are replacing a door lock please take a photo of the existing lock.</p>
                             </div>
-
-
-
-
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <a data-bs-toggle="modal" data-bs-target="#exampleModal4" id="gUMbtn1" class="btn btn-outline-danger btn-block">
@@ -198,47 +209,21 @@
                                         Take video
                                     </a>
                                 </div>
-                                <div>
-                                    <ul  class="list-unstyled" id='ul'></ul>
-                                </div>
+                                
                             </div>
-
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <a href="{{ route('dropzoneupload') }}" data-bs-toggle="modal" onclick="geturldata(event)" class="btn btn-outline-danger btn-block">
-                                        <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M17.0344 4.21564L13.2844 0.465637C13.1415 0.326345 12.9495 0.248887 12.75 0.250012H5.25C4.85218 0.250012 4.47064 0.408047 4.18934 0.689352C3.90804 0.970656 3.75 1.35219 3.75 1.75001V3.25001H2.25C1.85218 3.25001 1.47064 3.40805 1.18934 3.68935C0.908035 3.97066 0.75 4.35219 0.75 4.75001V18.25C0.75 18.6478 0.908035 19.0294 1.18934 19.3107C1.47064 19.592 1.85218 19.75 2.25 19.75H12.75C13.1478 19.75 13.5294 19.592 13.8107 19.3107C14.092 19.0294 14.25 18.6478 14.25 18.25V16.75H15.75C16.1478 16.75 16.5294 16.592 16.8107 16.3107C17.092 16.0294 17.25 15.6478 17.25 15.25V4.75001C17.2511 4.55048 17.1737 4.35851 17.0344 4.21564ZM12.75 18.25H2.25V4.75001H9.44062L12.75 8.05939V18.25ZM15.75 15.25H14.25V7.75001C14.2511 7.55048 14.1737 7.35851 14.0344 7.21564L10.2844 3.46564C10.1415 3.32635 9.94954 3.24889 9.75 3.25001H5.25V1.75001H12.4406L15.75 5.05939V15.25ZM10.5 12.25C10.5 12.4489 10.421 12.6397 10.2803 12.7803C10.1397 12.921 9.94891 13 9.75 13H5.25C5.05109 13 4.86032 12.921 4.71967 12.7803C4.57902 12.6397 4.5 12.4489 4.5 12.25C4.5 12.0511 4.57902 11.8603 4.71967 11.7197C4.86032 11.579 5.05109 11.5 5.25 11.5H9.75C9.94891 11.5 10.1397 11.579 10.2803 11.7197C10.421 11.8603 10.5 12.0511 10.5 12.25ZM10.5 15.25C10.5 15.4489 10.421 15.6397 10.2803 15.7803C10.1397 15.921 9.94891 16 9.75 16H5.25C5.05109 16 4.86032 15.921 4.71967 15.7803C4.57902 15.6397 4.5 15.4489 4.5 15.25C4.5 15.0511 4.57902 14.8603 4.71967 14.7197C4.86032 14.579 5.05109 14.5 5.25 14.5H9.75C9.94891 14.5 10.1397 14.579 10.2803 14.7197C10.421 14.8603 10.5 15.0511 10.5 15.25Z"
-                                                fill="#EE5719"
-                                            />
-                                        </svg>
-                                        Upload files
-                                    </a>
+                                   <a data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-outline-danger btn-block">
+                                      <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                         <path d="M17.0344 4.21564L13.2844 0.465637C13.1415 0.326345 12.9495 0.248887 12.75 0.250012H5.25C4.85218 0.250012 4.47064 0.408047 4.18934 0.689352C3.90804 0.970656 3.75 1.35219 3.75 1.75001V3.25001H2.25C1.85218 3.25001 1.47064 3.40805 1.18934 3.68935C0.908035 3.97066 0.75 4.35219 0.75 4.75001V18.25C0.75 18.6478 0.908035 19.0294 1.18934 19.3107C1.47064 19.592 1.85218 19.75 2.25 19.75H12.75C13.1478 19.75 13.5294 19.592 13.8107 19.3107C14.092 19.0294 14.25 18.6478 14.25 18.25V16.75H15.75C16.1478 16.75 16.5294 16.592 16.8107 16.3107C17.092 16.0294 17.25 15.6478 17.25 15.25V4.75001C17.2511 4.55048 17.1737 4.35851 17.0344 4.21564ZM12.75 18.25H2.25V4.75001H9.44062L12.75 8.05939V18.25ZM15.75 15.25H14.25V7.75001C14.2511 7.55048 14.1737 7.35851 14.0344 7.21564L10.2844 3.46564C10.1415 3.32635 9.94954 3.24889 9.75 3.25001H5.25V1.75001H12.4406L15.75 5.05939V15.25ZM10.5 12.25C10.5 12.4489 10.421 12.6397 10.2803 12.7803C10.1397 12.921 9.94891 13 9.75 13H5.25C5.05109 13 4.86032 12.921 4.71967 12.7803C4.57902 12.6397 4.5 12.4489 4.5 12.25C4.5 12.0511 4.57902 11.8603 4.71967 11.7197C4.86032 11.579 5.05109 11.5 5.25 11.5H9.75C9.94891 11.5 10.1397 11.579 10.2803 11.7197C10.421 11.8603 10.5 12.0511 10.5 12.25ZM10.5 15.25C10.5 15.4489 10.421 15.6397 10.2803 15.7803C10.1397 15.921 9.94891 16 9.75 16H5.25C5.05109 16 4.86032 15.921 4.71967 15.7803C4.57902 15.6397 4.5 15.4489 4.5 15.25C4.5 15.0511 4.57902 14.8603 4.71967 14.7197C4.86032 14.579 5.05109 14.5 5.25 14.5H9.75C9.94891 14.5 10.1397 14.579 10.2803 14.7197C10.421 14.8603 10.5 15.0511 10.5 15.25Z" fill="#EE5719"/>
+                                      </svg>
+                                      Upload files
+                                   </a>
                                 </div>
-                                <div id="exampleModal2" class="modal fade" role="dialog" >
-                                    <div class="modal-dialog" style="width:700px;max-width:initial;height:500px;">
-                                    <!-- Modal content-->
-                                        <div class="modal-content">
-
-                                            <div class="modal-body modeldropzone">
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
+                             </div>
+                            <div class="row" id="getfilesformdb">
                             </div>
-
-                            <div class="col-md-6 mt-2" id="getfilesformdb">
-
-                                {{-- <div class="d-inline mr-3">
-                                    abc.doc (3MB) <a href="#"><img src="{{ asset('frontend/img/crose-btn.svg') }}" alt="" /> </a>
-                                </div> --}}
-
-                            </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -254,9 +239,8 @@
                             <div class="col-md-12">
                                 <div class="row form_wrap mt-3">
                                     <div class="col-md-4">
-                                        <div class="row">
-
-                                            <div class="col-9 pl-0"><input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="phone"/></div>
+                                      <div class="form-group">
+                                        <input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -266,7 +250,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="email" name="contact_email" class="form-control" id="" placeholder="Email" />
+                                            <input type="email" name="contact_email" class="form-control" id="contact_email" placeholder="Email" />
                                         </div>
                                     </div>
                                 </div>
@@ -284,10 +268,10 @@
 
     <!-- The Modal Upload Video file-->
     <div class="modal fade select_address" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Take video</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Capture video</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -305,17 +289,21 @@
                                 {{-- <div>
                                 <input type="radio" name="media" value="video" checked id='mediaVideo'>Video
                                 </div> --}}
-                                <button class="btn btn-warning mt-3"  id='gUMbtn'>Request Stream</button>
+                                <button class="btn btn-outline-danger mt-3"  id='gUMbtn'>Request Stream</button>
                             </div>
                             <div id='btns' style="display: none;">
-                                <button  class="btn btn-success mt-3" id='start'>Start</button>
-                                <button  class="btn btn-danger mt-3" id='stop'>Stop</button>
+                                <button  class="btn btn-outline-danger mt-3" id='start'>Start</button>
+                                <button  class="btn btn-outline-danger mt-3" id='stop'>Stop</button>
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                      <ul class="list-unstyled" id='video-captutes'></ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-light" type="button" id="upload_video">Upload</button>
+                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal" id="close_video_modal">Close</button>
                 </div>
             </div>
         </div>
@@ -324,85 +312,285 @@
 
     <!-- The Modal Upload Photo file-->
     <div class="modal fade select_address" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Take photo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                                fill="black"
-                            />
-                        </svg>
-                    </button>
+                  <h5 class="modal-title" id="exampleModalLabel">Take photo</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                              d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
+                              fill="black"
+                          />
+                      </svg>
+                  </button>
                 </div>
-                <div class="modal-body">
-
+                <form id="capturephoto">
+                  @csrf
+                  <div class="modal-body">
                     {{-- <form method="POST" action="{{ route('capture-photo') }}" enctype="multipart/form-data"> --}}
-                    <form id="capturephoto">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div id="my_camera"></div>
-                                        <input type="button" class="btn btn-warning" value="Take Snapshot" onClick="take_snapshot()">
-                                        <input type="hidden" name="image" class="image-tag" >
-
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div id="results">Your captured image will appear here...</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                {{-- <button class="btn btn-danger">Submit</button> --}}
-                                <button class="btn btn-success" type="submit">Submit</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
-
-                </div>
+                    <div id="my_camera"></div>
+                    <input type="button" class="btn btn-outline-danger" value="Take Snapshot" onClick="take_snapshot()">
+                    <input type="hidden" name="image_count" id="image_count" class="image-tag">
+                    <div id="results" class="row"></div>
+                  </div>
+                  <div class="modal-footer">
+                    {{-- <button class="btn btn-danger">Submit</button> --}}
+                    <button class="btn btn-light" type="submit">Upload</button>
+                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal" id="close_image_modal">Close</button>
+                  </div>
+                </form>
+              </div>
             </div>
-        </div>
     </div>
     <!-- The Modal Upload Photo file END-->
+
+
+    <!-- The Modal Upload files-->
+    <div class="modal fade select_address" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Upload files</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 supported_">
+                    <h4>Supported file type list:</h4>
+                    <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
+                    <h6><strong>Documents:</strong> .doc, .docx .key .odt .pdf .ppt, .pptx, .pps, .ppsx .xls, .xlsx</h6>
+                    <h6><strong>Audio:</strong> .mp3 .m4a .ogg .wav</h6>
+                    <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6>
+                    </div>
+                    <div class="col-md-6">
+                        <form method="post" action="{{route('dropzonesave')}}" enctype="multipart/form-data" class="dropzone" id="dropzone">
+                            @csrf
+                            <div class="text-center upload_wrap dz-message">
+                                <img src="{{ asset('frontend/img/upload.svg') }}" alt="">
+                                <p>Drag and drop files here</p>
+                                <h4>OR</h4>
+                                <button type="button" id="file_upload_btn" class="btn btn-light mt-3" style="width:180px;">Browse files</button>
+                            </div>
+                        </form>
+                        <div class='invalid-file'></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="uploadfiles" class="btn btn-light">Upload</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- The Modal Upload files END-->
+
+
+
+
 </section>
 <!--Code area end-->
 
 @push('scripts')
 
-
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+<script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
+<script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
+<script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script language="JavaScript">
+
+    Dropzone.autoDiscover = false;
+    var currentFile = null;
+    var myDropzone = new Dropzone(".dropzone", {
+      maxFiles:10,
+      autoProcessQueue: false,
+      clickable: "#file_upload_btn",
+      dictDefaultMessage: "Drag and drop a file here",
+      parallelUploads: 10, // Number of files process at a time (default 2)
+      addRemoveLinks: true,
+      removedfile: function(file)
+      {
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this item?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            var name = file.upload.filename;
+            $.ajax({
+              headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              type: 'POST',
+              url: '{{ url("dropzonedestroy") }}',
+              data: {filename: name},
+              success: function (data){
+                //console.log("File has been successfully removed!!");
+                //alert('File has been successfully removed!!'); return false;
+                Swal.fire({
+                  //position: 'top-end',
+                  icon: 'warning',
+                  title: 'File has been successfully removed!!',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+              },
+              error: function(e) {
+                console.log(e);
+              }
+            });
+            var fileRef;
+            return (fileRef = file.previewElement) != null ?
+            fileRef.parentNode.removeChild(file.previewElement) : void 0;
+          }
+        })
+      },
+      success: function (file, response) {
+        Swal.fire({
+          //position: 'top-end',
+          icon: 'success',
+          title: 'File has been successfully uploaded!!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
+      },
+      uploadprogress: function(file, progress, bytesSent) {
+          if (file.previewElement) {
+              // var progressElement = file.previewElement.querySelector("[data-dz-uploadprogress]");
+              // progressElement.style.width = progress + "%";
+              // progressElement.querySelector(".progress-text").textContent = progress + "%";
+
+              swal.fire({
+                  title:"",
+                  text:"Loading...",
+                  icon: "{{ asset('frontend/dropzone/loading2.gif') }}",
+              });
+          }
+      },
+
+    });
+
+    $('#uploadfiles').click(function(){
+        myDropzone.processQueue();
+        $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
+    });
+
+    $(document).ready(function(){
+        $("#savenewproject").validate({
+            // Specify validation rules
+            rules: {
+                forename: {
+                    required: true,
+                },
+                surname: {
+                    required: true,
+                },
+                project_name: {
+                    required: true,
+                },
+                contact_mobile_no: {
+                    required: true,
+                },
+                contact_email: {
+                    required: true,
+                }
+            },
+            messages: {
+                forename: {
+                    required: "Please enter forename",
+                },
+                surname: {
+                    required: "Please enter surname",
+                },
+                project_name: {
+                    required: "Please enter project name",
+                },
+                contact_mobile_no: {
+                    required: "Please enter mobile",
+                },
+                contact_email: {
+                    required: "Please enter contact email",
+                },
+            },
+
+        });
+    });
+
+    function Get_zipcode(){
+        // var zipcode = $('input[name="zipcode"]:checked').val();
+        // $("#zipcode_selected").attr('value',zipcode);
+        // $("#selected_post_code_html").html(zipcode);
+        // $('#exampleModal').modal('toggle');
+
+        var zipcode = $('input[name="zipcode"]:checked').val();
+
+        $("#zipcode_selected_address_line_one").attr('value',zipcode.split(",")[0]);
+        $("#zipcode_selected_address_line_two").attr('value',zipcode.split(",")[1]);
+        $("#zipcode_selected_town_city").attr('value',zipcode.split(",")[2]+','+ zipcode.split(",")[3]);
+        $("#zipcode_selected_postcode").attr('value',$("#postcode").val());
+
+        $("#selected_post_code_html").html(zipcode);
+        $('#exampleModal').modal('toggle');
+    }
 
     gUMbtn1 = id('gUMbtn1'),
     gUMbtn1.onclick = e => {
-        var constraints = { audio: true, video: true };
-        navigator.mediaDevices.getUserMedia(constraints)
-        .then(function(mediaStream) {
-                Webcam.set({
-                    width: 300,
-                    height: 250,
-                    image_format: 'jpeg',
-                    jpeg_quality: 100
-                });
-                Webcam.attach( '#my_camera' );
-        })
-        .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+      var constraints = { audio: true, video: true };
+      navigator.mediaDevices.getUserMedia(constraints)
+      .then(function(mediaStream) {
+        Webcam.set({
+            width: 450,
+            height: 350,
+            image_format: 'jpeg',
+            jpeg_quality: 100
+        });
+        Webcam.attach( '#my_camera' );
+      })
+      .catch(function(err) { console.log(err.name + ": " + err.message); }); 
     }
-
+    let imagesArray = []
     function take_snapshot() {
-        Webcam.snap( function(data_uri) {
-            $(".image-tag").val(data_uri);
-            document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
-        } );
+      Webcam.snap( function(data_uri) {
+        //$(".image-tag").val(data_uri);
+        imagesArray.push(data_uri)
+        //document.getElementById('results').innerHTML = '<img src="'+data_uri+'" class="rounded"/>';
+      } );
+      const form  = document.getElementById('capturephoto');
+      var formData = new FormData(form);
+      formData.append('image_count',  imagesArray.length);
+      for (let i = 0; i < imagesArray; i++) {
+        formData.append('image_' + i, imagesArray[i]);
+      }
+      displayImages()
+    }
+    function displayImages() {
+      let images = ""
+      output=document.getElementById('results')
+      for (i = 0; i < imagesArray.length; i++){
+        images += `<div class="col-4 col-sm-6 col-md-4 mt-2 image">
+          <img src="${imagesArray[i]}" alt="image" class="rounded">
+          <input type="hidden" name="image_${i}" class="image-tag" value="${imagesArray[i]}">
+          <div class="capture-image-level">Image Capture ${i+1}
+            <span class="capture-image-delete" onclick="deleteImage(${i})">&times;</span>
+          </div>
+        </div>`
+      }
+      output.innerHTML = images
+      $("#image_count").val(imagesArray.length);
+    }
+    function deleteImage(index) {
+      imagesArray.splice(index, 1)
+      displayImages()
     }
 
     gUMbtn2 = id('gUMbtn2'),
@@ -410,15 +598,14 @@
         var constraints = { audio: true, video: true };
         navigator.mediaDevices.getUserMedia(constraints)
         .then(function(mediaStream) {
-
-                Webcam.set({
-                    width: 300,
-                    height: 250,
-                    image_format: 'jpeg',
-                    jpeg_quality: 90
-                });
-
-                Webcam.attach( '#my_camera_video' );
+            Webcam.set({
+                width: 450,
+                height: 350,
+                image_format: 'jpeg',
+                jpeg_quality: 90
+            });
+            Webcam.attach( '#my_camera_video' );
+            $("#gUMbtn").click();
         })
         .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
     }
@@ -432,9 +619,8 @@
                     //url: 'https://api.getAddress.io/find/'+$postcode+'?api-key=8IiS7wYTGUGowt0cbGIWeA37601',
                     url: 'https://api.getAddress.io/find/'+$postcode+'?api-key=8IiS7wYTGUGowt0cbGIWeA37601&expand=true',
                     success: function(data){
-
                         var  addresshtml ='';
-
+                        var counter = 1;
                         $.each(data.addresses, function(index, value) {
                             var fulladdress = '';
                             if(value.line_1 != ''){
@@ -450,17 +636,36 @@
                                 fulladdress += value.country;
                             }
 
-                            addresshtml += '<div class="form-check target"><input type="radio" class="form-check-input" id="radio1" name="optradio" value="'+fulladdress+'"  />'+fulladdress+'<label class="form-check-label" for="radio1"></label></div>';
+                            addresshtml += '<div class="form-check"><input type="radio" class="form-check-input" id="radio'+counter+'" name="zipcode" value="'+fulladdress+'" />'+fulladdress+'<label class="form-check-label" for="radio'+counter+'"></label></div>';
+                            counter++;
                         });
                         $(".zipcode-modal-header").html('<h5 class="modal-title" id="exampleModalLabel">Select your address<span>Postcode: '+$postcode+'</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/></svg></button>');
                         $(".zipcode-modal-body").html('<div class="wrap"><div class="search"><button type="submit" class="searchButton"><svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.59174 2.00025C7.01698 2.00025 5.50672 2.68507 4.3932 3.90406C3.27968 5.12305 2.65411 6.77635 2.65411 8.50025C2.65411 10.2242 3.27968 11.8775 4.3932 13.0964C5.50672 14.3154 7.01698 15.0003 8.59174 15.0003C10.1665 15.0003 11.6768 14.3154 12.7903 13.0964C13.9038 11.8775 14.5294 10.2242 14.5294 8.50025C14.5294 6.77635 13.9038 5.12305 12.7903 3.90406C11.6768 2.68507 10.1665 2.00025 8.59174 2.00025ZM0.827148 8.50025C0.827254 7.14485 1.12345 5.80912 1.69102 4.60451C2.25859 3.3999 3.08109 2.36135 4.08988 1.57549C5.09867 0.789633 6.2645 0.279263 7.49012 0.0869618C8.71573 -0.10534 9.96558 0.0260029 11.1354 0.470032C12.3052 0.914061 13.3611 1.6579 14.2149 2.63949C15.0687 3.62108 15.6957 4.81196 16.0435 6.11277C16.3914 7.41358 16.4501 8.7866 16.2147 10.1173C15.9792 11.448 15.4565 12.6977 14.6901 13.7623L18.0262 17.4143C18.1926 17.6029 18.2846 17.8555 18.2826 18.1177C18.2805 18.3799 18.1844 18.6307 18.015 18.8161C17.8457 19.0015 17.6166 19.1066 17.377 19.1089C17.1375 19.1112 16.9068 19.0104 16.7345 18.8283L13.3985 15.1763C12.2535 16.1642 10.8776 16.7794 9.42823 16.9514C7.97884 17.1233 6.5145 16.8451 5.20281 16.1485C3.89112 15.4519 2.78506 14.3651 2.01123 13.0126C1.2374 11.66 0.827051 10.0962 0.827148 8.50025ZM7.67826 5.00025C7.67826 4.73504 7.7745 4.48068 7.94581 4.29315C8.11712 4.10561 8.34947 4.00025 8.59174 4.00025C9.68195 4.00025 10.7275 4.47436 11.4984 5.31827C12.2693 6.16219 12.7024 7.30678 12.7024 8.50025C12.7024 8.76547 12.6062 9.01982 12.4348 9.20736C12.2635 9.3949 12.0312 9.50025 11.7889 9.50025C11.5466 9.50025 11.3143 9.3949 11.143 9.20736C10.9717 9.01982 10.8754 8.76547 10.8754 8.50025C10.8754 7.83721 10.6348 7.20133 10.2066 6.73249C9.77828 6.26365 9.19741 6.00025 8.59174 6.00025C8.34947 6.00025 8.11712 5.8949 7.94581 5.70736C7.7745 5.51982 7.67826 5.26547 7.67826 5.00025Z" fill="#6D717A"/></svg></button><input type="text" id="Search" onkeyup="Searchpostcode()"  class="searchTerm" placeholder="Search your address"></div></div><div class="div_checked">'+addresshtml+'<div>');
                         $("#exampleModal").modal('show');
                         return false;
+
+                    },
+                    error: function (error) {
+                        //alert(error.responseText);
+                        if(error.status == 400){
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Bad Request: Invalid postcode!!',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            $("#postcode").val('');
+                        }
                     }
                 });
                 return false;
             }else{
-                alert("Before submit enter your postcode."); return false;
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Enter your postcode.!!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
             }
 
         });
@@ -493,12 +698,13 @@
         }
     }
 
-    $('#summernote').summernote({
-        //placeholder: 'FixMyBuild',
-        tabsize: 2,
-        height: 200
-    });
-    setInterval(function() { FetchfilesData(); }, 5000);
+    // $('#summernote').summernote({
+    //     //placeholder: 'FixMyBuild',
+    //     tabsize: 2,
+    //     height: 200
+    // });
+     FetchfilesData();
+    //setInterval(function() { FetchfilesData(); }, 5000);
     function FetchfilesData(){
         $.ajax({
             type:'POST',
@@ -529,7 +735,9 @@
     $(document).ready(function(){
         $("form#capturephoto").submit(function(e){
             e.preventDefault();
-            var formData = new FormData(this);
+            var success=1
+            // var images = document.getElementById('image');
+            // var formData = new FormData(this);
             Swal.fire({
             title: 'Are you sure?',
             text: "You want to upload this image?",
@@ -540,36 +748,79 @@
             confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    //for (i = 0; i < imagesArray.length; i++){
+                    var formData = new FormData($("#capturephoto")[0]);
                     $.ajax({
-                        url: '{{ route("capture-photo") }}',
-                        type: 'POST',
-                        contentType: 'multipart/form-data',
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        data: formData,
-                        success: (response) => {
-                            // success
-                            Swal.fire({
-                                //position: 'top-end',
-                                icon: 'success',
-                                title: 'Image uploaded successfully.',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                        },
-                        error: (response) => {
-                            console.log(response);
-                        }
+                      data: formData,
+                      async: false,
+                      url: '{{ route("capture-photo") }}',
+                      type: 'POST',
+                      cache: false,
+                      contentType: false,
+                      processData: false,
+                      dataType: "json",
+                      success: (response) => {
+                          success='1'
+                      },
+                      error: (response) => {
+                        console.log(response);
+                        success=response
+                      }
                     });
+                    if(success=='1'){
+                      Swal.fire({
+                      //position: 'top-end',
+                      icon: 'success',
+                      title: 'Image uploaded successfully.',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+                  } else{console.log(success);}
+
                 }
             })
         });
-    });
 
+
+        // addresstype
+        var addresstype = $('input[name="addresstype"]:checked').val();
+        if(addresstype == 1){
+            $("#address_line_one").attr('disabled',true);
+            $("#address_line_two").attr('disabled',true);
+            $("#town_city").attr('disabled',true);
+            $("#address_type_postcode").attr('disabled',true);
+        }
+
+        if(addresstype == 2){
+            $("#address_line_one").attr('disabled',false);
+            $("#address_line_two").attr('disabled',false);
+            $("#town_city").attr('disabled',false);
+            $("#address_type_postcode").attr('disabled',false);
+        }
+
+
+
+        $("input[name='addresstype']").change(function(e){
+            var addresstype = $('input[name="addresstype"]:checked').val();
+            if(addresstype == 1){
+                $("#address_line_one").attr('disabled',true);
+                $("#address_line_two").attr('disabled',true);
+                $("#town_city").attr('disabled',true);
+                $("#address_type_postcode").attr('disabled',true);
+            }
+
+            if(addresstype == 2){
+                $("#address_line_one").attr('disabled',false);
+                $("#address_line_two").attr('disabled',false);
+                $("#town_city").attr('disabled',false);
+                $("#address_type_postcode").attr('disabled',false);
+
+                $("#postcode").attr('disabled',true);
+                $("#postcode").attr('required',true);
+            }
+
+        });
+    });
 </script>
 @endpush
-
-
-
 @endsection

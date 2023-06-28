@@ -51,7 +51,9 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('adminpanel/assets/images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('adminpanel/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
-
+    {{-- Page Level CSS --}}
+    @stack('styles')
+    {{-- Page Level CSS --}}
 
 </head>
   <body>
@@ -118,7 +120,7 @@
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#category" aria-expanded="false" aria-controls="apps">
                         <i class="mdi mdi-menu menu-icon"></i>
-                        <span class="menu-title">Builders</span>
+                        <span class="menu-title">Tradesperson</span>
                         <i class="menu-arrow"></i>
                     </a>
                     <div class="collapse" id="category">
@@ -130,7 +132,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/admin/users') }}">
+                    <a class="nav-link" href="{{ route('admin.users') }}">
                         <i class="mdi mdi-account-multiple-outline menu-icon"></i>
                         <span class="menu-title">Users</span>
                     </a>
@@ -153,9 +155,9 @@
 
           @if (Auth::guard('admin')->user()->type == "reviewer")
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/project/awaiting-your-review') }}">
+                <a class="nav-link" href="{{ url('admin/project') }}">
                   <i class="mdi mdi-view-dashboard menu-icon"></i>
-                  <span class="menu-title">Awaiting your review</span>
+                  <span class="menu-title">Projects</span>
                 </a>
             </li>
 
@@ -181,7 +183,7 @@
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_settings-panel.html -->
-        <div id="settings-trigger"><i class="mdi mdi-settings"></i></div>
+        {{-- <div id="settings-trigger"><i class="mdi mdi-settings"></i></div> --}}
         <div id="theme-settings" class="settings-panel">
           <i class="settings-close mdi mdi-close"></i>
           <p class="settings-heading">SIDEBAR SKINS</p>
@@ -222,7 +224,7 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item preview-item">
                     <div class="preview-thumbnail">
-                      <img src="../assets/images/faces/face1.jpg" alt="image" class="profile-pic">
+                      <img src="{{ asset('adminpanel/assets/images/faces/face1.jpg') }}" alt="image" class="profile-pic">
                     </div>
                     <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                       <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
@@ -232,7 +234,7 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item preview-item">
                     <div class="preview-thumbnail">
-                      <img src="../assets/images/faces/face6.jpg" alt="image" class="profile-pic">
+                      <img src="{{ asset('adminpanel/assets/images/faces/face6.jpg') }}" alt="image" class="profile-pic">
                     </div>
                     <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                       <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
@@ -242,7 +244,7 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item preview-item">
                     <div class="preview-thumbnail">
-                      <img src="../assets/images/faces/face7.jpg" alt="image" class="profile-pic">
+                      <img src="{{ asset('adminpanel/assets/images/faces/face7.jpg') }}" alt="image" class="profile-pic">
                     </div>
                     <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                       <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>

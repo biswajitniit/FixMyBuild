@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\OtpPasswordResets;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 
@@ -10,11 +11,12 @@ use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
 use App\Models\User;
+use AWS\CRT\Log;
 use Mail;
 use Hash;
 use Illuminate\Support\Str;
-
-
+use App\Models\UserOtp;
+use Illuminate\Support\Facades\Auth;
 
 class ForgotPasswordController extends Controller
 {
@@ -199,12 +201,19 @@ class ForgotPasswordController extends Controller
               'password_confirmation' => 'required'
           ]);
 
-          $updatePassword = DB::table('password_resets')
-                              ->where([
-                                'email' => $request->email,
-                                'token' => $request->token
-                              ])
-                              ->first();
+        //   $updatePassword = DB::table('password_resets')
+        //                       ->where([
+        //                         'email' => $request->email,
+        //                         'token' => $request->token
+        //                       ])
+        //                       ->first();
+
+        $updatePassword = DB::table('password_resets')
+                            ->where('email', '=', $request->email)
+                            ->where('token', '=', $request->token)
+                            ->where('created_at', '>', Carbon::now()->subHours(2))
+                            ->first();
+
 
           if(!$updatePassword){
               return back()->withInput()->with('error', 'Invalid token!');
@@ -219,5 +228,91 @@ class ForgotPasswordController extends Controller
       }
 
 
+    public function generateOtp(Request $request)
+    {
+        $user = User::where('phone', $request->phone)->first();
+        if($user){
+            $otp = mt_rand(100000, 999999);
+            $data = new OtpPasswordResets();
+            $data->user_id = $user->id;
+            $data->otp = $otp;
+            $data->used = 0;
+            $data->created_at = now()->addMinutes(5);
+            if(strtotime($data->created_at) < strtotime(now()))
+            {
+                return back();
+            }
+            $data->save();
+            return redirect()->route('otpVerify.get', ['user_id' => $user->id])
+                            ->with('success',  "OTP has been sent on Your Mobile Number.");
+        } else {
+            return back()->with('message', $request->phone.' is Not Register With Us');
+        }
+
+    }
+    public function resendOtp(Request $request)
+    {
+        $user = User::where('id', $request->user_id)->first();
+
+        if($user){
+            $otp = mt_rand(100000, 999999);
+            $data = new OtpPasswordResets();
+            $data->user_id = $user->id;
+            $data->otp = $otp;
+            $data->used = 0;
+            $data->created_at = now()->addMinutes(5);
+            if(strtotime($data->created_at) < strtotime(now()))
+            {
+                return false;
+            }
+            $data->save();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function otpVerifyPage(Request $request)
+    {
+        $user_id = $request->user_id;
+        $user = User::where("id", $user_id)
+                                ->first();
+        $phone = $user["phone"];
+        return view('auth.smsVerification',compact('user_id','phone'));
+    }
+
+
+    public function verifyOtp(Request $request)
+    {
+        $user = OtpPasswordResets::where('user_id', $request->id)
+        ->where('otp', $request->otp)
+        ->get();
+
+        if(count($user)>0){
+            $user_id = $user[0]->user_id;
+            $data = OtpPasswordResets::where('user_id', $request->id)
+                                        ->where('otp', $request->otp)
+                                        ->update(array('used' => 1));
+            return view('auth.setNewPassword',compact('user_id'));
+        }
+        else{
+            return back()->with('error', 'Wrong OTP');
+        }
+    }
+
+
+    public function resetPasswordusingOTP(Request $request){
+        $updatePassword = DB::table('users')
+                            ->where('id', $request->id)
+                            ->first();
+          if(!$updatePassword){
+          return redirect('/login')->with('error', 'Your password has not  been changed!');
+          }
+          $user = User::where('id', $request->id)
+                      ->update(['password' => Hash::make($request->Password2)]);
+
+          return redirect('/login')->with('message', 'Your password has been changed!');
+    }
 
 }
