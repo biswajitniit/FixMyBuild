@@ -21,11 +21,17 @@ Route::namespace('Api')->group(function() {
     Route::post('/forgot-password', 'PasswordController@forgot_password');
     Route::post('/verify-otp', 'PasswordController@verify_otp');
     Route::post('/create-password', 'PasswordController@create_password');
+    
+
 
     Route::middleware('auth:sanctum')->group(function() {
       Route::post('/change-password', 'UserController@change_password');
       Route::get('/profile', 'UserController@get_profile');
-      Route::apiResource('projects', 'ProjectController');
+      Route::apiResource('projects', 'ProjectController',);
+      Route::post('projects','ProjectController@add_project');
+      Route::put('projects','ProjectController@update_project');
+      Route::apiResource('address', 'AddressController',);
+      Route::get('/builder-category', 'BuilderController@get_builders');
     });
   });
 

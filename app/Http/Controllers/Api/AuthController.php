@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -22,8 +23,8 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        $user = User::where('email', $request->email)->first();
+        try{
+            $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages(['errors' => ['email' => ['The provided credentials are incorrect!']]], 422);
@@ -34,8 +35,12 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'user_type'=> $user->customer_or_tradesperson,
+            'user'=>$user,
             'token_type' => 'Bearer',
         ], 200);
+        } catch(Exception $e){
+            return response()->json($e->getMessage(),500);
+        }
     }
 
     public function signup(Request $request)
@@ -45,7 +50,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'required|string|max:50|unique:users',
             'password' => 'required|string|min:5|confirmed',
-            'customer_or_tradesperson' => 'required|string',
+            'user_type' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -57,7 +62,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'customer_or_tradesperson'=>$request->customer_or_tradesperson,
+            'user_type'=>$request->user_type,
             'verification_code'=>strval($random)
         ]);
 
@@ -117,7 +122,7 @@ class AuthController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
 
-        return response()->json(['otp' => $random,"curl_response"=>$response], 201);
+        return response()->json(['otp' => $random,"message"=>'Otp sent to your email'], 201);
     }
     public function verify_email(Request $request){
         $validator = Validator::make($request->all(), [
@@ -136,6 +141,5 @@ class AuthController extends Controller
         }
         
         return response()->json(['message'=>'User registered successfully'],200);
-
     }
 }
