@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Projectnotesandcommend extends Model
 {
     use HasFactory;
+
+
+
+
+    public function projectnotesandcommends(){
+        return $this->belongsTo(Project::class,'project_id');
+    }
 }
