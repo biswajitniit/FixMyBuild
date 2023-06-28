@@ -188,5 +188,53 @@
         });
 
 
+        function submitMessage(event){
+            // event.preventDefault();
+            // $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+$('#messsageInput').val()+'</p></div></div>');
+            // SEND MESSAGE TO THE CHOSEN USER
+            $.ajax({
+                method: 'POST',
+                url: '{{ route("tradeperson.chat") }}',
+                data:{
+                    _token: '{{ csrf_token() }}',
+                    from_user_id: $('#from_user_id').val(),
+                    to_user_id: $('#to_user_id').val(),
+                    project_id: $('#project_id').val(),
+                    estimate_id: $('#estimate_id').val(),
+                    message: $('#type_msg').val()
+                },
+                success: function(response){
+                    $('#outgoing_msg').html(response);
+                },
+                error: function(response){
+                    console.log(response);
+                }
+            });
+        }
+
+        function retrieveMessages(){
+            i=0;
+            var authUser =  $('#from_user_id').val();
+            var to_user_id = $('#to_user_id').val();
+            var lastMessageId =
+            $.ajax({
+                method: 'GET',
+                url: '/retrive-new-msg/'+to_user_id+'/'+authUser+'/'+lastMessageId,
+                success: function(response){
+                    //console.log(response);
+                    //console.log(lastMessageId);
+                    while(response[i]!=null){
+                        $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[i].message +'</p></div></div>');
+                        lastMessageId = response[i].id + 1;
+                        i++;
+                    }
+                    // scrollPaubos();
+                },
+                complete: function(){
+                    //retrieveMessages();
+                }
+            });
+    }
+
     </script>
 @endpush

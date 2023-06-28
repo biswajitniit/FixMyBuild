@@ -57,7 +57,7 @@ function openChatBox(user, authUser){
         });
     }
 
-    function retrieveMessages(){
+    function retrieveMessages2(){
         i=0;
         $.ajax({
             headers: {
@@ -83,7 +83,7 @@ function openChatBox(user, authUser){
 }
 
 
-function submitMessage(){
+function submitMessage2(){
     event.preventDefault();
     $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+$('#messsageInput').val()+'</p></div></div>');
     // SEND MESSAGE TO THE CHOSEN USER

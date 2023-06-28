@@ -23,7 +23,6 @@ use App\Http\Controllers\Admin\Cms\CmsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ChatController;
-
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -241,4 +240,10 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
     Route::get('project/submit-review/{project_id}', [CustomerController::class, 'project_review'])->name('customer.project_review');
     Route::post('project/submit-review', [CustomerController::class, 'submit_review'])->name('customer.review');
+
+    Route::group(['middleware' => 'auth'], function () {
+        Route::post('submit-msg', [ChatController::class, 'submit_msg'])->name('tradeperson.chat');
+        Route::get('retrive-new-msg', [ChatController::class, 'retrieveNew'])->name('tradeperson.retrive-new-msg');
+
+    });
 });
