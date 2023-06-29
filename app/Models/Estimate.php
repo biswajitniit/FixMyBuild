@@ -43,15 +43,15 @@ class Estimate extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function taskTotalAmount()
-    {
-        $amount = 0;
+    // public function taskTotalAmount()
+    // {
+    //     $amount = 0;
 
-        foreach ($this->tasks as $task) {
-            $amount += $task->price;
-        }
+    //     foreach ($this->tasks as $task) {
+    //         $amount += $task->price;
+    //     }
 
-        return ($amount != 0)? (($this->apply_vat == 0)? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
-    }
+    //     return ($amount != 0)? (($this->apply_vat == 0) ? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
+    // }
 
 }

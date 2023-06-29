@@ -60,11 +60,12 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
-                                        @if($data['approve_or_refer'] == 'approve')
+                                        @if($data['reviewer_status'] == 'approved')
                                             <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">{{ ucwords($data['project_name']) }} project has been approved</h5>
-                                        @else
+                                            <p><strong>Message from Reviewer :</strong> {{ $data['notes_for_customer'] }}</p>
+                                            @else
                                             <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">{{ ucwords($data['project_name']) }} project not approved</h5>
-                                            <p>Message from Reviewer : {{ $data['notes_for_customer'] }}</p>
+                                            <p><strong>Message from Reviewer :</strong> {{ $data['notes_for_customer'] }}</p>
                                         @endif
                                     </td>
                                 </tr>

@@ -36,6 +36,7 @@
                                         <div class="col-md-11 col-9 pl-0">
                                             <h5>{{ ucwords($notification->notification_text) }}</h5>
                                             <h6>{{ time_diff($notification->created_at) }}</h6>
+                                            <p>{{ ucwords($notification->reviewer_note) }}<p>
                                         </div>
                                         </div><!--//-->
                                     </div>

@@ -61,8 +61,11 @@
                                             @case('awaiting_your_review')
                                                 <td class="text-awaiting">Awaiting your feedback</td>
                                                 @break
+                                            @case('')
+                                                <td class="text-awaiting"></td>
+                                                @break
                                             @endswitch
-                                        <td> @if($projects->reviewer_status == "Refer") <p class="btn btn-danger">Refer</p> @elseif($projects->reviewer_status == "Approve") <p class="btn btn-success">Approve</p> @else <p class="btn btn-warning active">Pending</p> @endif </td>
+                                        <td> @if($projects->reviewer_status == "referred") <p class="btn btn-danger">Refer</p> @elseif($projects->reviewer_status == "approved") <p class="btn btn-success">Approve</p> @else <p class="btn btn-warning active">Pending</p> @endif </td>
                                         <td><a href="{{route('awaiting-your-review-show',[Hashids_encode($projects->id)])}}" title="View Projects"><i class="mdi mdi-eye"></i></a></td>
                                     </tr>
                                     @endforeach
