@@ -1,12 +1,12 @@
 var lastMessageId = 0;
 // auto scroll down chatbox when sending a message
-function scrollPaubos(){
+function scrollPaubos2(){
     var a = document.getElementById('messageThread');
     a.scrollTop = a.scrollHeight;
 }
 
 // when choosing a user to message
-function openChatBox(user, authUser){
+function openChatBox2(user, authUser){
     $('#messageThread').html('<h1 class="text-center"> Loading. . .');
 
     $('#default_card').hide();
@@ -31,7 +31,7 @@ function openChatBox(user, authUser){
         }
     });
 
-    function loadMessagesOfThisConvo(){
+    function loadMessagesOfThisConvo2(){
         i=0;
         $.ajax({
             headers: {

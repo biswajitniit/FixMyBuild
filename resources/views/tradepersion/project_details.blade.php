@@ -189,7 +189,6 @@
 
 
         function submitMessage(event){
-            // event.preventDefault();
             // $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+$('#messsageInput').val()+'</p></div></div>');
             // SEND MESSAGE TO THE CHOSEN USER
             $.ajax({
@@ -204,7 +203,8 @@
                     message: $('#type_msg').val()
                 },
                 success: function(response){
-                    $('#outgoing_msg').html(response);
+                    // $('#outgoing_msg').html(response.message);
+                    $('#last_msg_id').html(response.last_insert_id);
                 },
                 error: function(response){
                     console.log(response);
@@ -213,27 +213,53 @@
         }
 
         function retrieveMessages(){
-            i=0;
-            var authUser =  $('#from_user_id').val();
-            var to_user_id = $('#to_user_id').val();
-            var lastMessageId =
+            let i=0;
+            const authUser =  $('#from_user_id').val();
+            const to_user_id = $('#to_user_id').val();
+            var lastMessageId = $('#last_msg_id').val();
             $.ajax({
                 method: 'GET',
                 url: '/retrive-new-msg/'+to_user_id+'/'+authUser+'/'+lastMessageId,
                 success: function(response){
-                    //console.log(response);
-                    //console.log(lastMessageId);
+                    console.log(response);
+                    console.log(lastMessageId);
                     while(response[i]!=null){
-                        $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[i].message +'</p></div></div>');
+                        $('#sender_msg').append('<div class="msg" id="outgoing_msg">'+response[i].message +'</div>');
                         lastMessageId = response[i].id + 1;
                         i++;
                     }
                     // scrollPaubos();
                 },
                 complete: function(){
-                    //retrieveMessages();
+                    retrieveMessages();
                 }
             });
+        }
+
+
+        function loadMessagesOfThisConvo(){
+        i=0;
+        const authUser =  $('#from_user_id').val();
+        const to_user_id = $('#to_user_id').val();
+        $.ajax({
+            method: 'GET',
+            url: '/load-msg/'+to_user_id+'/'+authUser,
+            success: function(response){
+                $('#messageThread').html('');
+                //console.log();
+                while(response[0][i]!=null){
+                    if(response[1][0] == response[0][i].message_users_id ){
+                        $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+response[0][i].message +'</p></div></div>');
+                    }else{
+                        $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[0][i].message +'</p></div></div>');
+                    }
+                    lastMessageId = response[0][i].id + 1;
+                    i++;
+                }
+                // scrollPaubos();
+                retrieveMessages();
+            }
+        });
     }
 
     </script>

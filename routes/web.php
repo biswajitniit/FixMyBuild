@@ -244,6 +244,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::group(['middleware' => 'auth'], function () {
         Route::post('submit-msg', [ChatController::class, 'submit_msg'])->name('tradeperson.chat');
         Route::get('retrive-new-msg', [ChatController::class, 'retrieveNew'])->name('tradeperson.retrive-new-msg');
+        Route::get('load-msg', [ChatController::class, 'submit_msg'])->name('tradeperson.load-msg');
 
     });
 });

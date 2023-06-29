@@ -27,7 +27,7 @@
                           <span class="time">10:30</span>
                        </div>
                        <div class="msg-area">
-                          <div class="msg"></div>
+                          <div class="msg" id="abc"> </div>
                           <div>
                              <div class="dots">
 
@@ -102,7 +102,7 @@
 
 
                     </div>
-                    <div class="msg-area">
+                    <div class="msg-area" id="sender_msg">
                        <div class="tick mr-2">
                             <img width="50px" src="{{ asset('images/mdi_tick.png') }}" alt="">
                         </div>
@@ -196,7 +196,7 @@
                     </div>
                 </div>
                 </div>
-
+                <input type="hidden" id="last_msg_id" value="">
               {{-- </div> --}}
             <div class="chat-footer">
                 <form id="new_msg_form" >
