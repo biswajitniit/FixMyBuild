@@ -316,6 +316,60 @@ class TradepersionDashboardController extends Controller
            return $response;
         }
     }
+
+    function getTempTeamImages(Request $request)
+    {
+        $temp_team_imgs = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'team_img'])->get();
+        echo $this->getTempMedia($temp_team_imgs);
+    }
+
+    function getTempPrevProjImages(Request $request)
+    {
+        $temp_prev_projects = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'prev_project_img'])->get();
+        echo $this->getTempMedia($temp_prev_projects);
+    }
+
+    function getTempPublicLiabilityInsurance(Request $request)
+    {
+        $temp_public_liability_insurances = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'public_liability_insurance'])->get();
+        echo $this->getTempMedia($temp_public_liability_insurances);
+    }
+
+    function getTempPhotoIdProof(Request $request)
+    {
+        $temp_trader_images = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'trader_img'])->get();
+        echo $this->getTempMedia($temp_trader_images);
+    }
+
+    function getTempCompAddrProof(Request $request)
+    {
+        $temp_comp_addresses = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'company_address'])->get();
+        echo $this->getTempMedia($temp_comp_addresses);
+    }
+
+    function getProductImage(Request $request)
+    {
+        $temp_project_images = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'media_type' => 'estimate'])->get();
+        echo $this->getTempMedia($temp_project_images);
+    }
+
+    private function getTempMedia($images) {
+        $html = '';
+        foreach ($images as $image) {
+            $html .= '<div class="d-inline mr-2 mt-1" id="Image-0'.$image->id.'">
+                        <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup('.$image->id.', \'Image-0'.$image->id.'\')">
+                        <img src="'. $image->url .'" alt="" class="rectangle-img">
+                        <div class="remove_img" title="'.$image->filename.'">
+                            <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                            </svg>
+                        </div>
+                        </a>
+                    </div>';
+        }
+        return $html;
+    }
+
     public function dashboard()
     {
         $works = Buildercategory::where('status', 'Active')->get();
@@ -336,48 +390,102 @@ class TradepersionDashboardController extends Controller
         try{
             $user = Auth::user()->id;
 
-            $this->validate($request, [
-                'file_related_to' => 'required|string',
-            ]);
+            // $this->validate($request, [
+            //     'file_related_to' => 'required|string',
+            // ]);
 
-            $file = $request->file('file');
-            $fileName = $request->file('file')->getClientOriginalName();
-            $extension = $file->getClientOriginalExtension();
-            $s3FileName = \Str::uuid().'.'.$extension;
-            Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
-            $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+            $files = $request->file('file');
+            $response = [];
 
-            $single_file_uploads = ['company_logo'];
+            // if (!is_array($files)) {
+            //     $file = $files;
+            //     $fileName = $file->getClientOriginalName();
+            //     $extension = $file->getClientOriginalExtension();
+            //     $s3FileName = \Str::uuid().'.'.$extension;
+            //     Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
+            //     $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
 
-            if( in_array($request->file_related_to, $single_file_uploads)){
-                $delete_medias_after_save = tempmedia::where(['file_related_to'=> $request->file_related_to, 'media_type'=> 'tradesperson', 'user_id' => $user])->get();
+            //     $single_file_uploads = ['company_logo'];
+
+            //     if( in_array($request->file_related_to, $single_file_uploads)){
+            //         $delete_medias_after_save = tempmedia::where(['file_related_to'=> $request->file_related_to, 'media_type'=> 'tradesperson', 'user_id' => $user])->get();
+            //     }
+
+            //     $fileType = '';
+            //     if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
+            //         $fileType = 'image';
+            //     else
+            //         $fileType = 'document';
+
+            //     $temp_media = new Tempmedia();
+            //     $temp_media->user_id           = $user;
+            //     $temp_media->sessionid         = session()->getId();
+            //     $temp_media->file_type         = $fileType;
+            //     $temp_media->media_type        = 'tradesperson';
+            //     $temp_media->file_related_to   = $request->file_related_to;
+            //     $temp_media->filename          = $fileName;
+            //     $temp_media->file_extension    = $extension;
+            //     $temp_media->url               = $path;
+            //     $temp_media->file_created_date = now()->toDateString();
+            //     $temp_media->save();
+
+            //     if (isset($delete_medias_after_save) && !empty($delete_medias_after_save)) {
+            //         $delete_medias_after_save->each(function ($media) {
+            //             $media->delete();
+            //         });
+            //     }
+
+            //     return response()->json(['image_link' => $path, 'file_name' => $fileName]);
+            // }
+
+            foreach($files as $file) {
+                // $fileName = $request->file('file')->getClientOriginalName();
+                $fileName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $s3FileName = \Str::uuid().'.'.$extension;
+                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+
+                $single_file_uploads = ['company_logo'];
+
+                if( in_array($request->file_related_to, $single_file_uploads)){
+                    $delete_medias_after_save = tempmedia::where(['file_related_to'=> $request->file_related_to, 'media_type'=> 'tradesperson', 'user_id' => $user])->get();
+                }
+
+                $fileType  = '';
+                $image_ext = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'heic', 'heif'];
+                $video_ext = ['avi', 'mp4', 'm4v', 'ogv', '3gp', '3g2'];
+                if ( in_array($extension, $image_ext) )
+                    $fileType = 'image';
+                elseif ( in_array($extension, $video_ext) )
+                    $fileType = 'video';
+                else
+                    $fileType = 'document';
+
+                $temp_media = new Tempmedia();
+                $temp_media->user_id           = $user;
+                $temp_media->sessionid         = session()->getId();
+                $temp_media->file_type         = $fileType;
+                $temp_media->media_type        = $request->media_type ?? 'tradesperson';
+                $temp_media->file_related_to   = $request->file_related_to;
+                $temp_media->filename          = $fileName;
+                $temp_media->file_extension    = $extension;
+                $temp_media->url               = $path;
+                $temp_media->file_created_date = now()->toDateString();
+                $temp_media->save();
+
+                $uploaded_file = ['image_link' => $path, 'file_name' => $fileName];
+                array_push($response, $uploaded_file);
+
+                if (isset($delete_medias_after_save) && !empty($delete_medias_after_save)) {
+                    $delete_medias_after_save->each(function ($media) {
+                        $media->delete();
+                    });
+                }
             }
 
-            $fileType = '';
-            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
-                $fileType = 'image';
-            else
-                $fileType = 'document';
-
-            $temp_media = new Tempmedia();
-            $temp_media->user_id           = $user;
-            $temp_media->sessionid         = session()->getId();
-            $temp_media->file_type         = $fileType;
-            $temp_media->media_type        = 'tradesperson';
-            $temp_media->file_related_to   = $request->file_related_to;
-            $temp_media->filename          = $fileName;
-            $temp_media->file_extension    = $extension;
-            $temp_media->url               = $path;
-            $temp_media->file_created_date = now()->toDateString();
-            $temp_media->save();
-
-            if (isset($delete_medias_after_save) && !empty($delete_medias_after_save)) {
-                $delete_medias_after_save->each(function ($media) {
-                    $media->delete();
-                });
-            }
-
-            return response()->json(['image_link'=>$path, 'file_name'=>$fileName]);
+            return response()->json($response);
+            // return response()->json(['image_link'=>$path, 'file_name'=>$fileName]);
         } catch(\Exception $e) {
             return response()->json(['error' => 'Failed to store data'],500);
         }
@@ -532,7 +640,7 @@ class TradepersionDashboardController extends Controller
             $s3FileName = \Str::of($fileName)->basename('.'.$extension).'_'.now()->format('Y_m_d_H_i_s').'_'.rand(1000,9999).'.'.$image->getClientOriginalExtension();
             $path       = Storage::disk('s3')->put('Testfolder/'.$s3FileName,file_get_contents($image->getRealPath(),'public'));
             $path       = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
-            $oldLogo   = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'company_logo'])->first();
+            $oldLogos   = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'company_logo'])->get();
 
             $companyLogo = new TradespersonFile();
             $companyLogo->tradesperson_id   = Auth::user()->id;
@@ -543,7 +651,10 @@ class TradepersionDashboardController extends Controller
             $companyLogo->url               = $path;
             if($companyLogo->save()){
                 // Delete Old Logo
-                TradespersonFile::where('id',$oldLogo->id)->delete();
+                foreach($oldLogos as $oldLogo) {
+                    $oldLogo->delete();
+                }
+                // TradespersonFile::where('id',$oldLogo->id)->delete();
                 // Set Company Logo As User's Profile Image
                 $user = Auth::user();
                 $user->profile_image = $path;
@@ -605,38 +716,74 @@ class TradepersionDashboardController extends Controller
                 'file_type' =>'nullable',
             ]);
 
-            $image = $request->file('file');
-            $fileName = $request->file('file')->getClientOriginalName();
-            $extension = $image->getClientOriginalExtension();
-            $s3FileName = \Str::of($fileName)->basename('.'.$extension).'_'.now()->format('Y_m_d_H_i_s').'_'.rand(1000,9999).'.'.$image->getClientOriginalExtension();
-            $path = Storage::disk('s3')->put('Testfolder/'.$s3FileName,file_get_contents($image->getRealPath(),'public'));
-            $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+            $files = $request->file('file');
+            $response = [];
 
-            $fileType = '';
-            if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
-                $fileType = 'image';
-            else
-                $fileType = 'document';
+            foreach($files as $file){
 
-            // $tradesperson_file = new TradespersonFile();
-            // $tradesperson_file->tradesperson_id   = Auth::user()->id;
-            // $tradesperson_file->file_related_to   = $request->file_related_to;
-            // $tradesperson_file->file_type         = $request->file_type;
-            // $tradesperson_file->file_name          = $fileName;
-            // $tradesperson_file->file_extension    = $extension;
-            // $tradesperson_file->url               = $path;
-            // $tradesperson_file->save();
-            $tradesperson_file = TradespersonFile::create([
-                'tradesperson_id' => Auth::user()->id,
-                'file_related_to' => $request->file_related_to,
-                'file_type'       => $fileType,
-                'file_name'       => $fileName,
-                'file_extension'  => $extension,
-                'url'             => $path,
-            ]);
+                $fileName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $s3FileName = \Str::uuid().'.'.$extension;
+                Storage::disk('s3')->put('Testfolder/'.$s3FileName,file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+                $single_file_uploads = ['company_logo'];
 
-            // return response()->json(['image_link'=>$path, 'id'=>]);
-            return response()->json(['file' => $tradesperson_file]);
+                if( in_array($request->file_related_to, $single_file_uploads)){
+                    $delete_medias_after_save = TradespersonFile::where(['file_related_to'=> $request->file_related_to, 'tradesperson_id' =>  $user->id])->get();
+                }
+
+                $fileType  = '';
+                $image_ext = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'heic', 'heif'];
+                $video_ext = ['avi', 'mp4', 'm4v', 'ogv', '3gp', '3g2'];
+                // if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
+                //     $fileType = 'image';
+                // else
+                //     $fileType = 'document';
+
+                if ( in_array($extension, $image_ext) )
+                    $fileType = 'image';
+                elseif ( in_array($extension, $video_ext) )
+                    $fileType = 'video';
+                else
+                    $fileType = 'document';
+
+                // $tradesperson_file = new TradespersonFile();
+                // $tradesperson_file->tradesperson_id   = Auth::user()->id;
+                // $tradesperson_file->file_related_to   = $request->file_related_to;
+                // $tradesperson_file->file_type         = $request->file_type;
+                // $tradesperson_file->file_name          = $fileName;
+                // $tradesperson_file->file_extension    = $extension;
+                // $tradesperson_file->url               = $path;
+                // $tradesperson_file->save();
+                $tradesperson_file = TradespersonFile::create([
+                    'tradesperson_id' => Auth::user()->id,
+                    'file_related_to' => $request->file_related_to,
+                    'file_type'       => $fileType,
+                    'file_name'       => $fileName,
+                    'file_extension'  => $extension,
+                    'url'             => $path,
+                ]);
+
+                // Set Company Logo As User's Profile Image
+                if($request->file_related_to == 'company_logo') {
+                    $user = Auth::user();
+                    $user->profile_image = $path;
+                    $user->save();
+                }
+
+                // $uploaded_file = ['file' => $tradesperson_file];
+                // array_push($response, $uploaded_file);
+                array_push($response, $tradesperson_file);
+
+                if (isset($delete_medias_after_save) && !empty($delete_medias_after_save)) {
+                    $delete_medias_after_save->each(function ($media) {
+                        $media->delete();
+                    });
+                }
+            }
+
+            return $response;
+            // return response()->json(['file' => $tradesperson_file]);
         } catch(\Exception $e) {
             return response()->json(['error' => 'Failed to store data'],500);
         }

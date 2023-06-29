@@ -104,3 +104,19 @@ video.customer-video{
   border-radius: 10px;
   margin-top: 15px;
 }
+
+.rectangle-video-lg {
+    width: 200px !important;
+    height: 138px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 0 !important;
+}
+
+.center-svg {
+    vertical-align: -50%;
+}
+
+.h-95 {
+    height: 95% !important;
+}
