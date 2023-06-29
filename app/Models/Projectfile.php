@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Projectfile extends Model
 {
     use HasFactory;
+
+
+
+    public function project(){
+        return $this->belongsTo(Project::class,'project_id');
+    }
 }

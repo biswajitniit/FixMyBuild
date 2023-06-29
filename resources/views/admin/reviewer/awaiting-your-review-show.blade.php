@@ -137,127 +137,33 @@
                                 </div>
                             </div>
                         </div>
-
-                        @if ($project->reviewer_status == 'Refer')
-                            <div class="mb-3 row">
-                                <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
-                                <div class="col-lg-9 mt-2">
-                                    <div id="approve" style="display: none;">
-                                        <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
-                                    </div>
-                                    <div id="refer" style="display: block;">
-                                        <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
-                                    </div>
-
-                                    <input type="hidden" name="your_decision" id="your_decision" value="Refer">
-                                </div>
-                            </div>
-                        @endif
-
-                        @if ($project->reviewer_status == 'Approve')
-                            <div class="mb-3 row">
-                                <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
-                                <div class="col-lg-9 mt-2">
-                                    <div id="approve" style="display: block;">
-                                        <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
-                                    </div>
-                                    <div id="refer" style="display: none;">
-                                        <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
-                                    </div>
-
-                                    <input type="hidden" name="your_decision" id="your_decision" value="Approve">
-                                </div>
-                            </div>
-                        @endif
-
-                        @if ($project->reviewer_status == '')
-                            <div class="mb-3 row">
-                                <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
-                                <div class="col-lg-9 mt-2">
-                                    <select>
-                                        <option value="approve">Approve</option>
-                                        <option value="refer">Refer</option>
-                                    </select>
-                                    {{-- <div id="approve">
-                                        <a onclick="return show_approve_refer('Approve')" class="btn btn-success">Approve</a>
-                                    </div>
-                                    <div id="refer" style="display: none;">
-                                        <a onclick="return show_approve_refer('Refer')" class="btn btn-danger">Refer</a>
-                                    </div>--}}
-
-                                    <input type="hidden" name="your_decision" id="your_decision" value="Approve">
-
-                                </div>
-                            </div>
-                        @endif
-
-
-
-                        @if($projectnotesandcommend->isNotEmpty())
-                            @foreach ($projectnotesandcommend as $row)
-
-                                @if($row->notes_for == 'customer')
-                                    <div class="mb-3 row">
-                                        <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                        <div class="col-lg-9 mt-3">
-                                            <textarea class="form-control" name="notes_for_customer" rows="5">{{ $row->notes }}</textarea>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if($row->notes_for == 'internal')
-                                    <div class="mb-3 row">
-                                        <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                        <div class="col-lg-9 mt-3">
-                                            <textarea class="form-control" name="notes_for_internal" rows="5">{{ $row->notes }}</textarea>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if($row->notes_for == 'tradespeople')
-                                    <div class="mb-3 row">
-                                        <label class="col-lg-3 col-form-label" for="example-textarea">Notes for {{ $row->notes_for }}</label>
-                                        <div class="col-lg-9 mt-3">
-                                            <textarea class="form-control" name="notes_for_tradespeople" rows="5" id="editor-description">{{ $row->notes }}</textarea>
-                                        </div>
-                                    </div>
-                                @endif
-
-                            @endforeach
-                        @else
-
-                            <div class="mb-3 row">
-                                <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Internal</label>
-                                <div class="col-lg-9 mt-3">
-                                    <textarea class="form-control" name="notes_for_internal" rows="5"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="mb-3 row">
-                                <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Customer</label>
-                                <div class="col-lg-9 mt-3">
-                                    <textarea class="form-control" name="notes_for_customer" rows="5"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="mb-3 row">
-                                <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Tradespeople</label>
-                                <div class="col-lg-9 mt-3">
-                                    <textarea class="form-control" name="notes_for_tradespeople" rows="5"></textarea>
-                                </div>
-                            </div>
-                        @endif
-
-                        {{-- <div class="row">
-                            <div class="col-lg-12">
-                                <div class="mb-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" id="addCF" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus icon-dual"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-
-                                </div>
-                            </div>
-                            <!-- end col -->
-                        </div> --}}
-
+                          <div class="mb-3 row">
+                              <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
+                              <div class="col-lg-9 mt-2">
+                                  <select name="reviewer_status">
+                                      <option value="approve">Approve</option>
+                                      <option value="refer">Refer</option>
+                                  </select>
+                              </div>
+                          </div>
+                          <div class="mb-3 row">
+                              <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Internal</label>
+                              <div class="col-lg-9 mt-3">
+                                  <textarea class="form-control" name="notes_for_internal" rows="10">{{ $project->internal_note }}</textarea>
+                              </div>
+                          </div>
+                          <div class="mb-3 row">
+                              <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Customer</label>
+                              <div class="col-lg-9 mt-3">
+                                  <textarea class="form-control" name="notes_for_customer" rows="10">{{ $project->internal_note }}</textarea>
+                              </div>
+                          </div>
+                          <div class="mb-3 row">
+                              <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Tradespeople</label>
+                              <div class="col-lg-9 mt-3">
+                                  <textarea class="form-control" name="notes_for_tradespeople" rows="10">{{ $project->tradeperson }}</textarea>
+                              </div>
+                          </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="mb-3">
@@ -348,21 +254,7 @@
   <!-- main-panel ends -->
 @push('scripts')
 <script>
-    CKEDITOR.replace( 'editor-description' );
 
-   function show_approve_refer(type){
-        if(type == 'Approve'){
-            $("#refer").show();
-            $("#approve").hide();
-            $("#your_decision").attr('value','Refer');
-        }
-        if(type == 'Refer'){
-            $("#approve").show();
-            $("#refer").hide();
-            $("#your_decision").attr('value','Approve');
-        }
-
-   }
 function get_builder_subcategory_list() {
     var val = [];
     $('.catid:checked').each(function(i) {
@@ -382,22 +274,6 @@ function get_builder_subcategory_list() {
 }
 
 $(document).ready(function(){
-    $("#addCF").click(function(){
-        if($("#count_total_record_id").val() != ""){
-            var counter = parseInt($("#count_total_record_id").val()) + 1;
-            $("#count_total_record_id").attr('value',counter);
-        }else{
-            var counter = 2;
-            $("#count_total_record_id").attr('value',counter);
-        }
-        var newTextBoxDiv = $(document.createElement('tr'));
-        newTextBoxDiv.after().html('<td><select name="notes_for[]" id="notes_for'+counter+'" class="form-select" ><option value="internal">Internal</option><option value="customer">To Customer</option><option value="tradespeople">For Tradespeople</option></select></td><td><textarea name="description[]" class="form-control" id="description'+counter+'"></textarea></td><td><a href="javascript:void(0);" class="remCF"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-delete"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg></a></td>');
-        newTextBoxDiv.appendTo("#TextBoxesGroup");
-        counter++;
-        $(".remCF").on('click',function(){
-            $(this).parent().parent().remove();
-        });
-    });
 });
 
 </script>
