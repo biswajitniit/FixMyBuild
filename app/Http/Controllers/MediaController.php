@@ -60,12 +60,12 @@ class MediaController extends Controller
         return response()->json([
           'status' => 'success',
           'message' => 'Video Uploaded successfully.',
-        ], 200); 
+        ], 200);
       }catch(Exception $e){
         return response()->json([
           'status' => 'error',
           'message' => $e,
-        ], 500); 
+        ], 500);
       }
       //  return $url;
     }
@@ -96,8 +96,7 @@ class MediaController extends Controller
 
 
     public function capture_photo(Request $request){
-        
-        //dd($request);
+
         try{
         for($i=0; $i<$request->image_count;$i++){
          $img_var = 'image_'.$i;
@@ -127,6 +126,8 @@ class MediaController extends Controller
         $tempmedia->filename        = $fileName;
         $tempmedia->sessionid       = Session::getId();
         $tempmedia->file_type       = "Image";
+        $tempmedia->media_type      = $request->media_type ?? 'customer';
+        $tempmedia->file_related_to = $request->file_related_to;
         $tempmedia->file_extension  = 'png';
         $tempmedia->url             = $spath;
         $tempmedia->file_created_date = date('Y-m-d');
@@ -138,12 +139,12 @@ class MediaController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Image Uploaded successfully.',
-          ], 200); 
-        }catch(Exception $e){
+          ], 200);
+        }catch(\Exception $e){
           return response()->json([
             'status' => 'error',
             'message' => $e,
-          ], 500); 
+          ], 500);
         }
     }
 
@@ -204,26 +205,128 @@ class MediaController extends Controller
         //     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         // ]);
 
+        try{
+            $user = Auth::user()->id;
 
-        $extension = $request->file->extension();
-        $filename = $request->file('file')->getClientOriginalName();
-        $file = $request->file('file');
-        $path = Storage::disk('s3')->put('Testfolder/'.$filename,file_get_contents($file->getRealPath(),'public'));
-        $path = Storage::disk('s3')->url('Testfolder/'.$filename);
+            $this->validate($request, [
+                'media_type' => 'required|string',
+            ]);
+
+            $files = $request->file('file');
+            $response = [];
+
+            // if (!is_array($files)) {
+            //     $file = $files;
+            //     $fileName = $file->getClientOriginalName();
+            //     $extension = $file->getClientOriginalExtension();
+            //     $s3FileName = \Str::uuid().'.'.$extension;
+            //     Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
+            //     $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+
+            //     $single_file_uploads = ['company_logo'];
+
+            //     if( in_array($request->file_related_to, $single_file_uploads)){
+            //         $delete_medias_after_save = tempmedia::where(['file_related_to'=> $request->file_related_to, 'media_type'=> 'tradesperson', 'user_id' => $user])->get();
+            //     }
+
+            //     $fileType = '';
+            //     if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
+            //         $fileType = 'image';
+            //     else
+            //         $fileType = 'document';
+
+            //     $temp_media = new Tempmedia();
+            //     $temp_media->user_id           = $user;
+            //     $temp_media->sessionid         = session()->getId();
+            //     $temp_media->file_type         = $fileType;
+            //     $temp_media->media_type        = $request->media_type;
+            //     $temp_media->filename          = $fileName;
+            //     $temp_media->file_extension    = $extension;
+            //     $temp_media->url               = $path;
+            //     $temp_media->file_created_date = now()->toDateString();
+            //     $temp_media->save();
+            //     $saved_file                    = $temp_media->id;
+
+            //     if (isset($delete_medias_after_save) && !empty($delete_medias_after_save)) {
+            //         $delete_medias_after_save->each(function ($media) {
+            //             $media->delete();
+            //         });
+            //     }
+
+            //     return response()->json(['image_link' => $path, 'file_name' => $fileName, 'file_id' => $saved_file]);
+            // }
+
+            foreach($files as $file) {
+                $fileName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $s3FileName = \Str::uuid().'.'.$extension;
+                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+
+                $single_file_uploads = ['company_logo'];
+
+                if( in_array($request->file_related_to, $single_file_uploads)){
+                    $delete_medias_after_save = tempmedia::where(['file_related_to'=> $request->file_related_to, 'media_type'=> 'tradesperson', 'user_id' => $user])->get();
+                }
+
+                $fileType  = '';
+                $image_ext = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'heic', 'heif'];
+                $video_ext = ['avi', 'mp4', 'm4v', 'ogv', '3gp', '3g2'];
+                // if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
+                if ( in_array($extension, $image_ext) )
+                    $fileType = 'image';
+                elseif ( in_array($extension, $video_ext) )
+                    $fileType = 'video';
+                else
+                    $fileType = 'document';
+
+                $temp_media = new Tempmedia();
+                $temp_media->user_id           = $user;
+                $temp_media->sessionid         = session()->getId();
+                $temp_media->file_type         = $fileType;
+                $temp_media->media_type        = $request->media_type;
+                $temp_media->file_related_to   = $request->file_related_to;
+                $temp_media->filename          = $fileName;
+                $temp_media->file_extension    = $extension;
+                $temp_media->url               = $path;
+                $temp_media->file_created_date = now()->toDateString();
+                $temp_media->save();
+                $saved_file                    = $temp_media->id;
+
+                $uploaded_file = ['image_link' => $path, 'file_name' => $fileName, 'file_id' => $saved_file];
+                array_push($response, $uploaded_file);
+
+                if (isset($delete_medias_after_save) && !empty($delete_medias_after_save)) {
+                    $delete_medias_after_save->each(function ($media) {
+                        $media->delete();
+                    });
+                }
+            }
+
+            return response()->json($response);
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Failed to store data'],500);
+        }
+
+        // $extension = $request->file->extension();
+        // $filename = $request->file('file')->getClientOriginalName();
+        // $file = $request->file('file');
+        // $path = Storage::disk('s3')->put('Testfolder/'.$filename,file_get_contents($file->getRealPath(),'public'));
+        // $path = Storage::disk('s3')->url('Testfolder/'.$filename);
 
 
-        $tempmedia = new Tempmedia();
-        $tempmedia->user_id         = Auth::user()->id;
-        $tempmedia->filename        = $filename;
-        $tempmedia->file_extension  = $extension;
-        $tempmedia->file_type       = "Document";
-        $tempmedia->url             = $path;
-        $tempmedia->file_created_date = date('Y-m-d');
-        $tempmedia->save();
+        // $tempmedia = new Tempmedia();
+        // $tempmedia->user_id         = Auth::user()->id;
+        // $tempmedia->filename        = $filename;
+        // $tempmedia->file_extension  = $extension;
+        // $tempmedia->file_type       = "Document";
+        // $tempmedia->url             = $path;
+        // $tempmedia->file_created_date = date('Y-m-d');
+        // $tempmedia->save();
 
         /* Store $imageName name in DATABASE from HERE */
 
-        return response()->json(['success' => $filename]);
+        // return response()->json(['success' => $filename]);
 
     }
 
@@ -239,6 +342,22 @@ class MediaController extends Controller
         return $filename;
     }
 
+    public function deleteTempFile(Request $request) {
 
+        $query = Tempmedia::where('id', $request->file)->first();
+        $s3filename = explode("/",$query->url);
+        $s3filename = end($s3filename);
+
+        if(Tempmedia::where('id', $request->file)->delete()) {
+            Storage::disk('s3')->delete('Testfolder/'. $s3filename);
+            return response()->json([
+                'response' => 'success',
+            ]);
+        }
+
+        return response()->json([
+            'response' => 'fail',
+        ]);
+    }
 
 }

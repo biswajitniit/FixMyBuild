@@ -52,6 +52,7 @@ Route::post('/capture-photo-project-return-for-review', [MediaController::class,
 Route::get('/dropzoneupload', [MediaController::class, 'dropzoneupload'])->name('dropzoneupload');
 Route::post('/dropzonesave', [MediaController::class, 'dropzonesave'])->name('dropzonesave');
 Route::post('/dropzonedestroy', [MediaController::class, 'dropzonedestroy'])->name('dropzonedestroy');
+Route::delete('/delete-temp-file', [MediaController::class, 'deleteTempFile'])->name('deleteTempFile');
 
 
 Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login');
@@ -89,6 +90,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::get('/termspage/{pageid}', [HomeController::class, 'termspage'])->name('termspage');
     Route::get('/terms-of-service', [HomeController::class, 'terms_of_service'])->name('terms-of-service');
 
+    Route::get('testTwilio', [ForgotPasswordController::class, 'testTwilio'])->name('forget.password.get');
 
     Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
     Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
@@ -108,7 +110,6 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
     Route::get('/auth/microsoft', [MicrosoftController::class, 'redirect'])->name('microsoft-auth');
     Route::get('/microsoft/callback', [GoogleController::class, 'callbackFromMicrosoft'])->name('microsoftcallback');
-
 
     Route::get('/dashboard', function () {
         return view('Dashboard/dashboard');
@@ -213,6 +214,12 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('settings', [TradepersionDashboardController::class, 'settings'])->name('tradepersion.settings');
 
         Route::group(['as' => 'tradesperson.'], function () {
+            Route::get('get-temp-team-image', [TradepersionDashboardController::class, 'getTempTeamImages'])->name('getTeamImages');
+            Route::get('get-temp-prev-image', [TradepersionDashboardController::class, 'getTempPrevProjImages'])->name('getPrevProjImage');
+            Route::get('get-temp-photo-id', [TradepersionDashboardController::class, 'getTempPhotoIdProof'])->name('getTempPhotoId');
+            Route::get('get-public-liability-insurance', [TradepersionDashboardController::class, 'getTempPublicLiabilityInsurance'])->name('publicLiabilityInsurance');
+            Route::get('get-company-address-proof', [TradepersionDashboardController::class, 'getTempCompAddrProof'])->name('getCompanyAddr');
+            Route::get('get-product-image', [TradepersionDashboardController::class, 'getProductImage'])->name('getProductImage');
             Route::post('updateTraderName', [TradepersionDashboardController::class, 'updateTraderName'])->name('updateTraderName');
             Route::post('updateTraderDesc', [TradepersionDashboardController::class, 'updateTraderDesc'])->name('updateTraderDesc');
             Route::post('updateTraderContactInfo', [TradepersionDashboardController::class, 'updateTraderContactInfo'])->name('updateTraderContactInfo');

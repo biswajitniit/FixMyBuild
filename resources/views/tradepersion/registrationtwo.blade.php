@@ -76,248 +76,13 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal" id="cancel_single_file_upload">Cancel</button>
                 <button type="button" class="btn btn-light" id="upload_single_file">Upload</button>
             </div>
         </div>
     </div>
 </div>
 {{-- Company Logo Upload Modal Ends --}}
-
-{{-- Public liability insurance Modal Starts --}}
-{{-- <div class="modal fade select_address" id="pliModal" tabindex="-1" aria-labelledby="pliModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header pb-0">
-                <h5 class="modal-title" id="pliModalLabel">Upload Files</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                            fill="black"
-                        />
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12 supported_">
-                        <h5>
-                            Supported file type list:
-                            <div class="ext_">.gif .jpeg, .jpg .png .svg .webp .pdf</div>
-                        </h5>
-                        <form method="post" enctype="multipart/form-data" id="pli_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
-                            @csrf
-                            <div class="dz-message">
-                                <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                                <p>Drag and drop a file here</p>
-                                <h4>OR</h4>
-                                <button type="button" id="pli_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
-                            </div>
-                        </form>
-                        <div class='invalid-file'></div>
-                        <div class="dropzone-messages"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light" id="upload_pli" disabled>Upload</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-{{-- Public liability insurance Upload Modal Ends --}}
-
-{{-- Trader Image Modal Starts --}}
-{{-- <div class="modal fade select_address" id="traderImgDropzoneModal" tabindex="-1" aria-labelledby="traderImgDropzoneModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header pb-0">
-                <h5 class="modal-title" id="traderImgDropzoneModalLabel">Upload Files</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                            fill="black"
-                        />
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12 supported_">
-                        <h5>
-                            Supported file type list:
-                            <div class="ext_">.gif .jpeg, .jpg .png .svg .webp .pdf</div>
-                        </h5>
-                        <form method="post" enctype="multipart/form-data" id="trader_img_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
-                            @csrf
-                            <div class="dz-message">
-                                <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                                <p>Drag and drop a file here</p>
-                                <h4>OR</h4>
-                                <button type="button" id="trader_img_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
-                            </div>
-                        </form>
-                        <div class='invalid-file'></div>
-                        <div class="dropzone-messages"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light" id="upload_trader_img" disabled>Upload</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-{{-- Trader Image Modal Ends--}}
-
-
-{{-- Trader Address Modal Starts --}}
-{{-- <div class="modal fade select_address" id="traderAddressModal" tabindex="-1" aria-labelledby="traderAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header pb-0">
-                <h5 class="modal-title" id="traderAddressModalLabel">Upload Files</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                            fill="black"
-                        />
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12 supported_">
-                        <h5>
-                            Supported file type list:
-                            <div class="ext_">.gif .jpeg, .jpg .png .svg .webp .pdf</div>
-                        </h5>
-                        <form method="post" enctype="multipart/form-data" id="trader_addr_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
-                            @csrf
-                            <div class="dz-message">
-                                <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                                <p>Drag and drop a file here</p>
-                                <h4>OR</h4>
-                                <button type="button" id="trader_addr_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
-                            </div>
-                        </form>
-                        <div class='invalid-file'></div>
-                        <div class="dropzone-messages"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light" id="upload_trader_addr" disabled>Upload</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-{{-- Trader Address Modal Ends--}}
-
-
-{{-- Team Photos Upload Modal Starts --}}
-{{-- <div class="modal fade select_address" id="teamPhotoModal" tabindex="-1" aria-labelledby="teamPhotoModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="teamPhotoModal">Upload files</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/>
-                </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                <div class="col-md-6 supported_">
-                    <h4>Supported file type list:</h4>
-                    <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
-                    <h6><strong>Documents:</strong> .doc, .docx .key .odt .pdf .ppt, .pptx, .pps, .ppsx .xls, .xlsx</h6>
-                    <h6><strong>Audio:</strong> .mp3 .m4a .ogg .wav</h6>
-                    <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6>
-                </div>
-                <div class="col-md-6">
-                    <!-- <div class="text-center upload_wrap">
-                        <img src="{{ asset('frontend/img/upload.svg') }}" alt="">
-                        <p>Drag and drop files here</p>
-                        <h4>OR</h4>
-                        <button type="button" class="btn btn-light mt-3" style="width:180px;">Browse files</button>
-                    </div> -->
-                    <form action="{{ route('tradesperson.storeTeamPhoto') }}" method="post" enctype="multipart/form-data" id="team_photo_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
-                        @csrf
-                        <div class="dz-default dz-message">
-                            <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                            <p>Drag and drop a file here</p>
-                            <h4>OR</h4>
-                            <button type="button" id="team_photo_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
-                        </div>
-                    </form>
-                </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light" id="upload_team_photo">Upload</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-{{-- Team Photos Upload Modal Ends --}}
-
-{{-- Previous Project Upload Modal Starts --}}
-{{-- <div class="modal fade select_address" id="prevProjModal" tabindex="-1" aria-labelledby="prevProjModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="prevProjModal">Upload files</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/>
-                </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                <div class="col-md-6 supported_">
-                    <h4>Supported file type list:</h4>
-                    <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
-                    <h6><strong>Documents:</strong> .doc, .docx .key .odt .pdf .ppt, .pptx, .pps, .ppsx .xls, .xlsx</h6>
-                    <h6><strong>Audio:</strong> .mp3 .m4a .ogg .wav</h6>
-                    <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6>
-                </div>
-                <div class="col-md-6">
-                    <!-- <div class="text-center upload_wrap">
-                        <img src="{{ asset('frontend/img/upload.svg') }}" alt="">
-                        <p>Drag and drop files here</p>
-                        <h4>OR</h4>
-                        <button type="button" class="btn btn-light mt-3" style="width:180px;">Browse files</button>
-                    </div> -->
-                    <form action="{{ route('tradesperson.storePrevProj') }}" method="post" enctype="multipart/form-data" id="prev_proj_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
-                        @csrf
-                        <div class="dz-default dz-message">
-                            <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                            <p>Drag and drop a file here</p>
-                            <h4>OR</h4>
-                            <button type="button" id="prev_proj_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
-                        </div>
-                    </form>
-                </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-light" id="upload_prev_proj">Upload</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-{{-- Previous Project Upload Modal Ends --}}
 
 {{-- Multiple File Upload Image Modal Starts --}}
 <div class="modal fade select_address" id="multiModal" tabindex="-1" aria-labelledby="multiModalLabel" aria-hidden="true">
@@ -390,6 +155,27 @@
     </div>
 </div>
 {{-- Multiple File Upload Image Modal Ends--}}
+
+<!-- Delete Image Modal -->
+<div class="modal fade select_address" id="Delete_wp" tabindex="-1" aria-labelledby="deleteImageModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+            <svg width="73" height="73" viewBox="0 0 73 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M36.5 0C29.281 0 22.2241 2.14069 16.2217 6.15136C10.2193 10.162 5.54101 15.8625 2.77841 22.532C0.0158149 29.2015 -0.707007 36.5405 0.701354 43.6208C2.10971 50.7011 5.586 57.2048 10.6906 62.3094C15.7952 67.414 22.2989 70.8903 29.3792 72.2986C36.4595 73.707 43.7984 72.9842 50.4679 70.2216C57.1374 67.459 62.838 62.7807 66.8486 56.7783C70.8593 50.7759 73 43.719 73 36.5C72.9907 26.8224 69.1422 17.5439 62.2991 10.7009C55.4561 3.8578 46.1776 0.00929194 36.5 0ZM36.5 67.3846C30.3916 67.3846 24.4204 65.5732 19.3414 62.1796C14.2625 58.786 10.3039 53.9624 7.96635 48.319C5.62877 42.6756 5.01715 36.4657 6.20884 30.4747C7.40053 24.4837 10.342 18.9806 14.6613 14.6613C18.9806 10.342 24.4837 7.40051 30.4747 6.20882C36.4657 5.01713 42.6756 5.62875 48.319 7.96633C53.9625 10.3039 58.786 14.2625 62.1796 19.3414C65.5733 24.4204 67.3846 30.3916 67.3846 36.5C67.3753 44.6882 64.1184 52.5385 58.3285 58.3284C52.5385 64.1184 44.6883 67.3753 36.5 67.3846ZM40.7115 54.75C40.7115 55.583 40.4645 56.3972 40.0018 57.0898C39.539 57.7824 38.8812 58.3222 38.1117 58.6409C37.3421 58.9597 36.4953 59.0431 35.6784 58.8806C34.8614 58.7181 34.111 58.317 33.522 57.728C32.933 57.139 32.5319 56.3886 32.3694 55.5716C32.2069 54.7547 32.2903 53.9079 32.6091 53.1383C32.9278 52.3687 33.4676 51.711 34.1602 51.2482C34.8528 50.7855 35.667 50.5384 36.5 50.5384C37.617 50.5384 38.6882 50.9822 39.478 51.772C40.2678 52.5618 40.7115 53.633 40.7115 54.75ZM49.1346 29.4808C49.1346 32.3437 48.1623 35.1218 46.3769 37.3599C44.5916 39.5979 42.0991 41.1633 39.3077 41.7995V42.1154C39.3077 42.86 39.0119 43.5742 38.4853 44.1007C37.9588 44.6273 37.2447 44.9231 36.5 44.9231C35.7554 44.9231 35.0412 44.6273 34.5147 44.1007C33.9881 43.5742 33.6923 42.86 33.6923 42.1154V39.3077C33.6923 38.563 33.9881 37.8489 34.5147 37.3223C35.0412 36.7958 35.7554 36.5 36.5 36.5C37.8883 36.5 39.2454 36.0883 40.3997 35.317C41.554 34.5458 42.4537 33.4495 42.9849 32.1669C43.5162 30.8843 43.6552 29.473 43.3844 28.1114C43.1135 26.7498 42.445 25.4991 41.4634 24.5174C40.4817 23.5358 39.231 22.8672 37.8694 22.5964C36.5078 22.3256 35.0965 22.4646 33.8139 22.9958C32.5313 23.5271 31.435 24.4268 30.6637 25.5811C29.8924 26.7354 29.4808 28.0925 29.4808 29.4808C29.4808 30.2254 29.185 30.9396 28.6584 31.4661C28.1319 31.9926 27.4177 32.2885 26.6731 32.2885C25.9284 32.2885 25.2143 31.9926 24.6877 31.4661C24.1612 30.9396 23.8654 30.2254 23.8654 29.4808C23.8654 26.1299 25.1965 22.9162 27.566 20.5467C29.9354 18.1773 33.1491 16.8461 36.5 16.8461C39.8509 16.8461 43.0646 18.1773 45.434 20.5467C47.8035 22.9162 49.1346 26.1299 49.1346 29.4808Z" fill="#061A48"/>
+                </svg>
+                <h5>Delete</h5>
+                <p>Are you sure you want to permanently delete this item?</p>
+                <h4 class="text-danger"></h4>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-light" onclick="deleteFile()" id="confirmedDelete">Yes</button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Image Modal END -->
 
 <section>
     <div class="container">
@@ -534,7 +320,8 @@
                          <div class="row mt-3">
                            <div class="col-md-4">
                               <div class="form-group">
-                                 <a data-bs-toggle="modal" data-bs-target="#takePhotoModal" class="btn btn-outline-danger btn-block">
+                                 {{-- <a data-bs-toggle="modal" data-bs-target="#takePhotoModal" class="btn btn-outline-danger btn-block"> --}}
+                                    <a data-bs-toggle="modal" data-bs-target="#exampleModal4" id="public_liability_insurance" onclick="capturePublicLiabilityIns('public_liability_insurance')" class="btn btn-outline-danger btn-block">
                                     <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z"
@@ -587,10 +374,10 @@
                                 </div>
                                </div>
                             </div>
-                            <div class="col-md-12 mt-3" id="uploaded_pli">
-                                @foreach ($temp_public_liability_insurances as $temp_public_liability_insurance)
+                            <div class="col-md-12 mt-3 pv_top" id="uploaded_pli">
+                                {{-- @foreach ($temp_public_liability_insurances as $temp_public_liability_insurance)
                                     <div class="d-inline mr-3">{{ $temp_public_liability_insurance->filename }}</div>
-                                @endforeach
+                                @endforeach --}}
                                {{-- <div class="d-inline mr-3">abc.doc (3MB) <a href="#"><img src="assets/img/crose-btn.svg" alt=""> </a></div> --}}
                             </div>
                          </div>
@@ -663,12 +450,14 @@
                       <div class="row mt-4">
                          <div class="col-md-3">
                             <div class="form-group">
-                               <button type="button" class="btn btn-outline-danger btn-block">
+                               {{-- <button type="button" class="btn btn-outline-danger btn-block"> --}}
+                                <a data-bs-toggle="modal" data-bs-target="#exampleModal4" id="photoIdProof" onclick="capturePhotoIdProof('trader_img')" class="btn btn-outline-danger btn-block">
                                   <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                      <path d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z" fill="#EE5719"/>
                                   </svg>
                                   {{-- Take photo/video --}}
                                   Take photo
+                                </a>
                                </button>
                             </div>
                          </div>
@@ -684,10 +473,10 @@
                                </button>
                             </div>
                          </div>
-                         <div class="col-md-12 mt-3" id="uploaded_trader_img">
-                            @foreach ($temp_trader_images as $temp_trader_img)
+                         <div class="col-md-12 mt-3 pv_top" id="uploaded_trader_img">
+                            {{-- @foreach ($temp_trader_images as $temp_trader_img)
                                 <div class="d-inline mr-3">{{ $temp_trader_img->filename }}</div>
-                            @endforeach
+                            @endforeach --}}
                         </div>
                       </div>
                    </div>
@@ -697,17 +486,19 @@
                       <h3>Please provide proof of company address</h3>
                       <p>e.g. Bank statement, bank certificate, credit card statement, statement of fees, tax letter/bill, utility bill, broadband bill, landline phone bill </p>
                       <div class="row mt-4">
-                         <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="form-group">
-                               <button type="submit" class="btn btn-outline-danger btn-block">
-                                  <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                     <path d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z" fill="#EE5719"/>
-                                  </svg>
-                                  {{-- Take photo/video --}}
-                                  Take photo
-                               </button>
+                                <a data-bs-toggle="modal" data-bs-target="#exampleModal4" id="compAddrProof" onclick="captureCompAddrProof('company_address')" class="btn btn-outline-danger btn-block">
+                                    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z"
+                                            fill="#EE5719"
+                                        />
+                                    </svg>
+                                    Take photo
+                                </a>
                             </div>
-                         </div>
+                        </div>
                          <div class="col-md-3">
                             <div class="form-group">
                                {{-- <a data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-outline-danger btn-block"> --}}
@@ -723,10 +514,10 @@
                          </div>
                       </div>
                       <div class="col-md-12 mt-3 mb-4">
-                         <div class="d-inline mr-3" id="uploaded_trader_addr">
-                            @foreach ($temp_comp_addresses as $addr)
+                         <div class="d-inline mr-3 pv_top" id="uploaded_trader_addr">
+                            {{-- @foreach ($temp_comp_addresses as $addr)
                                 <div class="d-inline mr-3">{{ $addr->filename }}</div>
-                            @endforeach
+                            @endforeach --}}
                          </div>
                       </div>
                    </div>
@@ -784,13 +575,15 @@
                          <div class="row mt-4">
                             <div class="col-md-6">
                                <div class="form-group">
-                                  <button type="submit" class="btn btn-outline-danger btn-block">
+                                  {{-- <button type="submit" class="btn btn-outline-danger btn-block"> --}}
+                                    <a data-bs-toggle="modal" data-bs-target="#exampleModal4" id="teamPhoto" onclick="captureTeamPhoto('team_img')" class="btn btn-outline-danger btn-block">
                                      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z" fill="#EE5719"/>
                                      </svg>
                                      {{-- Take photo/video --}}
                                      Take photo
-                                  </button>
+                                    </a>
+                                  {{-- </button> --}}
                                </div>
                             </div>
                             <div class="col-md-6">
@@ -805,14 +598,14 @@
                                     </button>
                                </div>
                             </div>
-                            <div class="mt-3 mb-4" id="uploaded_team_photo">
-                                @if($temp_team_imgs)
+                            <div class="mt-3 mb-4 pv_top" id="uploaded_team_photo">
+                                {{-- @if($temp_team_imgs)
                                     @foreach ($temp_team_imgs as $temp_team_img)
                                         <div class="d-inline mr-3">
                                             <a href="#"><img src="{{ $temp_team_img->url }}" alt="" class="rectangle-img mb-1"> </a>
                                         </div>
                                     @endforeach
-                                @endif
+                                @endif --}}
                             </div>
                          </div>
                       </div>
@@ -822,13 +615,15 @@
                          <div class="row mt-4">
                             <div class="col-md-6">
                                <div class="form-group">
-                                  <button type="submit" class="btn btn-outline-danger btn-block">
+                                  {{-- <button type="submit" class="btn btn-outline-danger btn-block"> --}}
+                                    <a data-bs-toggle="modal" data-bs-target="#exampleModal4" id="teamPhoto" onclick="captureTeamPhoto('prev_project_img')" class="btn btn-outline-danger btn-block">
                                      <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M18 6V4H16V2H18V0H20V2H22V4H20V6H18ZM2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196 19.021 0 18.55 0 18V6C0 5.45 0.196 4.97933 0.588 4.588C0.979333 4.196 1.45 4 2 4H5.15L7 2H13V4H7.875L6.05 6H2V18H18V9H20V18C20 18.55 19.8043 19.021 19.413 19.413C19.021 19.8043 18.55 20 18 20H2ZM10 16.5C11.25 16.5 12.3127 16.0627 13.188 15.188C14.0627 14.3127 14.5 13.25 14.5 12C14.5 10.75 14.0627 9.68733 13.188 8.812C12.3127 7.93733 11.25 7.5 10 7.5C8.75 7.5 7.68733 7.93733 6.812 8.812C5.93733 9.68733 5.5 10.75 5.5 12C5.5 13.25 5.93733 14.3127 6.812 15.188C7.68733 16.0627 8.75 16.5 10 16.5ZM10 14.5C9.3 14.5 8.70833 14.2583 8.225 13.775C7.74167 13.2917 7.5 12.7 7.5 12C7.5 11.3 7.74167 10.7083 8.225 10.225C8.70833 9.74167 9.3 9.5 10 9.5C10.7 9.5 11.2917 9.74167 11.775 10.225C12.2583 10.7083 12.5 11.3 12.5 12C12.5 12.7 12.2583 13.2917 11.775 13.775C11.2917 14.2583 10.7 14.5 10 14.5Z" fill="#EE5719"/>
                                      </svg>
                                      {{-- Take photo/video --}}
                                      Take photo
-                                  </button>
+                                    </a>
+                                  {{-- </button> --}}
                                </div>
                             </div>
                             <div class="col-md-6">
@@ -843,14 +638,14 @@
                                   </button>
                                </div>
                             </div>
-                            <div class="mt-3 mb-4" id="uploaded_prev_proj">
-                                @if($temp_prev_projs)
+                            <div class="mt-3 mb-4 pv_top" id="uploaded_prev_proj">
+                                {{-- @if($temp_prev_projs)
                                     @foreach ($temp_prev_projs as $temp_prev_proj)
                                         <div class="d-inline mr-3">
                                             <a href="#"><img src="{{ $temp_prev_proj->url }}" class="rectangle-img mb-1" /></a>
                                         </div>
                                     @endforeach
-                                @endif
+                                @endif --}}
                             </div>
                          </div>
                       </div>
@@ -1013,113 +808,230 @@
     </div>
  </section>
 
- <!-- The Modal Upload Photo file-->
- <div class="modal fade select_address" id="takePhotoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-lg">
-       <div class="modal-content">
-           <div class="modal-header">
-               <h5 class="modal-title" id="exampleModalLabel">Take photo</h5>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                       <path
-                           d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                           fill="black"
-                       />
-                   </svg>
-               </button>
-           </div>
-           <div class="modal-body">
-
-               <form method="POST" action="{{ route('capture-photo') }}" enctype="multipart/form-data">
-                   @csrf
-                       <div class="row">
-                           <div class="col-md-12 supported_">
-                               <div class="col-md-6">
-                                   <div id="my_camera"></div>
-                                   <br/>
-                                   <input type=button value="Take Snapshot" onClick="take_snapshot()">
-                                   <input type="hidden" name="image" class="image-tag" >
-                               </div>
-                               <div class="col-md-6">
-                                   <div id="results">Your captured image will appear here...</div>
-                               </div>
-                               <div class="col-md-12 text-center">
-                                   <br/>
-                                   <button class="btn btn-success">Submit</button>
-                               </div>
-                           </div>
-                       </div>
-               </form>
-
-
-           </div>
-           <div class="modal-footer">
-               <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-
-           </div>
-       </div>
-   </div>
-</div>
-<!-- The Modal Upload Photo file END-->
-
-<!-- The Modal Upload Video file-->
-<div class="modal fade select_address" id="takeVideoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-lg">
-       <div class="modal-content">
-           <div class="modal-header">
-               <h5 class="modal-title" id="exampleModalLabel">Take video</h5>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                       <path
-                           d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                           fill="black"
-                       />
-                   </svg>
-               </button>
-           </div>
-           <div class="modal-body">
-               <div class="row">
-                   <div class="col-md-12 supported_">
-
-                       <div id="my_camera_video"></div>
-                       <div id='gUMArea'>
-                           {{-- <div>
-                           <input type="radio" name="media" value="video" checked id='mediaVideo'>Video
-                           </div> --}}
-                           <button class="btn btn-default"  id='gUMbtn'>Request Stream</button>
-                       </div>
-                       <div id='btns' style="display: none;">
-
-                           <button  class="btn btn-default" id='start'>Start</button>
-                           <button  class="btn btn-default" id='stop'>Stop</button>
-                       </div>
-
-
-
-
-                   </div>
-               </div>
-           </div>
-           <div class="modal-footer">
-               <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-
-           </div>
-       </div>
-   </div>
-</div>
-<!-- The Modal Upload Video file END-->
+    <!-- The Modal Upload Photo file-->
+    <div class="modal fade select_address" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Take photo</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                              d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
+                              fill="black"
+                          />
+                      </svg>
+                  </button>
+                </div>
+                <form id="capturephoto">
+                  @csrf
+                  <div class="modal-body">
+                    {{-- <form method="POST" action="{{ route('capture-photo') }}" enctype="multipart/form-data"> --}}
+                    <div id="my_camera"></div>
+                    <input type="button" class="btn btn-outline-danger" value="Take Snapshot" onClick="take_snapshot()">
+                    <input type="hidden" name="image_count" id="image_count" class="image-tag">
+                    <input type="hidden" name="file_related_to" id="file_related_to">
+                    <div id="results" class="row"></div>
+                  </div>
+                  <div class="modal-footer">
+                    {{-- <button class="btn btn-danger">Submit</button> --}}
+                    <button class="btn btn-light" type="submit">Upload</button>
+                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal" id="close_image_modal">Close</button>
+                  </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- The Modal Upload Photo file END-->
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
 <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
 <script src="{{ asset('frontend/js/utils.js') }}"></script>
 <script type="text/javascript">
+
+
+    // function initialiseWebCam () {
+    //     var constraints = { audio: true, video: true };
+    //     navigator.mediaDevices.getUserMedia(constraints)
+    //     .then(function(mediaStream) {
+    //         Webcam.set({
+    //             width: 450,
+    //             height: 350,
+    //             image_format: 'jpeg',
+    //             jpeg_quality: 100
+    //         });
+    //         Webcam.attach( '#my_camera' );
+    //     })
+    //     .catch(function(err) { console.log(err.name + ": " + err.message); });
+    // }
+    // console.log(gUMbtn1);
+    // console.log(document.querySelector('#gUMbtn1'));
+
+    // $('#photoIdProof').click(initialiseWebCam('photoIdProof'));
+    let imagesArray = []
+    function take_snapshot() {
+      Webcam.snap( function(data_uri) {
+        //$(".image-tag").val(data_uri);
+        imagesArray.push(data_uri)
+        //document.getElementById('results').innerHTML = '<img src="'+data_uri+'" class="rounded"/>';
+      });
+      const form  = document.getElementById('capturephoto');
+      var formData = new FormData(form);
+      formData.append('image_count',  imagesArray.length);
+      for (let i = 0; i < imagesArray; i++) {
+        formData.append('image_' + i, imagesArray[i]);
+      }
+      displayImages();
+    }
+
+    function displayImages() {
+      let images = "";
+      output=document.getElementById('results');
+      for (i = 0; i < imagesArray.length; i++){
+        images += `<div class="col-4 col-sm-6 col-md-4 mt-2 image">
+          <img src="${imagesArray[i]}" alt="image" class="rounded">
+          <input type="hidden" name="image_${i}" class="image-tag" value="${imagesArray[i]}">
+          <div class="capture-image-level">Image Capture ${i+1}
+            <span class="capture-image-delete" onclick="deleteImage(${i})">&times;</span>
+          </div>
+        </div>`
+      }
+      output.innerHTML = images;
+      $("#image_count").val(imagesArray.length);
+    }
+    function deleteImage(index) {
+      imagesArray.splice(index, 1)
+      displayImages()
+    }
+
+
+    function captureCompAddrProof(file_related_to){
+        // initialiseWebCam();
+        $('#file_related_to').val(file_related_to);
+    }
+
+    function capturePhotoIdProof(file_related_to){
+        // initialiseWebCam();
+        $('#file_related_to').val(file_related_to);
+    }
+
+    function captureTeamPhoto(file_related_to){
+        // initialiseWebCam();
+        $('#file_related_to').val(file_related_to);
+    }
+
+    function capturePrevProjImg(file_related_to){
+        // initialiseWebCam();
+        $('#file_related_to').val(file_related_to);
+    }
+
+    function capturePublicLiabilityIns(file_related_to){
+        // initialiseWebCam();
+        $('#file_related_to').val(file_related_to);
+    }
+
+    function fetchTeamImages() {
+        $.ajax({
+            url: "{{ route('tradesperson.getTeamImages') }}",
+            success: function(response) {
+                $('#uploaded_team_photo').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function fetchPrevProjImages() {
+        $.ajax({
+            url: "{{ route('tradesperson.getPrevProjImage') }}",
+            success: function(response) {
+                $('#uploaded_prev_proj').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function fetchTraderPhotoId() {
+        $.ajax({
+            url: "{{ route('tradesperson.getTempPhotoId') }}",
+            success: function(response) {
+                $('#uploaded_trader_img').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function fetchPublicLiabilityInsurance() {
+        $.ajax({
+            url: "{{ route('tradesperson.publicLiabilityInsurance') }}",
+            success: function(response) {
+                $('#uploaded_pli').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function fetchCompanyAddr() {
+        $.ajax({
+            url: "{{ route('tradesperson.getCompanyAddr') }}",
+            success: function(response) {
+                $('#uploaded_trader_addr').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function fetchAllMedia() {
+        fetchTeamImages();
+        fetchPrevProjImages();
+        fetchTraderPhotoId();
+        fetchPublicLiabilityInsurance();
+        fetchCompanyAddr();
+    }
+
+    function deleteFile(){
+        let file = $('#confirmedDelete').attr('data-file');
+        let divId = "#" + $('#confirmedDelete').attr('data-div-id');
+        $.ajax
+         ({
+            type: "POST",
+            url: "{{ route('deleteTempFile') }}",
+            data: {
+                file: file,
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE',
+            },
+            success: function (data){
+                if(data.response == 'success'){
+                    $(divId).remove();
+                    $('#Delete_wp').modal('hide');
+                } else {
+                    $('#Delete_wp .modal-body h4.text-danger').text("Oops! Failed To delete the file");
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#Delete_wp .modal-body h4.text-danger').text("Oops! Failed To delete the file");
+            }
+         });
+    }
+
     $(document).ready(function(){
         //   var selectedtel = $(".iti__selected-dial-code").text();
         //   $('#phone_code').val(selectedtel);
-
+        fetchAllMedia();
         // phone number setup
         let input = document.querySelector("#phone");
         let iti = window.intlTelInput(input, {
@@ -1144,7 +1056,19 @@
             }
         }
 
-
+        // Initialise Webcam
+        var constraints = { audio: true, video: true };
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then(function(mediaStream) {
+            Webcam.set({
+                width: 450,
+                height: 350,
+                image_format: 'jpeg',
+                jpeg_quality: 100
+            });
+            Webcam.attach( '#my_camera' );
+        })
+        .catch(function(err) { console.log(err.name + ": " + err.message); });
 
         $('#company-general-form').submit(function(event) {
             event.preventDefault();
@@ -1172,6 +1096,49 @@
 
             document.querySelector('#company-general-form').submit();
         });
+
+        $("form#capturephoto").submit(function(e){
+            e.preventDefault();
+            var formData = new FormData(this);
+            var closeBtn = $(this).find('.btn-close');
+            formData.append('media_type', 'tradesperson');
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to upload this image?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route("capture-photo") }}',
+                        type: 'POST',
+                        contentType: 'multipart/form-data',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: (response) => {
+                            closeBtn.trigger('click');
+                            fetchAllMedia();
+                            Swal.fire({
+                                //position: 'top-end',
+                                icon: 'success',
+                                title: 'Image uploaded successfully.',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        },
+                        error: (response) => {
+                            console.log(response);
+                        }
+                    });
+                }
+            })
+        });
+
     });
 
 //    input.addEventListener("countrychange", function() {
@@ -1333,12 +1300,12 @@
     }
     //End of company logo uploading
 
-    function take_snapshot() {
-        Webcam.snap( function(data_uri) {
-            $(".image-tag").val(data_uri);
-            document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
-        } );
-    }
+    // function take_snapshot() {
+    //     Webcam.snap( function(data_uri) {
+    //         $(".image-tag").val(data_uri);
+    //         document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+    //     } );
+    // }
 
     //  For Uploading Company File
     function geturldataupload(e){
@@ -1348,6 +1315,12 @@
         e.preventDefault();
     }
     //End of company file uploading
+
+    function confirmDeletePopup(file, divId){
+        $('#Delete_wp').modal('show');
+        $('#confirmedDelete').attr('data-file', file);
+        $('#confirmedDelete').attr('data-div-id', divId);
+    }
 
     // Show Checked Work Numbers on Tab sidebar
     $("#work_tab .subworktypechk input[type='checkbox']").change( function() {
@@ -1398,7 +1371,15 @@
     // PreviewTemplate For Multiple File dropzone Ends
 
     // Dropzone Js For Single File Upload Starts
-    function singleFileDropzone(url, params, acceptedFiles="{{ config('const.dropzone_accepted_file') }}", maxFileSize={{ config('const.dropzone_max_file_size') }}, modalId="#singleFileModal") {
+    function singleFileDropzone(
+        {
+            url,
+            params,
+            acceptedFiles="{{ config('const.dropzone_accepted_file') }}",
+            maxFileSize={{ config('const.dropzone_max_file_size') }},
+            modalId="#singleFileModal"
+        }
+    ) {
         var singleFileDropzoneElement = document.querySelector("#single_file_dropzone");
         var singleFileDropzone = singleFileDropzoneElement.dropzone;
         var thumbnailMapping = {
@@ -1412,7 +1393,7 @@
             singleFileDropzone = new Dropzone(singleFileDropzoneElement, {
                 url: url,
                 params: params,
-                uploadMultiple: false,
+                uploadMultiple: true,
                 maxFiles: 1,
                 maxFilesize: maxFileSize,
                 acceptedFiles: acceptedFiles,
@@ -1471,9 +1452,7 @@
         });
 
         singleFileDropzone.on("uploadprogress", function(file, progress) {
-            if (progress == 100) {
-                $(file.previewElement).find('.progress').hide();
-            }
+
         });
 
         singleFileDropzone.on("sending", function(file) {
@@ -1491,6 +1470,14 @@
 
         });
 
+        singleFileDropzone.on("success", function(progress) {
+            if (progress == 100) {
+                $(file.previewElement).find('.progress').hide();
+            }
+            $(modalId).modal('hide');
+            singleFileDropzone.removeAllFiles(true);
+        });
+
         singleFileDropzone.on("removedfile", function(file) {
             if(singleFileDropzone.files.length == 0) {
                 $('#single-file-upload-logo').show();
@@ -1506,13 +1493,13 @@
             singleFileDropzone.enqueueFiles(singleFileDropzone.getFilesWithStatus(Dropzone.ADDED));
         };
 
-        // document.querySelector("#cancel_multiple_file_upload").onclick = function() {
-        //     singleFileDropzone.removeAllFiles(true);
-        // };
-
-        $(modalId).on('hidden.bs.modal', function(e){
+        document.querySelector("#cancel_single_file_upload").onclick = function() {
             singleFileDropzone.removeAllFiles(true);
-        });
+        };
+
+        // $(modalId).on('hidden.bs.modal', function(e){
+        //     singleFileDropzone.removeAllFiles(true);
+        // });
 
         return singleFileDropzone;
     }
@@ -1534,12 +1521,17 @@
         $(modal+' .ext_').html(html);
         $(modal).modal('show');
 
-        var dropzone = singleFileDropzone(url, params, acceptedFiles, maxFileSize, modal);
+        var dropzone = singleFileDropzone({
+            url: url,
+            params: params,
+            acceptedFiles: acceptedFiles,
+            modalId: modal
+        });
 
         dropzone.on("success", function(file, response) {
-            let html = `<img src="${response.image_link}" alt="" class="square-img" id="uploaded_company_logo" />
+            let html = `<img src="${response[0].image_link}" alt="" class="square-img" id="uploaded_company_logo" />
                         <div class="d-inline ml-2">
-                            <span id="uploaded_company_logo_details">${response.file_name}</span>
+                            <span id="uploaded_company_logo_details">${response[0].file_name}</span>
                         </div>`;
             $('#company_logo').html(html);
         });
@@ -1552,303 +1544,19 @@
     }
     // Dropzone Js For Company Logo Ends
 
-
-    // Dropzone Js For Company Logo Starts
-    // let dropzone = new Dropzone("#company_logo_dropzone", {
-    //     {{-- url: "{{ route('tradesperson.storeLogo') }}", --}}
-    //     url: "{{ route('tradesperson.tempTraderMedia') }}",
-    //     params: {
-    //         file_related_to: 'company_logo',
-    //         file_type: 'image',
-    //     },
-    //     uploadMultiple: false,
-    //     maxFiles: 1,
-    //     // maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-    //     // acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
-    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
-    //     acceptedFiles: "{{ config('const.dropzone_accepted_image') }}",
-    //     thumbnailWidth: 240,
-    //     thumbnailHeight: 240,
-    //     autoProcessQueue: false,
-    //     previewsContainer: "#company_logo_dropzone",
-    //     clickable: "#file_upload_btn",
-    //     dictDefaultMessage: "Drag and drop a file here",
-    //     init: function() {
-    //         let dz = this;
-    //         let uploadButton = $("#upload_avatar");
-
-    //         this.on("addedfile", function(file) {
-    //             if (this.files.length > 1) {
-    //                 dz.removeFile(this.files[0]);
-    //             }
-    //             // $("#company_logo_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             $("#company_logo_dropzone").find(".dz-message").hide();
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").show();
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("removedfile", function(file) {
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("thumbnail", function(file, dataUrl) {
-    //             // $("#company_logo_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-image img").css({
-    //             //     "border-radius": "5%",
-    //             //     "transition": "none"
-    //             // });
-    //             $("#company_logo_dropzone").find(".dz-message").hide();
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-    //             $(file.previewElement).find(".dz-image img").addClass("dropzone-preview-thumbnail");
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("sending", function(file, xhr, formData) {
-    //             // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //             uploadButton.prop("disabled", true);
-    //         });
-
-    //         this.on("uploadprogress", function(file, progress) {
-    //             if (file.upload) {
-    //                 // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         });
-
-    //         this.on("success", function(file, response) {
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-success-mark").css("display", "block");
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-success-mark").show();
-    //             if($('#uploaded_company_logo').length > 0) {
-    //                 $('#uploaded_company_logo').attr('src', response.image_link);
-    //                 $('#uploaded_company_logo_details').text(`${response.file_name}`);
-    //             } else {
-    //                 let html = `<img src="${response.image_link}" alt="" class="square-img" id="uploaded_company_logo" />
-    //                             <div class="d-inline ml-2">
-    //                                 <span id="uploaded_company_logo_details">${response.file_name}</span>
-    //                             </div>`;
-    //                 $('#company_logo').html(html);
-    //             }
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("error", function(file, errorMessage) {
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-message").text(errorMessage).css("display", "block");
-    //             // $(file.previewElement).find(".dz-error-mark").css("display", "block");
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
-    //             $(file.previewElement).find(".dz-error-mark").show();
-    //             updateUploadButton();
-    //         });
-
-    //         function updateUploadButton() {
-    //             let maxFileSize = dz.options.maxFilesize ? dz.options.maxFilesize * 1024 * 1024 : (2 * 1024 * 1024);
-    //             let acceptedFileTypes = dz.options.acceptedFiles;
-    //             $('.supported_ .invalid-file').empty();
-    //             $('.supported_ .dropzone-messages').empty();
-
-    //             let file = dz.files[0];
-
-    //             if (dz.files.length > 0) {
-    //                 let file = dz.files[0];
-    //                 if (file.size <= maxFileSize && acceptedFileTypes.includes(file.type)) {
-    //                     uploadButton.prop("disabled", false);
-    //                 } else {
-    //                     let errorMessage = [];
-    //                     let errorMessages = '<ul>';
-    //                     if (file.size > maxFileSize) {
-    //                         errorMessage.push("File size exceeds the maximum limit.");
-    //                     }
-    //                     if(!(acceptedFileTypes.includes(file.type))) {
-    //                         $('.supported_ .invalid-file').empty();
-    //                         $('.supported_ .dropzone-messages').empty();
-    //                         $('.dz-error-message').empty();
-    //                         $('.dz-success-mark').empty();
-    //                         $('.dz-error-mark').empty();
-    //                         $('.dz-details').empty();
-    //                         // $('.dz-message').css("display", "block");
-    //                         $('.dz-message').show();
-    //                         errorMessage.push("Invalid file type. Please select a valid file.");
-    //                     }
-    //                     $.each(errorMessage, function(key, errorMessage) {
-    //                         errorMessages += `<li> ${errorMessage} </li>`;
-    //                     });
-
-    //                     errorMessages += '</ul>';
-    //                     $('.supported_ .invalid-file').html(errorMessages);
-    //                     uploadButton.prop("disabled", true);
-    //                 }
-    //             } else {
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         }
-
-    //         uploadButton.click(function() {
-    //             if (dz.files.length > 0) {
-    //                 dz.processQueue();
-    //             }
-    //         });
-
-    //         $("#companyLogoModal").on("hidden.bs.modal", function() {
-    //             $("#company_logo_dropzone").find(".dz-message").show();
-    //             $("#company_logo_dropzone .supported_ .invalid-file").empty();
-    //             $("#company_logo_dropzone .supported_ .dropzone-messages").empty();
-    //             dz.removeAllFiles();
-    //         });
-    //     }
-
-    // });
-    // Dropzone Js For Company Logo Ends
-
-    // let pli_dropzone = new Dropzone("#pli_dropzone", {
-    //     url: "{{-- route('tradesperson.storePLI') --}}",
-    //     params: {
-    //         file_related_to: 'public_liability_insurance',
-    //         file_type: 'document',
-    //     },
-    //     uploadMultiple: false,
-    //     maxFiles: 1,
-    //     // maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-    //     // acceptedFiles: "image/jpeg, image/png, image/svg+xml, image/webp, application/pdf",
-    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
-    //     acceptedFiles: "{{ config('const.dropzone_accepted_file') }}",
-    //     thumbnailWidth: 240,
-    //     thumbnailHeight: 240,
-    //     autoProcessQueue: false,
-    //     previewsContainer: "#pli_dropzone",
-    //     clickable: "#pli_upload_btn",
-    //     dictDefaultMessage: "",
-    //     init: function() {
-    //         let dz = this;
-    //         let uploadButton = $("#upload_pli");
-
-    //         this.on("addedfile", function(file) {
-    //             if (this.files.length > 1) {
-    //                 dz.removeFile(this.files[0]);
-    //             }
-    //             // $("#pli_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             $("#pli_dropzone").find(".dz-message").hide();
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("removedfile", function(file) {
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("thumbnail", function(file, dataUrl) {
-    //             // $("#pli_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-image img").css({
-    //             //     "border-radius": "5%",
-    //             //     "transition": "none"
-    //             // });
-    //             $("#pli_dropzone").find(".dz-message").hide();
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-    //             $(file.previewElement).find(".dz-image img").addClass('dropzone-preview-thumbnail');
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("sending", function(file, xhr, formData) {
-    //             // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //             uploadButton.prop("disabled", true);
-    //         });
-
-    //         this.on("uploadprogress", function(file, progress) {
-    //             if (file.upload) {
-    //                 // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         });
-
-    //         this.on("success", function(file, response) {
-    //             let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-success-mark").css("display", "block");
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-success-mark").show();
-    //             $('#uploaded_pli').empty();
-    //             $('#uploaded_pli').append(html);
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("error", function(file, errorMessage) {
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-message").text(errorMessage).css("display", "block");
-    //             // $(file.previewElement).find(".dz-error-mark").css("display", "block");
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
-    //             $(file.previewElement).find(".dz-error-mark").show();
-    //             updateUploadButton();
-    //         });
-
-    //         function updateUploadButton() {
-    //             let maxFileSize = dz.options.maxFilesize ? dz.options.maxFilesize * 1024 * 1024 : (2 * 1024 * 1024);
-    //             let acceptedFileTypes = dz.options.acceptedFiles;
-    //             $('.supported_ .invalid-file').empty();
-    //             $('.supported_ .dropzone-messages').empty();
-
-    //             let file = dz.files[0];
-
-    //             if (dz.files.length > 0) {
-    //                 let file = dz.files[0];
-    //                 if (file.size <= maxFileSize && acceptedFileTypes.includes(file.type)) {
-    //                     uploadButton.prop("disabled", false);
-    //                 } else {
-    //                     let errorMessage = [];
-    //                     let errorMessages = '<ul>';
-    //                     if (file.size > maxFileSize) {
-    //                         errorMessage.push("File size exceeds the maximum limit.");
-    //                     }
-    //                     if(!(acceptedFileTypes.includes(file.type))) {
-    //                         $('.supported_ .invalid-file').empty();
-    //                         $('.supported_ .dropzone-messages').empty();
-    //                         $('.dz-error-message').empty();
-    //                         $('.dz-success-mark').empty();
-    //                         $('.dz-error-mark').empty();
-    //                         $('.dz-details').empty();
-    //                         // $('.dz-message').css("display", "block");
-    //                         $('.dz-message').show();
-    //                         errorMessage.push("Invalid file type. Please select a valid file.");
-    //                     }
-    //                     $.each(errorMessage, function(key, errorMessage) {
-    //                         errorMessages += `<li> ${errorMessage} </li>`;
-    //                     });
-
-    //                     errorMessages += '</ul>';
-    //                     $('.supported_ .invalid-file').html(errorMessages);
-    //                     uploadButton.prop("disabled", true);
-    //                 }
-    //             } else {
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         }
-
-    //         uploadButton.click(function() {
-    //             if (dz.files.length > 0) {
-    //                 dz.processQueue();
-    //             }
-    //         });
-
-    //         $("#pliModal").on("hidden.bs.modal", function() {
-    //             // $("#pli_dropzone").find(".dz-message").css("display", "block");
-    //             $("#pli_dropzone").find(".dz-message").show();
-    //             $("#pli_dropzone .supported_ .invalid-file").empty();
-    //             $("#pli_dropzone .supported_ .dropzone-messages").empty();
-    //             dz.removeAllFiles();
-    //         });
-    //     }
-
-    // });
     // Dropzone Js For Public liability insurance Starts
-    function callDropzone(url, params, acceptedFiles="{{ config('const.dropzone_accepted_file') }}", maxFileSize={{ config('const.dropzone_max_file_size') }}) {
+    function callDropzone(
+        {
+            url,
+            params,
+            acceptedFiles="{{ config('const.dropzone_accepted_file') }}",
+            maxFileSize={{ config('const.dropzone_max_file_size') }},
+            parallelUploads={{ config('const.dropzone_parallel_file_upload') }},
+            maxFiles={{ config('const.dropzone_max_file_upload') }}
+        }
+    ) {
         var multiFileDropzoneElement = document.querySelector("#multi_file_dropzone");
-        var multiFileDropzone = multiFileDropzoneElement.dropzone;
+        // var multiFileDropzone = multiFileDropzoneElement.dropzone;
         var thumbnailMapping = {
             'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
             'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
@@ -1856,7 +1564,7 @@
         };
 
         // If a Dropzone instance doesn't exist, create a new one
-        if (!multiFileDropzone) {
+        if (typeof multiFileDropzone === "undefined") {
             multiFileDropzone = new Dropzone(multiFileDropzoneElement, {
                 url: url,
                 params: params,
@@ -1865,6 +1573,9 @@
                 thumbnailWidth: 100,
                 thumbnailHeight: 69,
                 previewTemplate: previewTemplate,
+                uploadMultiple: true,
+                parallelUploads: parallelUploads,
+                maxFiles: maxFiles,
                 autoQueue: false,
                 previewsContainer: "#previews",
                 clickable: "#multi_file_upload_btn",
@@ -1872,8 +1583,12 @@
         }
 
         // If a Dropzone instance exists, update the old instance
-        multiFileDropzone.options.url = url;
-        multiFileDropzone.options.params = params;
+        multiFileDropzone.options.url             = url;
+        multiFileDropzone.options.params          = params;
+        multiFileDropzone.options.acceptedFiles   = acceptedFiles;
+        multiFileDropzone.options.maxFileSize     = maxFileSize;
+        multiFileDropzone.options.parallelUploads = parallelUploads;
+        multiFileDropzone.options.maxFiles        = maxFiles;
 
         multiFileDropzone.on("addedfile", function(file) {
             var videoElement   = $(file.previewElement).find('video[data-dz-video]');
@@ -1909,7 +1624,7 @@
 
         multiFileDropzone.on("uploadprogress", function(file, progress) {
             if (progress == 100) {
-                $(file.previewElement).find('.progress').hide();
+                $(file.previewElement).find('.progress').hide(1000);
             }
         });
 
@@ -1936,6 +1651,11 @@
             }
         });
 
+        multiFileDropzone.on("successmultiple", function(file, responses) {
+            $('#multiModal').modal('hide');
+            multiFileDropzone.removeAllFiles(true);
+        });
+
         // Setup the buttons for all transfers
         // The "add files" button doesn't need to be setup because the config
         // `clickable` has already been specified.
@@ -1943,19 +1663,19 @@
             multiFileDropzone.enqueueFiles(multiFileDropzone.getFilesWithStatus(Dropzone.ADDED));
         };
 
-        // document.querySelector("#cancel_multiple_file_upload").onclick = function() {
-        //     multiFileDropzone.removeAllFiles(true);
-        // };
+        document.querySelector("#cancel_multiple_file_upload").onclick = function() {
+            multiFileDropzone.removeAllFiles(true);
+        };
+
 
         $('#multiModal').on('hidden.bs.modal', function(e){
-            multiFileDropzone.removeAllFiles(true);
+            // multiFileDropzone.removeAllFiles(true);
         });
 
         return multiFileDropzone;
     }
 
     function pli_upload() {
-        // var url = "{{-- route('tradesperson.storePLI') --}}";
         var url = "{{ route('tradesperson.tempTraderMedia') }}";
         var params = {
             file_related_to: 'public_liability_insurance',
@@ -1968,162 +1688,25 @@
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
-        var dropzone = callDropzone(url, params, acceptedFiles);
+        var dropzone = callDropzone({url: url, params: params, acceptedFiles: acceptedFiles});
 
-        dropzone.on("success", function(file, response) {
-            let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
-            $('#uploaded_pli').append(html);
+        dropzone.on("successmultiple", function(file, responses) {
+            // for(let response of responses) {
+            //     let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
+            //     $('#uploaded_pli').append(html);
+            // }
+            fetchPublicLiabilityInsurance();
         });
 
-        dropzone.on("error", function(file, errorMessage, xhr) {
-            console.log(file);
-            console.log(errorMessage);
-            console.log(xhr);
-        });
+        // dropzone.on("error", function(file, errorMessage, xhr) {
+        //     console.log(file);
+        //     console.log(errorMessage);
+        //     console.log(xhr);
+        // });
     }
 
     // Dropzone Js For Trader Image Identification Upload Starts
-    // let trader_img_dropzone = new Dropzone("#trader_img_dropzone", {
-    //     url: "{{-- route('tradesperson.storeTraderImg') --}}",
-    //     params: {
-    //         file_related_to: 'trader_img',
-    //     },
-    //     uploadMultiple: false,
-    //     maxFiles: 1,
-    //     // maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-    //     // acceptedFiles: "image/jpeg, image/png, image/svg+xml, image/webp, application/pdf",
-    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
-    //     acceptedFiles: "{{ config('const.dropzone_accepted_file') }}",
-    //     thumbnailWidth: 240,
-    //     thumbnailHeight: 240,
-    //     autoProcessQueue: false,
-    //     previewsContainer: "#trader_img_dropzone",
-    //     clickable: "#trader_img_upload_btn",
-    //     dictDefaultMessage: "",
-    //     init: function() {
-    //         let dz = this;
-    //         let uploadButton = $("#upload_trader_img");
-
-    //         this.on("addedfile", function(file) {
-    //             if (this.files.length > 1) {
-    //                 dz.removeFile(this.files[0]);
-    //             }
-    //             $("#trader_img_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("removedfile", function(file) {
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("thumbnail", function(file, dataUrl) {
-    //             // $("#trader_img_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-image img").css({
-    //             //     "border-radius": "5%",
-    //             //     "transition": "none"
-    //             // });
-    //             $("#trader_img_dropzone").find(".dz-message").hide();
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-    //             $(file.previewElement).find(".dz-image img").addClass('dropzone-preview-thumbnail');
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("sending", function(file, xhr, formData) {
-    //             // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //             uploadButton.prop("disabled", true);
-    //         });
-
-    //         this.on("uploadprogress", function(file, progress) {
-    //             if (file.upload) {
-    //                 // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         });
-
-    //         this.on("success", function(file, response) {
-    //             let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-success-mark").css("display", "block");
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-success-mark").show();
-    //             $('#uploaded_trader_img').empty();
-    //             $('#uploaded_trader_img').append(html);
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("error", function(file, errorMessage) {
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-message").text(errorMessage).css("display", "block");
-    //             // $(file.previewElement).find(".dz-error-mark").css("display", "block");
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
-    //             $(file.previewElement).find(".dz-error-mark").show();
-    //             updateUploadButton();
-    //         });
-
-    //         function updateUploadButton() {
-    //             let maxFileSize = dz.options.maxFilesize ? dz.options.maxFilesize * 1024 * 1024 : (2 * 1024 * 1024);
-    //             let acceptedFileTypes = dz.options.acceptedFiles;
-    //             $('.supported_ .invalid-file').empty();
-    //             $('.supported_ .dropzone-messages').empty();
-
-    //             let file = dz.files[0];
-
-    //             if (dz.files.length > 0) {
-    //                 let file = dz.files[0];
-    //                 if (file.size <= maxFileSize && acceptedFileTypes.includes(file.type)) {
-    //                     uploadButton.prop("disabled", false);
-    //                 } else {
-    //                     let errorMessage = [];
-    //                     let errorMessages = '<ul>';
-    //                     if (file.size > maxFileSize) {
-    //                         errorMessage.push("File size exceeds the maximum limit.");
-    //                     }
-    //                     if(!(acceptedFileTypes.includes(file.type))) {
-    //                         $('.supported_ .invalid-file').empty();
-    //                         $('.supported_ .dropzone-messages').empty();
-    //                         $('.dz-error-message').empty();
-    //                         $('.dz-success-mark').empty();
-    //                         $('.dz-error-mark').empty();
-    //                         $('.dz-details').empty();
-    //                         // $('.dz-message').css("display", "block");
-    //                         $('.dz-message').show();
-    //                         errorMessage.push("Invalid file type. Please select a valid file.");
-    //                     }
-    //                     $.each(errorMessage, function(key, errorMessage) {
-    //                         errorMessages += `<li> ${errorMessage} </li>`;
-    //                     });
-
-    //                     errorMessages += '</ul>';
-    //                     $('.supported_ .invalid-file').html(errorMessages);
-    //                     uploadButton.prop("disabled", true);
-    //                 }
-    //             } else {
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         }
-
-    //         uploadButton.click(function() {
-    //             if (dz.files.length > 0) {
-    //                 dz.processQueue();
-    //             }
-    //         });
-
-    //         $("#traderImgDropzoneModal").on("hidden.bs.modal", function() {
-    //             // $("#trader_img_dropzone").find(".dz-message").css("display", "block");
-    //             $("#trader_img_dropzone").find(".dz-message").show();
-    //             $("#trader_img_dropzone .supported_ .invalid-file").empty();
-    //             $("#trader_img_dropzone .supported_ .dropzone-messages").empty();
-    //             dz.removeAllFiles();
-    //         });
-    //     }
-
-    // });
     function trader_photo_id_upload() {
-        // var url = "{{-- route('tradesperson.storeTraderImg') --}}";
         var url = "{{ route('tradesperson.tempTraderMedia') }}";
         var params = {
             file_related_to: 'trader_img',
@@ -2135,158 +1718,20 @@
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
-        var dropzone = callDropzone(url, params, acceptedFiles);
+        var dropzone = callDropzone({url: url, params: params, acceptedFiles: acceptedFiles});
 
-        dropzone.on("success", function(file, response) {
-            let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
-            $('#uploaded_trader_img').append(html);
+        dropzone.on("successmultiple", function(file, responses) {
+            // for(let response of responses) {
+            //     let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
+            //     $('#uploaded_trader_img').append(html);
+            // }
+            fetchTraderPhotoId();
         });
     }
     // Dropzone Js For Trader Image Identification Upload Ends
 
     // Dropzone Js For Trader Address Proof Upload Starts
-    // let trader_addr_dropzone = new Dropzone("#trader_addr_dropzone", {
-    //     url: "{{-- route('tradesperson.storeCompAddr') --}}",
-    //     params: {
-    //         file_related_to: 'company_address',
-    //     },
-    //     uploadMultiple: false,
-    //     maxFiles: 1,
-    //     // maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-    //     // acceptedFiles: "image/jpeg, image/png, image/svg+xml, image/webp, application/pdf",
-    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
-    //     acceptedFiles: "{{ config('const.dropzone_accepted_file') }}",
-    //     thumbnailWidth: 240,
-    //     thumbnailHeight: 240,
-    //     autoProcessQueue: false,
-    //     previewsContainer: "#trader_addr_dropzone",
-    //     clickable: "#trader_addr_upload_btn",
-    //     dictDefaultMessage: "",
-    //     init: function() {
-    //         let dz = this;
-    //         let uploadButton = $("#upload_trader_addr");
-
-    //         this.on("addedfile", function(file) {
-    //             if (this.files.length > 1) {
-    //                 dz.removeFile(this.files[0]);
-    //             }
-    //             // $("#trader_addr_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             $("#trader_addr_dropzone").find(".dz-message").hide();
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("removedfile", function(file) {
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("thumbnail", function(file, dataUrl) {
-    //             // $("#trader_addr_dropzone").find(".dz-message").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-image img").css({
-    //             //     "border-radius": "5%",
-    //             //     "transition": "none"
-    //             // });
-    //             $("#trader_addr_dropzone").find(".dz-message").hide();
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-    //             $(file.previewElement).find(".dz-image img").addClass('dropzone-preview-thumbnail');
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("sending", function(file, xhr, formData) {
-    //             // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //             uploadButton.prop("disabled", true);
-    //         });
-
-    //         this.on("uploadprogress", function(file, progress) {
-    //             if (file.upload) {
-    //                 // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         });
-
-    //         this.on("success", function(file, response) {
-    //             let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-success-mark").css("display", "block");
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-success-mark").show();
-    //             $('#uploaded_trader_addr').empty();
-    //             $('#uploaded_trader_addr').append(html);
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("error", function(file, errorMessage) {
-    //             // $(file.previewElement).find(".dz-progress").css("display", "none");
-    //             // $(file.previewElement).find(".dz-error-message").text(errorMessage).css("display", "block");
-    //             // $(file.previewElement).find(".dz-error-mark").css("display", "block");
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
-    //             $(file.previewElement).find(".dz-error-mark").show();
-    //             updateUploadButton();
-    //         });
-
-    //         function updateUploadButton() {
-    //             let maxFileSize = dz.options.maxFilesize ? dz.options.maxFilesize * 1024 * 1024 : (2 * 1024 * 1024);
-    //             let acceptedFileTypes = dz.options.acceptedFiles;
-    //             $('.supported_ .invalid-file').empty();
-    //             $('.supported_ .dropzone-messages').empty();
-
-    //             let file = dz.files[0];
-
-    //             if (dz.files.length > 0) {
-    //                 let file = dz.files[0];
-    //                 if (file.size <= maxFileSize && acceptedFileTypes.includes(file.type)) {
-    //                     uploadButton.prop("disabled", false);
-    //                 } else {
-    //                     let errorMessage = [];
-    //                     let errorMessages = '<ul>';
-    //                     if (file.size > maxFileSize) {
-    //                         errorMessage.push("File size exceeds the maximum limit.");
-    //                     }
-    //                     if(!(acceptedFileTypes.includes(file.type))) {
-    //                         $('.supported_ .invalid-file').empty();
-    //                         $('.supported_ .dropzone-messages').empty();
-    //                         $('.dz-error-message').empty();
-    //                         $('.dz-success-mark').empty();
-    //                         $('.dz-error-mark').empty();
-    //                         $('.dz-details').empty();
-    //                         // $('.dz-message').css("display", "block");
-    //                         $('.dz-message').show();
-    //                         errorMessage.push("Invalid file type. Please select a valid file.");
-    //                     }
-    //                     $.each(errorMessage, function(key, errorMessage) {
-    //                         errorMessages += `<li> ${errorMessage} </li>`;
-    //                     });
-
-    //                     errorMessages += '</ul>';
-    //                     $('.supported_ .invalid-file').html(errorMessages);
-    //                     uploadButton.prop("disabled", true);
-    //                 }
-    //             } else {
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         }
-
-    //         uploadButton.click(function() {
-    //             if (dz.files.length > 0) {
-    //                 dz.processQueue();
-    //             }
-    //         });
-
-    //         $("#traderImgDropzoneModal").on("hidden.bs.modal", function() {
-    //             // $("#trader_img_dropzone").find(".dz-message").css("display", "block");
-    //             $("#trader_img_dropzone").find(".dz-message").show();
-    //             $("#trader_img_dropzone .supported_ .invalid-file").empty();
-    //             $("#trader_img_dropzone .supported_ .dropzone-messages").empty();
-    //             dz.removeAllFiles();
-    //         });
-    //     }
-
-    // });
     function comp_addr_proof() {
-        // var url = "{{-- route('tradesperson.storeCompAddr') --}}";
         var url = "{{ route('tradesperson.tempTraderMedia') }}";
         var params = {
             file_related_to: 'company_address',
@@ -2298,126 +1743,65 @@
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
-        var dropzone = callDropzone(url, params, acceptedFiles);
+        var dropzone = callDropzone({url: url, params: params, acceptedFiles: acceptedFiles});
 
-        dropzone.on("success", function(file, response) {
-            let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
-            $('#uploaded_trader_addr').append(html);
+        dropzone.on("successmultiple", function(file, responses) {
+            // for(let response of responses) {
+            //     let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
+            //     $('#uploaded_trader_addr').append(html);
+            // }
+            fetchCompanyAddr();
         });
     }
     // Dropzone Js For Trader Address Proof Upload Ends
 
     // Dropzone Js For Team Photo Upload Starts
-    // let team_photo_dropzone = new Dropzone("#team_photo_dropzone", {
-    //     url: "{{-- route('tradesperson.storeTeamPhoto') --}}",
-    //     params: {
-    //         file_related_to: 'team_img',
-    //         file_type: 'image',
-    //     },
-    //     maxFiles: 6,
-    //     // maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-    //     // acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
-    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
-    //     acceptedFiles: "{{ config('const.dropzone_accepted_image') }}",
-    //     thumbnailWidth: 240,
-    //     thumbnailHeight: 240,
-    //     previewsContainer: "#team_photo_dropzone",
-    //     clickable: "#team_photo_upload_btn",
-    //     init: function() {
-    //         let dz = this;
-
-    //         $("#teamPhotoModal").on("hidden.bs.modal", function() {
-    //             // $("#trader_img_dropzone").find(".dz-message").css("display", "block");
-    //             $("#trader_img_dropzone").find(".dz-message").show();
-    //             $("#trader_img_dropzone .supported_ .invalid-file").empty();
-    //             $("#trader_img_dropzone .supported_ .dropzone-messages").empty();
-    //             dz.removeAllFiles();
-    //         });
-
-    //         this.on("success", function(file, response) {
-    //             // let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
-    //             let html = `<div class="d-inline mr-3"><a href="#"><img src="${response.image_link}" /></a></div>`;
-    //             $('#uploaded_team_photo').append(html);
-    //         });
-    //     }
-    // });
     function team_photo_upload() {
-        // var url    = "{{-- route('tradesperson.storeTeamPhoto') --}}";
         var url = "{{ route('tradesperson.tempTraderMedia') }}";
         var params = {
             file_related_to: 'team_img',
             file_type: 'image',
         };
-        var maxFileSize = {{ config('const.dropzone_max_file_size') }};
         var acceptedFiles = "{{ config('const.dropzone_accepted_image') }}";
         let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>`;
 
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
-        var dropzone = callDropzone(url, params, acceptedFiles, maxFileSize);
+        var dropzone = callDropzone({url: url, params: params, acceptedFiles: acceptedFiles});
 
-        dropzone.on("success", function(file, response) {
-            let html = `<div class="d-inline mr-3"><a href="#"><img src="${response.image_link}" class="rectangle-img mb-1" /></a></div>`;
-            $('#uploaded_team_photo').append(html);
+        dropzone.on("successmultiple", function(file, responses) {
+            // for(let response of responses) {
+            //     let html = `<div class="d-inline mr-3"><a href="#"><img src="${response.image_link}" class="rectangle-img mb-1" /></a></div>`;
+            //     $('#uploaded_team_photo').append(html);
+            // }
+            fetchTeamImages();
         });
     }
     // Dropzone Js For Team Photo Upload Ends
 
 
     // Dropzone Js For Previous Project Upload Starts
-    // let prev_proj_dropzone = new Dropzone("#prev_proj_dropzone", {
-    //     url: "{{-- route('tradesperson.storePrevProj') --}}",
-    //     params: {
-    //         file_related_to: 'prev_project_img',
-    //         file_type: 'image',
-    //     },
-    //     maxFiles: 6,
-    //     // maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-    //     // acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
-    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
-    //     acceptedFiles: "{{ config('const.dropzone_accepted_image') }}",
-    //     thumbnailWidth: 240,
-    //     thumbnailHeight: 240,
-    //     previewsContainer: "#prev_proj_dropzone",
-    //     clickable: "#prev_proj_upload_btn",
-    //     init: function() {
-    //         let dz = this;
-
-    //         $("#prevProjModal").on("hidden.bs.modal", function() {
-    //             // $("#prev_proj_dropzone").find(".dz-message").css("display", "block");
-    //             $("#prev_proj_dropzone").find(".dz-message").show();
-    //             $("#prev_proj_dropzone .supported_ .invalid-file").empty();
-    //             $("#prev_proj_dropzone .supported_ .dropzone-messages").empty();
-    //             dz.removeAllFiles();
-    //         });
-
-    //         this.on("success", function(file, response) {
-    //             // let html = `<div class="d-inline mr-3">${response.file_name}</div>`;
-    //             let html = `<div class="d-inline mr-3"><a href="#"><img src="${response.image_link}" /></a></div>`;
-    //             $('#uploaded_prev_proj').append(html);
-    //         });
-    //     }
-    // });
     function prev_proj_upload() {
-        // var url    = "{{-- route('tradesperson.storePrevProj') --}}";
         var url = "{{ route('tradesperson.tempTraderMedia') }}";
         var params = {
             file_related_to: 'prev_project_img',
             file_type: 'image',
         };
-        var maxFileSize = {{ config('const.dropzone_max_file_size') }};
         var acceptedFiles = "{{ config('const.dropzone_accepted_image') }}";
         let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>`;
 
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
-        var dropzone = callDropzone(url, params, acceptedFiles, maxFileSize);
+        var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
 
-        dropzone.on("success", function(file, response) {
-            let html = `<div class="d-inline mr-3"><a href="#"><img src="${response.image_link}" class="rectangle-img mb-1" /></a></div>`;
-            $('#uploaded_prev_proj').append(html);
+        dropzone.on("successmultiple", function(file, responses) {
+            // for(let response of responses) {
+            //     let html = `<div class="d-inline mr-3"><a href="#"><img src="${response.image_link}" class="rectangle-img mb-1" /></a></div>`;
+            //     $('#uploaded_prev_proj').append(html);
+            // }
+            fetchPrevProjImages();
         });
     }
     // Dropzone Js For Previous Project Upload Ends

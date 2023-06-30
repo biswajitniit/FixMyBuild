@@ -194,7 +194,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal" id="cancel_single_file_upload">Cancel</button>
                 <button type="button" class="btn btn-light" id="upload_single_file">Upload</button>
             </div>
         </div>
@@ -1432,7 +1432,7 @@
             singleFileDropzone = new Dropzone(singleFileDropzoneElement, {
                 url: url,
                 params: params,
-                uploadMultiple: false,
+                uploadMultiple: true,
                 maxFiles: 1,
                 maxFilesize: maxFileSize,
                 acceptedFiles: acceptedFiles,
@@ -1519,6 +1519,10 @@
             }
         });
 
+        singleFileDropzone.on("success", function(file) {
+            $(modalId).modal('hide');
+        });
+
         // Setup the buttons for all transfers
         // The "add files" button doesn't need to be setup because the config
         // `clickable` has already been specified.
@@ -1526,13 +1530,13 @@
             singleFileDropzone.enqueueFiles(singleFileDropzone.getFilesWithStatus(Dropzone.ADDED));
         };
 
-        // document.querySelector("#cancel_multiple_file_upload").onclick = function() {
-        //     singleFileDropzone.removeAllFiles(true);
-        // };
-
-        $(modalId).on('hidden.bs.modal', function(e){
+        document.querySelector("#cancel_single_file_upload").onclick = function() {
             singleFileDropzone.removeAllFiles(true);
-        });
+        };
+
+        // $(modalId).on('hidden.bs.modal', function(e){
+        //     singleFileDropzone.removeAllFiles(true);
+        // });
 
         return singleFileDropzone;
     }
@@ -1540,12 +1544,12 @@
 
     // Dropzone Js For Company Logo Starts
     function comp_logo_upload() {
-        var url = "{{ route('tradesperson.tempTraderMedia') }}";
+        var url = "{{ route('tradesperson.storeTraderFile') }}";
         var params = {
             file_related_to: 'company_logo',
             file_type: 'image',
         };
-        var html = ` .gif .heic .jpeg, .jpg .png .svg .webp`;
+        var html = `.gif .heic .jpeg, .jpg .png .svg .webp`;
         var acceptedFiles = "{{ config('const.dropzone_accepted_image') }}";
         var maxFileSize = {{ config('const.dropzone_max_file_size') }};
         var modal = "#companyLogoModal";
@@ -1555,9 +1559,13 @@
 
         var dropzone = singleFileDropzone(url, params, acceptedFiles, maxFileSize, modal);
 
-        dropzone.on("success", function(file, response) {
-            $('.profile_pics > img').attr('src', response.image_link);
-            $('.reg_ img').attr('src', response.image_link);
+        dropzone.on("successmultiple", function(file, responses) {
+            // console.log(response);
+            for (let response of responses) {
+                $('.profile_pics > img').attr('src', response.url);
+                $('.reg_ img').attr('src', response.url);
+            }
+
         });
 
         // dropzone.on("error", function(file, errorMessage, xhr) {
@@ -1632,7 +1640,149 @@
     });
     */
 
-    function callDropzone(url, params, acceptedFiles="{{ config('const.dropzone_accepted_file') }}", maxFileSize={{ config('const.dropzone_max_file_size') }}) {
+    // function callDropzone(url, params, acceptedFiles="{{ config('const.dropzone_accepted_file') }}", maxFileSize={{ config('const.dropzone_max_file_size') }}) {
+    //     var multiFileDropzoneElement = document.querySelector("#multi_file_dropzone");
+    //     var multiFileDropzone = multiFileDropzoneElement.dropzone;
+    //     var thumbnailMapping = {
+    //         'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
+    //         'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
+    //         'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.png') }}",
+    //     };
+
+    //     // If a Dropzone instance doesn't exist, create a new one
+    //     if (!multiFileDropzone) {
+    //         multiFileDropzone = new Dropzone(multiFileDropzoneElement, {
+    //             url: url,
+    //             params: params,
+    //             maxFilesize: maxFileSize,
+    //             acceptedFiles: acceptedFiles,
+    //             thumbnailWidth: 100,
+    //             thumbnailHeight: 69,
+    //             previewTemplate: previewTemplate,
+    //             autoQueue: false,
+    //             previewsContainer: "#previews",
+    //             clickable: "#multi_file_upload_btn",
+    //         });
+    //     }
+
+    //     // If a Dropzone instance exists, update the old instance
+    //     multiFileDropzone.options.url = url;
+    //     multiFileDropzone.options.params = params;
+
+    //     // var multiFileDropzone = new Dropzone("#multi_file_dropzone", {
+    //     //     url: url,
+    //     //     params: params,
+    //     //     thumbnailWidth: 100,
+    //     //     thumbnailHeight: 69,
+    //     //     previewTemplate: previewTemplate,
+    //     //     autoQueue: false,
+    //     //     previewsContainer: "#previews", // Define the container to display the previews
+    //     //     clickable: "#multi_file_upload_btn",
+    //     // });
+
+    //     multiFileDropzone.on("addedfile", function(file) {
+    //         // Hookup the start button
+    //         // file.previewElement.querySelector(".start").onclick = function() { multiFileDropzone.enqueueFile(file); };
+    //         // var videoElement = file.previewElement.querySelector('video[data-dz-video]');
+    //         // var imageElement = file.previewElement.querySelector('img[data-dz-thumbnail]');
+    //         var videoElement   = $(file.previewElement).find('video[data-dz-video]');
+    //         var imageElement   = $(file.previewElement).find('img[data-dz-thumbnail]');
+    //         var uploadProgress = $(file.previewElement).find('.progress');
+
+    //         uploadProgress.hide();
+
+    //         if (file.type.startsWith('image/')) {
+    //            //  videoElement.remove();
+    //             videoElement.hide();
+    //             imageElement.show();
+    //             multiFileDropzone.emit("thumbnail", file, file.thumbnail);
+    //         } else if (file.type.startsWith('video/')) {
+    //            //  imageElement.remove();
+    //             imageElement.hide();
+    //             videoElement.show();
+    //             var videoUrl = URL.createObjectURL(file);
+    //             //  videoElement.src = videoUrl;
+    //             videoElement.attr('src', videoUrl);
+    //            //  videoElement.load();
+    //            //  multiFileDropzone.emit("thumbnail", file, videoUrl);
+    //         } else {
+    //            //  videoElement.remove();
+    //             videoElement.hide();
+    //             imageElement.show();
+    //             var thumbnailUrl = thumbnailMapping[file.type] || "{{ asset('frontend/img/file_logo.png') }}";
+    //             multiFileDropzone.emit("thumbnail", file, thumbnailUrl);
+    //         }
+    //         $('#file-upload-logo').hide();
+    //         $('#previews').removeClass('d-none');
+    //         $('#multi_file_dropzone.cpp_wrap').addClass('uploading');
+    //     });
+
+    //     // Update the total progress bar
+    //     multiFileDropzone.on("totaluploadprogress", function(progress) {
+    //         // document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+    //     });
+
+    //     multiFileDropzone.on("uploadprogress", function(file, progress) {
+    //         if (progress == 100) {
+    //             $(file.previewElement).find('.progress').hide();
+    //         }
+    //     });
+
+    //     multiFileDropzone.on("sending", function(file) {
+    //         // Show the total progress bar when upload starts
+    //         // document.querySelector("#total-progress").style.opacity = "1";
+    //         // And disable the start button
+    //         // file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+    //         $(file.previewElement).find('.progress').show();
+    //     });
+
+    //     multiFileDropzone.on("queuecomplete", function(progress) {
+    //         // document.querySelector("#total-progress").style.opacity = "0";
+    //         // $('#previews.files').find('.progress').hide();
+    //         // $('#multiModal').modal('hide');
+
+    //     });
+
+    //     multiFileDropzone.on("removedfile", function(file) {
+    //         if(multiFileDropzone.files.length == 0) {
+    //             $('#file-upload-logo').show();
+    //             $('#previews').addClass('d-none');
+    //             $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
+    //         }
+    //     });
+
+    //     // multiFileDropzone.on("successmultiple", function(file) {
+    //     //     $(modalId).modal('hide');
+    //     // });
+
+    //     // Setup the buttons for all transfers
+    //     // The "add files" button doesn't need to be setup because the config
+    //     // `clickable` has already been specified.
+    //     document.querySelector("#upload_multiple_file").onclick = function() {
+    //         multiFileDropzone.enqueueFiles(multiFileDropzone.getFilesWithStatus(Dropzone.ADDED));
+    //     };
+
+    //     document.querySelector("#cancel_multiple_file_upload").onclick = function() {
+    //         multiFileDropzone.removeAllFiles(true);
+    //     };
+
+    //     // $('#multiModal').on('hidden.bs.modal', function(e){
+    //     //     multiFileDropzone.removeAllFiles(true);
+    //     // });
+
+    //     return multiFileDropzone;
+    // }
+
+    function callDropzone(
+        {
+            url,
+            params,
+            acceptedFiles="{{ config('const.dropzone_accepted_file') }}",
+            maxFileSize={{ config('const.dropzone_max_file_size') }},
+            parallelUploads={{ config('const.dropzone_parallel_file_upload') }},
+            maxFiles={{ config('const.dropzone_max_file_upload') }}
+        }
+    ) {
         var multiFileDropzoneElement = document.querySelector("#multi_file_dropzone");
         var multiFileDropzone = multiFileDropzoneElement.dropzone;
         var thumbnailMapping = {
@@ -1642,7 +1792,7 @@
         };
 
         // If a Dropzone instance doesn't exist, create a new one
-        if (!multiFileDropzone) {
+        if (typeof multiFileDropzone === "undefined") {
             multiFileDropzone = new Dropzone(multiFileDropzoneElement, {
                 url: url,
                 params: params,
@@ -1651,6 +1801,9 @@
                 thumbnailWidth: 100,
                 thumbnailHeight: 69,
                 previewTemplate: previewTemplate,
+                uploadMultiple: true,
+                parallelUploads: parallelUploads,
+                maxFiles: maxFiles,
                 autoQueue: false,
                 previewsContainer: "#previews",
                 clickable: "#multi_file_upload_btn",
@@ -1658,25 +1811,14 @@
         }
 
         // If a Dropzone instance exists, update the old instance
-        multiFileDropzone.options.url = url;
-        multiFileDropzone.options.params = params;
-
-        // var multiFileDropzone = new Dropzone("#multi_file_dropzone", {
-        //     url: url,
-        //     params: params,
-        //     thumbnailWidth: 100,
-        //     thumbnailHeight: 69,
-        //     previewTemplate: previewTemplate,
-        //     autoQueue: false,
-        //     previewsContainer: "#previews", // Define the container to display the previews
-        //     clickable: "#multi_file_upload_btn",
-        // });
+        multiFileDropzone.options.url             = url;
+        multiFileDropzone.options.params          = params;
+        multiFileDropzone.options.acceptedFiles   = acceptedFiles;
+        multiFileDropzone.options.maxFileSize     = maxFileSize;
+        multiFileDropzone.options.parallelUploads = parallelUploads;
+        multiFileDropzone.options.maxFiles        = maxFiles;
 
         multiFileDropzone.on("addedfile", function(file) {
-            // Hookup the start button
-            // file.previewElement.querySelector(".start").onclick = function() { multiFileDropzone.enqueueFile(file); };
-            // var videoElement = file.previewElement.querySelector('video[data-dz-video]');
-            // var imageElement = file.previewElement.querySelector('img[data-dz-thumbnail]');
             var videoElement   = $(file.previewElement).find('video[data-dz-video]');
             var imageElement   = $(file.previewElement).find('img[data-dz-thumbnail]');
             var uploadProgress = $(file.previewElement).find('.progress');
@@ -1684,21 +1826,15 @@
             uploadProgress.hide();
 
             if (file.type.startsWith('image/')) {
-               //  videoElement.remove();
                 videoElement.hide();
                 imageElement.show();
                 multiFileDropzone.emit("thumbnail", file, file.thumbnail);
             } else if (file.type.startsWith('video/')) {
-               //  imageElement.remove();
                 imageElement.hide();
                 videoElement.show();
                 var videoUrl = URL.createObjectURL(file);
-                //  videoElement.src = videoUrl;
                 videoElement.attr('src', videoUrl);
-               //  videoElement.load();
-               //  multiFileDropzone.emit("thumbnail", file, videoUrl);
             } else {
-               //  videoElement.remove();
                 videoElement.hide();
                 imageElement.show();
                 var thumbnailUrl = thumbnailMapping[file.type] || "{{ asset('frontend/img/file_logo.png') }}";
@@ -1716,7 +1852,7 @@
 
         multiFileDropzone.on("uploadprogress", function(file, progress) {
             if (progress == 100) {
-                $(file.previewElement).find('.progress').hide();
+                $(file.previewElement).find('.progress').hide(1000);
             }
         });
 
@@ -1743,6 +1879,11 @@
             }
         });
 
+        multiFileDropzone.on("successmultiple", function(file, responses) {
+            $('#multiModal').modal('hide');
+            multiFileDropzone.removeAllFiles(true);
+        });
+
         // Setup the buttons for all transfers
         // The "add files" button doesn't need to be setup because the config
         // `clickable` has already been specified.
@@ -1750,13 +1891,14 @@
             multiFileDropzone.enqueueFiles(multiFileDropzone.getFilesWithStatus(Dropzone.ADDED));
         };
 
-        // document.querySelector("#cancel_multiple_file_upload").onclick = function() {
-        //     multiFileDropzone.removeAllFiles(true);
-        // };
-
-        $('#multiModal').on('hidden.bs.modal', function(e){
+        document.querySelector("#cancel_multiple_file_upload").onclick = function() {
             multiFileDropzone.removeAllFiles(true);
-        });
+        };
+
+
+        // $('#multiModal').on('hidden.bs.modal', function(e){
+            // multiFileDropzone.removeAllFiles(true);
+        // });
 
         return multiFileDropzone;
     }
@@ -1768,29 +1910,30 @@
         };
         let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
                     <h6><strong>Documents:</strong> .doc, .docx .odt .pdf .ppt, .pptx </h6>`;
-        var maxFileSize = {{ config('const.dropzone_max_file_size') }};
         var acceptedFiles = "{{ config('const.trader_public_liability') }}";
 
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
-        var dropzone = callDropzone(url, params, acceptedFiles);
+        var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
 
-        dropzone.on("success", function(file, response) {
-            let html = `<div class="mb-3" id="publicLiabilityInsurance-${response.file.id}">
-                        <a href="${response.file.url}" class="btn-pli" target="_blank">
-                            ${truncateString(response.file.file_name, 15)}
-                            <svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
-                            </svg>
-                        </a>
-                        <a href="javascript:void(0)" onclick="confirmDeletePopup(${response.file.id}, 'publicLiabilityInsurance-${response.file.id}')">
-                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
-                            </svg>
-                        </a>
-                        </div>`;
-
+        dropzone.on("successmultiple", function(file, responses) {
+            let html = '';
+            for(let response of responses) {
+                html += `<div class="mb-3" id="publicLiabilityInsurance-${response.id}">
+                                <a href="${response.url}" class="btn-pli" target="_blank">
+                                    ${truncateString(response.file_name, 15)}
+                                    <svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
+                                    </svg>
+                                </a>
+                                <a href="javascript:void(0)" onclick="confirmDeletePopup(${response.id}, 'publicLiabilityInsurance-${response.id}')">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
+                                    </svg>
+                                </a>
+                            </div>`;
+            }
             $(html).insertBefore('#addPLIdocs');
         });
 
@@ -1806,30 +1949,31 @@
         var params = {
             file_related_to: 'team_img',
         };
-        var maxFileSize = {{ config('const.dropzone_max_file_size') }};
+        // var maxFileSize = {{ config('const.dropzone_max_file_size') }};
         var acceptedFiles = "{{ config('const.dropzone_accepted_image') }}";
         let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>`;
 
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
-        var dropzone = callDropzone(url, params, acceptedFiles, maxFileSize);
+        var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
 
-        dropzone.on("success", function(file, response) {
-            let newElementId = `#teamImage-${response.file.id}`;
-            if ($(newElementId).length > 0) {
-                return;
+        dropzone.on("successmultiple", function(file, responses) {
+            let html = '';
+
+            for(let response of responses) {
+                html += `<div class="d-inline mr-2" id="teamImage-${response.id}">
+                            <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.id}, 'teamImage-${response.id}')">
+                                <img src="${response.url}" alt="" class="rectangle-img">
+                                <div class="remove_img">
+                                    <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                                    </svg>
+                                </div>
+                            </a>
+                        </div>`;
             }
-            let html = `<div class="d-inline mr-2" id="teamImage-${response.file.id}">
-                                <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.file.id}, 'teamImage-${response.file.id}')">
-                                   <img src="${response.file.url}" alt="" class="rectangle-img">
-                                   <div class="remove_img">
-                                      <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                         <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
-                                      </svg>
-                                   </div>
-                                </a>
-                            </div>`;
+
             $(html).insertBefore('#addTeamPhotos');
         });
 
@@ -1852,16 +1996,15 @@
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
-        var dropzone = callDropzone(url, params, acceptedFiles, maxFileSize);
+        var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
 
-        dropzone.on("success", function(file, response) {
-            let newElementId = `#prevProjectImage-${response.file.id}`;
-            if ($(newElementId).length > 0) {
-                return;
-            }
-            let html = `<div class="d-inline mr-2" id="prevProjectImage-${response.file.id}">
-                            <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.file.id}, 'prevProjectImage-${response.file.id}')">
-                            <img src="${response.file.url}" alt="" class="rectangle-img">
+        dropzone.on("successmultiple", function(file, responses) {
+            let html = '';
+
+            for(let response of responses) {
+                html += `<div class="d-inline mr-2" id="prevProjectImage-${response.id}">
+                            <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.id}, 'prevProjectImage-${response.id}')">
+                            <img src="${response.url}" alt="" class="rectangle-img">
                             <div class="remove_img">
                                 <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
@@ -1869,6 +2012,7 @@
                             </div>
                             </a>
                         </div>`;
+            }
 
             $(html).insertBefore('#addPrevProj');
         });
