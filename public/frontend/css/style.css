@@ -14901,3 +14901,224 @@ h2.company-name a:hover svg path {
 .success{
   color: #17ad6a;
 }
+/* Chat-------------------------*/
+.chat-window
+{
+  height: 600px;
+    overflow-y: auto;
+    background-color: #FFF;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 28px;
+    color: var(--primary_color);
+    border-bottom: none;
+    border-radius: 0 0 5px 5px;
+}
+
+.chat-window .alert
+{
+    background: #FFECBC;
+    border: 1px solid #EE5719;
+    border-radius: 5px;
+    color: #EE5719;
+    font-size: 14px;
+    line-height: 17px;
+    display: flex;
+
+
+}
+.chat-window .alert .icon{
+    width: 80px;
+}
+.date-line
+{
+    position: relative;
+    text-align: center;
+    margin: 50px 0;
+
+}
+.date-line hr
+{
+    color: #c9c9c9;
+}
+
+.date-line .date-area
+{
+    position: absolute;
+    top:-20px;
+    width: 100%;
+}
+.date-line .date{
+display: inline-block;
+padding: 10px 20px;
+background: #F2F2F2;
+border-radius: 50px;
+color:#000;
+font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 19px;
+margin-top: -40px;
+}
+
+.user1
+{
+max-width: 80%;
+display: block;
+}
+
+.user1 .time
+{
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 19px;
+color: #BDBDBD;
+}
+.user1 .name-time .user-name
+{
+margin:0 10px 0 10px;
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 19px;
+color: #061A48;
+}
+.user1 .msg-area
+{
+padding-left: 60px;
+display: flex;
+}
+.user1 .msg-area .msg
+{
+background: #F2F2F2;
+border-radius: 0px 10px 10px 10px;
+padding: 20px;
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 19px;
+}
+.user1 .msg-area .dots{
+width: 32px;
+}
+.user1 .dropdown-menu a
+{
+
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 22px;
+color: #6D717A !important;
+}
+.user1 .msg-area + .msg-area
+{
+    margin-top: 20px;
+}
+
+/*----user2----------------------------------*/
+
+.user2
+{
+max-width: 80%;
+display: block;
+text-align: right;
+float: right;
+}
+
+.user2 .time
+{
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 19px;
+color: #BDBDBD;
+}
+.user2 .name-time .user-name
+{
+margin:0 10px 0 10px;
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 19px;
+color: #061A48;
+}
+.user2 .msg-area
+{
+padding-right: 60px;
+display: flex;
+text-align: left;
+justify-content: flex-end;
+}
+.user2 .msg-area .msg
+{
+background: #EE5719;
+border-radius: 10px 0px 10px 10px;
+padding: 20px;
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 19px;
+color: #ffffff;
+}
+
+.user2 .dropdown-menu a
+{
+
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 22px;
+color: #6D717A !important;
+}
+.user2 .msg-area + .msg-area
+{
+    margin-top: 20px;
+}
+.clearfix::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+.chat-footer
+{
+    background: #E0E0E0;
+    border-radius: 0px 0px 5px 5px;
+    padding:20px 45px;
+    display: flex;
+    justify-content: space-between;
+}
+.chat-footer .icon-set
+{
+    width: 150px;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 20px;
+}
+.chat-footer .icon-set img
+{
+    width: 30px;
+}
+.chat-footer .input-area
+{
+    position: relative;
+    width: 100%;
+}
+.chat-footer .input-area .msg-send-icon
+{
+    position: absolute;
+    top: 2px;
+    right: 4px;
+}
+.chat-footer input
+{
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid #6D717A;
+    background: transparent;
+    padding: 5px 0;
+}
+.user-img-chat{
+    width: 50px;
+}
