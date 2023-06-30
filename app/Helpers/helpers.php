@@ -3,6 +3,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Buildercategory;
 use App\Models\Buildersubcategory;
+use App\Models\Estimate;
+use App\Models\Notification;
+use App\Models\NotificationDetail;
+use App\Models\Project;
+use App\Models\Task;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Hashids\Hashids;
 use Carbon\Carbon;
@@ -114,5 +120,52 @@ if (! function_exists('getRemoteFileSize')) {
             return 'yesterday';
         } else {
             return date('F j, Y', strtotime($created));
+        }
+    }
+
+
+    function milestone_completion_notification($task_id)
+    {
+        $task = Task::where('id', $task_id)->first();
+        $estimate = Estimate::where('id', $task->estimate_id)->first();
+        $project = Project::where('id', $estimate->project_id)->first();
+        $user = User::where('id', $project->user_id)->first();
+
+        // Check Notification settings
+        $notify_settings = Notification::where('user_id', $project->user_id)->first();
+        if($notify_settings) {
+            if($notify_settings->settings != null){
+                $project_milestone = $notify_settings->settings['project_milestone_complete'];
+            }
+        }
+
+        // Notification
+        if($project_milestone == 1){
+            $html = view('email.milestone-complete')
+                ->with('data', [
+                'project_name'       => $project->project_name,
+                'user_name'          => $user->name
+                ])
+                ->render();
+            $emaildata = array(
+                'From'          => 'support@fixmybuild.com',
+                'To'            => $user->email,
+                'Subject'       => 'Milestone Completed',
+                'HtmlBody'      => $html,
+                'MessageStream' => 'outbound'
+            );
+            $email_sent = send_email($emaildata);
+
+            // Notificatin Insert in DB
+            $notificationDetail = new NotificationDetail();
+            $notificationDetail->user_id = $user->id;
+            $notificationDetail->from_user_id = Auth::user()->id;
+            $notificationDetail->from_user_type = Auth::user()->type;
+            $notificationDetail->related_to = 'project';
+            $notificationDetail->related_to_id = $project->id;
+            $notificationDetail->read_status = 0;
+            $notificationDetail->notification_text = 'Your project milestone has been completed';
+            $notificationDetail->reviewer_note = null;
+            $notificationDetail->save();
         }
     }
