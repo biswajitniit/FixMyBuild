@@ -2,7 +2,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Buildercategory;
+use App\Models\Project;
 use App\Models\Buildersubcategory;
+use App\Models\Estimate;
 use Illuminate\Support\Facades\Auth;
 use Hashids\Hashids;
 
@@ -97,5 +99,56 @@ if (! function_exists('getRemoteFileSize')) {
       $response = curl_exec($curl);
       curl_close($curl);
       return $response;
+    }
+}
+
+if (!function_exists('tradesperson_project_status')) {
+    function tradesperson_project_status($project_id)
+    {
+        $project = Project::where('id', $project_id)->first();
+        if ($project->status === 'cancelled') {
+            return 'project_cancelled';
+        }
+        if ($project->status === 'paused') {
+            return 'project_paused';
+        }
+        if ($project->status === 'completed' || $project->status === 'awaiting_your_review') {
+            return 'project_completed';
+        }
+
+        if($project->status === 'estimation') {
+            $estimate_recalled = Estimate::where('project_id', $project_id)
+                                ->where('tradesperson_id', Auth::user()->id)
+                                ->first();
+
+            if ($estimate_recalled->isEmpty()) {
+                return 'write_estimate';
+            }
+            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'recalled') {
+                return 'estimate_recalled';
+            }
+            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == null) {
+                return 'estimate_submitted';
+            }
+            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'rejected') {
+                return 'estimate_rejected';
+            }
+        }
+
+        if($project->status === 'project_started') {
+            $project_started = Estimate::where('project_id', $project_id)
+                                ->where('tradesperson_id', Auth::user()->id)
+                                ->first();
+
+
+            if ($project_started->project_awarded == 0) {
+                return 'estimate_not_accepted';
+            }
+            if ($project_started->project_awarded == 1 && $project_started->status == 'awarded') {
+                return 'estimate_accepted';
+            }
+
+        }
+
     }
 }
