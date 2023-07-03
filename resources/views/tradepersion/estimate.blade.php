@@ -219,6 +219,19 @@
                     </div>
                 </div>
                 <!--// END-->
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        @if($errors->any())
+                            <div class="alert alert-danger mt-15">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    </div>
+                </div>
                 <section>
                     <div class="container">
                         <div class="row">
@@ -231,14 +244,14 @@
                 <div class="row">
                     <div class="col-md-10 offset-md-1">
                         <div class="white_bg mb-5 create-task-wp">
-                            <div class="row" id="for_task">
                                 <div class="col-12">
                                     <div class="form-check mb-2">
                                         <input type="radio" class="form-check-input mb" id="Fully_describe"
-                                            name="describe_mode" value="Fully_describe">
+                                            name="describe_mode" value="Fully_describe" checked>
                                         <h5>Please describe fully each task that needs to be undertaken.</h5>
                                     </div>
                                 </div>
+                            <div class="row" id="for_task">
                                 <div class="row task-wrap">
                                     <div class="col-md-1">
                                         <svg width="27" height="25" viewBox="0 0 27 25" fill="none"
@@ -313,7 +326,7 @@
                                                 placeholder="Type price for task 2">
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
+                                    {{-- <div class="col-md-1">
                                         <span class="remove-row">
                                             <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -322,7 +335,7 @@
                                                     fill="#6D717A" />
                                             </svg>
                                         </span>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 {{-- for add more --}}
                                 <div id="new_add"></div>
@@ -337,7 +350,7 @@
                             </div>
                             <div id='unable_to_desc_div'>
                                 <div class="form-check mb-3">
-                                    <input type="radio" class="form-check-input mb" id="Unable_to_describe" name="Unable_to_describe" value="Unable_to_describe">
+                                    <input type="radio" class="form-check-input mb" id="Unable_to_describe" name="describe_mode" value="Unable_to_describe" {{ old('describe_mode') == 'Unable_to_describe' ? 'checked' : '' }}>
                                     <h5>I am unable to describe the work required.</h5>
                                 </div>
 
@@ -345,7 +358,7 @@
                                     <div class="row mb-3">
                                         <div class="col-md-5">
                                             <div class="form-check mb-2">
-                                                <input type="radio" class="form-check-input mb" onchange="ifYes()" id="forMore" name="Need_more_info" value="Need_more_info">
+                                                <input type="radio" class="form-check-input mb" id="forMore" name="unable_to_describe_type" value="Need_more_info" {{ old('unable_to_describe_type') == 'Need_more_info' ? 'checked' : '' }} >
                                                 <h5>I need more information</h5>
                                                 <p>Please write here what additional information you need.
                                                     This will be sent directly to the customer.</p>
@@ -360,7 +373,7 @@
                                     <div class="row mb-3">
                                         <div class="col-12">
                                             <div class="form-check mb-2">
-                                                <input type="radio" class="form-check-input mb" id="radiox1" name="Do_not_undertake_project_type" value="Do_not_undertake_project_type">
+                                                <input type="radio" class="form-check-input mb" id="radiox1" name="unable_to_describe_type" value="Do_not_undertake_project_type" {{ old('unable_to_describe_type') == 'Do_not_undertake_project_type' ? 'checked' : '' }}>
                                                 <h5>I do not undertake this type of project.</h5>
                                             </div>
                                         </div>
@@ -368,7 +381,7 @@
                                     <div class="row mb-3">
                                         <div class="col-12">
                                             <div class="form-check mb-2">
-                                                <input type="radio" class="form-check-input mb" id="radiox2" name="Do_not_cover_location" value="Do_not_cover_location">
+                                                <input type="radio" class="form-check-input mb" id="radiox2" name="unable_to_describe_type" value="Do_not_cover_location" {{ old('unable_to_describe_type') == 'Do_not_cover_location' ? 'checked' : '' }}>
                                                 <h5>I do not cover the customer’s location.</h5>
                                             </div>
                                         </div>
@@ -541,7 +554,7 @@
                                         <div class="col-3 pr-0">
                                             <input type="text" class="form-control pull-left"
                                                 id="percentage_contingency" name='contingency'
-                                                onchange="calculate_amount()" onkeyup="calculate_amount()">
+                                                onchange="calculate_amount()" onkeyup="calculate_amount()" value="{{ $default_contingency }}">
                                         </div>
                                         <div class="col-3 pl-0">
                                             <h5>%</h5>
@@ -670,7 +683,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3>Terms and conditions</h3>
-                                    <textarea name="termsconditions" id="summernote"></textarea>
+                                    {{-- <textarea name="termsconditions" id="summernote"></textarea> --}}
+                                    <textarea name="termsconditions" class="form-control"></textarea>
                                 </div>
 
                             </div>
@@ -689,7 +703,7 @@
 @push('scripts')
     <!-- Main JS -->
     {{-- <script src="assets/js/main.js"></script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script> --}}
     <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
     <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
     <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
@@ -747,18 +761,18 @@
         }
 
 
-        $('#summernote').summernote({
-            // placeholder: 'FixMyBuild',
-            tabsize: 2,
-            height: 200,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-            ]
-        });
+        // $('#summernote').summernote({
+        //     // placeholder: 'FixMyBuild',
+        //     tabsize: 2,
+        //     height: 200,
+        //     toolbar: [
+        //         ['style', ['style']],
+        //         ['font', ['bold', 'underline', 'clear']],
+        //         ['color', ['color']],
+        //         ['para', ['ul', 'ol', 'paragraph']],
+        //         ['table', ['table']],
+        //     ]
+        // });
 
         $(document).ready(function() {
             $(".remove-row").click(function(e) {
@@ -822,15 +836,22 @@
 
         }
 
-        function ifYes() {
-            const forClick = document.getElementById("forMore");
-            const textBox = document.getElementById("typeHere");
-            if (forClick.clicked == false) {
-                textBox.disabled = true;
-            } else {
-                textBox.disabled = false;
+        function needMoreInfo() {
+            // const forClick = document.getElementById("forMore");
+            // const textBox = document.getElementById("typeHere");
+            // if (forClick.clicked == false) {
+            //     textBox.disabled = true;
+            // } else {
+            //     textBox.disabled = false;
+            // }
+            if ( $('#forMore').is(':checked') ) {
+                $('#typeHere').prop('disabled', false);
+            }
+            else {
+                $('#typeHere').prop('disabled', true);
             }
         }
+
 
         function calculate_amount() {
             let sum = 0;
@@ -912,6 +933,8 @@
         $(document).ready(function() {
             getDate();
             fetchProductImages();
+            $('input[name="unable_to_describe_type"]').prop('disabled', true); // Disable the Unable to describe work radio buttons by default
+
             $("form#capturephoto").submit(function(e){
                 e.preventDefault();
                 var success=1
@@ -964,22 +987,78 @@
                         }
                 })
             });
-            $('#Unable_to_describe').change(function() {
-                if ($(this).is(':checked')) {
-                    $("#div_for_calculate_estimate").hide();
-                    $("#div_for_initial_payment").hide();
-                    $("#terms_conditions").hide();
-                    $("#for_photos").hide();
-                    $("#for_task").hide();
-                } else {
-                    $("#div_for_calculate_estimate").show();
-                    $("#div_for_initial_payment").show();
-                    $("#terms_conditions").show();
-                    $("#for_photos").show();
-                    $("#for_task").show();
-                }
+
+            // $('#Unable_to_describe').change(function() {
+            // $('input[name="describe_mode"]').change(function() {
+            //     // if ($(this).is(':checked')) {
+            //     if ($('#Unable_to_describe').is(':checked')) {
+            //         // $('#Fully_describe').closest('.form-check').removeClass('mb-2').addClass('mb-4');
+            //         // $("#div_for_calculate_estimate").hide();
+            //         // $("#div_for_initial_payment").hide();
+            //         // $("#terms_conditions").hide();
+            //         // $("#for_photos").hide();
+            //         // $("#for_task").hide();
+            //         // $('input[name="unable_to_describe_type"]').prop('disabled', false);
+            //         // $('input[name="unable_to_describe_type"]:first').prop('checked', true);
+            //         // needMoreInfo();
+
+            //         showUnableToDescribeContent();
+            //     } else {
+            //         // $('#Fully_describe').closest('.form-check').removeClass('mb-4').addClass('mb-2');
+            //         // $("#div_for_calculate_estimate").show();
+            //         // $("#div_for_initial_payment").show();
+            //         // $("#terms_conditions").show();
+            //         // $("#for_photos").show();
+            //         // $("#for_task").show();
+            //         // $('input[name="unable_to_describe_type"]').prop('disabled', true);
+            //         // $('input[name="unable_to_describe_type"]').prop('checked', false);
+            //         // $('#typeHere').prop('disabled', true);
+
+            //         showFullyDescribeContent();
+            //     }
+            // });
+
+            $('input[name="describe_mode"]').change(function() {
+                showContentBasedOnDescribeMode();
             });
+
+            $('input[name="unable_to_describe_type"]').on('change', () => needMoreInfo());
+            showContentBasedOnDescribeMode();
+
         });
+
+        function showContentBasedOnDescribeMode() {
+            if ($('#Unable_to_describe').is(':checked'))
+                showUnableToDescribeContent();
+            else
+                showFullyDescribeContent();
+        }
+
+        function showUnableToDescribeContent() {
+            $('#unable_to_desc_div .unable-work').show();
+            $('#Fully_describe').closest('.form-check').removeClass('mb-2').addClass('mb-4');
+            $("#div_for_calculate_estimate").hide();
+            $("#div_for_initial_payment").hide();
+            $("#terms_conditions").hide();
+            $("#for_photos").hide();
+            $("#for_task").hide();
+            $('input[name="unable_to_describe_type"]').prop('disabled', false);
+            $('input[name="unable_to_describe_type"]:first').prop('checked', true);
+            needMoreInfo();
+        }
+
+        function showFullyDescribeContent() {
+            $('#Fully_describe').closest('.form-check').removeClass('mb-4').addClass('mb-2');
+            $("#div_for_calculate_estimate").show();
+            $("#div_for_initial_payment").show();
+            $("#terms_conditions").show();
+            $("#for_photos").show();
+            $("#for_task").show();
+            $('input[name="unable_to_describe_type"]').prop('disabled', true);
+            $('input[name="unable_to_describe_type"]').prop('checked', false);
+            $('#typeHere').prop('disabled', true);
+            $('#unable_to_desc_div .unable-work').hide();
+        }
 
         function fetchProductImages() {
             $.ajax({

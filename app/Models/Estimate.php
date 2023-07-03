@@ -11,6 +11,8 @@ class Estimate extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'describe_mode',
+        'unable_to_describe_type',
         'more_info',
         'do_not_undertake_project_type',
         'do_not_cover_location',
