@@ -20,4 +20,8 @@ class Project extends Model
     public function projectfile(){
         return $this->belongsTo(Projectfile::class,'project_id');
     }
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

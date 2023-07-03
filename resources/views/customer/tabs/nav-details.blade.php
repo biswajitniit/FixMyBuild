@@ -43,7 +43,7 @@
 
     <div class="row">
         <div class="col-md-12">
-                {!!$projects->description!!}
+            {{-- {{htmlspecialchars(trim(strip_tags($projects->description)))}} --}}
         </div>
     </div>
 
@@ -63,7 +63,7 @@
                         @php $is_media_present = true; @endphp
                         <div class="video-mask">
                             <a href="javascript:void(0);">
-                                <video width="100" height="69"> <source src="{{ $docs->url }}"> </video>
+                                <video width="100" height="69" src="{{ $docs->url }}" >  </video>
                             </a>
                         </div>
                     @endif
@@ -85,7 +85,7 @@
                     @if(strtolower($docs->file_type) == 'document')
                         @php $is_document_present=true; @endphp
                         <div class="d-inline mr-4 img-text">
-                            <a href="{{$docs->url}}" target="_blank"><img src="" alt="">{{$docs->filename}}</a>
+                            <a href="{{$docs->url}}" target="_blank"><img src="{{ asset("frontend/img/pdf-icon.svg") }}" alt=""> {{$docs->filename}}</a>
                         </div>
                     @endif
                 @endforeach

@@ -7,7 +7,7 @@ use App\Models\Projectaddresses;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\Projectfile;
-use App\Models\{Estimate, Task, TraderDetail};
+use App\Models\{Estimate, Task, TraderDetail, TradespersonFile};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use App\Models\ProjectReview;
@@ -116,7 +116,7 @@ class CustomerController extends Controller
 
     function getcustomermediafiles(){
         $getcustomerfiles = Tempmedia::where('sessionid',Session::getId())->get();
-        
+
         if($getcustomerfiles){
             $html = '';
             foreach($getcustomerfiles as $row){
@@ -214,6 +214,7 @@ class CustomerController extends Controller
 
 
     function details(Request $request){
+
         $id=Hashids_decode($request->id);
         $projects = Project::where('id',$id)->first();
 
@@ -222,6 +223,11 @@ class CustomerController extends Controller
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
                 $doc= projectfile::where('project_id', $id)->get();
                 $project_id=$id;
+
+                if($projects->status == 'submitted_for_review'){
+                    $doc= projectfile::where('project_id', $id)->get();
+                    return view('customer.project_details',compact('projects','doc','project_id'));
+                }
 
                 if($projects->status == 'estimation') {
                     $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
@@ -264,6 +270,16 @@ class CustomerController extends Controller
             return redirect()->route('customer.project');
         }
 
+    }
+
+    public function cancel_project(Request $request){
+        // try {
+        //     $project_id = Hashids_encode($request->project_id);
+        //     Project::where('id', $project_id)->update(['status' => $request->status]);
+        //     return response()->json(['status' => $request->input('status')]);
+        // } catch (Exception $e) {
+        //     echo 'error';
+        // }
     }
 
     function review(Request $request){
@@ -362,77 +378,79 @@ class CustomerController extends Controller
             return response()->json(['error' => 'Failed to update data'],500);
         }
     }
-
-    public function project_review(Request $request)
+    //z5doyvrmpjnyvn2gmwb6e8dk29x53jplqaz97row89lb3gqea6
+    public function project_review($project_id)
     {
         try{
-            $project_id = Hashids_decode($request->project_id)[0];
             return view("customer.review", ['project_id' => $project_id]);
-
         } catch(\Exception $e) {
             return 'error';
         }
 
     }
 
-    public function submit_review(Request $request)
-    {
-        $request->validate([
-            'optradio1' => 'required',
-            'optradio2' => 'required',
-            'optradio3' => 'required',
-            'optradio4' => 'required',
-            'optradio5' => 'required',
-        ]);
-        try {
-            $review = ProjectReview::where('user_id','=', Auth::user()->id)
-                ->where('project_id', '=', $request->project_id)
-                ->get();
-            $tradeperson = Estimate::where('project_id', $request->project_id)
-                ->where('project_awarded', 1)
-                ->value('tradesperson_id');
-            if (count($review)==0) {
-                $review = new ProjectReview();
-                $review->user_id = Auth::user()->id;
-                $review->tradesperson_id = $tradeperson;
-                $review->project_id = $request->project_id;
-                $review->punctuality = $request->optradio1;
-                $review->workmanship = $request->optradio2;
-                $review->tidiness = $request->optradio3;
-                $review->price_accuracy = $request->optradio4;
-                $review->detailed_review = $request->optradio5;
-                $review->description = $request->detailed_review;
-                $review->save();
-                return 'Saved';
-            } else {
-                $review = DB::table('project_reviews')
-                ->where('user_id', '=', Auth::user()->id,)
-                ->where('project_id','=', $request->project_id)
-                ->where('tradesperson_id','=', $tradeperson)
-                ->update([
-                    'punctuality' => $request->optradio1,
-                    'workmanship' => $request->optradio2,
-                    'tidiness' => $request->optradio3,
-                    'price_accuracy' => $request->optradio4,
-                    'detailed_review' => $request->optradio5,
-                    'description' => $request->detailed_review
-                ]);
-                return 'Review Updated';
-            }
+    // public function submit_review(Request $request)
+    // {
+    //     $request->validate([
+    //         'optradio1' => 'required',
+    //         'optradio2' => 'required',
+    //         'optradio3' => 'required',
+    //         'optradio4' => 'required',
+    //         'optradio5' => 'required',
+    //     ]);
+    //     try {
+    //         $project_id = Hashids_decode($request->project_id);
+    //         //dd($p_id);die;
+    //         // $review = ProjectReview::where('user_id','=', Auth::user()->id)
+    //         //     ->where('project_id', '=', $project_id)
+    //         //     ->get();
+    //         $tradeperson = Estimate::where('project_id', $project_id[0])
+    //             ->where('project_awarded', 1)
+    //             ->where('status', 'awarded')
+    //             ->value('tradesperson_id');
+    //         //if (count($review)==0) {
+    //             $review = new ProjectReview();
+    //             $review->user_id = Auth::user()->id;
+    //             $review->tradesperson_id = $tradeperson;
+    //             $review->project_id = $project_id[0];
+    //             $review->punctuality = $request->optradio1;
+    //             $review->workmanship = $request->optradio2;
+    //             $review->tidiness = $request->optradio3;
+    //             $review->price_accuracy = $request->optradio4;
+    //             $review->detailed_review = $request->optradio5;
+    //             $review->description = $request->detailed_review;
+    //             $review->save();
+    //             return 'Saved';
+    //         // } else {
+    //         //     $review = DB::table('project_reviews')
+    //         //     ->where('user_id', '=', Auth::user()->id,)
+    //         //     ->where('project_id','=', $project_id)
+    //         //     ->where('tradesperson_id','=', $tradeperson)
+    //         //     ->update([
+    //         //         'punctuality' => $request->optradio1,
+    //         //         'workmanship' => $request->optradio2,
+    //         //         'tidiness' => $request->optradio3,
+    //         //         'price_accuracy' => $request->optradio4,
+    //         //         'detailed_review' => $request->optradio5,
+    //         //         'description' => $request->detailed_review
+    //         //     ]);
+    //         //     return 'Review Updated';
+    //         // }
 
-        } catch(\Exception $e) {
-            return 'error';
-        }
-    }
+    //     } catch(\Exception $e) {
+    //         echo $e;
+    //     }
+    // }
 
     public function project_estimate(Request $request, $id)
     {
-
         $estimate = Estimate::where('id', $id)
                             ->first();
         $project = Project::where('id', $estimate->project_id)->first();
-        $projectid = Projectfile::where('project_id', $estimate->project_id)->get();
+        // $projectid = Projectfile::where('project_id', $estimate->project_id)->get();
         $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
+        $user = User::where('id', $trader_detail->user_id)->first();
+        $project_reviews = ProjectReview::where('project_id', $estimate->project_id)->get();
 
         $tasks = Task::where('estimate_id', $estimate->id)->get();
         $amount = 0;
@@ -460,7 +478,7 @@ class CustomerController extends Controller
         $initial_payment_percentage = number_format($initial_payment_percentage, 2);
         $contingency_per_task = number_format($contingency_per_task, 2);
 
-        return view('customer.estimate_details',compact('projectid','project','trader_detail','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task'));
+        return view('customer.estimate_details',compact('project','trader_detail','project_reviews','user','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task'));
 
     }
 }

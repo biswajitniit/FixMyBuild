@@ -128,7 +128,21 @@
                         </div>
                         <div class="row mt-4">
                             <div class="col-md-6"><h5>Location</h5></div>
-                            <div class="col-md-6"><h2>{{$projectaddress->town_city}}</h2></div>
+                            <div class="col-md-6">
+                                <h2>
+                                    @if ($projects->postcode)
+                                        {{ $projects->postcode }}
+                                    @endif
+                                    @if ($projects->town)
+                                        @if ($projects->postcode) , @endif
+                                        {{ $projects->town }}
+                                    @endif
+                                    @if ($projects->county)
+                                        @if ($projects->postcode || $projects->town) , @endif
+                                        {{ $projects->county }}
+                                    @endif
+                                </h2>
+                            </div>
                         </div>
                      </div>
                   </div>
@@ -264,7 +278,7 @@
                         {{-- Buttons Starts --}}
                         <div class="form-group col-md-12 mt-5 text-center pre_">
                             @if ($status == 'estimation')
-                                <a href="#" class="btn btn-light mr-3">Cancel project</a>
+                                <a href="javascript:void(0);" class="btn btn-light mr-3" onclick="cancelProject()">Cancel project</a>
                                 <a href="{{url('/customer/projects')}}" class="btn btn-primary">Back</a>
                             @else
                                 <a href="{{url('/customer/projects')}}" class="btn btn-light mr-3">Back</a>
@@ -276,6 +290,9 @@
                             @if ($status == 'awaiting_your_review')
                                 <a href="{{ route('customer.project_review',[Hashids_encode($project_id)]) }}" class="btn btn-primary">Review</a>
                             @endif
+                            @if ($status == 'submitted_for_review')
+                                <a href="{{ route('customer.project_review',[Hashids_encode($project_id)]) }}" class="btn btn-primary">Review</a>
+                            @endif
                         </div>
                         {{-- Buttons Ends --}}
                     </div>
@@ -284,7 +301,7 @@
                <!--// END-->
             </form>
          </div>
-
+         <input type="hidden" value="{{ $project_id }}" id="projectid"/>
       </section>
 
 
@@ -346,6 +363,26 @@
     $('#customer_feedback_tooltip').hover(function(e) {
         customerFeedbackInfo();
     });
+
+    function cancelProject() {
+        var projectid=$('#projectid').val();
+        console.log(projectid);
+        $.ajax({
+            url: '{{ route("cancel-project") }}',
+            type: 'POST',
+            data: {
+                status: 'project_cancelled',
+                project_id : project_id
+            },
+            success: function(response) {
+                console.log('Project cancelled successfully');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error cancelling project:', error);
+            }
+        });
+    }
+
 
 </script>
 @endpush
