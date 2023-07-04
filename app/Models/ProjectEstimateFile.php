@@ -16,6 +16,7 @@ class ProjectEstimateFile extends Model
         'file_original_name',
         'file_extension',
         'url',
+        'file_type',
     ];
 
 }

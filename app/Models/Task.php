@@ -20,6 +20,7 @@ class Task extends Model
         'status',
         'payment_transaction_id',
         'payment_date',
+        'is_initial',
     ];
 
     public function estimate() {

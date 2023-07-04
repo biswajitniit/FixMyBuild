@@ -20,7 +20,8 @@ use App\Models\{
   Project,
   Projectfile,
   Estimate,
-  Task
+  Task,
+  ProjectEstimateFile
 };
 use Illuminate\Support\Facades\{
     Http,
@@ -906,7 +907,16 @@ class TradepersionDashboardController extends Controller
             //     return Redirect::back()->with('status', 'error');
             // }
 
-            // dd($request->total_field);
+        try{
+            $old_estimate = Estimate::where([
+                                'project_id'      => $request->project_id,
+                                'tradesperson_id' => Auth::user()->id,
+                            ])->first();
+
+            if ($old_estimate) {
+                $errors = new MessageBag(['duplicate_entry' => 'You have already written an estimate for this project.']);
+                return redirect()->back()->withErrors($errors);
+            }
 
             if (\Str::lower($request->describe_mode) == 'unable_to_describe') {
 
@@ -936,59 +946,104 @@ class TradepersionDashboardController extends Controller
                     $errors->add("numeric_amount"."$i", 'Please provide a numeric value for task '.$i.' price.');
             }
 
-            // $request->validate([
-            //     'covers_customers_all_needs' => 'nullable|boolean',
-            //     'payment_required_upfront' => 'nullable|boolean',
-            //     'apply_vat' =>'nullable|boolean',
-            //     'contingency' =>'required|numeric',
-            //     'for_start_date' => 'required',
-            //     'total_time' => 'required',
-            //     'total_time_type' =>'required|string',
-            // ]);
-
-            // if( \Str::lower($request->for_start_date) == 'specific_date')
-            //     $request->validate(['project_start_date' => 'required|date']);
-
             $rules = [
                 'covers_customers_all_needs' => 'nullable|boolean',
-                'payment_required_upfront' => 'nullable|boolean',
-                'apply_vat' =>'nullable|boolean',
-                'contingency' =>'required|numeric',
-                'for_start_date' => 'required',
-                'total_time' => 'required',
-                'total_time_type' =>'required|string',
+                'payment_required_upfront'   => 'nullable|boolean',
+                'apply_vat'                  => 'nullable|boolean',
+                'contingency'                => 'required|numeric',
+                'for_start_date'             => 'required',
+                'total_time'                 => 'required',
+                'total_time_type'            => 'required|string',
+                'termsconditions'            => 'required|string',
             ];
 
-            if ($request->has('designation')) {
-                $rules['designation'] = 'required|string|max:255';
-            }
-
-            if($request->vat_reg) {
-                $rules['vat_no'] = 'required|string|max:255';
-            }
-
-            if( \Str::lower($request->for_start_date) == 'specific_date')
+            if (\Str::lower($request->for_start_date) == 'specific_date')
                 $rules['project_start_date'] = 'required|date';
 
-            $messages = [];
+            if ($request->payment_required_upfront && \Str::lower($request->initial_payment_type) == 'percentage')
+                $rules['initial_payment_percentage'] = 'required|numeric';
+            elseif ($request->payment_required_upfront && \Str::lower($request->initial_payment_type) == 'fixed_amount')
+                $rules['initial_payment_amount'] = 'required|numeric';
+
+
+            $messages = [
+                'termsconditions.required'  => 'The terms and condition field is required.'
+            ];
 
             $validator = Validator::make($request->all(), $rules, $messages);
             if ($validator->fails() || count($errors) != 0) {
                 $errors->merge($validator->errors());
-                return redirect()
-                            ->back()
-                            ->withInput()
-                            ->withErrors($errors);
+                return redirect()->back()->withInput()->withErrors($errors);
             }
 
-            Estimate::create([
+            $initial_payment = null;
 
+            if ($request->payment_required_upfront && $request->initial_payment_type == 'fixed_amount')
+                $initial_payment = $request->initial_payment_amount;
+            elseif ($request->payment_required_upfront && $request->initial_payment_type == 'percentage')
+                $initial_payment = $request->initial_payment_percentage;
+
+            $estimate = Estimate::create([
+                'describe_mode'              => $request->describe_mode,
+                'project_id'                 => $request->project_id,
+                'tradesperson_id'            => Auth::user()->id,
+                'covers_customers_all_needs' => $request->covers_customers_all_needs ?? 0,
+                'payment_required_upfront'   => $request->payment_required_upfront ?? 0,
+                'apply_vat'                  => $request->apply_vat ?? 0,
+                'contingency'                => $request->contingency,
+                'initial_payment'            => $initial_payment ,
+                'initial_payment_type'       => $request->initial_payment_type ,
+                'project_start_date_type'    => $request->for_start_date ,
+                'project_start_date'         => ($request->for_start_date == 'specific_date' ) ? $request->project_start_date : null,
+                'total_time'                 => $request->total_time ,
+                'total_time_type'            => $request->total_time_type ,
+                'terms_and_conditions'       => $request->termsconditions ,
             ]);
 
+            if ($estimate) {
 
-        // } catch (\Exception $e) {
-        //     echo $e;die;
-        // }
+                if ($request->payment_required_upfront) {
+                    Task::create([
+                        'estimate_id' => $estimate->id,
+                        'description' => 'initial payment',
+                        'price'       => $request->initial_payment_type == 'percentage' ? $request->initial_payment_calculated_percentage : $request->initial_payment_amount,
+                        'is_initial'  => true,
+                    ]);
+                }
+
+                for ($i = 1; $i <= $request->total_field; $i++) {
+                    Task::create([
+                        'estimate_id'     => $estimate->id,
+                        'description'     => $request->input('task'."$i"),
+                        'price'           => $request->input('amount'."$i"),
+                        'contingency'     => $request->input('amount'."$i") * ( $request->contingency / 100 ),
+                        'max_contingency' => $request->input('amount'."$i") * ( $request->contingency / 100 ),
+                    ]);
+                }
+
+                // Move the estimate files from temp_media to project_estimate_files
+                $temp_medias = tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'media_type' => 'estimate'])->get();
+                foreach ($temp_medias as $temp_media) {
+                    $estimate_file = ProjectEstimateFile::create([
+                        'estimate_id'        => $estimate->id,
+                        'file_related_to'    => $temp_media->file_related_to,
+                        'file_type'          => $temp_media->file_type,
+                        'file_name'          => $temp_media->filename,
+                        'file_original_name' => $temp_media->file_original_name,
+                        'file_extension'     => $temp_media->file_extension,
+                        'url'                => $temp_media->url,
+                    ]);
+
+                    if($estimate_file)
+                        $temp_media->delete();
+                }
+            }
+
+            return redirect()->route('tradepersion.projects');
+
+        } catch (\Exception $e) {
+            echo $e;die;
+        }
     }
 
 

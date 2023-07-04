@@ -164,7 +164,7 @@
                   </div>
                   <div class="modal-footer">
                     {{-- <button class="btn btn-danger">Submit</button> --}}
-                    <button class="btn btn-light" type="submit">Upload</button>
+                    <button class="btn btn-light" type="submit" id="capture_photo_upload">Upload</button>
                     <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal" id="close_image_modal">Close</button>
                   </div>
                 </form>
@@ -515,7 +515,7 @@
                                         <div class="form-check form-switch">
                                             <div class="switchToggle">
                                                 <input type="checkbox" id="toogle1" name="covers_customers_all_needs"
-                                                    value="1">
+                                                    value="1" {{ old('covers_customers_all_needs') ? 'checked' : '' }}>
                                                 <label for="toogle1">Toggle</label>
                                             </div>
                                             <label class="form-check-label" for="mySwitch">Does the above list of tasks
@@ -527,21 +527,20 @@
                                         <div class="form-check form-switch">
                                             <div class="switchToggle">
                                                 <input type="checkbox" id="toogle2" name="payment_required_upfront"
-                                                    value="1">
+                                                    value="1" {{ old('payment_required_upfront') ? 'checked' : '' }}>
                                                 <label for="toogle2">Toggle</label>
                                             </div>
-                                            <label class="form-check-label" for="mySwitch">Payment required
-                                                upfront?</label>
+                                            <label class="form-check-label" for="mySwitch">Would you like to charge the customer an additional payment upfront?</label>
                                         </div>
                                     </div>
                                     <!--//-->
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
                                             <div class="switchToggle">
-                                                <input type="checkbox" id="toogle3" name="apply_vat" value="1">
+                                                <input type="checkbox" id="toogle3" name="apply_vat" value="1" {{ old('apply_vat') ? 'checked' : '' }}>
                                                 <label for="toogle3">Toggle</label>
                                             </div>
-                                            <label class="form-check-label" for="mySwitch">Apply VAT @ 20%?</label>
+                                            <label class="form-check-label" for="mySwitch">Apply VAT @ {{ config('const.vat_charge') }}%?</label>
                                         </div>
                                     </div>
                                     <!--//-->
@@ -554,7 +553,7 @@
                                         <div class="col-3 pr-0">
                                             <input type="text" class="form-control pull-left"
                                                 id="percentage_contingency" name='contingency'
-                                                onchange="calculate_amount()" onkeyup="calculate_amount()" value="{{ $default_contingency }}">
+                                                onchange="calculate_amount()" onkeyup="calculate_amount()" value="{{ old('contingency') ?? $default_contingency }}">
                                         </div>
                                         <div class="col-3 pl-0">
                                             <h5>%</h5>
@@ -579,25 +578,26 @@
                         <div class="white_bg mb-5 initial-payment">
                             <div class="row" id="for_initial_pay_hide">
                                     <div class="col-md-12">
-                                        <h3>Initial payment</h3>
+                                        <h3>Additional payment upfront</h3>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-2 pr-0">
                                                 <div class="form-check mt-2">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1">
+                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="percentage" checked>
                                                 </div>
                                             </div>
                                             <div class="col-8">
                                                 <div class="row total_price_">
                                                     <div class="col-4 pl-0 pr-0">
-                                                        <input type="text" class="form-control pull-left" id="initial_payment_percentage" name="initial_payment_percentage" onkeyup="calculate_amount()">
+                                                        <input type="text" class="form-control pull-left" id="initial_payment_percentage" name="initial_payment_percentage" onkeyup="calculate_amount()" value="{{ old('initial_payment_percentage') }}">
                                                     </div>
                                                     <div class="col-2 pl-0">
                                                         <h5>%</h5>
                                                     </div>
                                                     <div class="col-3">
                                                         <span id="initial_payment1">(£0.00)</span>
+                                                        <input name="initial_payment_calculated_percentage" type="hidden" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -610,7 +610,7 @@
                                         <div class="row task-wrap p-0">
                                             <div class="col-1">
                                                 <div class="form-check mt-2">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1">
+                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="fixed_amount">
                                                 </div>
                                             </div>
                                             <div class="col-9">
@@ -625,7 +625,7 @@
                                                             </svg>
                                                         </span>
                                                     </div>
-                                                    <input type="text" class="form-control" name="initial_payment_amount" placeholder="Type Price">
+                                                    <input type="text" class="form-control" name="initial_payment_amount" placeholder="Type Price" value="{{ old('initial_payment_amount') }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -638,16 +638,16 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <select name="for_start_date" class="form-control" id="for_start_date" onchange="getDate()">
-                                                    <option value="now">Now</option>
-                                                    <option value="one_week">Next one week</option>
-                                                    <option value="two_three_weeks">2-3 weeks time</option>
-                                                    <option value="specific_date">On a specific date</option>
+                                                    <option value="now" {{ old('for_start_date') == 'now' ? 'selected' : '' }}>Now</option>
+                                                    <option value="one_week" {{ old('for_start_date') == 'one_week' ? 'selected' : '' }}>Next one week</option>
+                                                    <option value="two_three_weeks" {{ old('for_start_date') == 'two_three_weeks' ? 'selected' : '' }}>2-3 weeks time</option>
+                                                    <option value="specific_date" {{ old('for_start_date') == 'specific_date' ? 'selected' : '' }}>On a specific date</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <input type="date" class="form-control" id="project_start_date" name="project_start_date" placeholder="DD MM YYYY" style="display: none;">
+                                                <input type="date" class="form-control" id="project_start_date" name="project_start_date" placeholder="DD MM YYYY" style="display: none;" value="{{ old('project_start_date') }}">
                                             </div>
                                         </div>
                                         <h3 class="mt-4">Total time required to complete the project (including
@@ -655,17 +655,17 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <input type="text" class="form-control" id=""
-                                                    placeholder="Type time" name="total_time">
+                                                    placeholder="Type time" name="total_time" value="{{ old('total_time') }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <select name="total_time_type" class="form-control" id="">
-                                                    <option value="minutes">minutes</option>
-                                                    <option value="Hours">hours</option>
-                                                    <option value="days">days</option>
-                                                    <option value="weeks">weeks</option>
-                                                    <option value="months">months</option>
+                                                    <option value="minutes" {{ old('total_time_type') == 'minutes' ? 'selected' : '' }}>minutes</option>
+                                                    <option value="Hours" {{ old('total_time_type') == 'Hours' ? 'selected' : '' }} >hours</option>
+                                                    <option value="days" {{ old('total_time_type') == 'days' ? 'selected' : '' }} >days</option>
+                                                    <option value="weeks" {{ old('total_time_type') == 'weeks' ? 'selected' : '' }} >weeks</option>
+                                                    <option value="months" {{ old('total_time_type') == 'months' ? 'selected' : '' }} >months</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -684,7 +684,7 @@
                                 <div class="col-md-12">
                                     <h3>Terms and conditions</h3>
                                     {{-- <textarea name="termsconditions" id="summernote"></textarea> --}}
-                                    <textarea name="termsconditions" class="form-control"></textarea>
+                                    <textarea name="termsconditions" class="form-control">{{ old('termsconditions') }}</textarea>
                                 </div>
 
                             </div>
@@ -774,15 +774,15 @@
         //     ]
         // });
 
-        $(document).ready(function() {
-            $(".remove-row").click(function(e) {
-                var last_field = parseInt($('#total_field').val())
-                if (last_field > 2) {
-                    $('#new_' + last_field).remove();
-                    $('#total_field').val(last_field - 1);
-                }
-            });
-        });
+        // $(document).ready(function() {
+        //     $(".remove-row").click(function(e) {
+        //         var last_field = parseInt($('#total_field').val())
+        //         if (last_field > 2) {
+        //             $('#new_' + last_field).remove();
+        //             $('#total_field').val(last_field - 1);
+        //         }
+        //     });
+        // });
 
         function addMore() {
             var new_field = parseInt($('#total_field').val()) + 1;
@@ -864,7 +864,7 @@
             }
             var percentage_contingency = $("#percentage_contingency").val() ?? 0;
             var total_price_including_contingency = (sum * percentage_contingency / 100) + sum;
-            var total_price_including_vat = ((total_price_including_contingency * {{ env('VAT_CHARGE', 20) }}) / 100) +
+            var total_price_including_vat = ((total_price_including_contingency * {{ config('const.vat_charge') }}) / 100) +
                 total_price_including_contingency;
 
             $("#price_include_contigency").text("£" + total_price_including_contingency.toFixed(2));
@@ -880,38 +880,54 @@
             }
 
             $("#initial_payment1").text("(£" + initial_payment_percentage.toFixed(2) + ")");
+            $("input[name='initial_payment_calculated_percentage']").val(initial_payment_percentage.toFixed(2));
         }
 
-        $(document).ready(function() {
-            $("#vat_price").hide();
-        });
+        // $(document).ready(function() {
+        //     $("#vat_price").hide();
+        // });
 
         $('#toogle3').change(function() {
-            if (this.checked) {
+            // if (this.checked) {
+            //     $("#vat_price").show();
+            //     calculate_amount();
+            // } else {
+            //     $("#vat_price").hide();
+            //     calculate_amount();
+            // }
+            showAndUpdateVatPrice();
+        });
+
+        function showAndUpdateVatPrice() {
+            if ($('#toogle3').prop('checked'))
                 $("#vat_price").show();
-                calculate_amount();
-            } else {
+            else
                 $("#vat_price").hide();
-                calculate_amount();
-            }
+            calculate_amount();
+        }
 
-        });
-
-        $(document).ready(function() {
-            $("#for_initial_pay_hide").hide();
-        });
+        // $(document).ready(function() {
+        //     $("#for_initial_pay_hide").hide();
+        // });
 
         $('#toogle2').change(function() {
-            if (this.checked) {
-                $("#for_initial_pay_hide").show();
-                calculate_amount();
-            } else {
-                $("#for_initial_pay_hide").hide();
-                calculate_amount();
-            }
-
+            // if (this.checked) {
+            //     $("#for_initial_pay_hide").show();
+            //     calculate_amount();
+            // } else {
+            //     $("#for_initial_pay_hide").hide();
+            //     calculate_amount();
+            // }
+            showInitialPayment();
         });
 
+        function showInitialPayment() {
+            if ($('#toogle2').prop('checked'))
+                $("#for_initial_pay_hide").show();
+            else
+                $("#for_initial_pay_hide").hide();
+            calculate_amount();
+        }
 
         function getDate() {
             let e = document.getElementById('for_start_date');
@@ -931,8 +947,9 @@
         }
 
         $(document).ready(function() {
-            getDate();
             fetchProductImages();
+            // $("#for_initial_pay_hide").hide();
+            $("#vat_price").hide();
             $('input[name="unable_to_describe_type"]').prop('disabled', true); // Disable the Unable to describe work radio buttons by default
 
             $("form#capturephoto").submit(function(e){
@@ -952,6 +969,8 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         //for (i = 0; i < imagesArray.length; i++){
+                        $("#capture_photo_upload").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+                        $("#capture_photo_upload").prop('disabled', true);
                         var formData = new FormData($("#capturephoto")[0]);
                         formData.append('media_type', 'estimate');
                         $.ajax({
@@ -964,6 +983,8 @@
                             processData: false,
                             dataType: "json",
                             success: (response) => {
+                                $("#capture_photo_upload").html('Upload');
+                                $("#capture_photo_upload").prop('disabled', false);
                                 success='1'
                             },
                             error: (response) => {
@@ -1025,6 +1046,34 @@
             $('input[name="unable_to_describe_type"]').on('change', () => needMoreInfo());
             showContentBasedOnDescribeMode();
 
+            $(".remove-row").click(function(e) {
+                var last_field = parseInt($('#total_field').val())
+                if (last_field > 2) {
+                    $('#new_' + last_field).remove();
+                    $('#total_field').val(last_field - 1);
+                }
+            });
+
+            let tasks = [];
+            @for ($i = 1; $i <= old('total_field'); $i++)
+                tasks.push({
+                    price : "{{ old('amount'.$i) }}",
+                    description: "{{ old('task'.$i) }}"
+                });
+            @endfor
+
+            @if($errors->any())
+                let total_tasks = {{ old('total_field')  }};
+                for (let i = 0; i < total_tasks; i++) {
+                    if (i > 1)
+                        addMore();
+                    $(`textarea[name="task${i+1}"]`).text(tasks[i].description);
+                    $(`input[name="amount${i+1}"]`).val((tasks[i].price == '') ? '' : parseFloat(tasks[i].price));
+                }
+            @endif
+
+            showInitialPayment();
+            showAndUpdateVatPrice();
         });
 
         function showContentBasedOnDescribeMode() {
@@ -1194,6 +1243,8 @@
                 if (progress == 100) {
                     $(file.previewElement).find('.progress').hide(1000);
                 }
+                $("#upload_multiple_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+                $("#upload_multiple_file").prop('disabled', true);
             });
 
             multiFileDropzone.on("sending", function(file) {
@@ -1208,7 +1259,7 @@
                 // document.querySelector("#total-progress").style.opacity = "0";
                 // $('#previews.files').find('.progress').hide();
                 // $('#multiModal').modal('hide');
-
+                $("#upload_multiple_file").prop('disabled', false);
             });
 
             multiFileDropzone.on("removedfile", function(file) {
@@ -1222,6 +1273,8 @@
             multiFileDropzone.on("successmultiple", function(file, responses) {
                 $('#multiModal').modal('hide');
                 multiFileDropzone.removeAllFiles(true);
+                $("#upload_multiple_file").html('Upload');
+                $("#upload_multiple_file").prop('disabled', false);
             });
 
             // Setup the buttons for all transfers
