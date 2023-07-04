@@ -118,16 +118,62 @@ class CustomerController extends Controller
         $getcustomerfiles = Tempmedia::where('sessionid',Session::getId())->get();
 
         if($getcustomerfiles){
-            $html = '';
+            // $html = '';
+            // $video_html = '<div><h4>Videos</h4>';
+            // $doc_html   = '<div><h4>Files</h4>';
+            // $image_html = '<div><h4>Images</h4>';
+            $video_html = '';
+            $doc_html   = '';
+            $image_html = '';
+
             foreach($getcustomerfiles as $row){
                 // $html .= '<div class="d-inline mr-3">'.$row->filename.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
-                if($row->file_type == 'Video'){
-                  $html .= '<div class="col-md-3 mt-2"><video controls="" src="'.$row->url.'"></video>'.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
-                }else{
-                $html .= '<div class="col-md-3 mt-2"><img src="'.$row->url.'" alt="" class="customer_img_project"/>'.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+                if (strtolower($row->file_type) == 'video'){
+                //   $html .= '<div class="col-md-3 mt-2"><video controls="" src="'.$row->url.'"></video>'.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+                $video_html .= '<div class="d-inline mr-5" id="project-'.$row->id.'">
+                            <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('.$row->id.',\'#project-'.$row->id.'\')">
+                            <video src="'.$row->url.'" class="rectangle-video-lg"></video>
+                            <div class="remove_img h-95" title="'.$row->filename.'">
+                                      <svg class="center-svg" width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                         <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                                      </svg>
+                                   </div>
+                                   </a>
+                            </div>';
+                } elseif (strtolower($row->file_type) == 'image') {
+                //   $html .= '<div class="col-md-3 mt-2"><img src="'.$row->url.'" alt="" class="rectangle-img mr-2"/>'.'<a onclick="deletetempmediafile('.$row->id.')"><img src="'.asset('frontend/img/crose-btn.svg').'" alt="" /> </a></div>';
+                    $image_html .= '<div class="d-inline mr-5" id="project-'.$row->id.'">
+                                        <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('.$row->id.',\'#project-'.$row->id.'\')">
+                                            <img src="'.$row->url.'" alt="" class="rectangle-img-lg center-svg">
+                                            <div class="remove_img h-100" title="'.$row->filename.'">
+                                                <svg class="center-svg" width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                                                </svg>
+                                            </div>
+                                        </a>
+                                    </div>';
+                } else {
+                    $doc_html .= '<div class="d-inline mr-5" id="project-'.$row->id.'">
+                                    <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('.$row->id.',\'#project-'.$row->id.'\')">
+                                        <img src="'.asset('frontend/img/file_logo.png').'" alt="'. $row->filename.'" title="'.$row->filename.'" class="rectangle-img-lg center-svg" >
+                                        <div class="remove_img h-100" title="'.$row->filename.'">
+                                            <svg class="center-svg" width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                                            </svg>
+                                        </div>
+                                    </a>
+                                </div>';
                 }
             }
-            echo $html;
+
+            if ($video_html != '')
+                $video_html = '<div><h4>Video(s)</h4>'.$video_html.'</div>';
+            if ($doc_html != '')
+                $doc_html = '<div><h4>File(s)</h4>'.$doc_html.'</div>';
+            if ($image_html != '')
+                $image_html = '<div><h4>Image(s)</h4>'.$image_html.'</div>';
+
+            echo $image_html.$video_html.$doc_html;
         }
     }
 
@@ -365,9 +411,12 @@ class CustomerController extends Controller
             $image = $request->file('file');
             $imageName = $request->file('file')->getClientOriginalName();
             $extension = $image->getClientOriginalExtension();
-            $imageName = \Str::of($imageName)->basename('.'.$extension).'_'.Auth::user()->id.'.'.$image->getClientOriginalExtension();
-            $path = Storage::disk('s3')->put('Testfolder/'.$imageName,file_get_contents($image->getRealPath(),'public'));
-            $path = Storage::disk('s3')->url('Testfolder/'.$imageName);
+            // $imageName = \Str::of($imageName)->basename('.'.$extension).'_'.Auth::user()->id.'.'.$image->getClientOriginalExtension();
+            // $path = Storage::disk('s3')->put('Testfolder/'.$imageName,file_get_contents($image->getRealPath(),'public'));
+            // $path = Storage::disk('s3')->url('Testfolder/'.$imageName);
+            $s3FileName = \Str::uuid().'.'.$extension;
+            Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($image->getRealPath()));
+            $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
             $user = Auth::user();
             $user->profile_image = $path;
             $user->update();

@@ -12554,7 +12554,7 @@ button.btn-close:hover {
 }
 p {
   color: #6d717a;
-   font-weight: 500; 
+   font-weight: 500;
   /*font-size: 22px;
   line-height: 25px;
   margin-bottom: 12px;*/
@@ -14584,6 +14584,13 @@ h2.company-name a:hover svg path {
 .rectangle-img {
     width: 100px;
     height: 69px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.rectangle-img-lg {
+    width: 200px;
+    height: 138px;
     object-fit: cover;
     border-radius: 10px;
 }
