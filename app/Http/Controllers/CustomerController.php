@@ -116,7 +116,7 @@ class CustomerController extends Controller
 
     function getcustomermediafiles(){
         $getcustomerfiles = Tempmedia::where('sessionid',Session::getId())->get();
-        
+
         if($getcustomerfiles){
             $html = '';
             foreach($getcustomerfiles as $row){
@@ -222,10 +222,9 @@ class CustomerController extends Controller
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
                 $doc= projectfile::where('project_id', $id)->get();
                 $project_id=$id;
-
+                //echo $projects->id; die;
                 if($projects->status == 'estimation') {
                     $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
-
                     foreach($estimates as $estimate) {
                         $amount = $estimate->tasks->sum('price');
                         $estimate->price = ($amount != 0) ? (($estimate->apply_vat == 0) ? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
@@ -252,6 +251,12 @@ class CustomerController extends Controller
                     };
 
                     return view('customer.project_details',compact('projects','projectaddress','doc','project_id','estimates'));
+                }
+
+                if($projects->status == 'project_started') {
+                    $estimates = Estimate::where('project_id', $projects->id)->first();
+                    $task = Task::where('estimate_id',$estimates->id)->get();
+                    return view('customer.project_details',compact('projects','projectaddress','doc','project_id','estimates','task'));
                 }
 
                 return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
@@ -424,4 +429,22 @@ class CustomerController extends Controller
             return 'error';
         }
     }
+
+
+    function project_all_payment(Request $request){
+        echo "<pre>"; print_r($_POST); die;
+    }
+
+
+    function project_pay_now(Request $request, $taskid){
+        $task = Task::where('id',Hashids_decode($taskid))->first();
+        return view("customer.pay-now", compact('task'));
+    }
+
+    function payment_capture(Request $request){
+        echo "<pre>"; print_r($_POST); die;
+    }
+
+
+
 }

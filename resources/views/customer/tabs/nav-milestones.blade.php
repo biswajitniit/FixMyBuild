@@ -15,46 +15,28 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                $count = 1;
+                @endphp
+                @foreach ($task as $row)
                 <tr>
-                    <td>01</td>
-                    <td>Initial payment</td>
-                    <td>£2300</td>
-                    <td>£360</td>
-                    <td class="text-success">Paid</td>
-                    @if ($status == 'project_started')
-                        <td></td>
-                    @endif
-                </tr>
-                <tr>
-                    <td>02</td>
-                    <td>Milestone 1</td>
-                    <td>£2300</td>
-                    <td>£360</td>
-                    <td class="text-success">Paid</td>
-                    @if ($status == 'project_started')
-                        <td></td>
-                    @endif
-                </tr>
-                <tr>
-                    <td>03</td>
-                    <td>Milestone 2</td>
-                    <td>£2300</td>
-                    <td>£360 <span class="max_">(Max. £800)</span></td>
+                    <td>@php
+                        echo $count;
+                    @endphp</td>
+                    <td>{{substr($row->description,0,100)}}</td>
+                    <td>£{{$row->price}}</td>
+                    <td>@if($row->contingency!='') £{{$row->contingency}} @endif</td>
+                    @if ($row->payment_status != 'Paid' || $row->payment_status == '')
                     <td class="text-warning">Pending</td>
-                    @if ($status == 'project_started')
-                        <td><a href="pay-now.html" class="btn btn-view">Pay now</a></td>
+                    <td><a href="{{route('customer.project-pay-now',[Hashids_encode($row->id)])}}" class="btn btn-view">Pay now</a></td>
+                    @else
+                    <td class="text-success">Paid</td>
                     @endif
                 </tr>
-                <tr>
-                    <td>04</td>
-                    <td>Milestone 3</td>
-                    <td>£2300</td>
-                    <td>£360 <span class="max_">(Max. £800)</span></td>
-                    <td class="text-warning">Pending</td>
-                    @if ($status == 'project_started')
-                        <td><a href="pay-now.html" class="btn btn-view">Pay now</a></td>
-                    @endif
-                </tr>
+                @php
+                   $count++;
+                @endphp
+                @endforeach
             </tbody>
         </table>
         </div>

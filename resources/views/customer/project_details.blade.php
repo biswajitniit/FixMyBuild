@@ -52,7 +52,8 @@
       <!--Code area start-->
       <section class="pb-5">
          <div class="container">
-            <form action="#" method="post">
+            <form action="{{route('customer.project-all-payment')}}" method="post" name="project-all-payment" id="project-all-payment">
+                @csrf
                 @php
                     $status=$projects->status;
                 @endphp
@@ -271,7 +272,10 @@
                             @endif
                             @if ($status == 'project_started')
                                 <a href="project-details-view-estimates.html" class="btn btn-light mr-3">Pause project </a>
-                                <a href="#" class="btn btn-primary">Pay all</a>
+                                {{-- <a href="#" class="btn btn-primary">Pay all</a> --}}
+
+                                <input type="submit" class="btn btn-primary" value="Pay all" data-key="pk_test_zeGoVEfpYZ93rNF9hwHUVY4r00DWWCoAJT" data-amount="500" data-currency="inr" data-name="Fixmybuild" data-description="" />
+
                             @endif
                             @if ($status == 'awaiting_your_review')
                                 <a href="{{ route('customer.project_review',[Hashids_encode($project_id)]) }}" class="btn btn-primary">Review</a>
@@ -292,6 +296,23 @@
 @endsection
 
 @push('scripts')
+<script src="https://checkout.stripe.com/v2/checkout.js"></script>
+
+<script>
+$(document).ready(function() {
+    $(':submit').on('click', function(event) {
+        event.preventDefault();
+        var $button = $(this),
+            $form = $button.parents('form');
+        var opts = $.extend({}, $button.data(), {
+            token: function(result) {
+                $form.append($('<input>').attr({ type: 'hidden', name: 'stripeToken', value: result.id })).submit();
+            }
+        });
+        StripeCheckout.open(opts);
+    });
+});
+</script>
 <script>
     $(function(){
         let modal_video = $('#project_media_modal .modal-body video');
