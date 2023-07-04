@@ -193,7 +193,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::put('updatecustomerphone', [CustomerController::class, 'update_phone'])->name('customer.updatephone');
 
         Route::get('project-estimate/{id}', [CustomerController::class, 'project_estimate'])->name('Customer.project-estimate');
-        Route::get('cancel-project', [CustomerController::class, 'cancel_project'])->name('cancel-project');
+        Route::post('cancel-project', [CustomerController::class, 'cancel_project'])->name('cancel-project');
         /**
          * Logout Route
          */

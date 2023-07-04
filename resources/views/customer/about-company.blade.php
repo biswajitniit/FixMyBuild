@@ -1,10 +1,10 @@
-<div class="tab-pane fade active show" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
     <div class="row mb-5">
-       <div class="col-md-8">
-          <img src="{{ $user->profile_image }}" alt="" class="mr-2"> <span>{{ $trader_detail->comp_name }}</span>
-       </div>
+        <div class="col-md-8">
+            <img src="{{ $company_logo->url }}" alt="" class="mr-2 c_logo"><span>{{ $trader_detail->comp_name }}</span>
+        </div>
        <div class="col-md-4 text-right mt-4">
-          <h6>Posted on: <span class="date_time">{{ $trader_detail->created_at->format('d M Y,  H:i A') }}</span> </h6>
+          <h6>Posted on: <span class="date_time">{{ $trader_detail->created_at->format('d M Y,  H:i A') }}</span></h6>
        </div>
     </div>
     <div class="row">
@@ -19,19 +19,21 @@
              <div class="col-md-6">
                 <h3>Team photo(s)</h3>
                 <div class="row">
-                   <div class="pv_top">
-                      <div class="d-inline mr-3"><img src="assets/img/Rectangle 63.jpg" alt=""></div>
-                      <div class="d-inline mr-3"><img src="assets/img/Rectangle 62.jpg" alt=""></div>
-                   </div>
+                    <div class="pv_top">
+                        @foreach($teams_photos as $teams_photo)
+                            <div class="d-inline mr-3"><img class="rectangle-img" src="{{ $teams_photo->url }}" alt=""></div>
+                        @endforeach
+                    </div>
                 </div>
              </div>
              <div class="col-md-6">
                 <h3>Photo(s) of previous project(s)</h3>
                 <div class="row">
-                   <div class="pv_top">
-                      <div class="d-inline mr-3"><img src="assets/img/Rectangle 63.jpg" alt=""></div>
-                      <div class="d-inline mr-3"><img src="assets/img/Rectangle 62.jpg" alt=""></div>
-                   </div>
+                    <div class="pv_top">
+                        @foreach($prev_project_imgs as $prev_project_img)
+                            <div class="d-inline mr-3"><img class="rectangle-img" src="{{ $prev_project_img->url }}" alt=""></div>
+                        @endforeach
+                    </div>
                 </div>
              </div>
           </div>
@@ -41,36 +43,36 @@
                 <div class="col-md-12 c_feedback">
                     <div class="row">
                     <div class="col-md-6">
-                        <h5><strong>From:</strong> {{ $project->user->name }} <span>{{ $project_review->created_at->format('d M Y') }}</span></h5>
+                        <h5><strong>From:</strong> {{ $project_review->user->name }} <span>{{ $project_review->created_at->format('d M Y') }}</span></h5>
                     </div>
                     <div class="col-md-6 text-right">
                         <div class="text-info">
                             @if($project_review->punctuality == 1)
-                                <span class="cf_rating bg-success">A</span>
+                                <span class="cf_rating bg-success"></span>
                             @else
-                                <span class="cf_rating bg-primary">B</span>
+                                <span class="cf_rating bg-danger"></span>
                             @endif
 
                             @if($project_review->workmanship == 2)
-                                <span class="cf_rating bg-success">A</span>
+                                <span class="cf_rating bg-success"></span>
                             @else
                                 @if($project_review->workmanship == 1)
-                                    <span class="cf_rating bg-primary">B</span>
+                                    <span class="cf_rating bg-warning"></span>
                                 @else
-                                    <span class="cf_rating bg-warning">C</span>
+                                    <span class="cf_rating bg-danger"></span>
                                 @endif
                             @endif
 
                             @if($project_review->tidiness == 1)
-                                <span class="cf_rating bg-success">A</span>
+                                <span class="cf_rating bg-success"></span>
                             @else
-                                <span class="cf_rating bg-primary">B</span>
+                                <span class="cf_rating bg-danger"></span>
                             @endif
 
                             @if($project_review->price_accuracy == 1)
-                                <span class="cf_rating bg-success">A</span>
+                                <span class="cf_rating bg-success"></span>
                             @else
-                                <span class="cf_rating bg-primary">B</span>
+                                <span class="cf_rating bg-danger"></span>
                             @endif
 
                             @if($project_review->verified == 1)
@@ -110,31 +112,31 @@
                             </h3>
                             <div class="ratings_">
                                 @if($project_review->punctuality == 1)
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-success">A</span> - Punctuality</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-success"></span> - Punctuality</div>
                                 @else
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-primary">B</span> - Punctuality</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-danger"></span> - Punctuality</div>
                                 @endif
 
                                 @if($project_review->workmanship == 2)
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-success">A</span> - Workmanship</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-success"> </span> - Workmanship</div>
                                 @else
                                     @if($project_review->workmanship == 1)
-                                        <div class="col-12 mb-2"><span class="cf_rating bg-primary">B</span> - Workmanship</div>
+                                        <div class="col-12 mb-2"><span class="cf_rating bg-warning"> </span> - Workmanship</div>
                                     @else
-                                        <div class="col-12 mb-2"><span class="cf_rating bg-warning">C</span> - Workmanship</div>
+                                        <div class="col-12 mb-2"><span class="cf_rating bg-danger"> </span> - Workmanship</div>
                                     @endif
                                 @endif
 
                                 @if($project_review->tidiness == 1)
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-success">A</span> - Tidiness</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-success"> </span> - Tidiness</div>
                                 @else
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-primary">B</span> - Tidiness</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-danger"> </span> - Tidiness</div>
                                 @endif
 
                                 @if($project_review->price_accuracy == 1)
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-success">A</span> - Price accuracy</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-success"> </span> - Price accuracy</div>
                                 @else
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-primary">B</span> - Price accuracy</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-danger"> </span> - Price accuracy</div>
                                 @endif
                             </div>
                         </div>

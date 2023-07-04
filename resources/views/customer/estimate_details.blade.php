@@ -8,8 +8,8 @@
           <div class="col-md-12 text-center pt-5 fmb_titel">
              <h1>Project</h1>
              <ol class="breadcrumb mb-5">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item"><a href="projects-tradesperson.html">Project list</a></li>
+                <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('customer.project')}}">Project list</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Details</li>
              </ol>
           </div>
@@ -30,7 +30,7 @@
                          <h5>Customer’s project name</h5>
                       </div>
                       <div class="col-md-6">
-                         <h2>Renovate my house</h2>
+                         <h2>{{ ucwords($project->project_name) }}</h2>
                       </div>
                    </div>
                     <div class="row mt-4">
@@ -38,19 +38,19 @@
                             <h5>Location</h5>
                         </div>
                         <div class="col-md-6">
-                            {{-- <h2>
-                                @if ($projects->postcode)
-                                    {{ $projects->postcode }}
+                            <h2>
+                                @if ($project->postcode)
+                                    {{ $project->postcode }}
                                 @endif
-                                @if ($projects->town)
-                                    @if ($projects->postcode) , @endif
-                                    {{ $projects->town }}
+                                @if ($project->town)
+                                    @if ($project->postcode), @endif
+                                    {{ $project->town }}
                                 @endif
-                                @if ($projects->county)
-                                    @if ($projects->postcode || $projects->town) , @endif
-                                    {{ $projects->county }}
+                                @if ($project->county)
+                                    @if ($project->postcode || $project->town) , @endif
+                                    {{ $project->county }}
                                 @endif
-                            </h2> --}}
+                            </h2>
                         </div>
                     </div>
                 </div>
@@ -65,8 +65,8 @@
                          <div class="card-header">
                             <nav>
                                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                    <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">About company</a>
-                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">About company</a>
                                     {{-- <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a> --}}
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                </div>
@@ -74,8 +74,8 @@
                          </div>
                          <div class="card-body">
                             <div class="tab-content" id="nav-tabContent">
-                                @include('customer.about-company')
                                 @include('customer.estimate_tab')
+                                @include('customer.about-company')
                                 {{-- @include('customer.details') --}}
                                 @include('customer.chat')
                             </div>
@@ -213,19 +213,9 @@
             element.previousElementSibling.style.display = "inline";
         }
 
-        var visibleReviews = 5;
-        var loadMoreCount = 5;
-
-        $('.c_feedback:gt(' + (visibleReviews - 1) + ')').hide();
-        $('#load_more').on('click', function() {
-            $('.c_feedback:hidden:lt(' + loadMoreCount + ')').show();
-            if ($('.c_feedback:hidden').length === 0) {
-                $('.load_more').hide();
-            }
-        });
 
 
 
-</script>
+    </script>
 
 @endpush

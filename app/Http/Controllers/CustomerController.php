@@ -38,9 +38,13 @@ class CustomerController extends Controller
         return view("customer.profile");
     }
     public function customer_project(Request $request){
-        $project = Project::where('user_id',Auth::user()->id)->get();
-        $projecthistory = Project::where('user_id',Auth::user()->id)->where('created_at', '!=', Carbon::today())->get();
-        return view("customer/project",compact('project','projecthistory'));
+        $project = Project::where('user_id',Auth::user()->id)
+                            ->whereIn('status', ['awaiting_your_review', 'submitted_for_review','project_started','estimation','returned_for_review'])
+                            ->get();
+        $projecthistory = Project::where('user_id',Auth::user()->id)
+                                ->whereIn('status', ['project_cancelled', 'project_completed','project_paused'])
+                                ->get();
+        return view("customer.project",compact('project','projecthistory'));
     }
     // public function customer_notifications(Request $request){
     //     return view("customer/notifications");
@@ -262,9 +266,9 @@ class CustomerController extends Controller
     function details($project_id){
 
         $id=Hashids_decode($project_id);
-        //DB::enableQueryLog();
+        // DB::enableQueryLog();
         $projects = Project::where('id',$id)->first();
-        //dd(DB::getQueryLog());
+        // dd(DB::getQueryLog());
         try{
             if(Auth::user()->id == $projects->user_id){
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
@@ -320,13 +324,12 @@ class CustomerController extends Controller
     }
 
     public function cancel_project(Request $request){
-        // try {
-        //     $project_id = Hashids_encode($request->project_id);
-        //     Project::where('id', $project_id)->update(['status' => $request->status]);
-        //     return response()->json(['status' => $request->input('status')]);
-        // } catch (Exception $e) {
-        //     echo 'error';
-        // }
+        try {
+            Project::where('id', $request->project_id)->update(['status' => $request->status]);
+            return response()->json(['redirect_url' => route('customer.project')]);
+        } catch (Exception $e) {
+            echo 'error';
+        }
     }
 
     function review(Request $request){
@@ -494,6 +497,7 @@ class CustomerController extends Controller
 
     public function project_estimate(Request $request, $id)
     {
+        $id = Hashids_decode($id);
         $estimate = Estimate::where('id', $id)
                             ->first();
         $project = Project::where('id', $estimate->project_id)->first();
@@ -501,6 +505,10 @@ class CustomerController extends Controller
         $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
         $user = User::where('id', $trader_detail->user_id)->first();
         $project_reviews = ProjectReview::where('project_id', $estimate->project_id)->get();
+        $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
+        $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
+        $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
+
 
         $tasks = Task::where('estimate_id', $estimate->id)->get();
         $amount = 0;
@@ -528,7 +536,7 @@ class CustomerController extends Controller
         $initial_payment_percentage = number_format($initial_payment_percentage, 2);
         $contingency_per_task = number_format($contingency_per_task, 2);
 
-        return view('customer.estimate_details',compact('project','trader_detail','project_reviews','user','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task'));
+        return view('customer.estimate_details',compact('project','trader_detail','company_logo','teams_photos','prev_project_imgs','project_reviews','user','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task'));
 
     }
 }

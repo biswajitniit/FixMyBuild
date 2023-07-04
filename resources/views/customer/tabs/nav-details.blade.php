@@ -43,7 +43,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            {{-- {{htmlspecialchars(trim(strip_tags($projects->description)))}} --}}
+            {{htmlspecialchars(trim(strip_tags($projects->description)))}}
         </div>
     </div>
 

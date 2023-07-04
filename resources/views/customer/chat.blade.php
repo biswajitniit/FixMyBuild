@@ -224,9 +224,9 @@
 
             </div>
             </div>
-            <div class="form-group col-md-12 mt-5 text-center">
+            {{-- <div class="form-group col-md-12 mt-5 text-center">
             <a href="projects.html" class="btn btn-primary">Back</a>
-            </div>
+            </div> --}}
         </div>
     </div>
     <!--// END-->

@@ -13,7 +13,7 @@
         </div>
         @endforeach --}}
         <div class="col-md-12">
-            {{-- <p>{{htmlspecialchars(trim(strip_tags($project->description)))}}<p> --}}
+            <p>{{htmlspecialchars(trim(strip_tags($project->description)))}}<p>
          </div>
      </div>
      <div class="col-md-12">
