@@ -9,6 +9,8 @@ use Exception;
 //use Stripe\Exception\CardException;
 use Stripe;
 use App\Models\{Estimate, Task};
+use App\Models\Transactionhistory;
+use Illuminate\Support\Facades\Auth;
 class StripeController extends Controller
 {
     /**
@@ -28,6 +30,8 @@ class StripeController extends Controller
      */
     public function stripePost(Request $request)
     {
+        $orderid= "FIXMYBUILD".date('Ymd').rand();
+
         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         $customer = Stripe\Customer::create(array(
                 // "address" => [
@@ -37,7 +41,7 @@ class StripeController extends Controller
                 //         "state" => "GJ",
                 //         "country" => "IN",
                 //     ],
-                "email" => "biswajitmaityniit@gmail.com",
+                "email" => Auth::user()->email,
                 //"name" => "Hardik Savani",
                 "source" => $request->stripeToken
              ));
@@ -46,7 +50,7 @@ class StripeController extends Controller
                 "amount" => $request->totalamount * 100,
                 "currency" => "gbp",
                 "customer" => $customer->id,
-                "description" => rand(1000,2),
+                "description" => $orderid,
         ]);
         if (!empty($charge) && $charge['status'] == 'succeeded') {
 
@@ -59,11 +63,25 @@ class StripeController extends Controller
                 'payment_date'             => date('Y-m-d H:i:s')
             );
             Task::where('id', $request->taskid)->update($data);
+
+            // Transaction history save
+            $th = new Transactionhistory();
+            $th->order_id               = $orderid;
+            $th->user_id                = Auth::user()->id;
+            $th->task_id                = $request->taskid;
+            $th->totalamount            = $request->totalamount;
+            $th->payment_status         = $charge['status'];
+            $th->payment_type           = 'card';
+            $th->payment_transaction_id = $charge['balance_transaction'];
+            $th->payment_capture_log    = $charge;
+            $th->payment_date           = date('Y-m-d H:i:s');
+            $th->save();
+
             $request->session()->flash('success', 'Payment completed.');
         } else {
             $request->session()->flash('danger', 'Payment failed.');
         }
 
-        return back();
+        //return back();
     }
 }

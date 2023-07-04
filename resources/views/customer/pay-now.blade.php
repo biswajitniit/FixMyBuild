@@ -1,4 +1,5 @@
 @extends('layouts.app') @section('content')
+<!--header area end-->
 <!--Code area start-->
 <section>
     <div class="container">
@@ -6,20 +7,23 @@
             <div class="col-md-12 text-center pt-5 fmb_titel">
                 <h1>Checkout & Payment</h1>
                 <ol class="breadcrumb mb-5">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item"><a href="projects.html">Project list</a></li>
+                    <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('customer.project')}}">Project list</a></li>
+
                     <li class="breadcrumb-item active" aria-current="page">Checkout</li>
                 </ol>
             </div>
         </div>
     </div>
 </section>
+<!--Code area end-->
+<!--Code area start-->
 <section class="pb-5 checkout_">
     <div class="container">
         <form role="form" action="{{ route('stripe.post') }}" method="post" class="require-validation" data-cc-on-file="false" data-stripe-publishable-key="{{ env('STRIPE_KEY') }}" id="payment-form">
             @csrf
             <input type="hidden" name="taskid" value="{{$task->id}}">
-            <input type="hidden" name="totalamount" value="{{ $task->price + $task->contingency }}">
+
 
             <div class="row mb-5">
                 <div class="col-md-10 offset-md-1">
@@ -27,11 +31,10 @@
                         <div class="col">
                             <div class="text-center">
                                 Initial payment
-                                <h2>£{{ $task->price }}</h2>
+                                <h2>£{{ @$task->price }}</h2>
                             </div>
                         </div>
 
-                        @if($task->contingency !='')
                         <div class="col">
                             <div class="text-center mt-5">
                                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,10 +46,13 @@
                         <div class="col">
                             <div class="text-center">
                                 Contingency
+                                @if($task->contingency !='')
                                 <h2>£{{ $task->contingency }}</h2>
+                                @else
+                                <h2>£0.00</h2>
+                                @endif
                             </div>
                         </div>
-                        @endif
 
                         <div class="col">
                             <div class="text-center mt-5">
@@ -59,7 +65,7 @@
                         <div class="col">
                             <div class="text-center">
                                 Total amount
-                                <h2>£{{ $task->price }}</h2>
+                                <h2>£{{ $task->price + $task->contingency}}</h2>
                             </div>
                         </div>
                     </div>
@@ -68,12 +74,11 @@
 
             <div class="row payment-type">
                 <div class="col-md-10 offset-md-1">
-                    {{--
                     <div class="row mb-5">
                         <div class="col-12">
                             <div class="white_bg">
-                                <h3>Payment type</h3>
-                                <h5>
+                                {{-- <h3>Payment type</h3> --}}
+                                {{-- <h5>
                                     Debit / Credit card
                                     <div class="mt-2">
                                         <svg width="128" height="28" viewBox="0 0 128 28" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -91,9 +96,9 @@
                                             </defs>
                                         </svg>
                                     </div>
-                                </h5>
+                                </h5> --}}
 
-                                <div class="mt-4">
+                                {{-- <div class="mt-4">
                                     <div class="row form_wrap">
                                         <div class="col-md-6 spt_">
                                             <input type="text" class="form-control" id="" placeholder="7693  4456  7834  9012" />
@@ -129,13 +134,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="mt-4 ta_">
-                                    <p>Fix my build platform fee (5% + VAT): £2600</p>
+                                    <p>Fix my build platform fee (5% + VAT): £@php echo round(((($task->price + $task->contingency) * 5) / 100)) @endphp</p>
                                     <p>Stripe transaction fee (FEE): £195.20</p>
                                     <hr />
-                                    <h5>Total amount: £2795.20</h5>
+                                    <h5>Total amount: £@php echo round(((($task->price + $task->contingency) * 5) / 100)) + 195.20 +  ($task->price + $task->contingency) @endphp</h5>
                                 </div>
 
                                 <div class="mt-4">
@@ -156,16 +161,15 @@
                             </div>
                         </div>
                     </div>
-                    --}}
                     <div class="form-group col-md-12 mt-5 text-center pre_">
                         <a href="projects.html" class="btn btn-light mr-3">Back</a>
-                        {{-- <a href="#" class="btn btn-primary">Make payment</a> --}}
+                        <input type="hidden" name="totalamount" value="{{ round((((($task->price + $task->contingency) * 5) / 100)) + 195.20 +  ($task->price + $task->contingency)) }}">
                         <input
                             type="submit"
                             class="btn btn-primary"
                             value="Make payment"
                             data-key="pk_test_zeGoVEfpYZ93rNF9hwHUVY4r00DWWCoAJT"
-                            data-amount="{{ ($task->price + $task->contingency) * 100 }}"
+                            data-amount="{{ round(((((($task->price + $task->contingency) * 5) / 100)) + 195.20 +  ($task->price + $task->contingency)) * 100) }}"
                             data-currency="gbp"
                             data-name="Fixmybuild"
                             data-description=""
@@ -178,8 +182,7 @@
     </div>
 </section>
 <!--Code area end-->
-
-@push('scripts') @push('scripts')
+@endsection @push('scripts')
 <script src="https://checkout.stripe.com/v2/checkout.js"></script>
 
 <script>
@@ -208,4 +211,4 @@
         });
     });
 </script>
-@endpush @endsection
+@endpush
