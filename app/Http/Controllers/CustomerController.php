@@ -213,11 +213,12 @@ class CustomerController extends Controller
 
 
 
-    function details(Request $request){
+    function details($project_id){
 
-        $id=Hashids_decode($request->id);
+        $id=Hashids_decode($project_id);
+        //DB::enableQueryLog();
         $projects = Project::where('id',$id)->first();
-
+        //dd(DB::getQueryLog());
         try{
             if(Auth::user()->id == $projects->user_id){
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
@@ -226,7 +227,7 @@ class CustomerController extends Controller
 
                 if($projects->status == 'submitted_for_review'){
                     $doc= projectfile::where('project_id', $id)->get();
-                    return view('customer.project_details',compact('projects','doc','project_id'));
+                    return view('customer.project_details',compact('projects','doc'));
                 }
 
                 if($projects->status == 'estimation') {

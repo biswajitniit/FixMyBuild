@@ -288,10 +288,10 @@
                                 <a href="#" class="btn btn-primary">Pay all</a>
                             @endif
                             @if ($status == 'awaiting_your_review')
-                                <a href="{{ route('customer.project_review',[Hashids_encode($project_id)]) }}" class="btn btn-primary">Review</a>
+                                <a href="{{ route('customer.project_review',[Hashids_encode($projects->id)]) }}" class="btn btn-primary">Review</a>
                             @endif
                             @if ($status == 'submitted_for_review')
-                                <a href="{{ route('customer.project_review',[Hashids_encode($project_id)]) }}" class="btn btn-primary">Review</a>
+                                <a href="{{ route('customer.project_review',[Hashids_encode($projects->id)]) }}" class="btn btn-primary">Review</a>
                             @endif
                         </div>
                         {{-- Buttons Ends --}}
@@ -301,7 +301,7 @@
                <!--// END-->
             </form>
          </div>
-         <input type="hidden" value="{{ $project_id }}" id="projectid"/>
+         <input type="hidden" value="{{ $projects->id }}" id="projectid"/>
       </section>
 
 
@@ -372,7 +372,7 @@
             type: 'POST',
             data: {
                 status: 'project_cancelled',
-                project_id : project_id
+                project_id : projectid
             },
             success: function(response) {
                 console.log('Project cancelled successfully');

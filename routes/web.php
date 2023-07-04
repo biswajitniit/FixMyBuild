@@ -172,7 +172,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('newproject', [CustomerController::class, 'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class, 'customer_storeproject'])->name('customer.storeproject');
 
-        Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
+        Route::get('project/{project_id}', [CustomerController::class,'details'])->name('customer.project_details');
         Route::get('project-return-for-review/{id}', [CustomerController::class,'project_return_for_review'])->name('customer.project-return-for-review');
         Route::post('editproject-return-for-review/{projectid}', [CustomerController::class,'customer_editproject'])->name('customer.editproject-return-for-review');
 
@@ -192,7 +192,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::put('updatecustomerphone', [CustomerController::class, 'update_phone'])->name('customer.updatephone');
 
         Route::get('project-estimate/{id}', [CustomerController::class, 'project_estimate'])->name('Customer.project-estimate');
-        // Route::get('cancel-project', [CustomerController::class, 'cancel_project'])->name('cancel-project');
+        Route::get('cancel-project', [CustomerController::class, 'cancel_project'])->name('cancel-project');
         /**
          * Logout Route
          */
