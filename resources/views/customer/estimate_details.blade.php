@@ -39,17 +39,7 @@
                         </div>
                         <div class="col-md-6">
                             <h2>
-                                @if ($project->postcode)
-                                    {{ $project->postcode }}
-                                @endif
-                                @if ($project->town)
-                                    @if ($project->postcode), @endif
-                                    {{ $project->town }}
-                                @endif
-                                @if ($project->county)
-                                    @if ($project->postcode || $project->town) , @endif
-                                    {{ $project->county }}
-                                @endif
+                                @if ($project->postcode){{ $project->postcode.', ' }} @endif @if ($project->town){{ $project->town.', ' }}@endif @if ($project->county){{ $project->county }}@endif
                             </h2>
                         </div>
                     </div>

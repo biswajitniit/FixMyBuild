@@ -15,27 +15,51 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>01</td>
-                    <td>Initial payment</td>
-                    <td>£2300</td>
-                    <td>£360</td>
-                    <td class="text-success">Paid</td>
-                    @if ($status == 'project_started')
-                        <td></td>
+                    <tr>
+                        @foreach($tasks as $key=>$task)
+                            @if($task->is_initial == 1)
+                                <td>1</td>
+                                <td>Initial payment</td>
+                                <td>£{{ $task->price }}</td>
+                                <td>NA</td>
+                                @if($task->payment_status == 'paid')
+                                    <td class="text-success">Paid</td>
+                                @else
+                                    <td class="text-warning">Pending</td>
+                                @endif
+                                @if($task->payment_status == 'paid')
+                                    <td></td>
+                                @else
+                                    <td><a href="pay-now.html" class="btn btn-view">Pay now</a></td>
+                                @endif
+                            @endif
+                        @endforeach
+                    </tr>
+                @foreach($tasks as $key=>$task)
+                    @if($task->is_initial == 0)
+                    <tr>
+                        @if($task->is_initial == 1)
+                            <td>{{ $key+2 }}</td>
+                        @else
+                            <td>{{ $key+1 }}</td>
+                        @endif
+                        <td>Milestone {{ $key+1 }}</td>
+                        <td>£{{ sprintf("%.2f",$task->price) }}</td>
+                        <td>£{{ sprintf("%.2f",$task->contingency) }}</td>
+                        @if($task->payment_status == 'paid')
+                            <td class="text-success">Paid</td>
+                        @else
+                            <td class="text-warning">Pending</td>
+                        @endif
+                        @if($task->payment_status == 'paid')
+                            <td></td>
+                        @else
+                            <td><a href="pay-now.html" class="btn btn-view">Pay now</a></td>
+                        @endif
+                    </tr>
                     @endif
-                </tr>
-                <tr>
-                    <td>02</td>
-                    <td>Milestone 1</td>
-                    <td>£2300</td>
-                    <td>£360</td>
-                    <td class="text-success">Paid</td>
-                    @if ($status == 'project_started')
-                        <td></td>
-                    @endif
-                </tr>
-                <tr>
+                @endforeach
+                {{-- <tr>
                     <td>03</td>
                     <td>Milestone 2</td>
                     <td>£2300</td>
@@ -54,7 +78,7 @@
                     @if ($status == 'project_started')
                         <td><a href="pay-now.html" class="btn btn-view">Pay now</a></td>
                     @endif
-                </tr>
+                </tr> --}}
             </tbody>
         </table>
         </div>

@@ -263,7 +263,7 @@ class CustomerController extends Controller
 
 
 
-    function details($project_id){
+    public function details($project_id){
 
         $id=Hashids_decode($project_id);
         // DB::enableQueryLog();
@@ -273,11 +273,47 @@ class CustomerController extends Controller
             if(Auth::user()->id == $projects->user_id){
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
                 $doc= projectfile::where('project_id', $id)->get();
-                $project_id=$id;
+                $project_id=$id;;
 
                 if($projects->status == 'submitted_for_review'){
                     $doc= projectfile::where('project_id', $id)->get();
                     return view('customer.project_details',compact('projects','doc'));
+                }
+
+                if($projects->status == 'project_started'){
+                    $estimate = Estimate::where('project_id', $id)->first();
+                    $tasks = Task::where('estimate_id', $estimate->id)->get();
+                    $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
+                    $project_reviews = ProjectReview::where('project_id', $estimate->project_id)->get();
+                    $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
+                    $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
+                    $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
+
+                    $amount = 0;
+                    foreach ($tasks as $task) {
+                        $price = $task->price;
+                        $amount += $task->price;
+                    }
+                    $taskTotalAmount = ($amount != 0)? (($estimate->apply_vat == 0)? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
+                    $taskAmountWithContingency = (($taskTotalAmount * $estimate->contingency)/100) + $taskTotalAmount;
+                    $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * 20)/100) + $taskAmountWithContingency;
+                    $initial_payment_percentage = $estimate->initial_payment;
+                    $contingency_per_task = ($price * $estimate->contingency)/100;
+
+                    if($estimate->apply_vat == 1){
+                        if($estimate->initial_payment_type == 'Percentage'){
+                            $initial_payment_percentage = ($taskAmountWithContingencyAndVat * $estimate->initial_payment)/100;
+                        }
+                    } elseif($estimate->apply_vat == 0){
+                        $initial_payment_percentage = ($taskAmountWithContingency * $estimate->initial_payment)/100;
+                    }
+                    // for showing amounts in 2 decimal
+                    $taskTotalAmount = round($taskTotalAmount, 2);
+                    $taskAmountWithContingency = round($taskAmountWithContingency, 2);
+                    $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
+                    $initial_payment_percentage = number_format($initial_payment_percentage, 2);
+                    $contingency_per_task = number_format($contingency_per_task, 2);
+                    return view('customer.project_details',compact('projects','estimate','tasks', 'doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
                 }
 
                 if($projects->status == 'estimation') {

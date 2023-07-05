@@ -5,3 +5,4 @@ ALTER TABLE `chat` CHANGE `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT, add PRIM
 ALTER TABLE `project_reviews` ADD `verified` TINYINT(1) NOT NULL DEFAULT '0' AFTER `description`;
 ALTER TABLE `projects` ADD `postcode` VARCHAR(10) NULL AFTER `contact_email`, ADD `county` VARCHAR(20) NULL AFTER `postcode`;
 ALTER TABLE `projects` ADD `town` VARCHAR(20) NULL AFTER `county`;
+ALTER TABLE `projects` ADD `reviewer_id` INT(11) NULL DEFAULT NULL AFTER `status`;

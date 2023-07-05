@@ -112,31 +112,31 @@
                             </h3>
                             <div class="ratings_">
                                 @if($project_review->punctuality == 1)
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-success"></span> - Punctuality</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-success">&nbsp;</span> - Punctuality</div>
                                 @else
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-danger"></span> - Punctuality</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-danger">&nbsp;</span> - Punctuality</div>
                                 @endif
 
                                 @if($project_review->workmanship == 2)
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-success"> </span> - Workmanship</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-success">&nbsp;</span> - Workmanship</div>
                                 @else
                                     @if($project_review->workmanship == 1)
-                                        <div class="col-12 mb-2"><span class="cf_rating bg-warning"> </span> - Workmanship</div>
+                                        <div class="col-12 mb-2"><span class="cf_rating bg-warning">&nbsp;</span> - Workmanship</div>
                                     @else
-                                        <div class="col-12 mb-2"><span class="cf_rating bg-danger"> </span> - Workmanship</div>
+                                        <div class="col-12 mb-2"><span class="cf_rating bg-danger">&nbsp;</span> - Workmanship</div>
                                     @endif
                                 @endif
 
                                 @if($project_review->tidiness == 1)
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-success"> </span> - Tidiness</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-success">&nbsp;</span> - Tidiness</div>
                                 @else
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-danger"> </span> - Tidiness</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-danger">&nbsp;</span> - Tidiness</div>
                                 @endif
 
                                 @if($project_review->price_accuracy == 1)
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-success"> </span> - Price accuracy</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-success">&nbsp;</span> - Price accuracy</div>
                                 @else
-                                    <div class="col-12 mb-2"><span class="cf_rating bg-danger"> </span> - Price accuracy</div>
+                                    <div class="col-12 mb-2"><span class="cf_rating bg-danger">&nbsp;</span> - Price accuracy</div>
                                 @endif
                             </div>
                         </div>
