@@ -968,7 +968,10 @@ class TradepersionDashboardController extends Controller
     public function update_task_status(Request $request)
     {
         try {
-            Task::where('id', $request->task_id)->update(['status' => $request->status]);
+            $task_id = Hashids_decode($request->task_id);
+            Task::where('id', $task_id)->update(['status' => 'completed']);
+            
+            milestone_completion_notification($task_id);
             return response()->json(['status' => $request->input('status')]);
         } catch (Exception $e) {
 

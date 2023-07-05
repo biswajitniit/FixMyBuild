@@ -167,18 +167,17 @@
         // checkbox for <tr>
 
         $('.toggle-class').on('change',function(){
-            let task_id = $(this).closest('tr').attr('data-id');
-            let status = $(this).prop('checked') ? 'Active' : 'Inactive';
+            let task_id = $(this).val();
             let pencil = $('#pencil'+task_id);
-            // let pencil=document.getElementById('pencil'+task_id);
-            $(this).prop('checked') ?pencil.addClass('d-none'):pencil.removeClass('d-none');
             $.ajax({
-                url: '{{ route('tradeperson.update-task-status') }}',
+                url: '{{ route("tradeperson.update-task-status") }}',
                 type: 'post',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    status: status,
                     task_id: task_id,
+                },
+                success: function(response) {
+                    $(this).prop('checked') ?pencil.addClass('d-none'):pencil.removeClass('d-none');
                 },
                 error: function(xhr) {
 

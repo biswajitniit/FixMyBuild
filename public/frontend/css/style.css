@@ -15130,3 +15130,9 @@ color: #6D717A !important;
     left: 325px;
     border-radius: 3px;
 }
+.notification-user-img
+{
+    width: 60%;
+    background-color: #d1cabf;
+    border-radius: 50%;
+}
