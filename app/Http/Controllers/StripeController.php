@@ -82,6 +82,6 @@ class StripeController extends Controller
             $request->session()->flash('danger', 'Payment failed.');
         }
 
-        //return back();
+        return redirect()->route('customer.project');
     }
 }

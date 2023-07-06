@@ -179,7 +179,6 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
         Route::post('project-all-payment', [CustomerController::class,'project_all_payment'])->name('customer.project-all-payment');
         Route::get('project-pay-now/{taskid}', [CustomerController::class,'project_pay_now'])->name('customer.project-pay-now');
-        //Route::post('payment-capture', [CustomerController::class,'payment_capture'])->name('customer.payment-capture');
 
         Route::get('stripe', [StripeController::class, 'stripe']);
         Route::post('stripe', [StripeController::class, 'stripePost'])->name('stripe.post');

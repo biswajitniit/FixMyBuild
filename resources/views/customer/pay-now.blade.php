@@ -17,6 +17,41 @@
     </div>
 </section>
 <!--Code area end-->
+
+    <!--Code area end-->
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    @if($errors->any())
+                        <div class="alert alert-danger mt-15">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if(session()->has('message'))
+                        <div class="alert alert-success mt-15">
+                            {{ session()->get('message') }}
+                        </div>
+                    @endif
+
+                    @if(session()->has('danger'))
+                        <div class="alert alert-danger mt-15">
+                            {{ session()->get('danger') }}
+                        </div>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--Code area start-->
+
+
 <!--Code area start-->
 <section class="pb-5 checkout_">
     <div class="container">
@@ -162,13 +197,13 @@
                         </div>
                     </div>
                     <div class="form-group col-md-12 mt-5 text-center pre_">
-                        <a href="projects.html" class="btn btn-light mr-3">Back</a>
+                        <a href="{{route('customer.project')}}" class="btn btn-light mr-3">Back</a>
                         <input type="hidden" name="totalamount" value="{{ round((((($task->price + $task->contingency) * 5) / 100)) + 195.20 +  ($task->price + $task->contingency)) }}">
                         <input
                             type="submit"
                             class="btn btn-primary"
                             value="Make payment"
-                            data-key="pk_test_zeGoVEfpYZ93rNF9hwHUVY4r00DWWCoAJT"
+                            data-key="{{env('STRIPE_KEY')}}"
                             data-amount="{{ round(((((($task->price + $task->contingency) * 5) / 100)) + 195.20 +  ($task->price + $task->contingency)) * 100) }}"
                             data-currency="gbp"
                             data-name="Fixmybuild"

@@ -49,10 +49,44 @@
       </section>
       <!--Code area end-->
 
+    <!--Code area end-->
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    @if($errors->any())
+                        <div class="alert alert-danger mt-15">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if(session()->has('message'))
+                        <div class="alert alert-success mt-15">
+                            {{ session()->get('message') }}
+                        </div>
+                    @endif
+
+                    @if(session()->has('danger'))
+                        <div class="alert alert-danger mt-15">
+                            {{ session()->get('danger') }}
+                        </div>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--Code area start-->
+
       <!--Code area start-->
       <section class="pb-5">
          <div class="container">
             <form action="{{route('customer.project-all-payment')}}" method="post" name="project-all-payment" id="project-all-payment">
+                <input type="hidden" name="estimates_id" value="{{$estimates->id}}">
                 @csrf
                 @php
                     $status=$projects->status;
@@ -257,6 +291,11 @@
                                                 @include('customer.tabs.nav-chat')
                                             @endif
                                             {{-- Dynamic Div Ends --}}
+
+
+
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -274,7 +313,35 @@
                                 <a href="project-details-view-estimates.html" class="btn btn-light mr-3">Pause project </a>
                                 {{-- <a href="#" class="btn btn-primary">Pay all</a> --}}
 
-                                <input type="submit" class="btn btn-primary" value="Pay all" data-key="pk_test_zeGoVEfpYZ93rNF9hwHUVY4r00DWWCoAJT" data-amount="500" data-currency="inr" data-name="Fixmybuild" data-description="" />
+                                {{-- <input type="submit" class="btn btn-primary" value="Pay all" data-key="pk_test_zeGoVEfpYZ93rNF9hwHUVY4r00DWWCoAJT" data-amount="500" data-currency="inr" data-name="Fixmybuild" data-description="" /> --}}
+
+                                @php
+                                $total_task_price = 0;
+                                @endphp
+                                @foreach ($task as $row)
+
+                                        @php
+                                            if ($row->payment_status != 'succeeded'){
+                                                $total_task_price =  $total_task_price+($row->price + $row->contingency);
+                                            }
+                                        @endphp
+                                @endforeach
+                                @php
+                                    $total_payble_amount =  round(((($total_task_price * 5) / 100)) + 195.20 +  $total_task_price);
+                                @endphp
+
+
+                                <input type="hidden" name="totalamount" value="{{ round(((($total_task_price * 5) / 100)) + 195.20 +  $total_task_price) }}">
+                                <input
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    value="Pay all"
+                                    data-key="{{env('STRIPE_KEY')}}"
+                                    data-amount="{{ round((((($total_task_price * 5) / 100)) + 195.20 +  $total_task_price) * 100) }}"
+                                    data-currency="gbp"
+                                    data-name="Fixmybuild"
+                                    data-description=""
+                                />
 
                             @endif
                             @if ($status == 'awaiting_your_review')

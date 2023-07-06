@@ -26,7 +26,7 @@
                     <td>{{substr($row->description,0,100)}}</td>
                     <td>£{{$row->price}}</td>
                     <td>@if($row->contingency!='') £{{$row->contingency}} @endif</td>
-                    @if ($row->payment_status != 'Paid' || $row->payment_status == '')
+                    @if ($row->payment_status != 'succeeded' || $row->payment_status == '')
                     <td class="text-warning">Pending</td>
                     <td><a href="{{route('customer.project-pay-now',[Hashids_encode($row->id)])}}" class="btn btn-view">Pay now</a></td>
                     @else
