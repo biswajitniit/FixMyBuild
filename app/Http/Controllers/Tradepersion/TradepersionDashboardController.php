@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tradepersion;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EstimateProjectResource;
 use App\Models\UkTown;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
@@ -789,11 +790,113 @@ class TradepersionDashboardController extends Controller
         }
     }
 
-    public function projects()
+    public function projects(Request $request)
     {
         // Projects for which the Tradesperson has written an estimate
-        $estimate_projects = Estimate::where('tradesperson_id', Auth::user()->id)->with('project')->get();
-        return view('tradepersion.projects', compact('estimate_projects'));
+        $estimate_projects = Estimate::where('tradesperson_id', Auth::user()->id)
+                                ->join('projects', 'estimates.project_id', '=', 'projects.id')
+                                ->when(($request->has('keyword') && !empty($request->keyword)), function ($query) use ($request) {
+                                    $query->where('projects.project_name', 'like', '%' . $request->keyword . '%');
+                                })
+                                ->with('project')
+                                ->paginate(10);
+
+        $estimate_project_histories = Estimate::where('tradesperson_id', Auth::user()->id)
+                                ->join('projects', 'estimates.project_id', '=', 'projects.id')
+                                ->when(($request->has('name') && !empty($request->name)), function ($query) use ($request) {
+                                    $query->where('projects.project_name', 'like', '%' . $request->name . '%');
+                                })
+                                ->with('project')
+                                ->paginate(10);
+
+        return view('tradepersion.projects', compact('estimate_projects','estimate_project_histories'));
+    }
+
+    public function searchProject(Request $request)
+    {
+        $estimate_projects = Estimate::where('tradesperson_id', Auth::user()->id)
+            ->join('projects', 'estimates.project_id', '=', 'projects.id')
+            ->when(($request->has('keyword') && !empty($request->keyword)), function ($query) use ($request) {
+                $query->where('projects.project_name', 'like', '%' . $request->keyword . '%');
+            })
+            ->with('project')
+            ->paginate(10);
+
+        $key = 0;
+        $html = '';
+        foreach ($estimate_projects as $data) {
+            $projectStatus = tradesperson_project_status($data->project->id);
+            if ($projectStatus == 'write_estimate') {
+                $status = '<span class="text-primary">Write estimate</span>';
+            }elseif ($projectStatus == 'estimate_recalled') {
+                $status = '<span class="text-warning">Estimate recalled</span>';
+            }elseif ($projectStatus == 'estimate_submitted') {
+                $status = '<span class="text-info">Estimate submitted</span>';
+            }elseif ($projectStatus == 'estimate_rejected') {
+                $status = '<span class="text-danger">Estimate rejected</span>';
+            }elseif ($projectStatus == 'estimate_not_accepted') {
+                $status = '<span class="text-danger">Estimate not accepted</span>';
+            }elseif ($projectStatus == 'estimate_accepted') {
+                $status = '<span class="text-success">Estimate accepted</span>';
+            }else{
+                $status = '<span>&nbsp;</span>';
+            }
+
+            $key += 1;
+            $html .= "<tr><td>" . $key . "</td>" .
+                "<td>" . $data->project->project_name . "</td>" .
+                "<td>" . $data->project->created_at->format('d/m/Y') . "<br>" .
+                "<em>" . $data->project->created_at->format('g:i A') . "</em></td>" .
+                "<td>".$status."</td>" .
+                "<td><a href='#' class='btn btn-view'>View</a></td></tr>";
+        }
+
+        return $html;
+        // return EstimateProjectResource::collection($estimate_projects);
+    }
+
+    public function paginateProject(Request $request)
+    {
+        if($request->ajax())
+        {
+            $estimate_projects = Estimate::where('tradesperson_id', Auth::user()->id)
+            ->join('projects', 'estimates.project_id', '=', 'projects.id')
+            ->when(($request->has('keyword') && !empty($request->keyword)), function ($query) use ($request) {
+                $query->where('projects.project_name', 'like', '%' . $request->keyword . '%');
+            })
+            ->with('project')
+            ->paginate(10);
+
+            $key = 0;
+            $html = '';
+            foreach ($estimate_projects as $data) {
+                $projectStatus = tradesperson_project_status($data->project->id);
+                if ($projectStatus == 'write_estimate') {
+                    $status = '<span class="text-primary">Write estimate</span>';
+                }elseif ($projectStatus == 'estimate_recalled') {
+                    $status = '<span class="text-warning">Estimate recalled</span>';
+                }elseif ($projectStatus == 'estimate_submitted') {
+                    $status = '<span class="text-info">Estimate submitted</span>';
+                }elseif ($projectStatus == 'estimate_rejected') {
+                    $status = '<span class="text-danger">Estimate rejected</span>';
+                }elseif ($projectStatus == 'estimate_not_accepted') {
+                    $status = '<span class="text-danger">Estimate not accepted</span>';
+                }elseif ($projectStatus == 'estimate_accepted') {
+                    $status = '<span class="text-success">Estimate accepted</span>';
+                }else{
+                    $status = '<span>&nbsp;</span>';
+                }
+
+                $key += 1;
+                $html .= "<tr><td>" . $key . "</td>" .
+                    "<td>" . $data->project->project_name . "</td>" .
+                    "<td>" . $data->project->created_at->format('d/m/Y') . "<br>" .
+                    "<em>" . $data->project->created_at->format('g:i A') . "</em></td>" .
+                    "<td>".$status."</td>" .
+                    "<td><a href='#' class='btn btn-view'>View</a></td></tr>";
+            }
+            return $html;
+        }
     }
 
     public function settings()

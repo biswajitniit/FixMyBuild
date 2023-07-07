@@ -211,6 +211,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('updateVatInfo', [TradepersionDashboardController::class, 'updateVatInfo']);
         Route::post('updateContingency', [TradepersionDashboardController::class, 'updateContingency']);
         Route::get('projects', [TradepersionDashboardController::class, 'projects'])->name('tradepersion.projects');
+        Route::get('projects-search', [TradepersionDashboardController::class, 'searchProject'])->name('tradesperson.searchprojects');
+        Route::post('pagination/fetch', [TradepersionDashboardController::class, 'paginateProject'])->name('pagination.fetch');
         Route::get('settings', [TradepersionDashboardController::class, 'settings'])->name('tradepersion.settings');
 
         Route::group(['as' => 'tradesperson.'], function () {
