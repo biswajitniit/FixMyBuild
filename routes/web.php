@@ -196,6 +196,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
         Route::get('project-estimate/{id}', [CustomerController::class, 'project_estimate'])->name('Customer.project-estimate');
         Route::post('cancel-project', [CustomerController::class, 'cancel_project'])->name('cancel-project');
+        Route::post('accept-estimation', [CustomerController::class, 'accept_estimation'])->name('accept-estimation');
+        Route::post('reject-estimation', [CustomerController::class, 'reject_estimation'])->name('reject-estimation');
         /**
          * Logout Route
          */
@@ -204,6 +206,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::get('review', [CustomerController::class,'review']);
 
     Route::group(['prefix' => 'tradeperson', 'middleware' => ['auth', 'steps_completed']], function () {
+        Route::delete('/users/users-delete_account', [UserController::class, 'delete_account_tradeperson'])->name('tradeperson.user-delete-account');
+
         Route::get('company-registration', [TradepersionDashboardController::class, 'registrationsteptwo'])->name('tradepersion.compregistration');
         Route::post('save-company-registration', [TradepersionDashboardController::class, 'saveregistrationsteptwo'])->name('tradepersion.savecompregistration');
         Route::get('bank-registration', [TradepersionDashboardController::class, 'registrationstepthree'])->name('tradepersion.bankregistration');

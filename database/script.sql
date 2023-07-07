@@ -40,3 +40,6 @@ CREATE TABLE `notification_details` (
 
 ALTER TABLE `notification_details` ADD `user_id` BIGINT(20) NOT NULL AFTER `id`, ADD `from_user_id` BIGINT(20) NOT NULL AFTER `user_id`, ADD `from_user_type` VARCHAR(30) NOT NULL AFTER `from_user_id`, ADD `related_to` VARCHAR(20) NOT NULL AFTER `from_user_type`, ADD `related_to_id` BIGINT(20) NOT NULL AFTER `related_to`;
 ALTER TABLE `estimates` CHANGE `initial_payment_type` `initial_payment_type` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'Fixed,Percentage';
+ALTER TABLE `project_status_change_log` ADD `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `status_changed_at`;
+ALTER TABLE `project_status_change_log` ADD `created_at` TIMESTAMP NOT NULL AFTER `status_changed_at`;
+ALTER TABLE `project_status_change_log` CHANGE `id` `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`id`);
