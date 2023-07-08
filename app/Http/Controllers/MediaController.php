@@ -51,6 +51,7 @@ class MediaController extends Controller
           $tempmedia->sessionid         = Session::getId();
           $tempmedia->file_extension    = 'mkv';
           $tempmedia->file_type         = "Video";
+          $tempmedia->media_type        = $request->media_type;
           $tempmedia->url               = $spath;
           $tempmedia->file_created_date = date('Y-m-d');
           $tempmedia->save();
@@ -84,7 +85,7 @@ class MediaController extends Controller
       //$videomedia->project_id        = $request->projectid;
       $videomedia->project_id        = 1;
       $videomedia->filename          = $filename_with_extention;
-      $tempmedia->sessionid          = Session::getId();
+      $videomedia->sessionid         = Session::getId();
       $videomedia->file_extension    = 'mkv';
       $videomedia->file_type         = "Video";
       $videomedia->url               = $spath;
@@ -360,4 +361,26 @@ class MediaController extends Controller
         ]);
     }
 
+    public function deleteProjectFile(Request $request) {
+        // $filename = Projectfile::where('id',$request->deleteid)->first()->filename;
+        Projectfile::where('id', $request->deleteid)->delete();
+        // Storage::disk('s3')->delete('Testfolder/'. $filename);
+    }
+
+    public function getTempFile(Request $request) {
+
+        if (!$request->ajax() || !Auth::user())
+            abort(403);
+
+        $temp_medias = Tempmedia::where([
+            'user_id'   => Auth::user()->id,
+            'sessionid' => Session::getId(),
+        ])->when(isset($request->media_type), function ($q) use ($request) {
+            return $q->where('media_type', $request->media_type);
+        })->when(isset($request->file_type), function ($q) use ($request){
+            return $q->where('file_type', $request->file_type);
+        })->get();
+
+        return $temp_medias;
+    }
 }

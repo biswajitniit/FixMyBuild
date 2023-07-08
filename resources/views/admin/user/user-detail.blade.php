@@ -85,8 +85,12 @@
                                         {{ $trader_detail->comp_reg_no }}
                                     </div>
                                     <div class="col-sm-6 mb-3">
-                                        <h4>Company Name</h4>
+                                        <h4>Registered Company Name</h4>
                                         {{ $trader_detail->comp_name }}
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <h4>Trader Name</h4>
+                                        {{ $trader_detail->trader_name }}
                                     </div>
                                     <div class="col-sm-6 mb-3">
                                         <h4>Company Address</h4>

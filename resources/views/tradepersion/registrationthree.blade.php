@@ -159,7 +159,8 @@
                             <div class="col-md-12">
                                <div class="form-check">
                                   <input class="form-check-input" type="checkbox" value="1" id="builder_amendment" name="builder_amendment">
-                                  <label class="form-check-label">Builder registration page amendment</label>
+                                  <label class="form-check-label">I confirm that the account belongs myself / my company and the above details are correct</label>
+                                  {{-- <label class="form-check-label">Builder registration page amendment</label> --}}
                                </div>
                             </div>
                          </div>
@@ -185,27 +186,27 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch1" name="noti_new_quotes" value="1" checked>
+                                     <input type="checkbox" id="switch1" name="noti_new_quotes" value="1" {{ $notification['noti_new_quotes'] ? 'checked' : '' }}>
                                      <label for="switch1">Toggle</label>
                                  </div>
-                                  <label class="form-check-label" for="mySwitch">When new quotes are requested</label>
+                                  <label class="form-check-label" for="mySwitch">When new estimates are requested</label>
                                </div>
                             </div>
                             <!--//-->
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch2" name="noti_quote_accepted" value="1" checked>
+                                     <input type="checkbox" id="switch2" name="noti_quote_accepted" value="1" {{ $notification['noti_quote_accepted'] ? 'checked' : '' }}>
                                      <label for="switch2">Toggle</label>
                                  </div>
-                                  <label class="form-check-label" for="mySwitch">When your quote is accepted and, where applicable, upfront payment received</label>
+                                  <label class="form-check-label" for="mySwitch">When your estimate is accepted and, where applicable, upfront payment received</label>
                                </div>
                             </div>
                             <!--//-->
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch3" name="noti_project_stopped" value="1" checked>
+                                     <input type="checkbox" id="switch3" name="noti_project_stopped" value="1" {{ $notification['noti_project_stopped'] ? 'checked' : '' }}>
                                      <label for="switch3">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When a project is stopped</label>
@@ -215,23 +216,33 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch4" name="noti_quote_rejected" value="1" checked>
+                                     <input type="checkbox" id="switch4" name="noti_quote_rejected" value="1" {{ $notification['noti_quote_rejected'] ? 'checked' : '' }}>
                                      <label for="switch4">Toggle</label>
                                  </div>
-                                  <label class="form-check-label" for="mySwitch">When your quote is rejected</label>
+                                  <label class="form-check-label" for="mySwitch">When your estimate is rejected</label>
                                </div>
                             </div>
                             <!--//-->
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch5" name="noti_project_cancelled" value="1" checked>
+                                     <input type="checkbox" id="switch5" name="noti_project_cancelled" value="1" {{ $notification['noti_project_cancelled'] ? 'checked' : '' }}>
                                      <label for="switch5">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When a project is cancelled before it starts</label>
                                </div>
                             </div>
-                            <!--//-->
+                            {{-- <!--//-->
+                            <div class="col-md-12">
+                                <div class="form-check form-switch">
+                                   <div class="switchToggle">
+                                      <input type="checkbox" id="switch6" name="noti_share_contact_info" value="1" checked>
+                                      <label for="switch6">Toggle</label>
+                                  </div>
+                                   <label class="form-check-label" for="mySwitch">I would like my company address and contact information to be publicly accessible so that customers can see if I am in their local area.</label>
+                                </div>
+                             </div>
+                            <!--//--> --}}
                          </div>
                       </div>
                    </div>

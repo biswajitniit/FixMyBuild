@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProjectStatusChangeLog;
 use Illuminate\Http\Request;
 use App\Models\Projectaddresses;
 use App\Models\Project;
@@ -74,6 +75,14 @@ class CustomerController extends Controller
             $project->contact_email             =  $request['contact_email'];
             $project->Status                    =  'submitted_for_review';
         $project->save();
+
+        ProjectStatusChangeLog::create([
+            'project_id'        => $project->id,
+            'action_by_id'      => Auth::user()->id,
+            'action_by_type'    => 'user',
+            'status'            => 'submitted_for_review',
+            'status_changed_at' => now(),
+        ]);
 
         if($request->addresstype == 1){ // Enter your postcode
             $address = new Projectaddresses();
@@ -193,7 +202,7 @@ class CustomerController extends Controller
             foreach($getcustomerfiles as $row){
                 if (strtolower($row->file_type) == 'video'){
                 $video_html .= '<div class="d-inline mr-5" id="project-'.$row->id.'">
-                            <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('.$row->id.',\'#project-'.$row->id.'\')">
+                            <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup(\'projectFiles\', '.$row->id.',\'#project-'.$row->id.'\')">
                             <video src="'.$row->url.'" class="rectangle-video-lg"></video>
                             <div class="remove_img h-95" title="'.$row->filename.'">
                                       <svg class="center-svg" width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -204,7 +213,7 @@ class CustomerController extends Controller
                             </div>';
                 } elseif (strtolower($row->file_type) == 'image') {
                     $image_html .= '<div class="d-inline mr-5" id="project-'.$row->id.'">
-                                        <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('.$row->id.',\'#project-'.$row->id.'\')">
+                                        <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup(\'projectFiles\','.$row->id.',\'#project-'.$row->id.'\')">
                                             <img src="'.$row->url.'" alt="" class="rectangle-img-lg center-svg">
                                             <div class="remove_img h-100" title="'.$row->filename.'">
                                                 <svg class="center-svg" width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -215,7 +224,7 @@ class CustomerController extends Controller
                                     </div>';
                 } else {
                     $doc_html .= '<div class="d-inline mr-5" id="project-'.$row->id.'">
-                                    <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('.$row->id.',\'#project-'.$row->id.'\')">
+                                    <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup(\'projectFiles\', '.$row->id.',\'#project-'.$row->id.'\')">
                                         <img src="'.asset('frontend/img/file_logo.png').'" alt="'. $row->filename.'" title="'.$row->filename.'" class="rectangle-img-lg center-svg" >
                                         <div class="remove_img h-100" title="'.$row->filename.'">
                                             <svg class="center-svg" width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -228,11 +237,11 @@ class CustomerController extends Controller
             }
 
             if ($video_html != '')
-                $video_html = '<div><h4>Video(s)</h4>'.$video_html.'</div>';
+                $video_html = '<div class="video_section"><h4>Video(s)</h4>'.$video_html.'</div>';
             if ($doc_html != '')
-                $doc_html = '<div><h4>File(s)</h4>'.$doc_html.'</div>';
+                $doc_html = '<div class="file_section"><h4>File(s)</h4>'.$doc_html.'</div>';
             if ($image_html != '')
-                $image_html = '<div><h4>Image(s)</h4>'.$image_html.'</div>';
+                $image_html = '<div class="image_section"><h4>Image(s)</h4>'.$image_html.'</div>';
 
             echo $image_html.$video_html.$doc_html;
 
@@ -282,6 +291,13 @@ class CustomerController extends Controller
         );
         Project::where('id', Hashids_decode($projectid))->update($data);
 
+        ProjectStatusChangeLog::create([
+            'project_id'        => Hashids_decode($projectid)[0],
+            'action_by_id'      => Auth::user()->id,
+            'action_by_type'    => 'user',
+            'status'            => 'submitted_for_review',
+            'status_changed_at' => now(),
+        ]);
 
         if($request->addresstype == 1){ // Enter your postcode
             $datapostcode = array(
@@ -303,6 +319,23 @@ class CustomerController extends Controller
         }
 
 
+        // Store the files from tempmedia to Projectfile
+        $temp_medias = Tempmedia::where([
+                            'user_id'       => Auth::user()->id,
+                            'sessionid'     => session()->getId(),
+                            'media_type'    => 'project'
+                        ])->get();
+
+        foreach($temp_medias as $temp_media) {
+            $project_file                   = new Projectfile();
+            $project_file->project_id       = Hashids_decode($projectid)[0];
+            $project_file->file_type        = $temp_media->file_type;
+            $project_file->filename         = $temp_media->filename;
+            $project_file->file_extension   = $temp_media->file_extension;
+            $project_file->url              = $temp_media->url;
+            $project_file->save();
+            $temp_media->delete();
+        }
 
         return redirect()->back()->with('message', 'Project return for review send successfully.');
     }

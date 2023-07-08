@@ -712,52 +712,55 @@
     <script>
         gUMbtn1 = id('gUMbtn1'),
         gUMbtn1.onclick = e => {
-        var constraints = { audio: true, video: true };
-        navigator.mediaDevices.getUserMedia(constraints)
-        .then(function(mediaStream) {
-            Webcam.set({
-                width: 450,
-                height: 350,
-                image_format: 'jpeg',
-                jpeg_quality: 100
-            });
-            Webcam.attach( '#my_camera' );
-        })
-        .catch(function(err) { console.log(err.name + ": " + err.message); });
+            var constraints = { audio: true, video: true };
+            navigator.mediaDevices.getUserMedia(constraints)
+            .then(function(mediaStream) {
+                Webcam.set({
+                    width: 450,
+                    height: 350,
+                    image_format: 'jpeg',
+                    jpeg_quality: 100
+                });
+                Webcam.attach( '#my_camera' );
+            })
+            .catch(function(err) { console.log(err.name + ": " + err.message); });
         }
-        let imagesArray = []
+
+        let imagesArray = [];
         function take_snapshot() {
-        Webcam.snap( function(data_uri) {
-            //$(".image-tag").val(data_uri);
-            imagesArray.push(data_uri)
-            //document.getElementById('results').innerHTML = '<img src="'+data_uri+'" class="rounded"/>';
-        } );
-        const form  = document.getElementById('capturephoto');
-        var formData = new FormData(form);
-        formData.append('image_count',  imagesArray.length);
-        for (let i = 0; i < imagesArray; i++) {
-            formData.append('image_' + i, imagesArray[i]);
+            Webcam.snap( function(data_uri) {
+                //$(".image-tag").val(data_uri);
+                imagesArray.push(data_uri)
+                //document.getElementById('results').innerHTML = '<img src="'+data_uri+'" class="rounded"/>';
+            });
+            const form  = document.getElementById('capturephoto');
+            var formData = new FormData(form);
+            formData.append('image_count',  imagesArray.length);
+            for (let i = 0; i < imagesArray; i++) {
+                formData.append('image_' + i, imagesArray[i]);
+            }
+            displayImages();
         }
-        displayImages()
-        }
+
         function displayImages() {
-        let images = ""
-        output=document.getElementById('results')
-        for (i = 0; i < imagesArray.length; i++){
-            images += `<div class="col-4 col-sm-6 col-md-4 mt-2 image">
-            <img src="${imagesArray[i]}" alt="image" class="rounded">
-            <input type="hidden" name="image_${i}" class="image-tag" value="${imagesArray[i]}">
-            <div class="capture-image-level">Image Capture ${i+1}
-                <span class="capture-image-delete" onclick="deleteImage(${i})">&times;</span>
-            </div>
-            </div>`
+            let images = "";
+            output = document.getElementById('results');
+            for (i = 0; i < imagesArray.length; i++){
+                images += `<div class="col-4 col-sm-6 col-md-4 mt-2 image">
+                <img src="${imagesArray[i]}" alt="image" class="rounded">
+                <input type="hidden" name="image_${i}" class="image-tag" value="${imagesArray[i]}">
+                <div class="capture-image-level">Image Capture ${i+1}
+                    <span class="capture-image-delete" onclick="deleteImage(${i})">&times;</span>
+                </div>
+                </div>`
+            }
+            output.innerHTML = images;
+            $("#image_count").val(imagesArray.length);
         }
-        output.innerHTML = images
-        $("#image_count").val(imagesArray.length);
-        }
+
         function deleteImage(index) {
-        imagesArray.splice(index, 1)
-        displayImages()
+            imagesArray.splice(index, 1);
+            displayImages();
         }
 
 
@@ -1259,6 +1262,7 @@
                 // document.querySelector("#total-progress").style.opacity = "0";
                 // $('#previews.files').find('.progress').hide();
                 // $('#multiModal').modal('hide');
+                $("#upload_multiple_file").html('Upload');
                 $("#upload_multiple_file").prop('disabled', false);
             });
 

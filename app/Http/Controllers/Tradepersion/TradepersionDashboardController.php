@@ -240,7 +240,8 @@ class TradepersionDashboardController extends Controller
 
     public function registrationstepthree()
     {
-        return view('tradepersion.registrationthree');
+        $notification = Notification::where('user_id', Auth::user()->id)->first()->settings;
+        return view('tradepersion.registrationthree', compact('notification'));
     }
 
     public function saveregistrationstepthree(Request $request){
@@ -264,27 +265,50 @@ class TradepersionDashboardController extends Controller
         $traderdetails->bnk_sort_code = $request->bnk_sort_code;
         $traderdetails->bnk_account_number = $request->bnk_account_number;
         $traderdetails->builder_amendment = $request->builder_amendment ?? 0;
-        $traderdetails->email_notification = json_encode([
-            "new_quotes"=>$request->noti_new_quotes ?? 0,
-            "quote_accepted"=>$request->noti_quote_accepted ?? 0,
-            "project_stopped"=>$request->noti_project_stopped ?? 0,
-            "quote_rejected"=>$request->noti_quote_rejected ?? 0,
-            "project_cancelled"=> $request->noti_project_cancelled ?? 0,
-        ]);
+        // $traderdetails->email_notification = json_encode([
+        //     "noti_new_quotes"           => $request->noti_new_quotes ?? "0",
+        //     "noti_quote_accepted"       => $request->noti_quote_accepted ?? "0",
+        //     "noti_project_stopped"      => $request->noti_project_stopped ?? "0",
+        //     "noti_quote_rejected"       => $request->noti_quote_rejected ?? "0",
+        //     "noti_project_cancelled"    => $request->noti_project_cancelled ?? "0",
+        //     "noti_share_contact_info"   => $request->noti_share_contact_info ?? "0",
+        //     'noti_new_message'          => "1",
+        // ]);
 
         if($traderdetails->save()){
-            $notification = new stdClass();
-            $notification->builder_amendment = $request->builder_amendment ? $request->builder_amendment : 0;
-            $notification->noti_new_quotes = $request->noti_new_quotes ? $request->noti_new_quotes : 0;
-            $notification->noti_quote_accepted = $request->noti_quote_accepted ? $request->noti_quote_accepted : 0;
-            $notification->noti_project_stopped = $request->noti_project_stopped ? $request->noti_project_stopped : 0;
-            $notification->noti_quote_rejected = $request->noti_quote_rejected ? $request->noti_quote_rejected : 0;
-            $notification->noti_project_cancelled = $request->noti_project_cancelled ? $request->noti_project_cancelled : 0;
-            $notijson = json_encode($notification);
-            $notify = new Notification();
-            $notify->user_id = Auth::user()->id;
-            $notify->settings = $notijson;
-            $notify->save();
+            // $notification = new stdClass();
+            // $notification->builder_amendment = $request->builder_amendment ? $request->builder_amendment : 0;
+            // $notification->noti_new_quotes = $request->noti_new_quotes ? $request->noti_new_quotes : 0;
+            // $notification->noti_quote_accepted = $request->noti_quote_accepted ? $request->noti_quote_accepted : 0;
+            // $notification->noti_project_stopped = $request->noti_project_stopped ? $request->noti_project_stopped : 0;
+            // $notification->noti_quote_rejected = $request->noti_quote_rejected ? $request->noti_quote_rejected : 0;
+            // $notification->noti_project_cancelled = $request->noti_project_cancelled ? $request->noti_project_cancelled : 0;
+            // $notijson = json_encode($notification);
+            $notification = [
+                // Receive these notifications as a Tradesperson
+                'builder_amendment'         => $request->builder_amendment ?? "0",
+                'noti_new_quotes'           => $request->noti_new_quotes ?? "0",
+                'noti_quote_accepted'       => $request->noti_quote_accepted ?? "0",
+                'noti_project_stopped'      => $request->noti_project_stopped ?? "0",
+                'noti_quote_rejected'       => $request->noti_quote_rejected ?? "0",
+                'noti_project_cancelled'    => $request->noti_project_cancelled ?? "0",
+                'noti_share_contact_info'   => config('const.trader_notification_share_contact_info'),
+                'noti_new_message'          => config('const.trader_notification_trader_new_message'),
+
+                // Receive these notifications as a Customer
+                'reviewed'                  => config('const.trader_notification_reviewed'),
+                'paused'                    => config('const.trader_notification_paused'),
+                'project_milestone_complete'=> config('const.trader_notification_project_milestone_complete'),
+                'project_complete'          => config('const.trader_notification_project_complete'),
+                'project_new_message'       => config('const.trader_notification_project_new_message'),
+            ];
+            Notification::where('user_id',Auth::user()->id)->update(['settings' => $notification]);
+
+            // $notify = new Notification();
+            // $notify->user_id = Auth::user()->id;
+            // $notify->settings = $notijson;
+            // $notify->settings = $notification;
+            // $notify->save();
             $userstatus = User::where('id', Auth::user()->id)->update(['steps_completed' => "3"]);
             return Redirect::back()->with('status', 'success');
         }else{
@@ -799,8 +823,42 @@ class TradepersionDashboardController extends Controller
 
     public function settings()
     {
+        $notification = Notification::where('user_id',Auth::user()->id)->first()->settings;
+        return view('tradepersion.settings', compact('notification'));
+    }
 
-        return view('tradepersion.settings');
+    public function saveSettings(Request $request)
+    {
+        if(!$request->ajax())
+            abort(403);
+
+        try {
+            $notification = [
+                // Receive these notifications as a Tradesperson
+                'builder_amendment'         => $request->builder_amendment ?? "0",
+                'noti_new_quotes'           => $request->noti_new_quotes ?? "0",
+                'noti_quote_accepted'       => $request->noti_quote_accepted ?? "0",
+                'noti_project_stopped'      => $request->noti_project_stopped ?? "0",
+                'noti_quote_rejected'       => $request->noti_quote_rejected ?? "0",
+                'noti_project_cancelled'    => $request->noti_project_cancelled ?? "0",
+                'noti_share_contact_info'   => $request->noti_share_contact_info ?? "0",
+                'noti_new_message'          => "1",
+
+                // Receive these notifications as a Customer
+                'reviewed'                  => $request->reviewed ?? "0",
+                'paused'                    => $request->paused ?? "0",
+                'project_milestone_complete'=> $request->project_milestone_complete ?? "0",
+                'project_complete'          => $request->project_complete ?? "0",
+                'project_new_message'       => $request->project_new_message ?? "0",
+            ];
+
+            Notification::where('user_id', Auth::user()->id)->update(['settings' => $notification]);
+            return response()->json(['status' => 'success']);
+        } catch(\Exception $e) {
+            return response()->json(['status' => 'error']);
+        }
+
+
     }
 
     public function project_estimate(Request $request,$key)

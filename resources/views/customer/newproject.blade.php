@@ -243,11 +243,13 @@
                                     <div class="col-md-4">
                                       <div class="form-group">
                                         <input type="text" name="contact_mobile_no" class="form-control col-md-10" placeholder="Mobile" id="contact_mobile_no"/>
+                                        <label for="contact_mobile_no" generated="true" class="error"></label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="text" name="contact_home_phone" class="form-control" id="" placeholder="Home phone" />
+                                            <input type="text" name="contact_home_phone" class="form-control" id="contact_home_phone" placeholder="Home phone" />
+                                            <label for="contact_home_phone" generated="true" class="error"></label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -488,6 +490,8 @@
 <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
 <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('frontend/js/utils.js') }}"></script>
+
 <script language="JavaScript">
 
     var currentFile = null;
@@ -585,6 +589,11 @@
                 },
                 contact_mobile_no: {
                     required: true,
+                    phoneNumber: true
+                },
+                contact_home_phone: {
+                    required: true,
+                    phoneNumber: true
                 },
                 contact_email: {
                     required: true,
@@ -601,7 +610,12 @@
                     required: "Please enter project name",
                 },
                 contact_mobile_no: {
-                    required: "Please enter mobile",
+                    required: 'Please enter a phone number',
+                    phoneNumber: 'Please enter a valid phone number'
+                },
+                contact_home_phone: {
+                    required: 'Please enter a phone number',
+                    phoneNumber: 'Please enter a valid phone number'
                 },
                 contact_email: {
                     required: "Please enter contact email",
@@ -998,6 +1012,18 @@
         // });
     }
 
+    function validatePhone(iti, errorsId) {
+        // if(iti.isValidNumber()) {
+        //     $(errorsId).hide();
+        //     // $('button[type="submit"]').prop('disabled', false);
+        // }
+        // else {
+        //     $(errorsId).show();
+        //     // $('button[type="submit"]').prop('disabled', true);
+        // }
+        iti.setNumber(iti.getNumber()); //it removes alphabets from the number
+    }
+
     $(document).ready(function(){
         $("form#capturephoto").submit(function(e){
             e.preventDefault();
@@ -1090,6 +1116,54 @@
             }
 
         });
+
+        // Phone Number Setup
+        let contact_mobile_no = document.querySelector("#contact_mobile_no");
+        let contact_mobile_iti = window.intlTelInput(contact_mobile_no, {
+            separateDialCode: true,
+            initialCountry: "gb",
+        });
+        validatePhone(contact_mobile_iti, "#mobile_no_errors");
+
+
+        $("#contact_mobile_no").on('blur keyup keypress change', function() {
+            validatePhone(contact_mobile_iti, "#mobile_no_errors");
+        });
+
+        contact_mobile_no.addEventListener('countrychange', function(e) {
+            validatePhone(contact_mobile_iti, "#mobile_no_errors");
+        });
+
+        // Home Phone Number Setup
+        let contact_home_phone = document.querySelector("#contact_home_phone");
+        let home_phone_iti = window.intlTelInput(contact_home_phone, {
+            separateDialCode: true,
+            initialCountry: "gb",
+        });
+
+
+        contact_home_phone.addEventListener('countrychange', function(e) {
+            validatePhone(home_phone_iti, "#home_phone_errors");
+        });
+
+        $("#contact_home_phone").on('blur keyup keypress change', function() {
+            validatePhone(home_phone_iti, "#home_phone_errors");
+        });
+
+        validatePhone(home_phone_iti, "#home_phone_errors");
+
+        $('#savenewproject').submit(function() {
+            $('#contact_mobile_no').val(contact_mobile_iti.getNumber());
+            $('#contact_home_phone').val(home_phone_iti.getNumber());
+        });
+
+        // Jquery Validation
+        $.validator.addMethod('phoneNumber', function(value, element) {
+            if (element.id == 'contact_mobile_no')
+                return contact_mobile_iti.isValidNumber();
+            return home_phone_iti.isValidNumber();
+        }, 'Please enter a valid phone number');
+
     });
 </script>
 @endpush
