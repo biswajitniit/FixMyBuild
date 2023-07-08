@@ -73,7 +73,7 @@
 
                                 @endif
                             </td>
-                            <td><a href="#" class="btn btn-view">View</a></td>
+                            <td><a href="{{ route('Customer.project-estimate', [Hashids_encode($estimate->id)]) }}" class="btn btn-view">View</a></td>
                         </tr>
                     @empty
                         <tr><td colspan='6' class="text-center text-danger">No Data Found<td></tr>
@@ -198,3 +198,4 @@
         </div>
     </div>
 @endif
+

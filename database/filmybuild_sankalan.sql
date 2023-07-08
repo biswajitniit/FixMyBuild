@@ -35,3 +35,16 @@ ALTER TABLE `project_categories`
 -- Change Status Column From Enum to Varchar on projects table
 --
 ALTER TABLE `projects` CHANGE `status` `status` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'submitted_for_review' COMMENT 'submitted_for_review,returned_for_review,estimation,project_started,awaiting_your_review';
+
+--
+-- Add Nullable Fields to estimates table
+--
+
+ALTER TABLE `estimates` CHANGE `contingency` `contingency` VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `initial_payment` `initial_payment` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `total_time` `total_time` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `total_time_type` `total_time_type` VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `terms_and_conditions` `terms_and_conditions` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+
+
+--
+-- Modify file_original_name field of project_estimate_files to NULL
+--
+
+ALTER TABLE `project_estimate_files` CHANGE `file_original_name` `file_original_name` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;

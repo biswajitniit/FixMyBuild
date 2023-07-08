@@ -85,6 +85,7 @@
 @endsection
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    <script src="{{ asset('frontend/js/chat.js') }}"></script>
     <script>
         $('#summernote').summernote({
         placeholder: '',
@@ -166,18 +167,17 @@
         // checkbox for <tr>
 
         $('.toggle-class').on('change',function(){
-            let task_id = $(this).closest('tr').attr('data-id');
-            let status = $(this).prop('checked') ? 'Active' : 'Inactive';
+            let task_id = $(this).val();
             let pencil = $('#pencil'+task_id);
-            // let pencil=document.getElementById('pencil'+task_id);
-            $(this).prop('checked') ?pencil.addClass('d-none'):pencil.removeClass('d-none');
             $.ajax({
-                url: '{{ route('tradeperson.update-task-status') }}',
+                url: '{{ route("tradeperson.update-task-status") }}',
                 type: 'post',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    status: status,
                     task_id: task_id,
+                },
+                success: function(response) {
+                    $(this).prop('checked') ?pencil.addClass('d-none'):pencil.removeClass('d-none');
                 },
                 error: function(xhr) {
 
@@ -186,6 +186,80 @@
 
         });
 
+
+        function submitMessage(event){
+            // $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+$('#messsageInput').val()+'</p></div></div>');
+            // SEND MESSAGE TO THE CHOSEN USER
+            $.ajax({
+                method: 'POST',
+                url: '{{ route("tradeperson.chat") }}',
+                data:{
+                    _token: '{{ csrf_token() }}',
+                    from_user_id: $('#from_user_id').val(),
+                    to_user_id: $('#to_user_id').val(),
+                    project_id: $('#project_id').val(),
+                    estimate_id: $('#estimate_id').val(),
+                    message: $('#type_msg').val()
+                },
+                success: function(response){
+                    // $('#outgoing_msg').html(response.message);
+                    $('#last_msg_id').html(response.last_insert_id);
+                },
+                error: function(response){
+                    console.log(response);
+                }
+            });
+        }
+
+        function retrieveMessages(){
+            let i=0;
+            const authUser =  $('#from_user_id').val();
+            const to_user_id = $('#to_user_id').val();
+            var lastMessageId = $('#last_msg_id').val();
+            $.ajax({
+                method: 'GET',
+                url: '/retrive-new-msg/'+to_user_id+'/'+authUser+'/'+lastMessageId,
+                success: function(response){
+                    console.log(response);
+                    console.log(lastMessageId);
+                    while(response[i]!=null){
+                        $('#sender_msg').append('<div class="msg" id="outgoing_msg">'+response[i].message +'</div>');
+                        lastMessageId = response[i].id + 1;
+                        i++;
+                    }
+                    // scrollPaubos();
+                },
+                complete: function(){
+                    retrieveMessages();
+                }
+            });
+        }
+
+
+        function loadMessagesOfThisConvo(){
+        i=0;
+        const authUser =  $('#from_user_id').val();
+        const to_user_id = $('#to_user_id').val();
+        $.ajax({
+            method: 'GET',
+            url: '/load-msg/'+to_user_id+'/'+authUser,
+            success: function(response){
+                $('#messageThread').html('');
+                //console.log();
+                while(response[0][i]!=null){
+                    if(response[1][0] == response[0][i].message_users_id ){
+                        $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+response[0][i].message +'</p></div></div>');
+                    }else{
+                        $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[0][i].message +'</p></div></div>');
+                    }
+                    lastMessageId = response[0][i].id + 1;
+                    i++;
+                }
+                // scrollPaubos();
+                retrieveMessages();
+            }
+        });
+    }
 
     </script>
 @endpush

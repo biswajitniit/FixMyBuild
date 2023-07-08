@@ -51,15 +51,15 @@
         </div>
      </div>
      <div class="col-md-12 mt-4">
-        @foreach($projectid as $data)
+        {{-- @foreach($projectid as $data)
         <h3>Files(s)</h3>
         <div class="row">
            <div class="mt-3">
-              <div class="d-inline mr-4 img-text">{{ $data->filename }}</div>
+              <div class="d-inline mr-4 img-text">{{ $data->filename }}</div> --}}
               {{-- <div class="d-inline mr-4 img-text"><img src="" alt=""> xyz.doc</div>
               <div class="d-inline mr-4 img-text"><img src="" alt=""> pqr.xls</div> --}}
-           </div>
+           {{-- </div>
         </div>
-        @endforeach
+        @endforeach --}}
      </div>
  </div>

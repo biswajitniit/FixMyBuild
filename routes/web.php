@@ -22,6 +22,8 @@ use App\Http\Controllers\Admin\Builder\BuildersubcategoryController;
 use App\Http\Controllers\Admin\Cms\CmsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationDetailsController;
+
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -53,6 +55,8 @@ Route::get('/dropzoneupload', [MediaController::class, 'dropzoneupload'])->name(
 Route::post('/dropzonesave', [MediaController::class, 'dropzonesave'])->name('dropzonesave');
 Route::post('/dropzonedestroy', [MediaController::class, 'dropzonedestroy'])->name('dropzonedestroy');
 Route::delete('/delete-temp-file', [MediaController::class, 'deleteTempFile'])->name('deleteTempFile');
+Route::delete('/delete-proj-file', [MediaController::class, 'deleteProjectFile'])->name('deleteProjectFile');
+Route::get('/get-temp-file', [MediaController::class, 'getTempFile'])->name('getTempFile');
 
 
 Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login');
@@ -173,7 +177,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('newproject', [CustomerController::class, 'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class, 'customer_storeproject'])->name('customer.storeproject');
 
-        Route::get('project/{id}', [CustomerController::class,'details'])->name('customer.project_details');
+        Route::get('project/{project_id}', [CustomerController::class,'details'])->name('customer.project_details');
         Route::get('project-return-for-review/{id}', [CustomerController::class,'project_return_for_review'])->name('customer.project-return-for-review');
         Route::post('editproject-return-for-review/{projectid}', [CustomerController::class,'customer_editproject'])->name('customer.editproject-return-for-review');
 
@@ -193,6 +197,9 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::put('updatecustomerphone', [CustomerController::class, 'update_phone'])->name('customer.updatephone');
 
         Route::get('project-estimate/{id}', [CustomerController::class, 'project_estimate'])->name('Customer.project-estimate');
+        Route::post('cancel-project', [CustomerController::class, 'cancel_project'])->name('cancel-project');
+        Route::post('accept-estimation', [CustomerController::class, 'accept_estimation'])->name('accept-estimation');
+        Route::post('reject-estimation', [CustomerController::class, 'reject_estimation'])->name('reject-estimation');
         /**
          * Logout Route
          */
@@ -201,6 +208,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::get('review', [CustomerController::class,'review']);
 
     Route::group(['prefix' => 'tradeperson', 'middleware' => ['auth', 'steps_completed']], function () {
+        Route::delete('/users/users-delete_account', [UserController::class, 'delete_account_tradeperson'])->name('tradeperson.user-delete-account');
+
         Route::get('company-registration', [TradepersionDashboardController::class, 'registrationsteptwo'])->name('tradepersion.compregistration');
         Route::post('save-company-registration', [TradepersionDashboardController::class, 'saveregistrationsteptwo'])->name('tradepersion.savecompregistration');
         Route::get('bank-registration', [TradepersionDashboardController::class, 'registrationstepthree'])->name('tradepersion.bankregistration');
@@ -214,6 +223,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('projects-search', [TradepersionDashboardController::class, 'searchProject'])->name('tradesperson.searchprojects');
         Route::post('pagination/fetch', [TradepersionDashboardController::class, 'paginateProject'])->name('pagination.fetch');
         Route::get('settings', [TradepersionDashboardController::class, 'settings'])->name('tradepersion.settings');
+        Route::post('settings', [TradepersionDashboardController::class, 'saveSettings'])->name('tradesperson.savesettings');
 
         Route::group(['as' => 'tradesperson.'], function () {
             Route::get('get-temp-team-image', [TradepersionDashboardController::class, 'getTempTeamImages'])->name('getTeamImages');
@@ -249,4 +259,18 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
     Route::get('project/submit-review/{project_id}', [CustomerController::class, 'project_review'])->name('customer.project_review');
     Route::post('project/submit-review', [CustomerController::class, 'submit_review'])->name('customer.review');
+
+
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('all-notifications', [NotificationDetailsController::class, 'detailed_notification'])->name('detailed-notification');
+        Route::post('read-all-notifications', [NotificationDetailsController::class, 'read_all_notifications'])->name('read-all-notifications');
+
+    });
+
+    Route::group(['middleware' => 'auth'], function () {
+        Route::post('submit-msg', [ChatController::class, 'submit_msg'])->name('tradeperson.chat');
+        Route::get('retrive-new-msg', [ChatController::class, 'retrieveNew'])->name('tradeperson.retrive-new-msg');
+        Route::get('load-msg', [ChatController::class, 'submit_msg'])->name('tradeperson.load-msg');
+
+    });
 });

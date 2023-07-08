@@ -31,9 +31,15 @@ class Project extends Model
     public function projectfile(){
         return $this->belongsTo(Projectfile::class,'project_id');
     }
+
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
+    }
+
     public function projectfiles(){
         return $this->hasMany(Projectfile::class);
     }
+    
     public function projectnotesandcommends(){
         return $this->hasMany(Projectnotesandcommend::class);
     }

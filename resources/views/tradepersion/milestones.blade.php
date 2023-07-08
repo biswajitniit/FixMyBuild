@@ -120,10 +120,10 @@
                             <td class="text-warning" id="status">Pending</td>
                             <td>
                                 <label class="form-check-label">
-                                @if($task->status == null || $task->status == 'Inactive')
-                                    <input type="checkbox" class="form-check-input toggle-class" value="">
-                                @else
+                                @if($task->status == 'completed')
                                     <input type="checkbox" class="form-check-input toggle-class" checked disabled value="">
+                                @else
+                                    <input type="checkbox" class="form-check-input toggle-class" value="{{ Hashids_encode($task->id) }}">
                                 @endif
                                 </label>
                             </td>

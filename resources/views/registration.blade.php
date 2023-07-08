@@ -155,6 +155,7 @@
 
                 <div class="form-group col-md-12 mt-4">
                     <input type="text" name="phone" class="form-control col-md-10" id="phone" placeholder="Phone"  value="{{old('phone')}}" required/>
+                    <label for="phone" generated="true" class="error"></label>
                     <input type="hidden" name="full_phone" id="full_phone"  value="{{old('full_phone')}}"/>
                 </div>
 
@@ -239,6 +240,7 @@
                 },
                 phone: {
                     required: true,
+                    phoneNumber: true
                 },
                 customer_or_tradesperson: {
                     required: true,
@@ -259,6 +261,7 @@
                 },
                 phone: {
                     required: "Please enter phone number",
+                    phoneNumber: 'Please enter a valid phone number'
                 },
                 customer_or_tradesperson: {
                     required: "Are you a customer or tradeperson?",
@@ -275,6 +278,16 @@
         let iti = window.intlTelInput(input, {
             separateDialCode: true,
             initialCountry: "gb",
+        });
+
+        // Jquery Validation
+        $.validator.addMethod('phoneNumber', function(value, element) {
+            iti.setNumber(iti.getNumber());
+            return iti.isValidNumber();
+        }, 'Please enter a valid phone number');
+
+        input.addEventListener('countrychange', function(e) {
+            $("#userregistration").validate().element('#phone');
         });
 
         $("#fullname").bind("keypress", function (event) {

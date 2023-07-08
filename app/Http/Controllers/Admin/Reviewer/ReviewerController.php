@@ -10,10 +10,15 @@ use App\Models\Projectaddresses;
 use App\Models\Buildercategory;
 use App\Models\Buildersubcategory;
 use Illuminate\Support\Facades\DB;
-use App\Models\Projectnotesandcommend;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\Notification;
+use App\Models\NotificationDetail;
+use App\Models\ProjectStatusChangeLog;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+
 class ReviewerController extends Controller
 {
 
@@ -36,12 +41,10 @@ class ReviewerController extends Controller
       //echo Hashids_decode($projectid); die;
         $project = Project::where('id',Hashids_decode($projectid))->first();
         //dd($project);
-        $projectnotesandcommend = Projectnotesandcommend::where('project_id',Hashids_decode($projectid))->get();
         $projectmedia = Projectfile::where('project_id',Hashids_decode($projectid))->get();
         $buildercategory = Buildercategory::where('status','Active')->get();
 
-        $projectnotesandcommend = Projectnotesandcommend::where('project_id',Hashids_decode($projectid))->get();
-        return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory','projectnotesandcommend'));
+        return view("admin.reviewer.awaiting-your-review-show",compact('project','projectmedia','buildercategory'));
     }
 
     /**
@@ -49,71 +52,133 @@ class ReviewerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function awaiting_your_review_save(Request $request){
 
-       if($request->post('builder_category')){
+    public function awaiting_your_review_save(Request $request)
+    {
+        $request->validate([
+            'reviewer_status' => 'required',
+        ]);
+
+        $status = null;
+        if($request->post('reviewer_status') == "approved"){
+            $status = 'estimation';
+        } elseif($request->post('reviewer_status') == "referred"){
+            $status = 'returned_for_review';
+        }
+        $builder_category = null;
+        if($request->post('builder_category')){
+            $builder_category =  implode(',',$request->post('builder_category'));
+        }
+        $builder_subcategory = null;
+        if($request->post('builder_subcategory')){
+            $builder_subcategory =  implode(',',$request->post('builder_subcategory'));
+        }
             $data = array(
-                'reviewer_status'          => $request->post('your_decision'),
-                'categories'               => implode(',',$request->post('builder_category')),
-                'subcategories'            => implode(',',$request->post('builder_subcategory'))
+                'reviewer_status'          => $request->post('reviewer_status'),
+                'categories'               => $builder_category,
+                'subcategories'            => $builder_subcategory,
+                'customer_note'            => $request->post('notes_for_customer'),
+                'tradeperson_note'         => $request->post('notes_for_tradespeople'),
+                'internal_note'            => $request->post('notes_for_internal'),
+                'status'                   => $status
             );
             Project::where('id', $request->projectid)->update($data);
 
-            if($request->post('your_decision') == "Approve"){ //
-                $data = array(
-                    'status'          => 'estimation'
-                );
-                Project::where('id', $request->projectid)->update($data);
+        $notes_for_customer = $request->input('notes_for_customer');
+        $reviewer_status = $request->input('reviewer_status');
+        $project = Project::where('id', $request->projectid)->first();
+        $user = User::where('id', $project->user_id)->first();
+
+        // Check Notification settings
+        $notify_settings = Notification::where('user_id', $user->id)->first();
+        if($notify_settings) {
+            if($notify_settings->settings != null){
+                $project_reviewed = $notify_settings->settings['reviewed'];
+            } else {
+                $project_reviewed = 1;
             }
+        }
+        // Notification
+        if($project_reviewed == 1){
+            if($request->post('reviewer_status') == "approved"){
 
-       }else{
-            $data = array(
-                'reviewer_status'          => $request->post('your_decision')
-            );
-            Project::where('id', $request->projectid)->update($data);
-
-            if($request->post('your_decision') == "Approve"){ //
-                $data = array(
-                    'status'          => 'estimation'
+                $html = view('email.email-project-reviewed')
+                                ->with('data', [
+                                'notes_for_customer' => $notes_for_customer,
+                                'project_name'       => $project->project_name,
+                                'user_name'          => $user->name,
+                                'reviewer_status'    => $reviewer_status
+                                ])
+                                ->render();
+                $emaildata = array(
+                    'From'          => 'support@fixmybuild.com',
+                    'To'            => $user->email,
+                    'Subject'       => 'Your Project Approved',
+                    'HtmlBody'      => $html,
+                    'MessageStream' => 'outbound'
                 );
-                Project::where('id', $request->projectid)->update($data);
+                $email_sent = send_email($emaildata);
+
+                // Notificatin Insert in DB
+                $notificationDetail = new NotificationDetail();
+                $notificationDetail->user_id = $user->id;
+                $notificationDetail->from_user_id = Auth::user()->id;
+                $notificationDetail->from_user_type = Auth::user()->type;
+                $notificationDetail->related_to = 'project';
+                $notificationDetail->related_to_id = $project->id;
+                $notificationDetail->read_status = 0;
+                $notificationDetail->notification_text = 'Your project has been reviewed';
+                $notificationDetail->reviewer_note = $notes_for_customer;
+                $notificationDetail->save();
+                 //Insert data in project_status_change_log table
+                $projStatusChangeLog = new ProjectStatusChangeLog();
+                $projStatusChangeLog->project_id = $project->id;
+                $projStatusChangeLog->action_by_id = Auth::user()->id;
+                $projStatusChangeLog->action_by_type = Auth::user()->type;
+                $projStatusChangeLog->status = $request->post('reviewer_status');
+                $projStatusChangeLog->status_changed_at = Carbon::now();
+                $projStatusChangeLog->save();
+            } else{
+                    $html = view('email.email-project-reviewed')
+                                ->with('data', [
+                                    'notes_for_customer' => $notes_for_customer,
+                                    'project_name'       => $project->project_name,
+                                    'user_name'          => $user->name,
+                                    'reviewer_status'    =>$reviewer_status
+                                    ])
+                                ->render();
+                    $emaildata = array(
+                        'From'          => 'support@fixmybuild.com',
+                        'To'            => $user->email,
+                        'Subject'       => 'Your Project Reviewed',
+                        'HtmlBody'      => $html,
+                        'MessageStream' => 'outbound'
+                    );
+                    $email_sent = send_email($emaildata);
+
+                    // Notificatin Insert in DB
+                    $notificationDetail = new NotificationDetail();
+                    $notificationDetail->user_id = $user->id;
+                    $notificationDetail->from_user_id = Auth::user()->id;
+                    $notificationDetail->from_user_type = Auth::user()->type;
+                    $notificationDetail->related_to = 'project';
+                    $notificationDetail->related_to_id = $project->id;
+                    $notificationDetail->read_status = 0;
+                    $notificationDetail->notification_text = 'Your project has been reviewed';
+                    $notificationDetail->reviewer_note = $notes_for_customer;
+                    $notificationDetail->save();
+                    //Insert data in project_status_change_log table
+                    $projStatusChangeLog = new ProjectStatusChangeLog();
+                    $projStatusChangeLog->project_id = $project->id;
+                    $projStatusChangeLog->action_by_id = Auth::user()->id;
+                    $projStatusChangeLog->action_by_type = Auth::user()->type;
+                    $projStatusChangeLog->status = $request->post('reviewer_status');
+                    $projStatusChangeLog->status_changed_at = Carbon::now();
+                    $projStatusChangeLog->save();
             }
+        }
 
-       }
-       // if record exist in then delete
-        Projectnotesandcommend::where('project_id',$request->post('projectid'))->delete();
-
-        // Notes for Internal
-        $projectnotes = new Projectnotesandcommend();
-            $projectnotes->reviewer_id =  Auth::guard('admin')->user()['id'];
-            $projectnotes->project_id  =  $request->post('projectid');
-            $projectnotes->notes_for   =  'internal';
-            $projectnotes->notes       =  $request->post('notes_for_internal');
-        $projectnotes->save();
-
-        // Notes for Customer
-        $projectnotes = new Projectnotesandcommend();
-            $projectnotes->reviewer_id =  Auth::guard('admin')->user()['id'];
-            $projectnotes->project_id  =  $request->post('projectid');
-            $projectnotes->notes_for   =  'customer';
-            $projectnotes->notes       =  $request->post('notes_for_customer');
-        $projectnotes->save();
-
-        // Notes for Tradespeople
-        $projectnotes = new Projectnotesandcommend();
-            $projectnotes->reviewer_id =  Auth::guard('admin')->user()['id'];
-            $projectnotes->project_id  =  $request->post('projectid');
-            $projectnotes->notes_for   =  'tradespeople';
-            $projectnotes->notes       =  $request->post('notes_for_tradespeople');
-        $projectnotes->save();
-
-        return redirect()->route('final-review', [Hashids_encode($request->post('projectid'))]);
-
-    }
-
-    public function final_review($projectid){
-        $projectnotesandcommend = Projectnotesandcommend::where('project_id',Hashids_decode($projectid))->get();
-        return view("admin.reviewer.final-review",compact('projectnotesandcommend'));
+        return redirect()->route('admin/project/awaiting-your-review');
     }
 
     public function awaiting_your_review_final_save(Request $request){

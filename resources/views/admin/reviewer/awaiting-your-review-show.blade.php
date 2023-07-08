@@ -60,7 +60,7 @@
                         <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="simpleinput">Name of the project</label>
                             <div class="col-lg-9 mt-2">
-                                {{ $project->project_name }}
+                                {{ ucwords($project->project_name) }}
                             </div>
                         </div>
 
@@ -132,36 +132,35 @@
 
                                         @endforeach
                                     @endif
-
-
                                 </div>
                             </div>
                         </div>
-                          <div class="mb-3 row">
-                              <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
-                              <div class="col-lg-9 mt-2">
-                                  <select name="reviewer_status">
-                                      <option value="approve">Approve</option>
-                                      <option value="refer">Refer</option>
-                                  </select>
-                              </div>
-                          </div>
+                            <div class="mb-3 row">
+                                <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
+                                <div class="col-lg-9  mt-2">
+                                    <select name="reviewer_status" class="reviewer-status form-control" required>
+                                        <option value="">Select Status</option>
+                                        <option value="approved" {{ $project->reviewer_status == 'approved' ? 'selected' : '' }}>Approved</option>
+                                        <option value="referred" {{ $project->reviewer_status == 'referred' ? 'selected' : '' }}>Referred</option>
+                                    </select>
+                                </div>
+                            </div>
                           <div class="mb-3 row">
                               <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Internal</label>
                               <div class="col-lg-9 mt-3">
-                                  <textarea class="form-control" name="notes_for_internal" rows="10">{{ $project->internal_note }}</textarea>
+                                  <textarea class="form-control" name="notes_for_internal" id="notes_for_internal" rows="10">{{ old('notes_for_internal') ??$project->internal_note }}</textarea>
                               </div>
                           </div>
                           <div class="mb-3 row">
                               <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Customer</label>
                               <div class="col-lg-9 mt-3">
-                                  <textarea class="form-control" name="notes_for_customer" rows="10">{{ $project->internal_note }}</textarea>
+                                  <textarea class="form-control" name="notes_for_customer" id="notes_for_customer" rows="10">{{ old('notes_for_customer') ??$project->customer_note }}</textarea>
                               </div>
                           </div>
                           <div class="mb-3 row">
                               <label class="col-lg-3 col-form-label" for="example-textarea">Notes for Tradespeople</label>
                               <div class="col-lg-9 mt-3">
-                                  <textarea class="form-control" name="notes_for_tradespeople" rows="10">{{ $project->tradeperson }}</textarea>
+                                  <textarea class="form-control" name="notes_for_tradespeople" id="notes_for_tradespeople" rows="10">{{ old('notes_for_tradespeople') ?? $project->tradeperson_note }}</textarea>
                               </div>
                           </div>
                         <div class="row">
@@ -230,24 +229,69 @@
                             </div>
                             <!-- end col -->
                         </div>
-
                     </div>
-
                     <div class="row mt-15">
                         <div class="col-md-6">
-                            <input type="submit" class="btn btn-primary" value="Submit">
+                            <button type="button" class="btn btn-primary" onclick="confirmYourReviews()" data-bs-toggle="modal" data-bs-target="#comfirm_review">Submit</button>
                         </div>
                     </div>
 
+                     {{-- modal --}}
+                    <div class="modal fade" id="comfirm_review" tabindex="-1" aria-labelledby="comfirm_reviewLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="comfirm_reviewLabel">Confirm Your Decision</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
 
+                                <div class="mb-3 row">
+                                    <label class="col-lg-3 col-form-label" for="example-textarea"><b>Notes for Internal : </b></label>
+                                    <div class="col-lg-9 mt-3">
+                                        <p id="for_internal" name="for_internal"></p>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-lg-3 col-form-label" for="example-textarea"><b>Notes for Customer : </b></label>
+                                    <div class="col-lg-9 mt-3">
+                                        <p id="for_customer" name="for_customer"></p>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-lg-3 col-form-label" for="example-textarea"><b>Notes for Tradespeople : </b></label>
+                                    <div class="col-lg-9 mt-3">
+                                        <p id="for_tradeperson" name="for_tradeperson"></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-9">
+                                        <p><strong>Please check your wording here before pressing the "Confirm Submit" button. Communications cannot be recalled after they are sent.</strong></p>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-primary" id="final_submit">Confirm Submit</button>
+                                    </div>
+                                    <div class="col-1 ps-0">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    {{-- modal end --}}
                 </div>
-
               </form>
             </div>
           </div>
         </div>
       </div>
     </div>
+
     <!-- content-wrapper ends -->
     @include('admin.layout.footer')
   </div>
@@ -274,7 +318,21 @@ function get_builder_subcategory_list() {
 }
 
 $(document).ready(function(){
+    $('#final_submit').on('click', function(){
+        $('#save_awaiting_review').trigger('submit');
+    });
 });
+
+function confirmYourReviews(){
+    var forTradeperson = $('#notes_for_tradespeople').val();
+    var forCustomer = $('#notes_for_customer').val();
+    var forInternal = $('#notes_for_internal').val();
+
+    $('#for_tradeperson').text(forTradeperson);
+    $('#for_customer').text(forCustomer);
+    $('#for_internal').text(forInternal);
+
+}
 
 </script>
 @endpush

@@ -82,26 +82,28 @@
                                         @endphp
                                        @foreach ($project as $row)
                                             <tr>
-                                                <td>{{$count}}</td>
-                                                <td>{{$row->forename.' '.$row->surname}}</td>
+                                                <td>{{ $count }}</td>
+                                                <td>{{ ucwords($row->project_name) }}</td>
                                                 <td>{{ date('d/m/Y',strtotime($row->created_at))}} <br> <em> {{ date('h:i a',strtotime($row->created_at))}} </em> </td>
-                                                @switch($row->status)
-                                                    @case('submitted_for_review')
-                                                        <td class="text-info">Submitted for review</td>
-                                                        @break
-                                                    @case('returned_for_review')
-                                                        <td class="text-dark">Returned for review</td>
-                                                        @break
-                                                    @case('estimation')
-                                                        <td class="text-primary">View estimates</td>
-                                                        @break
-                                                    @case('project_started')
-                                                        <td class="text-success">Project started</td>
-                                                        @break
-                                                    @case('awaiting_your_review')
-                                                        <td class="text-awaiting">Awaiting your feedback</td>
-                                                        @break
-                                                @endswitch
+                                                <td>
+                                                    @switch($row->status)
+                                                        @case('submitted_for_review')
+                                                            <span class="text-info">Submitted for review</span>
+                                                            @break
+                                                        @case('returned_for_review')
+                                                            <span class="text-dark">Returned for review</span>
+                                                            @break
+                                                        @case('estimation')
+                                                            <span class="text-primary">View estimates</span>
+                                                            @break
+                                                        @case('project_started')
+                                                            <span class="text-success">Project started</span>
+                                                            @break
+                                                        @case('awaiting_your_review')
+                                                            <span class="text-awaiting">Awaiting your feedback</span>
+                                                            @break
+                                                    @endswitch
+                                                </td>
                                                 <td>
                                                     @if ($row->status === 'project_started')
                                                         <a href="#"><img src="{{ asset('frontend/img/chat-info.svg') }}" alt=""></a>
@@ -109,7 +111,9 @@
                                                 </td>
                                                 <td>
                                                     @if ($row->status === 'awaiting_your_review')
-                                                    <a href="{{route('customer.project_review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
+                                                        <a href="{{route('customer.project_review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
+                                                    @elseif (Str::lower($row->status) === 'returned_for_review')
+                                                        <a href="{{route('customer.project-return-for-review', [Hashids_encode($row->id)] )}}" class="btn btn-view">View</a>
                                                     @else
                                                     <a href="{{route('customer.project_details',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
                                                         {{-- <a href="{{route('customer.project-return-for-review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a> --}}
@@ -129,7 +133,7 @@
                     </div>
                 </div>
                 <!--//-->
-                {{-- <div class="white_bg">
+                <div class="white_bg">
                     <div class="row num_change">
                         <div class="col-md-12">
                             <h3>Project history</h3>
@@ -139,70 +143,60 @@
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
-                                   <tr>
-                                      <th style="width:80px;">Sl</th>
-                                      <th style="width:150px;">Name</th>
-                                      <th style="width:250px;">Category</th>
-                                      <th style="width:150px;">Posting date</th>
-                                      <th style="width:300px;">Status</th>
-                                      <th style="width:auto;"></th>
-                                   </tr>
+                                    <tr>
+                                        <th style="width:80px;">#</th>
+                                        <th style="width:140px;">Name</th>
+                                        <th style="width:140px;">Posting date</th>
+                                        <th style="width:340px;">Status</th>
+                                        <th style="width:80px;"></th>
+                                        <th style="width:auto;"></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                   <tr>
-                                      <td>01</td>
-                                      <td>Modern bathroom</td>
-                                      <td>Bathrooms <br> Bathroom Designer</td>
-                                      <td>02/01/2023 <br> 11:12 am</td>
-                                      <td class="text-success">Project completed</td>
-                                      <td><a href="#" class="btn btn-view">View</a></td>
-                                   </tr>
-                                   <tr>
-                                      <td>02</td>
-                                      <td>Modern bathroom</td>
-                                      <td>Bathrooms <br> Bathroom Designer</td>
-                                      <td>02/01/2023 <br> 11:12 am</td>
-                                      <td class="text-success">Project completed</td>
-                                      <td><a href="#" class="btn btn-view">View</a></td>
-                                   </tr>
-                                   <tr>
-                                      <td>03</td>
-                                      <td>Modern bathroom</td>
-                                      <td>Bathrooms <br> Bathroom Designer</td>
-                                      <td>02/01/2023 <br> 11:12 am</td>
-                                      <td class="text-danger">Project paused</td>
-                                      <td><a href="#" class="btn btn-view">View</a></td>
-                                   </tr>
-                                   <tr>
-                                      <td>04</td>
-                                      <td>Modern bathroom</td>
-                                      <td>Bathrooms <br> Bathroom Designer</td>
-                                      <td>02/01/2023 <br> 11:12 am</td>
-                                      <td class="text-danger">Project paused</td>
-                                      <td><a href="#" class="btn btn-view">View</a></td>
-                                   </tr>
-                                   <tr>
-                                      <td>05</td>
-                                      <td>Modern bathroom</td>
-                                      <td>Bathrooms <br> Bathroom Designer</td>
-                                      <td>02/01/2023 <br> 11:12 am</td>
-                                      <td class="text-success">Project completed</td>
-                                      <td><a href="#" class="btn btn-view">View</a></td>
-                                   </tr>
-                                   <tr>
-                                      <td>06</td>
-                                      <td>Modern bathroom</td>
-                                      <td>Bathrooms <br> Bathroom Designer</td>
-                                      <td>02/01/2023 <br> 11:12 am</td>
-                                      <td class="text-success">Project completed</td>
-                                      <td><a href="#" class="btn btn-view">View</a></td>
-                                   </tr>
+                                    @if ($project)
+                                         @php
+                                             $count = 1;
+                                         @endphp
+                                        @foreach ($projecthistory as $row)
+                                             <tr>
+                                                 <td>{{ $count }}</td>
+                                                 <td>{{ ucwords($row->project_name) }}</td>
+                                                 <td>{{ date('d/m/Y',strtotime($row->created_at))}} <br> <em> {{ date('h:i a',strtotime($row->created_at))}} </em> </td>
+                                                 <td>
+                                                    @switch($row->status)
+                                                        @case('project_cancelled')
+                                                            <span class="text-danger">Project Cancelled</span>
+                                                            @break
+                                                        @case('project_paused')
+                                                            <span class="text-warning">Project Paused</span>
+                                                            @break
+                                                        @case('project_completed')
+                                                            <span class="text-success">Project Completed</span>
+                                                            @break
+                                                    @endswitch
+                                                 </td>
+                                                 <td></td>
+                                                 <td>
+                                                     @if ($row->status === 'project_completed')
+                                                     <a href="{{route('customer.project_review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
+                                                     @else
+                                                     <a href="{{route('customer.project_details',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
+                                                         {{-- <a href="{{route('customer.project-return-for-review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a> --}}
+                                                     @endif
+                                                 </td>
+                                             </tr>
+                                             @php
+                                                 $count++;
+                                             @endphp
+                                         @endforeach
+                                    @endif
 
-                                </tbody>
+
+                                 </tbody>
                              </table>
                         </div>
                     </div>
-                </div> --}}
+                </div>
                 <!--//-->
             </div>
         </div>
