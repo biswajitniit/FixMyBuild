@@ -111,7 +111,9 @@
                                                 </td>
                                                 <td>
                                                     @if ($row->status === 'awaiting_your_review')
-                                                    <a href="{{route('customer.project_review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
+                                                        <a href="{{route('customer.project_review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
+                                                    @elseif (Str::lower($row->status) === 'returned_for_review')
+                                                        <a href="{{route('customer.project-return-for-review', [Hashids_encode($row->id)] )}}" class="btn btn-view">View</a>
                                                     @else
                                                     <a href="{{route('customer.project_details',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
                                                         {{-- <a href="{{route('customer.project-return-for-review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a> --}}

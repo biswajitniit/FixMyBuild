@@ -20,7 +20,8 @@ use App\Models\{
   Project,
   Projectfile,
   Estimate,
-  Task
+  Task,
+  ProjectEstimateFile
 };
 use Illuminate\Support\Facades\{
     Http,
@@ -239,7 +240,8 @@ class TradepersionDashboardController extends Controller
 
     public function registrationstepthree()
     {
-        return view('tradepersion.registrationthree');
+        $notification = Notification::where('user_id', Auth::user()->id)->first()->settings;
+        return view('tradepersion.registrationthree', compact('notification'));
     }
 
     public function saveregistrationstepthree(Request $request){
@@ -263,27 +265,50 @@ class TradepersionDashboardController extends Controller
         $traderdetails->bnk_sort_code = $request->bnk_sort_code;
         $traderdetails->bnk_account_number = $request->bnk_account_number;
         $traderdetails->builder_amendment = $request->builder_amendment ?? 0;
-        $traderdetails->email_notification = json_encode([
-            "new_quotes"=>$request->noti_new_quotes ?? 0,
-            "quote_accepted"=>$request->noti_quote_accepted ?? 0,
-            "project_stopped"=>$request->noti_project_stopped ?? 0,
-            "quote_rejected"=>$request->noti_quote_rejected ?? 0,
-            "project_cancelled"=> $request->noti_project_cancelled ?? 0,
-        ]);
+        // $traderdetails->email_notification = json_encode([
+        //     "noti_new_quotes"           => $request->noti_new_quotes ?? "0",
+        //     "noti_quote_accepted"       => $request->noti_quote_accepted ?? "0",
+        //     "noti_project_stopped"      => $request->noti_project_stopped ?? "0",
+        //     "noti_quote_rejected"       => $request->noti_quote_rejected ?? "0",
+        //     "noti_project_cancelled"    => $request->noti_project_cancelled ?? "0",
+        //     "noti_share_contact_info"   => $request->noti_share_contact_info ?? "0",
+        //     'noti_new_message'          => "1",
+        // ]);
 
         if($traderdetails->save()){
-            $notification = new stdClass();
-            $notification->builder_amendment = $request->builder_amendment ? $request->builder_amendment : 0;
-            $notification->noti_new_quotes = $request->noti_new_quotes ? $request->noti_new_quotes : 0;
-            $notification->noti_quote_accepted = $request->noti_quote_accepted ? $request->noti_quote_accepted : 0;
-            $notification->noti_project_stopped = $request->noti_project_stopped ? $request->noti_project_stopped : 0;
-            $notification->noti_quote_rejected = $request->noti_quote_rejected ? $request->noti_quote_rejected : 0;
-            $notification->noti_project_cancelled = $request->noti_project_cancelled ? $request->noti_project_cancelled : 0;
-            $notijson = json_encode($notification);
-            $notify = new Notification();
-            $notify->user_id = Auth::user()->id;
-            $notify->settings = $notijson;
-            $notify->save();
+            // $notification = new stdClass();
+            // $notification->builder_amendment = $request->builder_amendment ? $request->builder_amendment : 0;
+            // $notification->noti_new_quotes = $request->noti_new_quotes ? $request->noti_new_quotes : 0;
+            // $notification->noti_quote_accepted = $request->noti_quote_accepted ? $request->noti_quote_accepted : 0;
+            // $notification->noti_project_stopped = $request->noti_project_stopped ? $request->noti_project_stopped : 0;
+            // $notification->noti_quote_rejected = $request->noti_quote_rejected ? $request->noti_quote_rejected : 0;
+            // $notification->noti_project_cancelled = $request->noti_project_cancelled ? $request->noti_project_cancelled : 0;
+            // $notijson = json_encode($notification);
+            $notification = [
+                // Receive these notifications as a Tradesperson
+                'builder_amendment'         => $request->builder_amendment ?? "0",
+                'noti_new_quotes'           => $request->noti_new_quotes ?? "0",
+                'noti_quote_accepted'       => $request->noti_quote_accepted ?? "0",
+                'noti_project_stopped'      => $request->noti_project_stopped ?? "0",
+                'noti_quote_rejected'       => $request->noti_quote_rejected ?? "0",
+                'noti_project_cancelled'    => $request->noti_project_cancelled ?? "0",
+                'noti_share_contact_info'   => config('const.trader_notification_share_contact_info'),
+                'noti_new_message'          => config('const.trader_notification_trader_new_message'),
+
+                // Receive these notifications as a Customer
+                'reviewed'                  => config('const.trader_notification_reviewed'),
+                'paused'                    => config('const.trader_notification_paused'),
+                'project_milestone_complete'=> config('const.trader_notification_project_milestone_complete'),
+                'project_complete'          => config('const.trader_notification_project_complete'),
+                'project_new_message'       => config('const.trader_notification_project_new_message'),
+            ];
+            Notification::where('user_id',Auth::user()->id)->update(['settings' => $notification]);
+
+            // $notify = new Notification();
+            // $notify->user_id = Auth::user()->id;
+            // $notify->settings = $notijson;
+            // $notify->settings = $notification;
+            // $notify->save();
             $userstatus = User::where('id', Auth::user()->id)->update(['steps_completed' => "3"]);
             return Redirect::back()->with('status', 'success');
         }else{
@@ -798,14 +823,49 @@ class TradepersionDashboardController extends Controller
 
     public function settings()
     {
+        $notification = Notification::where('user_id',Auth::user()->id)->first()->settings;
+        return view('tradepersion.settings', compact('notification'));
+    }
 
-        return view('tradepersion.settings');
+    public function saveSettings(Request $request)
+    {
+        if(!$request->ajax())
+            abort(403);
+
+        try {
+            $notification = [
+                // Receive these notifications as a Tradesperson
+                'builder_amendment'         => $request->builder_amendment ?? "0",
+                'noti_new_quotes'           => $request->noti_new_quotes ?? "0",
+                'noti_quote_accepted'       => $request->noti_quote_accepted ?? "0",
+                'noti_project_stopped'      => $request->noti_project_stopped ?? "0",
+                'noti_quote_rejected'       => $request->noti_quote_rejected ?? "0",
+                'noti_project_cancelled'    => $request->noti_project_cancelled ?? "0",
+                'noti_share_contact_info'   => $request->noti_share_contact_info ?? "0",
+                'noti_new_message'          => "1",
+
+                // Receive these notifications as a Customer
+                'reviewed'                  => $request->reviewed ?? "0",
+                'paused'                    => $request->paused ?? "0",
+                'project_milestone_complete'=> $request->project_milestone_complete ?? "0",
+                'project_complete'          => $request->project_complete ?? "0",
+                'project_new_message'       => $request->project_new_message ?? "0",
+            ];
+
+            Notification::where('user_id', Auth::user()->id)->update(['settings' => $notification]);
+            return response()->json(['status' => 'success']);
+        } catch(\Exception $e) {
+            return response()->json(['status' => 'error']);
+        }
+
+
     }
 
     public function project_estimate(Request $request,$key)
     {
         try{
-            return view("tradepersion.estimate", ['project_id' => $key]);
+            $default_contingency = TraderDetail::where(['user_id' => Auth::user()->id])->first()->contingency;
+            return view("tradepersion.estimate", ['project_id' => $key, 'default_contingency' => $default_contingency]);
         } catch(\Exception $e) {
             return 'error';
         }
@@ -814,97 +874,232 @@ class TradepersionDashboardController extends Controller
 
     public function projectestimate(Request $request)
     {
-        try {
-            $insert_estimate = new Estimate();
-            $insert_estimate->project_id = $request->project_id;
-            $insert_estimate->tradesperson_id = Auth::user()->id;
-            // echo $request;die;
-            if($request->describe_mode==null){
-                $insert_estimate->describe_mode = 'Unable_to_describe ';
-                if($request->Need_more_info!=null){
-                    $insert_estimate->unable_to_describe_type = 'Need_more_info';
-                }
-                else if($request->Do_not_undertake_project_type!=null){
-                    $insert_estimate->unable_to_describe_type = 'Do_not_undertake_project_type';
-                }else{
-                    $insert_estimate->unable_to_describe_type = 'Do_not_cover_location';
-                }
-                $insert_estimate->more_info = $request->typeHere;
-                $insert_estimate->covers_customers_all_needs = 0;
-                $insert_estimate->payment_required_upfront = 0;
-                $insert_estimate->contingency = 0;
-                $insert_estimate->initial_payment = 0;
-                $insert_estimate->initial_payment_type = null;
-                $insert_estimate->project_start_date_type = null;
-                $insert_estimate->project_start_date = null;
-                $insert_estimate->total_time = '';
-                $insert_estimate->total_time_type = '';
-                $insert_estimate->apply_vat = 0;
-                $insert_estimate->terms_and_conditions = '';
-                if($insert_estimate->save()){
-                    return Redirect::back()->with('status', 'success');
-                }else{
-                    return Redirect::back()->with('status', 'error');
-                }
-            }else{
-            $insert_estimate->describe_mode = $request->describe_mode;
+        // try {
+            // $insert_estimate = new Estimate();
+            // $insert_estimate->project_id = $request->project_id;
+            // $insert_estimate->tradesperson_id = Auth::user()->id;
+            // // echo $request;die;
+            // if($request->describe_mode==null){
+            //     $insert_estimate->describe_mode = 'Unable_to_describe ';
+            //     if($request->Need_more_info!=null){
+            //         $insert_estimate->unable_to_describe_type = 'Need_more_info';
+            //     }
+            //     else if($request->Do_not_undertake_project_type!=null){
+            //         $insert_estimate->unable_to_describe_type = 'Do_not_undertake_project_type';
+            //     }else{
+            //         $insert_estimate->unable_to_describe_type = 'Do_not_cover_location';
+            //     }
+            //     $insert_estimate->more_info = $request->typeHere;
+            //     $insert_estimate->covers_customers_all_needs = 0;
+            //     $insert_estimate->payment_required_upfront = 0;
+            //     $insert_estimate->contingency = 0;
+            //     $insert_estimate->initial_payment = 0;
+            //     $insert_estimate->initial_payment_type = null;
+            //     $insert_estimate->project_start_date_type = null;
+            //     $insert_estimate->project_start_date = null;
+            //     $insert_estimate->total_time = '';
+            //     $insert_estimate->total_time_type = '';
+            //     $insert_estimate->apply_vat = 0;
+            //     $insert_estimate->terms_and_conditions = '';
+            //     if($insert_estimate->save()){
+            //         return Redirect::back()->with('status', 'success');
+            //     }else{
+            //         return Redirect::back()->with('status', 'error');
+            //     }
+            // }else{
+            // $insert_estimate->describe_mode = $request->describe_mode;
+            // }
+            // if($request->covers_customers_all_needs == 0){
+            //     $insert_estimate->covers_customers_all_needs = 0;
+            // }else{
+            //     $insert_estimate->covers_customers_all_needs = $request->covers_customers_all_needs;
+            // }
+            // if($request->payment_required_upfront == 0){
+            //     $insert_estimate->payment_required_upfront = 0;
+            //     $insert_estimate->initial_payment = 0;
+            //     $insert_estimate->initial_payment_type = null;
+            // }else{
+            //     $insert_estimate->payment_required_upfront = $request->payment_required_upfront;
+            //     if($request->initial_payment_percentage!=null){
+            //         $insert_estimate->initial_payment = $request->initial_payment_percentage;
+            //         $insert_estimate->initial_payment_type = 'Percentage';
+            //     }else{
+            //         $insert_estimate->initial_payment = $request->initial_payment_amount;
+            //         $insert_estimate->initial_payment_type = 'Fixed';
+            //     }
+
+            // }
+            // if($request->contingency == 0){
+            //     $insert_estimate->contingency = 0;
+            // }else{
+            //     $insert_estimate->contingency = $request->contingency;
+            // }
+            // $insert_estimate->project_start_date_type = $request->for_start_date;
+            // $insert_estimate->project_start_date = $request->project_start_date;
+            // $insert_estimate->total_time = $request->total_time;
+            // $insert_estimate->total_time_type = $request->total_time_type;
+
+            // if($request->apply_vat==null){
+            //     $insert_estimate->apply_vat = 0;
+            // }else{
+            // $insert_estimate->apply_vat = $request->apply_vat;
+            // }
+            // $insert_estimate->terms_and_conditions = $request->termsconditions;
+
+            // if($insert_estimate->save())
+            // {
+            //     echo $insert_estimate;
+            //     if($request->describe_mode!=null){
+            //         $estimate_id = Estimate::where('tradesperson_id',Auth::user()->id)->where('project_id',$request->project_id)->first();
+            //         for($i=1;$i<=$request->total_field;$i++){
+            //             $insert_task = new Task();
+            //             $insert_task->estimate_id = $estimate_id->id;
+            //             $insert_task->description = $request->input('task'."$i");
+            //             $insert_task->price = $request->input('amount'."$i");
+            //             $insert_task->save();
+            //         }
+            //     }
+
+            //     return Redirect::back()->with('status', 'success');
+            // }else{
+            //     return Redirect::back()->with('status', 'error');
+            // }
+
+        try{
+            $old_estimate = Estimate::where([
+                                'project_id'      => $request->project_id,
+                                'tradesperson_id' => Auth::user()->id,
+                            ])->first();
+
+            if ($old_estimate) {
+                $errors = new MessageBag(['duplicate_entry' => 'You have already written an estimate for this project.']);
+                return redirect()->back()->withErrors($errors);
             }
-            if($request->covers_customers_all_needs == 0){
-                $insert_estimate->covers_customers_all_needs = 0;
-            }else{
-                $insert_estimate->covers_customers_all_needs = $request->covers_customers_all_needs;
-            }
-            if($request->payment_required_upfront == 0){
-                $insert_estimate->payment_required_upfront = 0;
-                $insert_estimate->initial_payment = 0;
-                $insert_estimate->initial_payment_type = null;
-            }else{
-                $insert_estimate->payment_required_upfront = $request->payment_required_upfront;
-                if($request->initial_payment_percentage!=null){
-                    $insert_estimate->initial_payment = $request->initial_payment_percentage;
-                    $insert_estimate->initial_payment_type = 'Percentage';
-                }else{
-                    $insert_estimate->initial_payment = $request->initial_payment_amount;
-                    $insert_estimate->initial_payment_type = 'Fixed';
+
+            if (\Str::lower($request->describe_mode) == 'unable_to_describe') {
+
+                if (\Str::lower($request->unable_to_describe_type) == 'need_more_info' && !$request->typeHere) {
+                    $errors = new MessageBag(['more_info' => ['I need more information field is required']]);
+                    return Redirect::back()->withErrors($errors)->withInput();
                 }
 
+                Estimate::create([
+                    'describe_mode'           => $request->describe_mode,
+                    'project_id'              => $request->project_id,
+                    'tradesperson_id'         => Auth::user()->id,
+                    'unable_to_describe_type' => $request->unable_to_describe_type,
+                    'more_info'               => \Str::lower($request->unable_to_describe_type) == 'need_more_info' ? $request->typeHere : null,
+                ]);
+
+                return redirect()->route('tradepersion.projects');
+            }
+
+            $errors = new MessageBag();
+            for($i=1; $i<=$request->total_field; $i++){
+                if ( empty($request->input("task"."$i")) )
+                    $errors->add("task"."$i", 'Please provide a description for task '.$i.'.');
+                if ( empty($request->input("amount"."$i")))
+                    $errors->add("amount"."$i", 'Please provide a price for task '.$i.'.');
+                if ( !empty($request->input("amount"."$i")) && !is_numeric($request->input("amount"."$i")) )
+                    $errors->add("numeric_amount"."$i", 'Please provide a numeric value for task '.$i.' price.');
+            }
+
+            $rules = [
+                'covers_customers_all_needs' => 'nullable|boolean',
+                'payment_required_upfront'   => 'nullable|boolean',
+                'apply_vat'                  => 'nullable|boolean',
+                'contingency'                => 'required|numeric',
+                'for_start_date'             => 'required',
+                'total_time'                 => 'required',
+                'total_time_type'            => 'required|string',
+                'termsconditions'            => 'required|string',
+            ];
+
+            if (\Str::lower($request->for_start_date) == 'specific_date')
+                $rules['project_start_date'] = 'required|date';
+
+            if ($request->payment_required_upfront && \Str::lower($request->initial_payment_type) == 'percentage')
+                $rules['initial_payment_percentage'] = 'required|numeric';
+            elseif ($request->payment_required_upfront && \Str::lower($request->initial_payment_type) == 'fixed_amount')
+                $rules['initial_payment_amount'] = 'required|numeric';
+
+
+            $messages = [
+                'termsconditions.required'  => 'The terms and condition field is required.'
+            ];
+
+            $validator = Validator::make($request->all(), $rules, $messages);
+            if ($validator->fails() || count($errors) != 0) {
+                $errors->merge($validator->errors());
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+
+            $initial_payment = null;
+
+            if ($request->payment_required_upfront && $request->initial_payment_type == 'fixed_amount')
+                $initial_payment = $request->initial_payment_amount;
+            elseif ($request->payment_required_upfront && $request->initial_payment_type == 'percentage')
+                $initial_payment = $request->initial_payment_percentage;
+
+            $estimate = Estimate::create([
+                'describe_mode'              => $request->describe_mode,
+                'project_id'                 => $request->project_id,
+                'tradesperson_id'            => Auth::user()->id,
+                'covers_customers_all_needs' => $request->covers_customers_all_needs ?? 0,
+                'payment_required_upfront'   => $request->payment_required_upfront ?? 0,
+                'apply_vat'                  => $request->apply_vat ?? 0,
+                'contingency'                => $request->contingency,
+                'initial_payment'            => $initial_payment ,
+                'initial_payment_type'       => $request->initial_payment_type ,
+                'project_start_date_type'    => $request->for_start_date ,
+                'project_start_date'         => ($request->for_start_date == 'specific_date' ) ? $request->project_start_date : null,
+                'total_time'                 => $request->total_time ,
+                'total_time_type'            => $request->total_time_type ,
+                'terms_and_conditions'       => $request->termsconditions ,
+            ]);
+
+            if ($estimate) {
+
+                if ($request->payment_required_upfront) {
+                    Task::create([
+                        'estimate_id' => $estimate->id,
+                        'description' => 'initial payment',
+                        'price'       => $request->initial_payment_type == 'percentage' ? $request->initial_payment_calculated_percentage : $request->initial_payment_amount,
+                        'is_initial'  => true,
+                    ]);
                 }
-            if($request->contingency == 0){
-                $insert_estimate->contingency = 0;
-            }else{
-                $insert_estimate->contingency = $request->contingency;
-            }
-            $insert_estimate->project_start_date_type = $request->for_start_date;
-            $insert_estimate->project_start_date = $request->project_start_date;
-            $insert_estimate->total_time = $request->total_time;
-            $insert_estimate->total_time_type = $request->total_time_type;
 
-            if($request->apply_vat==null){
-                $insert_estimate->apply_vat = 0;
-            }else{
-            $insert_estimate->apply_vat = $request->apply_vat;
-            }
-            $insert_estimate->terms_and_conditions = $request->termsconditions;
-
-            if($insert_estimate->save())
-            {
-                echo $insert_estimate;
-                if($request->describe_mode!=null){
-                    $estimate_id = Estimate::where('tradesperson_id',Auth::user()->id)->where('project_id',$request->project_id)->first();
-                    for($i=1;$i<=$request->total_field;$i++){
-                        $insert_task = new Task();
-                        $insert_task->estimate_id = $estimate_id->id;
-                        $insert_task->description = $request->input('task'."$i");
-                        $insert_task->price = $request->input('amount'."$i");
-                        $insert_task->save();
-                    }
+                for ($i = 1; $i <= $request->total_field; $i++) {
+                    Task::create([
+                        'estimate_id'     => $estimate->id,
+                        'description'     => $request->input('task'."$i"),
+                        'price'           => $request->input('amount'."$i"),
+                        'contingency'     => $request->input('amount'."$i") * ( $request->contingency / 100 ),
+                        'max_contingency' => $request->input('amount'."$i") * ( $request->contingency / 100 ),
+                    ]);
                 }
 
-                return Redirect::back()->with('status', 'success');
-            }else{
-                return Redirect::back()->with('status', 'error');
+                // Move the estimate files from temp_media to project_estimate_files
+                $temp_medias = tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'media_type' => 'estimate'])->get();
+                foreach ($temp_medias as $temp_media) {
+                    $estimate_file = ProjectEstimateFile::create([
+                        'estimate_id'        => $estimate->id,
+                        'file_related_to'    => $temp_media->file_related_to,
+                        'file_type'          => $temp_media->file_type,
+                        'file_name'          => $temp_media->filename,
+                        'file_original_name' => $temp_media->file_original_name,
+                        'file_extension'     => $temp_media->file_extension,
+                        'url'                => $temp_media->url,
+                    ]);
+
+                    if($estimate_file)
+                        $temp_media->delete();
+                }
             }
-        } catch (Exception $e) {
+
+            return redirect()->route('tradepersion.projects');
+
+        } catch (\Exception $e) {
             echo $e;die;
         }
     }
@@ -959,7 +1154,7 @@ class TradepersionDashboardController extends Controller
             ]);
 
             return response()->json(['contingency' => $request->input('contingency')]);
-        } catch (Exception $e){
+        } catch (\Exception $e){
             echo "error"; die;
         }
 
@@ -973,7 +1168,7 @@ class TradepersionDashboardController extends Controller
             
             milestone_completion_notification($task_id);
             return response()->json(['status' => $request->input('status')]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
 
         }
     }

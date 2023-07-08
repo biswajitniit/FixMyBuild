@@ -89,16 +89,16 @@ function makeLink(){
   hf.innerHTML = `<div class="capture-image-level">Video Capture ${counter+1}
             <span class="capture-image-delete" onclick="deleteVideo(${counter++})">&times;</span>
           </div>`;
-  
+
   li.appendChild(mt);
   li.appendChild(hf);
   ul.appendChild(li);
-  
+
   //formData.append('_token',  $('meta[name="csrf-token"]').attr('content'));
   //formData.append('video', blob);
   videoArray.push(blob);
   console.log(videoArray);
-  
+
 }
 function deleteVideo(index) {
   videoArray.splice(index, 1)
@@ -116,11 +116,13 @@ $(document).ready(function(){
       confirmButtonText: 'Yes'
       }).then((result) => {
         if (result.isConfirmed) {
-          $("#upload_video").html('<img class="video-upload-loading" src="/images/loading.gif" alt=""/> Upload');
+        //   $("#upload_video").html('<img class="video-upload-loading" src="/images/loading.gif" alt=""/> Upload');
+          $("#upload_video").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
           $("#upload_video").disabled = true;
           const formData = new FormData();
           formData.append('_token',  $('meta[name="csrf-token"]').attr('content'));
           formData.append('video_count',  videoArray.length);
+        //   formData.append('media_type',  'project');
           for (let i = 0; i < videoArray.length; i++){
             formData.append('video_'+i, videoArray[i]);
           }
@@ -134,6 +136,8 @@ $(document).ready(function(){
             $("#upload_video").disabled = false;
             $('#close_video_modal').click();
             FetchfilesData();
+            if (typeof fetchAllMedias === 'function')
+                fetchAllMedias();
             formData.forEach(function(val, key, fD){
             // here you can add filtering conditions
             formData.delete(key)

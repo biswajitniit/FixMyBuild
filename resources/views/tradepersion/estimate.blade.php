@@ -164,7 +164,7 @@
                   </div>
                   <div class="modal-footer">
                     {{-- <button class="btn btn-danger">Submit</button> --}}
-                    <button class="btn btn-light" type="submit">Upload</button>
+                    <button class="btn btn-light" type="submit" id="capture_photo_upload">Upload</button>
                     <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal" id="close_image_modal">Close</button>
                   </div>
                 </form>
@@ -219,6 +219,19 @@
                     </div>
                 </div>
                 <!--// END-->
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        @if($errors->any())
+                            <div class="alert alert-danger mt-15">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    </div>
+                </div>
                 <section>
                     <div class="container">
                         <div class="row">
@@ -231,14 +244,14 @@
                 <div class="row">
                     <div class="col-md-10 offset-md-1">
                         <div class="white_bg mb-5 create-task-wp">
-                            <div class="row" id="for_task">
                                 <div class="col-12">
                                     <div class="form-check mb-2">
                                         <input type="radio" class="form-check-input mb" id="Fully_describe"
-                                            name="describe_mode" value="Fully_describe">
+                                            name="describe_mode" value="Fully_describe" checked>
                                         <h5>Please describe fully each task that needs to be undertaken.</h5>
                                     </div>
                                 </div>
+                            <div class="row" id="for_task">
                                 <div class="row task-wrap">
                                     <div class="col-md-1">
                                         <svg width="27" height="25" viewBox="0 0 27 25" fill="none"
@@ -313,7 +326,7 @@
                                                 placeholder="Type price for task 2">
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
+                                    {{-- <div class="col-md-1">
                                         <span class="remove-row">
                                             <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -322,7 +335,7 @@
                                                     fill="#6D717A" />
                                             </svg>
                                         </span>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 {{-- for add more --}}
                                 <div id="new_add"></div>
@@ -337,7 +350,7 @@
                             </div>
                             <div id='unable_to_desc_div'>
                                 <div class="form-check mb-3">
-                                    <input type="radio" class="form-check-input mb" id="Unable_to_describe" name="Unable_to_describe" value="Unable_to_describe">
+                                    <input type="radio" class="form-check-input mb" id="Unable_to_describe" name="describe_mode" value="Unable_to_describe" {{ old('describe_mode') == 'Unable_to_describe' ? 'checked' : '' }}>
                                     <h5>I am unable to describe the work required.</h5>
                                 </div>
 
@@ -345,7 +358,7 @@
                                     <div class="row mb-3">
                                         <div class="col-md-5">
                                             <div class="form-check mb-2">
-                                                <input type="radio" class="form-check-input mb" onchange="ifYes()" id="forMore" name="Need_more_info" value="Need_more_info">
+                                                <input type="radio" class="form-check-input mb" id="forMore" name="unable_to_describe_type" value="Need_more_info" {{ old('unable_to_describe_type') == 'Need_more_info' ? 'checked' : '' }} >
                                                 <h5>I need more information</h5>
                                                 <p>Please write here what additional information you need.
                                                     This will be sent directly to the customer.</p>
@@ -360,7 +373,7 @@
                                     <div class="row mb-3">
                                         <div class="col-12">
                                             <div class="form-check mb-2">
-                                                <input type="radio" class="form-check-input mb" id="radiox1" name="Do_not_undertake_project_type" value="Do_not_undertake_project_type">
+                                                <input type="radio" class="form-check-input mb" id="radiox1" name="unable_to_describe_type" value="Do_not_undertake_project_type" {{ old('unable_to_describe_type') == 'Do_not_undertake_project_type' ? 'checked' : '' }}>
                                                 <h5>I do not undertake this type of project.</h5>
                                             </div>
                                         </div>
@@ -368,7 +381,7 @@
                                     <div class="row mb-3">
                                         <div class="col-12">
                                             <div class="form-check mb-2">
-                                                <input type="radio" class="form-check-input mb" id="radiox2" name="Do_not_cover_location" value="Do_not_cover_location">
+                                                <input type="radio" class="form-check-input mb" id="radiox2" name="unable_to_describe_type" value="Do_not_cover_location" {{ old('unable_to_describe_type') == 'Do_not_cover_location' ? 'checked' : '' }}>
                                                 <h5>I do not cover the customer’s location.</h5>
                                             </div>
                                         </div>
@@ -502,7 +515,7 @@
                                         <div class="form-check form-switch">
                                             <div class="switchToggle">
                                                 <input type="checkbox" id="toogle1" name="covers_customers_all_needs"
-                                                    value="1">
+                                                    value="1" {{ old('covers_customers_all_needs') ? 'checked' : '' }}>
                                                 <label for="toogle1">Toggle</label>
                                             </div>
                                             <label class="form-check-label" for="mySwitch">Does the above list of tasks
@@ -514,21 +527,20 @@
                                         <div class="form-check form-switch">
                                             <div class="switchToggle">
                                                 <input type="checkbox" id="toogle2" name="payment_required_upfront"
-                                                    value="1">
+                                                    value="1" {{ old('payment_required_upfront') ? 'checked' : '' }}>
                                                 <label for="toogle2">Toggle</label>
                                             </div>
-                                            <label class="form-check-label" for="mySwitch">Payment required
-                                                upfront?</label>
+                                            <label class="form-check-label" for="mySwitch">Would you like to charge the customer an additional payment upfront?</label>
                                         </div>
                                     </div>
                                     <!--//-->
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
                                             <div class="switchToggle">
-                                                <input type="checkbox" id="toogle3" name="apply_vat" value="1">
+                                                <input type="checkbox" id="toogle3" name="apply_vat" value="1" {{ old('apply_vat') ? 'checked' : '' }}>
                                                 <label for="toogle3">Toggle</label>
                                             </div>
-                                            <label class="form-check-label" for="mySwitch">Apply VAT @ 20%?</label>
+                                            <label class="form-check-label" for="mySwitch">Apply VAT @ {{ config('const.vat_charge') }}%?</label>
                                         </div>
                                     </div>
                                     <!--//-->
@@ -541,7 +553,7 @@
                                         <div class="col-3 pr-0">
                                             <input type="text" class="form-control pull-left"
                                                 id="percentage_contingency" name='contingency'
-                                                onchange="calculate_amount()" onkeyup="calculate_amount()">
+                                                onchange="calculate_amount()" onkeyup="calculate_amount()" value="{{ old('contingency') ?? $default_contingency }}">
                                         </div>
                                         <div class="col-3 pl-0">
                                             <h5>%</h5>
@@ -566,25 +578,26 @@
                         <div class="white_bg mb-5 initial-payment">
                             <div class="row" id="for_initial_pay_hide">
                                     <div class="col-md-12">
-                                        <h3>Initial payment</h3>
+                                        <h3>Additional payment upfront</h3>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-2 pr-0">
                                                 <div class="form-check mt-2">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1">
+                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="percentage" checked>
                                                 </div>
                                             </div>
                                             <div class="col-8">
                                                 <div class="row total_price_">
                                                     <div class="col-4 pl-0 pr-0">
-                                                        <input type="text" class="form-control pull-left" id="initial_payment_percentage" name="initial_payment_percentage" onkeyup="calculate_amount()">
+                                                        <input type="text" class="form-control pull-left" id="initial_payment_percentage" name="initial_payment_percentage" onkeyup="calculate_amount()" value="{{ old('initial_payment_percentage') }}">
                                                     </div>
                                                     <div class="col-2 pl-0">
                                                         <h5>%</h5>
                                                     </div>
                                                     <div class="col-3">
                                                         <span id="initial_payment1">(£0.00)</span>
+                                                        <input name="initial_payment_calculated_percentage" type="hidden" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -597,7 +610,7 @@
                                         <div class="row task-wrap p-0">
                                             <div class="col-1">
                                                 <div class="form-check mt-2">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1">
+                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="fixed_amount">
                                                 </div>
                                             </div>
                                             <div class="col-9">
@@ -612,7 +625,7 @@
                                                             </svg>
                                                         </span>
                                                     </div>
-                                                    <input type="text" class="form-control" name="initial_payment_amount" placeholder="Type Price">
+                                                    <input type="text" class="form-control" name="initial_payment_amount" placeholder="Type Price" value="{{ old('initial_payment_amount') }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -625,16 +638,16 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <select name="for_start_date" class="form-control" id="for_start_date" onchange="getDate()">
-                                                    <option value="now">Now</option>
-                                                    <option value="one_week">Next one week</option>
-                                                    <option value="two_three_weeks">2-3 weeks time</option>
-                                                    <option value="specific_date">On a specific date</option>
+                                                    <option value="now" {{ old('for_start_date') == 'now' ? 'selected' : '' }}>Now</option>
+                                                    <option value="one_week" {{ old('for_start_date') == 'one_week' ? 'selected' : '' }}>Next one week</option>
+                                                    <option value="two_three_weeks" {{ old('for_start_date') == 'two_three_weeks' ? 'selected' : '' }}>2-3 weeks time</option>
+                                                    <option value="specific_date" {{ old('for_start_date') == 'specific_date' ? 'selected' : '' }}>On a specific date</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <input type="date" class="form-control" id="project_start_date" name="project_start_date" placeholder="DD MM YYYY" style="display: none;">
+                                                <input type="date" class="form-control" id="project_start_date" name="project_start_date" placeholder="DD MM YYYY" style="display: none;" value="{{ old('project_start_date') }}">
                                             </div>
                                         </div>
                                         <h3 class="mt-4">Total time required to complete the project (including
@@ -642,17 +655,17 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <input type="text" class="form-control" id=""
-                                                    placeholder="Type time" name="total_time">
+                                                    placeholder="Type time" name="total_time" value="{{ old('total_time') }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <select name="total_time_type" class="form-control" id="">
-                                                    <option value="minutes">minutes</option>
-                                                    <option value="Hours">hours</option>
-                                                    <option value="days">days</option>
-                                                    <option value="weeks">weeks</option>
-                                                    <option value="months">months</option>
+                                                    <option value="minutes" {{ old('total_time_type') == 'minutes' ? 'selected' : '' }}>minutes</option>
+                                                    <option value="Hours" {{ old('total_time_type') == 'Hours' ? 'selected' : '' }} >hours</option>
+                                                    <option value="days" {{ old('total_time_type') == 'days' ? 'selected' : '' }} >days</option>
+                                                    <option value="weeks" {{ old('total_time_type') == 'weeks' ? 'selected' : '' }} >weeks</option>
+                                                    <option value="months" {{ old('total_time_type') == 'months' ? 'selected' : '' }} >months</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -670,7 +683,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3>Terms and conditions</h3>
-                                    <textarea name="termsconditions" id="summernote"></textarea>
+                                    {{-- <textarea name="termsconditions" id="summernote"></textarea> --}}
+                                    <textarea name="termsconditions" class="form-control">{{ old('termsconditions') }}</textarea>
                                 </div>
 
                             </div>
@@ -689,7 +703,7 @@
 @push('scripts')
     <!-- Main JS -->
     {{-- <script src="assets/js/main.js"></script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script> --}}
     <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
     <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
     <script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
@@ -698,77 +712,80 @@
     <script>
         gUMbtn1 = id('gUMbtn1'),
         gUMbtn1.onclick = e => {
-        var constraints = { audio: true, video: true };
-        navigator.mediaDevices.getUserMedia(constraints)
-        .then(function(mediaStream) {
-            Webcam.set({
-                width: 450,
-                height: 350,
-                image_format: 'jpeg',
-                jpeg_quality: 100
-            });
-            Webcam.attach( '#my_camera' );
-        })
-        .catch(function(err) { console.log(err.name + ": " + err.message); });
+            var constraints = { audio: true, video: true };
+            navigator.mediaDevices.getUserMedia(constraints)
+            .then(function(mediaStream) {
+                Webcam.set({
+                    width: 450,
+                    height: 350,
+                    image_format: 'jpeg',
+                    jpeg_quality: 100
+                });
+                Webcam.attach( '#my_camera' );
+            })
+            .catch(function(err) { console.log(err.name + ": " + err.message); });
         }
-        let imagesArray = []
+
+        let imagesArray = [];
         function take_snapshot() {
-        Webcam.snap( function(data_uri) {
-            //$(".image-tag").val(data_uri);
-            imagesArray.push(data_uri)
-            //document.getElementById('results').innerHTML = '<img src="'+data_uri+'" class="rounded"/>';
-        } );
-        const form  = document.getElementById('capturephoto');
-        var formData = new FormData(form);
-        formData.append('image_count',  imagesArray.length);
-        for (let i = 0; i < imagesArray; i++) {
-            formData.append('image_' + i, imagesArray[i]);
-        }
-        displayImages()
-        }
-        function displayImages() {
-        let images = ""
-        output=document.getElementById('results')
-        for (i = 0; i < imagesArray.length; i++){
-            images += `<div class="col-4 col-sm-6 col-md-4 mt-2 image">
-            <img src="${imagesArray[i]}" alt="image" class="rounded">
-            <input type="hidden" name="image_${i}" class="image-tag" value="${imagesArray[i]}">
-            <div class="capture-image-level">Image Capture ${i+1}
-                <span class="capture-image-delete" onclick="deleteImage(${i})">&times;</span>
-            </div>
-            </div>`
-        }
-        output.innerHTML = images
-        $("#image_count").val(imagesArray.length);
-        }
-        function deleteImage(index) {
-        imagesArray.splice(index, 1)
-        displayImages()
-        }
-
-
-        $('#summernote').summernote({
-            // placeholder: 'FixMyBuild',
-            tabsize: 2,
-            height: 200,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-            ]
-        });
-
-        $(document).ready(function() {
-            $(".remove-row").click(function(e) {
-                var last_field = parseInt($('#total_field').val())
-                if (last_field > 2) {
-                    $('#new_' + last_field).remove();
-                    $('#total_field').val(last_field - 1);
-                }
+            Webcam.snap( function(data_uri) {
+                //$(".image-tag").val(data_uri);
+                imagesArray.push(data_uri)
+                //document.getElementById('results').innerHTML = '<img src="'+data_uri+'" class="rounded"/>';
             });
-        });
+            const form  = document.getElementById('capturephoto');
+            var formData = new FormData(form);
+            formData.append('image_count',  imagesArray.length);
+            for (let i = 0; i < imagesArray; i++) {
+                formData.append('image_' + i, imagesArray[i]);
+            }
+            displayImages();
+        }
+
+        function displayImages() {
+            let images = "";
+            output = document.getElementById('results');
+            for (i = 0; i < imagesArray.length; i++){
+                images += `<div class="col-4 col-sm-6 col-md-4 mt-2 image">
+                <img src="${imagesArray[i]}" alt="image" class="rounded">
+                <input type="hidden" name="image_${i}" class="image-tag" value="${imagesArray[i]}">
+                <div class="capture-image-level">Image Capture ${i+1}
+                    <span class="capture-image-delete" onclick="deleteImage(${i})">&times;</span>
+                </div>
+                </div>`
+            }
+            output.innerHTML = images;
+            $("#image_count").val(imagesArray.length);
+        }
+
+        function deleteImage(index) {
+            imagesArray.splice(index, 1);
+            displayImages();
+        }
+
+
+        // $('#summernote').summernote({
+        //     // placeholder: 'FixMyBuild',
+        //     tabsize: 2,
+        //     height: 200,
+        //     toolbar: [
+        //         ['style', ['style']],
+        //         ['font', ['bold', 'underline', 'clear']],
+        //         ['color', ['color']],
+        //         ['para', ['ul', 'ol', 'paragraph']],
+        //         ['table', ['table']],
+        //     ]
+        // });
+
+        // $(document).ready(function() {
+        //     $(".remove-row").click(function(e) {
+        //         var last_field = parseInt($('#total_field').val())
+        //         if (last_field > 2) {
+        //             $('#new_' + last_field).remove();
+        //             $('#total_field').val(last_field - 1);
+        //         }
+        //     });
+        // });
 
         function addMore() {
             var new_field = parseInt($('#total_field').val()) + 1;
@@ -822,15 +839,22 @@
 
         }
 
-        function ifYes() {
-            const forClick = document.getElementById("forMore");
-            const textBox = document.getElementById("typeHere");
-            if (forClick.clicked == false) {
-                textBox.disabled = true;
-            } else {
-                textBox.disabled = false;
+        function needMoreInfo() {
+            // const forClick = document.getElementById("forMore");
+            // const textBox = document.getElementById("typeHere");
+            // if (forClick.clicked == false) {
+            //     textBox.disabled = true;
+            // } else {
+            //     textBox.disabled = false;
+            // }
+            if ( $('#forMore').is(':checked') ) {
+                $('#typeHere').prop('disabled', false);
+            }
+            else {
+                $('#typeHere').prop('disabled', true);
             }
         }
+
 
         function calculate_amount() {
             let sum = 0;
@@ -843,7 +867,7 @@
             }
             var percentage_contingency = $("#percentage_contingency").val() ?? 0;
             var total_price_including_contingency = (sum * percentage_contingency / 100) + sum;
-            var total_price_including_vat = ((total_price_including_contingency * {{ env('VAT_CHARGE', 20) }}) / 100) +
+            var total_price_including_vat = ((total_price_including_contingency * {{ config('const.vat_charge') }}) / 100) +
                 total_price_including_contingency;
 
             $("#price_include_contigency").text("£" + total_price_including_contingency.toFixed(2));
@@ -859,38 +883,54 @@
             }
 
             $("#initial_payment1").text("(£" + initial_payment_percentage.toFixed(2) + ")");
+            $("input[name='initial_payment_calculated_percentage']").val(initial_payment_percentage.toFixed(2));
         }
 
-        $(document).ready(function() {
-            $("#vat_price").hide();
-        });
+        // $(document).ready(function() {
+        //     $("#vat_price").hide();
+        // });
 
         $('#toogle3').change(function() {
-            if (this.checked) {
+            // if (this.checked) {
+            //     $("#vat_price").show();
+            //     calculate_amount();
+            // } else {
+            //     $("#vat_price").hide();
+            //     calculate_amount();
+            // }
+            showAndUpdateVatPrice();
+        });
+
+        function showAndUpdateVatPrice() {
+            if ($('#toogle3').prop('checked'))
                 $("#vat_price").show();
-                calculate_amount();
-            } else {
+            else
                 $("#vat_price").hide();
-                calculate_amount();
-            }
+            calculate_amount();
+        }
 
-        });
-
-        $(document).ready(function() {
-            $("#for_initial_pay_hide").hide();
-        });
+        // $(document).ready(function() {
+        //     $("#for_initial_pay_hide").hide();
+        // });
 
         $('#toogle2').change(function() {
-            if (this.checked) {
-                $("#for_initial_pay_hide").show();
-                calculate_amount();
-            } else {
-                $("#for_initial_pay_hide").hide();
-                calculate_amount();
-            }
-
+            // if (this.checked) {
+            //     $("#for_initial_pay_hide").show();
+            //     calculate_amount();
+            // } else {
+            //     $("#for_initial_pay_hide").hide();
+            //     calculate_amount();
+            // }
+            showInitialPayment();
         });
 
+        function showInitialPayment() {
+            if ($('#toogle2').prop('checked'))
+                $("#for_initial_pay_hide").show();
+            else
+                $("#for_initial_pay_hide").hide();
+            calculate_amount();
+        }
 
         function getDate() {
             let e = document.getElementById('for_start_date');
@@ -910,8 +950,11 @@
         }
 
         $(document).ready(function() {
-            getDate();
             fetchProductImages();
+            // $("#for_initial_pay_hide").hide();
+            $("#vat_price").hide();
+            $('input[name="unable_to_describe_type"]').prop('disabled', true); // Disable the Unable to describe work radio buttons by default
+
             $("form#capturephoto").submit(function(e){
                 e.preventDefault();
                 var success=1
@@ -929,6 +972,8 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         //for (i = 0; i < imagesArray.length; i++){
+                        $("#capture_photo_upload").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+                        $("#capture_photo_upload").prop('disabled', true);
                         var formData = new FormData($("#capturephoto")[0]);
                         formData.append('media_type', 'estimate');
                         $.ajax({
@@ -941,6 +986,8 @@
                             processData: false,
                             dataType: "json",
                             success: (response) => {
+                                $("#capture_photo_upload").html('Upload');
+                                $("#capture_photo_upload").prop('disabled', false);
                                 success='1'
                             },
                             error: (response) => {
@@ -964,22 +1011,106 @@
                         }
                 })
             });
-            $('#Unable_to_describe').change(function() {
-                if ($(this).is(':checked')) {
-                    $("#div_for_calculate_estimate").hide();
-                    $("#div_for_initial_payment").hide();
-                    $("#terms_conditions").hide();
-                    $("#for_photos").hide();
-                    $("#for_task").hide();
-                } else {
-                    $("#div_for_calculate_estimate").show();
-                    $("#div_for_initial_payment").show();
-                    $("#terms_conditions").show();
-                    $("#for_photos").show();
-                    $("#for_task").show();
+
+            // $('#Unable_to_describe').change(function() {
+            // $('input[name="describe_mode"]').change(function() {
+            //     // if ($(this).is(':checked')) {
+            //     if ($('#Unable_to_describe').is(':checked')) {
+            //         // $('#Fully_describe').closest('.form-check').removeClass('mb-2').addClass('mb-4');
+            //         // $("#div_for_calculate_estimate").hide();
+            //         // $("#div_for_initial_payment").hide();
+            //         // $("#terms_conditions").hide();
+            //         // $("#for_photos").hide();
+            //         // $("#for_task").hide();
+            //         // $('input[name="unable_to_describe_type"]').prop('disabled', false);
+            //         // $('input[name="unable_to_describe_type"]:first').prop('checked', true);
+            //         // needMoreInfo();
+
+            //         showUnableToDescribeContent();
+            //     } else {
+            //         // $('#Fully_describe').closest('.form-check').removeClass('mb-4').addClass('mb-2');
+            //         // $("#div_for_calculate_estimate").show();
+            //         // $("#div_for_initial_payment").show();
+            //         // $("#terms_conditions").show();
+            //         // $("#for_photos").show();
+            //         // $("#for_task").show();
+            //         // $('input[name="unable_to_describe_type"]').prop('disabled', true);
+            //         // $('input[name="unable_to_describe_type"]').prop('checked', false);
+            //         // $('#typeHere').prop('disabled', true);
+
+            //         showFullyDescribeContent();
+            //     }
+            // });
+
+            $('input[name="describe_mode"]').change(function() {
+                showContentBasedOnDescribeMode();
+            });
+
+            $('input[name="unable_to_describe_type"]').on('change', () => needMoreInfo());
+            showContentBasedOnDescribeMode();
+
+            $(".remove-row").click(function(e) {
+                var last_field = parseInt($('#total_field').val())
+                if (last_field > 2) {
+                    $('#new_' + last_field).remove();
+                    $('#total_field').val(last_field - 1);
                 }
             });
+
+            let tasks = [];
+            @for ($i = 1; $i <= old('total_field'); $i++)
+                tasks.push({
+                    price : "{{ old('amount'.$i) }}",
+                    description: "{{ old('task'.$i) }}"
+                });
+            @endfor
+
+            @if($errors->any())
+                let total_tasks = {{ old('total_field')  }};
+                for (let i = 0; i < total_tasks; i++) {
+                    if (i > 1)
+                        addMore();
+                    $(`textarea[name="task${i+1}"]`).text(tasks[i].description);
+                    $(`input[name="amount${i+1}"]`).val((tasks[i].price == '') ? '' : parseFloat(tasks[i].price));
+                }
+            @endif
+
+            showInitialPayment();
+            showAndUpdateVatPrice();
         });
+
+        function showContentBasedOnDescribeMode() {
+            if ($('#Unable_to_describe').is(':checked'))
+                showUnableToDescribeContent();
+            else
+                showFullyDescribeContent();
+        }
+
+        function showUnableToDescribeContent() {
+            $('#unable_to_desc_div .unable-work').show();
+            $('#Fully_describe').closest('.form-check').removeClass('mb-2').addClass('mb-4');
+            $("#div_for_calculate_estimate").hide();
+            $("#div_for_initial_payment").hide();
+            $("#terms_conditions").hide();
+            $("#for_photos").hide();
+            $("#for_task").hide();
+            $('input[name="unable_to_describe_type"]').prop('disabled', false);
+            $('input[name="unable_to_describe_type"]:first').prop('checked', true);
+            needMoreInfo();
+        }
+
+        function showFullyDescribeContent() {
+            $('#Fully_describe').closest('.form-check').removeClass('mb-4').addClass('mb-2');
+            $("#div_for_calculate_estimate").show();
+            $("#div_for_initial_payment").show();
+            $("#terms_conditions").show();
+            $("#for_photos").show();
+            $("#for_task").show();
+            $('input[name="unable_to_describe_type"]').prop('disabled', true);
+            $('input[name="unable_to_describe_type"]').prop('checked', false);
+            $('#typeHere').prop('disabled', true);
+            $('#unable_to_desc_div .unable-work').hide();
+        }
 
         function fetchProductImages() {
             $.ajax({
@@ -1115,6 +1246,8 @@
                 if (progress == 100) {
                     $(file.previewElement).find('.progress').hide(1000);
                 }
+                $("#upload_multiple_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+                $("#upload_multiple_file").prop('disabled', true);
             });
 
             multiFileDropzone.on("sending", function(file) {
@@ -1129,7 +1262,8 @@
                 // document.querySelector("#total-progress").style.opacity = "0";
                 // $('#previews.files').find('.progress').hide();
                 // $('#multiModal').modal('hide');
-
+                $("#upload_multiple_file").html('Upload');
+                $("#upload_multiple_file").prop('disabled', false);
             });
 
             multiFileDropzone.on("removedfile", function(file) {
@@ -1143,6 +1277,8 @@
             multiFileDropzone.on("successmultiple", function(file, responses) {
                 $('#multiModal').modal('hide');
                 multiFileDropzone.removeAllFiles(true);
+                $("#upload_multiple_file").html('Upload');
+                $("#upload_multiple_file").prop('disabled', false);
             });
 
             // Setup the buttons for all transfers

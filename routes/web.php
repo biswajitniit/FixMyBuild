@@ -55,6 +55,8 @@ Route::get('/dropzoneupload', [MediaController::class, 'dropzoneupload'])->name(
 Route::post('/dropzonesave', [MediaController::class, 'dropzonesave'])->name('dropzonesave');
 Route::post('/dropzonedestroy', [MediaController::class, 'dropzonedestroy'])->name('dropzonedestroy');
 Route::delete('/delete-temp-file', [MediaController::class, 'deleteTempFile'])->name('deleteTempFile');
+Route::delete('/delete-proj-file', [MediaController::class, 'deleteProjectFile'])->name('deleteProjectFile');
+Route::get('/get-temp-file', [MediaController::class, 'getTempFile'])->name('getTempFile');
 
 
 Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login');
@@ -215,6 +217,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('updateContingency', [TradepersionDashboardController::class, 'updateContingency']);
         Route::get('projects', [TradepersionDashboardController::class, 'projects'])->name('tradepersion.projects');
         Route::get('settings', [TradepersionDashboardController::class, 'settings'])->name('tradepersion.settings');
+        Route::post('settings', [TradepersionDashboardController::class, 'saveSettings'])->name('tradesperson.savesettings');
 
         Route::group(['as' => 'tradesperson.'], function () {
             Route::get('get-temp-team-image', [TradepersionDashboardController::class, 'getTempTeamImages'])->name('getTeamImages');
