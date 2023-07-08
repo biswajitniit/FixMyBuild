@@ -793,35 +793,42 @@ class TradepersionDashboardController extends Controller
     public function projects(Request $request)
     {
         // Projects for which the Tradesperson has written an estimate
+        DB::enableQueryLog();
         $estimate_projects = Estimate::where('tradesperson_id', Auth::user()->id)
                                 ->join('projects', 'estimates.project_id', '=', 'projects.id')
                                 ->when(($request->has('keyword') && !empty($request->keyword)), function ($query) use ($request) {
                                     $query->where('projects.project_name', 'like', '%' . $request->keyword . '%');
                                 })
                                 ->with('project')
-                                ->paginate(10);
-
+                                ->offset(0)->limit(10)->get();
+        print_r(DB::getQueryLog());
+        //$paginationLinks = $estimate_projects->links();
+        //dd($paginationLinks->paginator->nextPageUrl());
+        //$paginator = $paginationLinks->paginator;
         $estimate_project_histories = Estimate::where('tradesperson_id', Auth::user()->id)
                                 ->join('projects', 'estimates.project_id', '=', 'projects.id')
                                 ->when(($request->has('name') && !empty($request->name)), function ($query) use ($request) {
                                     $query->where('projects.project_name', 'like', '%' . $request->name . '%');
                                 })
                                 ->with('project')
-                                ->paginate(10);
+                                ->paginate(1);
 
-        return view('tradepersion.projects', compact('estimate_projects','estimate_project_histories'));
+        return view('tradepersion.projects', compact('estimate_projects', 'estimate_project_histories'));
     }
 
     public function searchProject(Request $request)
     {
+        //DB::enableQueryLog();
         $estimate_projects = Estimate::where('tradesperson_id', Auth::user()->id)
             ->join('projects', 'estimates.project_id', '=', 'projects.id')
             ->when(($request->has('keyword') && !empty($request->keyword)), function ($query) use ($request) {
                 $query->where('projects.project_name', 'like', '%' . $request->keyword . '%');
             })
             ->with('project')
-            ->paginate(10);
+            ->paginate(1);
+        //print_r(DB::getQueryLog());
 
+        dd($estimate_projects);
         $key = 0;
         $html = '';
         foreach ($estimate_projects as $data) {

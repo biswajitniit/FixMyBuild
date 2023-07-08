@@ -686,7 +686,7 @@ checkboxDropdown('.dropdown');
         $(document).on('keyup','#keyword', function(){
             fetchTableData($(this).val());
         })
-        fetchTableData($(this).val());
+        //fetchTableData($(this).val());
     });
 
 
