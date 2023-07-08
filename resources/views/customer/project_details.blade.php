@@ -68,30 +68,39 @@
                                     <div class="progress-bar"></div>
                                 </div>
                                 <a href="#" class="bs-wizard-dot"></a>
-                                <div class="bs-wizard-info text-center">25-12-22</div>
+                                <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($projects->created_at)) }}</div>
                             </div>
-                            <div class="col bs-wizard-step complete">
-                                <!-- complete -->
-                                <div class="text-center bs-wizard-stepnum">View <br>estimates</div>
-                                <div class="progress">
-                                    <div class="progress-bar"></div>
-                                </div>
-                                <a href="#" class="bs-wizard-dot"></a>
-                                <div class="bs-wizard-info text-center">30-12-22</div>
-                            </div>
-                            @if($status == 'awaiting_your_review')
                                 <div class="col bs-wizard-step complete">
-                            @else
-                                <div class="col bs-wizard-step closed">
-                            @endif
-                                <!-- complete -->
-                                <div class="text-center bs-wizard-stepnum">Project started</div>
-                                <div class="progress">
-                                    <div class="progress-bar"></div>
+                                    <!-- complete -->
+                                    <div class="text-center bs-wizard-stepnum">View <br>estimates</div>
+                                    <div class="progress">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                    <a href="#" class="bs-wizard-dot"></a>
+                                    @foreach($proj_logs as $proj_log)
+                                        @if ($proj_log->action_by_type == 'reviewer' && $proj_log->status == 'approved')
+                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}</div>
+                                        @endif
+                                    @endforeach
                                 </div>
-                                <a href="#" class="bs-wizard-dot"></a>
-                                <div class="bs-wizard-info text-center">05-01-23</div>
-                            </div>
+                                @if($status == 'awaiting_your_review')
+                                    <div class="col bs-wizard-step complete">
+                                @else
+                                    <div class="col bs-wizard-step closed">
+                                @endif
+                                    <!-- complete -->
+                                    <div class="text-center bs-wizard-stepnum">Project started</div>
+                                    <div class="progress">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                    <a href="#" class="bs-wizard-dot"></a>
+                                    @foreach($proj_logs as $proj_log)
+                                        @if($proj_log->action_by_type == 'user' && $proj_log->status == 'project_started')
+                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}
+                                        @endif
+                                    @endforeach
+                                    </div>
+                                </div>
                             @if($status == 'awaiting_your_review')
                                 <div class="col bs-wizard-step closed">
                             @else
@@ -291,7 +300,7 @@
                <!--// END-->
             </form>
          </div>
-         <!-- Delete Image Modal -->
+         <!-- Cancel Project Modal -->
         <div class="modal fade select_address" id="cancel_project" tabindex="-1" aria-labelledby="deleteImageModal" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -310,7 +319,7 @@
                 </div>
             </div>
         </div>
-        <!-- Delete Image Modal END -->
+        <!-- Cancel Project Modal END -->
          <input type="hidden" value="{{ $projects->id }}" id="projectid"/>
       </section>
 
@@ -358,6 +367,11 @@
         });
 
     });
+
+    function myFunction() {
+        var popup = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+    }
 
     function customerFeedbackInfo() {
         if ($('#myPopup').hasClass( "show" )){

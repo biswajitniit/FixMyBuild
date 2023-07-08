@@ -60,7 +60,7 @@
                         <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="simpleinput">Name of the project</label>
                             <div class="col-lg-9 mt-2">
-                                {{ $project->project_name }}
+                                {{ ucwords($project->project_name) }}
                             </div>
                         </div>
 
@@ -267,8 +267,17 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" id="final_submit">Confirm Submit</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <p><strong>Please check your wording here before pressing the "Confirm Submit" button. Communications cannot be recalled after they are sent.</strong></p>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-primary" id="final_submit">Confirm Submit</button>
+                                    </div>
+                                    <div class="col-1 ps-0">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
                             </div>
                           </div>
                         </div>

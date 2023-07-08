@@ -8,7 +8,7 @@ use App\Models\Projectaddresses;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\Projectfile;
-use App\Models\{Estimate, Task, TraderDetail, TradespersonFile};
+use App\Models\{Estimate, Notification, NotificationDetail, ProjectStatusChangeLog, Task, TraderDetail, TradespersonFile, UserPersonalDataShare};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use App\Models\ProjectReview;
@@ -352,6 +352,7 @@ class CustomerController extends Controller
         // DB::enableQueryLog();
         $projects = Project::where('id',$id)->first();
         // dd(DB::getQueryLog());
+        $proj_logs = ProjectStatusChangeLog::where('project_id', $projects->id)->get();
         try{
             if(Auth::user()->id == $projects->user_id){
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
@@ -396,7 +397,7 @@ class CustomerController extends Controller
                     $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
                     $initial_payment_percentage = number_format($initial_payment_percentage, 2);
                     $contingency_per_task = number_format($contingency_per_task, 2);
-                    return view('customer.project_details',compact('projects','estimate','tasks', 'doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
+                    return view('customer.project_details',compact('projects','estimate','tasks','proj_logs','doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
                 }
 
                 if($projects->status == 'estimation') {
@@ -427,7 +428,7 @@ class CustomerController extends Controller
                         }
                     };
 
-                    return view('customer.project_details',compact('projects','projectaddress','doc','project_id','estimates'));
+                    return view('customer.project_details',compact('projects','projectaddress','proj_logs','doc','project_id','estimates'));
                 }
 
                 return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
@@ -446,7 +447,7 @@ class CustomerController extends Controller
         try {
             Project::where('id', $request->project_id)->update(['status' => $request->status]);
             return response()->json(['redirect_url' => route('customer.project')]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             echo 'error';
         }
     }
@@ -631,6 +632,7 @@ class CustomerController extends Controller
 
         $tasks = Task::where('estimate_id', $estimate->id)->get();
         $amount = 0;
+        $price = 0;
             foreach ($tasks as $task) {
                 $price = $task->price;
                 $amount += $task->price;
@@ -657,5 +659,149 @@ class CustomerController extends Controller
 
         return view('customer.estimate_details',compact('project','trader_detail','company_logo','teams_photos','prev_project_imgs','project_reviews','user','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task'));
 
+    }
+
+    public function accept_estimation(Request $request)
+    {
+        try {
+            $tradeperson = User::where('id', $request->tradesperson_id)->first();
+            $project = Project::where('id', $request->project_id)->first();
+            $user_personal_data = UserPersonalDataShare::where('project_id', $request->project_id)->first();
+
+            // Update project table
+            Project::where('id', $request->project_id)
+                    ->update([
+                        'status' => $request->status
+                    ]);
+            // Update estimate table
+            Estimate::where('id', $request->estimate_id)
+                    ->update([
+                        'project_awarded' => 1,
+                        'status' => 'awarded'
+                    ]);
+            //Insert data in project_status_change_log table
+            $projStatusChangeLog = new ProjectStatusChangeLog();
+            $projStatusChangeLog->project_id = $request->project_id;
+            $projStatusChangeLog->action_by_id = Auth::user()->id;
+            $projStatusChangeLog->action_by_type = 'user';
+            $projStatusChangeLog->status = $request->status;
+            $projStatusChangeLog->status_changed_at = Carbon::now();
+            $projStatusChangeLog->save();
+            //Insert data in user_personal_data_shares table
+            if ($user_personal_data) {
+                UserPersonalDataShare::where('project_id', $request->project_id)
+                                        ->update([
+                                            'settings' => $request->settings
+                                        ]);
+            } else {
+                $userPersonalData = new UserPersonalDataShare();
+                $userPersonalData->user_id = Auth::user()->id;
+                $userPersonalData->project_id = $request->project_id;
+                $userPersonalData->tradeperson_id = $request->tradesperson_id;
+                $userPersonalData->settings = $request->settings;
+                $userPersonalData->save();
+            }
+
+            // Check Notification settings
+            $notify_settings = Notification::where('user_id', $request->tradesperson_id)->first();
+            if($notify_settings) {
+                if($notify_settings->settings != null){
+                    $noti_accepted = $notify_settings->settings['noti_quote_accepted'];
+                } else {
+                    $noti_accepted = 1;
+                }
+            }
+            // Notification
+            if($noti_accepted == 1){
+                $html = view('email.estimate-accepted-email')
+                                ->with('data', [
+                                'project_name'       => $project->project_name,
+                                'user_name'          => $tradeperson->name
+                                ])
+                                ->render();
+                $emaildata = array(
+                    'From'          => 'support@fixmybuild.com',
+                    'To'            =>  $tradeperson->email,
+                    'Subject'       => 'Your Given Estimate Has Been Accepted',
+                    'HtmlBody'      =>  $html,
+                    'MessageStream' => 'outbound'
+                );
+                $email_sent = send_email($emaildata);
+
+                // Notificatin Insert in DB
+                $notificationDetail = new NotificationDetail();
+                $notificationDetail->user_id = $tradeperson->id;
+                $notificationDetail->from_user_id = Auth::user()->id;
+                $notificationDetail->from_user_type = 'customer';
+                $notificationDetail->related_to = 'project';
+                $notificationDetail->related_to_id = $project->id;
+                $notificationDetail->read_status = 0;
+                $notificationDetail->notification_text = 'Your Given Estimate Has Been Accepted';
+                $notificationDetail->reviewer_note = null;
+                $notificationDetail->save();
+            }
+
+            return response()->json(['redirect_url' => route('customer.project')]);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => $request->input('status')]);
+        }
+    }
+
+
+    public function reject_estimation(Request $request)
+    {
+        try {
+            $tradeperson = User::where('id', $request->tradesperson_id)->first();
+            $project = Project::where('id', $request->project_id)->first();
+
+            Estimate::where('id', $request->estimate_id)
+                    ->update([
+                        'status' => 'rejected'
+                    ]);
+
+            // Check Notification settings
+            $notify_settings = Notification::where('user_id', $request->tradesperson_id)->first();
+            if($notify_settings) {
+                if($notify_settings->settings != null){
+                    $noti_rejected = $notify_settings->settings['noti_quote_rejected'];
+                } else {
+                    $noti_rejected = 1;
+                }
+            }
+            // Notification
+            if($noti_rejected == 1){
+                $html = view('email.estimate-rejected-email')
+                                ->with('data', [
+                                'project_name'       => $project->project_name,
+                                'user_name'          => $tradeperson->name
+                                ])
+                                ->render();
+                $emaildata = array(
+                    'From'          => 'support@fixmybuild.com',
+                    'To'            =>  $tradeperson->email,
+                    'Subject'       => 'Your Given Estimate Has Been Rejected',
+                    'HtmlBody'      =>  $html,
+                    'MessageStream' => 'outbound'
+                );
+                $email_sent = send_email($emaildata);
+
+                // Notificatin Insert in DB
+                $notificationDetail = new NotificationDetail();
+                $notificationDetail->user_id = $tradeperson->id;
+                $notificationDetail->from_user_id = Auth::user()->id;
+                $notificationDetail->from_user_type = 'customer';
+                $notificationDetail->related_to = 'project';
+                $notificationDetail->related_to_id = $project->id;
+                $notificationDetail->read_status = 0;
+                $notificationDetail->notification_text = 'Your Given Estimate Has Been Rejected';
+                $notificationDetail->reviewer_note = null;
+                $notificationDetail->save();
+            }
+            return response()->json(['redirect_url' => route('customer.project')]);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => $request->input('status')]);
+        }
     }
 }

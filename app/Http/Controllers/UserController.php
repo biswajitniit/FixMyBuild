@@ -183,4 +183,32 @@ class UserController extends Controller
         return "error";
       }
     }
+
+    //delete account for tradeperson
+    public function delete_account_tradeperson(Request $request) {
+        try {
+            $user = User::find(auth()->user()->id);
+            $user->account_deletion_reason = $request->account_delete;
+            $user->delete_permanently = $request->delete_permanently;
+            $user->save();
+            $user->delete();
+
+            $html = view('email.email-account-delete')->with('user', $user)->render();
+
+            $emaildata = array(
+                'From'          => 'support@fixmybuild.com',
+                'To'            =>  $user->email,
+                'Subject'       => 'Fixmybuild Account Deletion',
+                'HtmlBody'      =>  $html,
+                'MessageStream' => 'outbound'
+            );
+
+            $email_sent = send_email($emaildata);
+
+            return redirect()->route('home');
+            } catch (\Exception $e) {
+                $request->session()->flash('alert-danger', $e->getMessage());
+                echo $e->getMessage();
+        }
+    }
 }

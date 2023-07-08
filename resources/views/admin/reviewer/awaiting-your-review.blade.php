@@ -43,7 +43,7 @@
                                 <tbody>
                                     @foreach ($project as $projects)
                                     <tr>
-                                        <td>{{ $projects->project_name }}</td>
+                                        <td>{{ ucwords($projects->project_name) }}</td>
                                         <td>{{ date('d/m/Y h:i a',strtotime($projects->created_at)) }}</td>
                                             @switch($projects->status)
                                             @case('submitted_for_review')
@@ -61,7 +61,7 @@
                                             @case('awaiting_your_review')
                                                 <td class="text-awaiting">Awaiting your feedback</td>
                                                 @break
-                                            @case('')
+                                            @default
                                                 <td class="text-awaiting"></td>
                                                 @break
                                             @endswitch

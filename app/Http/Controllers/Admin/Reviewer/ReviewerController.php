@@ -15,6 +15,8 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Models\Notification;
 use App\Models\NotificationDetail;
+use App\Models\ProjectStatusChangeLog;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class ReviewerController extends Controller
@@ -105,7 +107,7 @@ class ReviewerController extends Controller
                                 'notes_for_customer' => $notes_for_customer,
                                 'project_name'       => $project->project_name,
                                 'user_name'          => $user->name,
-                                'reviewer_status'    =>$reviewer_status
+                                'reviewer_status'    => $reviewer_status
                                 ])
                                 ->render();
                 $emaildata = array(
@@ -128,35 +130,51 @@ class ReviewerController extends Controller
                 $notificationDetail->notification_text = 'Your project has been reviewed';
                 $notificationDetail->reviewer_note = $notes_for_customer;
                 $notificationDetail->save();
+                 //Insert data in project_status_change_log table
+                $projStatusChangeLog = new ProjectStatusChangeLog();
+                $projStatusChangeLog->project_id = $project->id;
+                $projStatusChangeLog->action_by_id = Auth::user()->id;
+                $projStatusChangeLog->action_by_type = Auth::user()->type;
+                $projStatusChangeLog->status = $request->post('reviewer_status');
+                $projStatusChangeLog->status_changed_at = Carbon::now();
+                $projStatusChangeLog->save();
             } else{
-                  $html = view('email.email-project-reviewed')
-                              ->with('data', [
-                                'notes_for_customer' => $notes_for_customer,
-                                'project_name'       => $project->project_name,
-                                'user_name'          => $user->name,
-                                'reviewer_status'    =>$reviewer_status
-                                ])
-                              ->render();
-                  $emaildata = array(
-                    'From'          => 'support@fixmybuild.com',
-                    'To'            => $user->email,
-                    'Subject'       => 'Your Project Reviewed',
-                    'HtmlBody'      => $html,
-                    'MessageStream' => 'outbound'
-                  );
-                  $email_sent = send_email($emaildata);
+                    $html = view('email.email-project-reviewed')
+                                ->with('data', [
+                                    'notes_for_customer' => $notes_for_customer,
+                                    'project_name'       => $project->project_name,
+                                    'user_name'          => $user->name,
+                                    'reviewer_status'    =>$reviewer_status
+                                    ])
+                                ->render();
+                    $emaildata = array(
+                        'From'          => 'support@fixmybuild.com',
+                        'To'            => $user->email,
+                        'Subject'       => 'Your Project Reviewed',
+                        'HtmlBody'      => $html,
+                        'MessageStream' => 'outbound'
+                    );
+                    $email_sent = send_email($emaildata);
 
-                  // Notificatin Insert in DB
-                  $notificationDetail = new NotificationDetail();
-                  $notificationDetail->user_id = $user->id;
-                  $notificationDetail->from_user_id = Auth::user()->id;
-                  $notificationDetail->from_user_type = Auth::user()->type;
-                  $notificationDetail->related_to = 'project';
-                  $notificationDetail->related_to_id = $project->id;
-                  $notificationDetail->read_status = 0;
-                  $notificationDetail->notification_text = 'Your project has been reviewed';
-                  $notificationDetail->reviewer_note = $notes_for_customer;
-                  $notificationDetail->save();
+                    // Notificatin Insert in DB
+                    $notificationDetail = new NotificationDetail();
+                    $notificationDetail->user_id = $user->id;
+                    $notificationDetail->from_user_id = Auth::user()->id;
+                    $notificationDetail->from_user_type = Auth::user()->type;
+                    $notificationDetail->related_to = 'project';
+                    $notificationDetail->related_to_id = $project->id;
+                    $notificationDetail->read_status = 0;
+                    $notificationDetail->notification_text = 'Your project has been reviewed';
+                    $notificationDetail->reviewer_note = $notes_for_customer;
+                    $notificationDetail->save();
+                    //Insert data in project_status_change_log table
+                    $projStatusChangeLog = new ProjectStatusChangeLog();
+                    $projStatusChangeLog->project_id = $project->id;
+                    $projStatusChangeLog->action_by_id = Auth::user()->id;
+                    $projStatusChangeLog->action_by_type = Auth::user()->type;
+                    $projStatusChangeLog->status = $request->post('reviewer_status');
+                    $projStatusChangeLog->status_changed_at = Carbon::now();
+                    $projStatusChangeLog->save();
             }
         }
 
