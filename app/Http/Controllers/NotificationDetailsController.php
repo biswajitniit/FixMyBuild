@@ -10,7 +10,7 @@ class NotificationDetailsController extends Controller
 {
     public function detailed_notification(Request $request)
     {
-        $notifications = NotificationDetail::where('user_id', 1)->get();
+        $notifications = NotificationDetail::where('user_id', Auth::user()->id)->get();
         return view("all_notifications.notification_detail", ['notifications' => $notifications]);
     }
 

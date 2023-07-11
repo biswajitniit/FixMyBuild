@@ -510,6 +510,73 @@
                     <div class="col-md-10 offset-md-1">
                         <div class="white_bg mb-5" id="div_for_calculate_estimate">
                             <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-check form-switch">
+                                        <div class="switchToggle">
+                                            <input type="checkbox" id="toogle2" name="payment_required_upfront"
+                                                value="1" {{ old('payment_required_upfront') ? 'checked' : '' }}>
+                                            <label for="toogle2">Toggle</label>
+                                        </div>
+                                        <label class="form-check-label" for="mySwitch">Would you like to charge the customer an additional payment upfront?</label>
+                                    </div>
+                                </div>
+                                {{-- // --}}
+                                <div class="row mt-3 mb-3" id="for_initial_pay_hide">
+                                    <div class="col-md-12">
+                                        <h3>Additional payment upfront</h3>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-2 pr-0">
+                                                <div class="form-check mt-2">
+                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="percentage" checked>
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="row total_price_">
+                                                    <div class="col-4 pl-0 pr-0">
+                                                        <input type="text" class="form-control pull-left" id="initial_payment_percentage" name="initial_payment_percentage" onkeyup="calculate_amount()" onclick="clearvalue1();" value="{{ old('initial_payment_percentage') }}">
+                                                    </div>
+                                                    <div class="col-2 pl-0">
+                                                        <h5>%</h5>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <span id="initial_payment1">(£0.00)</span>
+                                                        <input name="initial_payment_calculated_percentage" type="hidden" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h4>Or</h4>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row task-wrap p-0">
+                                            <div class="col-1">
+                                                <div class="form-check mt-2">
+                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="fixed_amount">
+                                                </div>
+                                            </div>
+                                            <div class="col-9">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <svg width="13" height="18" viewBox="0 0 13 18"
+                                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path
+                                                                    d="M12.4297 18H0.160156V15.668H12.418L12.4297 18ZM8.60938 10.9688H0.113281V8.68359H8.60938V10.9688ZM4.8125 5.82422L5.08203 13.0898C5.08984 13.8398 4.95312 14.5117 4.67188 15.1055C4.39844 15.6914 3.94531 16.1523 3.3125 16.4883L1.17969 15.668C1.4375 15.6055 1.63281 15.4414 1.76562 15.1758C1.90625 14.9023 2 14.5859 2.04688 14.2266C2.10156 13.8594 2.12891 13.5156 2.12891 13.1953L1.88281 5.82422C1.88281 4.74609 2.10547 3.82813 2.55078 3.07031C3.00391 2.30469 3.625 1.71875 4.41406 1.3125C5.20312 0.90625 6.10938 0.703125 7.13281 0.703125C8.21875 0.703125 9.14062 0.902344 9.89844 1.30078C10.6562 1.69922 11.2344 2.25391 11.6328 2.96484C12.0312 3.66797 12.2305 4.48828 12.2305 5.42578H9.39453C9.39453 4.83984 9.28516 4.375 9.06641 4.03125C8.84766 3.67969 8.55859 3.42578 8.19922 3.26953C7.84766 3.11328 7.46484 3.03516 7.05078 3.03516C6.62891 3.03516 6.24609 3.14062 5.90234 3.35156C5.56641 3.5625 5.30078 3.875 5.10547 4.28906C4.91016 4.70312 4.8125 5.21484 4.8125 5.82422Z"
+                                                                    fill="black"></path>
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="initial_payment_amount" name="initial_payment_amount" placeholder="Type Price" onkeyup="calculate_amount()"  onclick="clearvalue2();" value="{{ old('initial_payment_amount') }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--//-->
                                 <div class="col-md-6 vat_">
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
@@ -520,17 +587,6 @@
                                             </div>
                                             <label class="form-check-label" for="mySwitch">Does the above list of tasks
                                                 cover all of the work the customer requested?</label>
-                                        </div>
-                                    </div>
-                                    <!--//-->
-                                    <div class="col-md-12">
-                                        <div class="form-check form-switch">
-                                            <div class="switchToggle">
-                                                <input type="checkbox" id="toogle2" name="payment_required_upfront"
-                                                    value="1" {{ old('payment_required_upfront') ? 'checked' : '' }}>
-                                                <label for="toogle2">Toggle</label>
-                                            </div>
-                                            <label class="form-check-label" for="mySwitch">Would you like to charge the customer an additional payment upfront?</label>
                                         </div>
                                     </div>
                                     <!--//-->
@@ -576,61 +632,6 @@
                 <div class="row">
                     <div class="col-md-10 offset-md-1" id="div_for_initial_payment">
                         <div class="white_bg mb-5 initial-payment">
-                            <div class="row" id="for_initial_pay_hide">
-                                    <div class="col-md-12">
-                                        <h3>Additional payment upfront</h3>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="row">
-                                            <div class="col-2 pr-0">
-                                                <div class="form-check mt-2">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="percentage" checked>
-                                                </div>
-                                            </div>
-                                            <div class="col-8">
-                                                <div class="row total_price_">
-                                                    <div class="col-4 pl-0 pr-0">
-                                                        <input type="text" class="form-control pull-left" id="initial_payment_percentage" name="initial_payment_percentage" onkeyup="calculate_amount()" value="{{ old('initial_payment_percentage') }}">
-                                                    </div>
-                                                    <div class="col-2 pl-0">
-                                                        <h5>%</h5>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <span id="initial_payment1">(£0.00)</span>
-                                                        <input name="initial_payment_calculated_percentage" type="hidden" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <h4>Or</h4>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="row task-wrap p-0">
-                                            <div class="col-1">
-                                                <div class="form-check mt-2">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="fixed_amount">
-                                                </div>
-                                            </div>
-                                            <div class="col-9">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                            <svg width="13" height="18" viewBox="0 0 13 18"
-                                                                fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <path
-                                                                    d="M12.4297 18H0.160156V15.668H12.418L12.4297 18ZM8.60938 10.9688H0.113281V8.68359H8.60938V10.9688ZM4.8125 5.82422L5.08203 13.0898C5.08984 13.8398 4.95312 14.5117 4.67188 15.1055C4.39844 15.6914 3.94531 16.1523 3.3125 16.4883L1.17969 15.668C1.4375 15.6055 1.63281 15.4414 1.76562 15.1758C1.90625 14.9023 2 14.5859 2.04688 14.2266C2.10156 13.8594 2.12891 13.5156 2.12891 13.1953L1.88281 5.82422C1.88281 4.74609 2.10547 3.82813 2.55078 3.07031C3.00391 2.30469 3.625 1.71875 4.41406 1.3125C5.20312 0.90625 6.10938 0.703125 7.13281 0.703125C8.21875 0.703125 9.14062 0.902344 9.89844 1.30078C10.6562 1.69922 11.2344 2.25391 11.6328 2.96484C12.0312 3.66797 12.2305 4.48828 12.2305 5.42578H9.39453C9.39453 4.83984 9.28516 4.375 9.06641 4.03125C8.84766 3.67969 8.55859 3.42578 8.19922 3.26953C7.84766 3.11328 7.46484 3.03516 7.05078 3.03516C6.62891 3.03516 6.24609 3.14062 5.90234 3.35156C5.56641 3.5625 5.30078 3.875 5.10547 4.28906C4.91016 4.70312 4.8125 5.21484 4.8125 5.82422Z"
-                                                                    fill="black"></path>
-                                                            </svg>
-                                                        </span>
-                                                    </div>
-                                                    <input type="text" class="form-control" name="initial_payment_amount" placeholder="Type Price" value="{{ old('initial_payment_amount') }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row form_wrap mt-3">
@@ -858,13 +859,24 @@
 
         function calculate_amount() {
             let sum = 0;
+            var initial_payment_percentage = 0
             var initial_payment = parseFloat(document.getElementById("initial_payment_percentage").value);
-
+            var initial_payment_fixed = parseFloat(document.getElementById("initial_payment_amount").value);
             const amount_from_addmore = document.getElementById("new_".$new_field);
             for (let i = 1; i <= $('#total_field').val(); i++) {
                 sum += Number($('#amount' + i).val());
-                $("#price_exclude_contigency").text("£" + sum.toFixed(2));
+                // $("#price_exclude_contigency").text("£" + sum.toFixed(2));
             }
+            if (document.getElementById('toogle2').checked) {
+                if (isNaN(initial_payment) != true){
+                    initial_payment_percentage = (parseFloat(sum))*(parseInt(initial_payment)/100);
+                    sum+=(parseFloat(sum))*(parseInt(initial_payment)/100)
+                }
+                if(isNaN(initial_payment_fixed) != true){
+                    sum+=parseInt(initial_payment_fixed);
+                }
+            }
+            $("#price_exclude_contigency").text("£" + sum.toFixed(2));
             var percentage_contingency = $("#percentage_contingency").val() ?? 0;
             var total_price_including_contingency = (sum * percentage_contingency / 100) + sum;
             var total_price_including_vat = ((total_price_including_contingency * {{ config('const.vat_charge') }}) / 100) +
@@ -873,14 +885,7 @@
             $("#price_include_contigency").text("£" + total_price_including_contingency.toFixed(2));
             $("#price_include_vat").text("£" + total_price_including_vat.toFixed(2));
 
-            var initial_payment_percentage = 0
-            if (isNaN(initial_payment) != true) {
-                if (!document.getElementById('toogle3').checked) {
-                    initial_payment_percentage = (parseFloat(total_price_including_contingency) * initial_payment / 100);
-                } else {
-                    initial_payment_percentage = (parseFloat(total_price_including_vat) * initial_payment / 100);
-                }
-            }
+
 
             $("#initial_payment1").text("(£" + initial_payment_percentage.toFixed(2) + ")");
             $("input[name='initial_payment_calculated_percentage']").val(initial_payment_percentage.toFixed(2));
@@ -1318,6 +1323,14 @@
             dropzone.on("successmultiple", function(file, responses) {
                 fetchProductImages();
             });
+        }
+        function clearvalue1(){
+            var initial_payment_amount=document.getElementById('initial_payment_amount');
+            initial_payment_amount.value=""
+        }
+        function clearvalue2(){
+            var initial_payment_percentage=document.getElementById('initial_payment_percentage');
+            initial_payment_percentage.value=""
         }
         // Dropzone Js For Product Photo Upload Ends
 

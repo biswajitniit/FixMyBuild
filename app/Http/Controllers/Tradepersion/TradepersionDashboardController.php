@@ -54,6 +54,7 @@ class TradepersionDashboardController extends Controller
         // $counties = UkTown::distinct()->pluck('county');
 
         // return view('tradepersion.registrationtwo', compact('works', 'areas', 'counties', 'temp_company_logo', 'temp_public_liability_insurances', 'temp_comp_addresses', 'temp_trader_images', 'temp_team_imgs', 'temp_prev_projs'));
+
         return view('tradepersion.registrationtwo', compact('works', 'areas', 'temp_company_logo', 'temp_public_liability_insurances', 'temp_comp_addresses', 'temp_trader_images', 'temp_team_imgs', 'temp_prev_projs'));
     }
 
@@ -1442,6 +1443,9 @@ class TradepersionDashboardController extends Controller
             milestone_completion_notification($task_id);
             return response()->json(['status' => $request->input('status')]);
         } catch (\Exception $e) {
+
+        }
+    }
 
         }
     }

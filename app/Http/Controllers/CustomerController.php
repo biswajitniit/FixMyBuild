@@ -2,12 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// use App\Models\ProjectStatusChangeLog;
 use Illuminate\Http\Request;
-// use App\Models\Projectaddresses;
-// use App\Models\Project;
-// use App\Models\User;
-// use App\Models\Projectfile;
 use App\Models\{
     Estimate,
     Notification,

@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+<div class="tab-pane fade active show" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
     <div class="row mb-3">
         <div class="col-md-8">
         <h3>Project</h3>
