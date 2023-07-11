@@ -125,7 +125,7 @@ if (!function_exists('tradesperson_project_status')) {
                                 ->where('tradesperson_id', Auth::user()->id)
                                 ->first();
 
-            if ($estimate_recalled->isEmpty()) {
+            if (empty($estimate_recalled)) {
                 return 'write_estimate';
             }
             if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'recalled') {

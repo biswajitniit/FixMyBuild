@@ -8,8 +8,8 @@
           <div class="col-md-12 text-center pt-5 fmb_titel">
              <h1>Project</h1>
              <ol class="breadcrumb mb-5">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item"><a href="projects-tradesperson.html">Project list</a></li>
+                <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('tradepersion.projects')}}">Project list</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Details</li>
              </ol>
           </div>
@@ -21,7 +21,6 @@
  <section class="pb-5">
     <div class="container">
        <form action="#" method="post">
-
           <div class="row mb-5">
              <div class="col-md-10 offset-md-1">
                 <div class="tell_about pl-details">
@@ -30,7 +29,7 @@
                          <h5>Customer’s project name</h5>
                       </div>
                       <div class="col-md-6">
-                         <h2>Renovate my house</h2>
+                         <h2>{{ ucwords($project->project_name) }}</h2>
                       </div>
                    </div>
                    <div class="row mt-4">
@@ -38,7 +37,9 @@
                          <h5>Location</h5>
                       </div>
                       <div class="col-md-6">
-                         <h2>London</h2>
+                         <h2>
+                            @if ($project->postcode){{ $project->postcode.', ' }} @endif @if ($project->town){{ $project->town.', ' }}@endif @if ($project->county){{ $project->county }}@endif
+                         </h2>
                       </div>
                    </div>
                 </div>
@@ -53,17 +54,21 @@
                          <div class="card-header">
                             <nav>
                                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                    <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
+                                    <a class="nav-item nav-link" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
                                     <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
-                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                    <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                </div>
                             </nav>
                          </div>
                          <div class="card-body">
                             <div class="tab-content" id="nav-tabContent">
-                                @include('tradepersion.milestones')
-                                @include('tradepersion.estimate_tab')
+                                @if (tradesperson_project_status($project->id) == 'estimate_accepted' || tradesperson_project_status($project->id) == 'project_started')
+                                    @include('tradepersion.milestones')
+                                @endif
+                                @if (tradesperson_project_status($project->id) == 'estimate_submitted' || tradesperson_project_status($project->id) == 'estimate_recalled' || tradesperson_project_status($project->id) == 'estimate_rejected')
+                                    @include('tradepersion.estimate_tab')
+                                @endif
                                 @include('tradepersion.details')
                                 @include('tradepersion.chat')
                             </div>
@@ -73,8 +78,64 @@
                 </div>
                 <div class="form-group col-md-12 mt-5 text-center pre_">
                     <a href="projects-tradesperson.html" class="btn btn-light mr-3">Back</a>
-                    <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" class="btn btn-primary">Recall Estimate</a>
+                    @if (tradesperson_project_status($project->id) == 'write_estimate')
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#reject-project"  class="btn btn-light mr-3">Reject project</a>
+                        <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" class="btn btn-primary">Estimate now</a>
+                    @endif
+
+                    @if (tradesperson_project_status($project->id) == 'estimate_submitted')
+                        <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" class="btn btn-primary">Recall estimate</a>
+                    @endif
+
+                    @if (tradesperson_project_status($project->id) == 'estimate_recalled' || tradesperson_project_status($project->id) == 'estimate_rejected')
+                        <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" class="btn btn-primary">Edit estimate</a>
+                    @endif
                 </div>
+                <!-- The ModalChange password-->
+                <div class="modal fade select_address" id="reject-project" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="#" method="post">
+                                <div class="modal-header pb-0">
+                                <h5 class="modal-title" id="exampleModalLabel">Reasons for project rejection</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/>
+                                    </svg>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Please tell us why you would like to reject this project. This will be kept confidential between yourself and our team only.</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12 mt-1">
+                                        <select name="select_reason" class="form-control" id="select_reason" onchange="forOtherReason()">
+                                            <option value="" selected>---Select---</option>
+                                            <option value="do_not_undertake_the_work">I do not undertake the work described in the project</option>
+                                            <option value="not_available_for_work">I'm currently not available for work</option>
+                                            <option value="do_not_cover_the_customer's_location">I do not cover the customer's location</option>
+                                            <option value="other_reasons">Other reasons</option>
+                                        </select>
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="form-group col-md-12 mt-3">
+                                        <textarea name="type_other_reason" id="type_other_reason" class="form-control" placeholder="Type your other reasons"></textarea>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-light" onclick="rejectProject()">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- The Modal Change password END-->
           </div>
           <!--// END-->
        </form>
@@ -235,31 +296,62 @@
             });
         }
 
-
         function loadMessagesOfThisConvo(){
-        i=0;
-        const authUser =  $('#from_user_id').val();
-        const to_user_id = $('#to_user_id').val();
-        $.ajax({
-            method: 'GET',
-            url: '/load-msg/'+to_user_id+'/'+authUser,
-            success: function(response){
-                $('#messageThread').html('');
-                //console.log();
-                while(response[0][i]!=null){
-                    if(response[1][0] == response[0][i].message_users_id ){
-                        $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+response[0][i].message +'</p></div></div>');
-                    }else{
-                        $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[0][i].message +'</p></div></div>');
+            i=0;
+            const authUser =  $('#from_user_id').val();
+            const to_user_id = $('#to_user_id').val();
+            $.ajax({
+                method: 'GET',
+                url: '/load-msg/'+to_user_id+'/'+authUser,
+                success: function(response){
+                    $('#messageThread').html('');
+                    //console.log();
+                    while(response[0][i]!=null){
+                        if(response[1][0] == response[0][i].message_users_id ){
+                            $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+response[0][i].message +'</p></div></div>');
+                        }else{
+                            $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[0][i].message +'</p></div></div>');
+                        }
+                        lastMessageId = response[0][i].id + 1;
+                        i++;
                     }
-                    lastMessageId = response[0][i].id + 1;
-                    i++;
+                    // scrollPaubos();
+                    retrieveMessages();
                 }
-                // scrollPaubos();
-                retrieveMessages();
+            });
+        }
+
+        function forOtherReason() {
+            let e = document.getElementById('select_reason');
+            if (e.value === 'other_reasons') {
+                    document.getElementById('type_other_reason').style.display = 'block';
+            } else {
+                document.getElementById('type_other_reason').style.display = 'none';
             }
-        });
-    }
+        }
+
+        function rejectProject() {
+            var projectid = {{ $project->id }};
+            var reason = $('#select_reason').val();
+            var more_details = $('#type_other_reason').val();
+            $.ajax({
+                url: '{{ route("reject-project") }}',
+                type: 'POST',
+                data: {
+                    _token : '{{ csrf_token() }}',
+                    reason : reason,
+                    more_details : more_details,
+                    project_id : projectid
+                },
+                success: function(response) {
+                    console.log('Project cancelled successfully');
+                    window.location.href = response.redirect_url;
+                },
+                error: function(xhr, error) {
+                    console.error('Error cancelling project:', error);
+                }
+            });
+        }
 
     </script>
 @endpush

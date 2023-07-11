@@ -50,9 +50,11 @@ class TradepersionDashboardController extends Controller
         $temp_team_imgs = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'team_img'])->get();
         $temp_prev_projs = Tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'file_related_to' => 'prev_project_img'])->get();
 
-        $counties = UkTown::distinct()->pluck('county');
+        // $counties = UkTown::distinct()->pluck('county');
 
-        return view('tradepersion.registrationtwo', compact('works', 'areas', 'counties', 'temp_company_logo', 'temp_public_liability_insurances', 'temp_comp_addresses', 'temp_trader_images', 'temp_team_imgs', 'temp_prev_projs'));
+        // return view('tradepersion.registrationtwo', compact('works', 'areas', 'counties', 'temp_company_logo', 'temp_public_liability_insurances', 'temp_comp_addresses', 'temp_trader_images', 'temp_team_imgs', 'temp_prev_projs'));
+
+        return view('tradepersion.registrationtwo', compact('works', 'areas', 'temp_company_logo', 'temp_public_liability_insurances', 'temp_comp_addresses', 'temp_trader_images', 'temp_team_imgs', 'temp_prev_projs'));
     }
 
     public function saveregistrationsteptwo(Request $request){
@@ -1165,9 +1167,38 @@ class TradepersionDashboardController extends Controller
         try {
             $task_id = Hashids_decode($request->task_id);
             Task::where('id', $task_id)->update(['status' => 'completed']);
-            
+
             milestone_completion_notification($task_id);
             return response()->json(['status' => $request->input('status')]);
+        } catch (\Exception $e) {
+
+        }
+    }
+
+
+    public function reject_project(Request $request){
+        try {
+            $estimate = new Estimate();
+            $estimate->project_id = $request->project_id;
+            $estimate->tradesperson_id = Auth::user()->id;
+            $estimate->project_awarded = 0;
+            $estimate->status = null;
+            $estimate->describe_mode = $request->reason;
+            $estimate->unable_to_describe_type = null;
+            $estimate->more_info = $request->more_details;
+            $estimate->covers_customers_all_needs = 0;
+            $estimate->payment_required_upfront = 0;
+            $estimate->contingency = null;
+            $estimate->initial_payment = null;
+            $estimate->initial_payment_type = null;
+            $estimate->project_start_date_type = null;
+            $estimate->project_start_date = null;
+            $estimate->total_time = null;
+            $estimate->total_time_type = null;
+            $estimate->terms_and_conditions = null;
+            $estimate->save();
+
+            return response()->json(['redirect_url' => route('tradepersion.projects')]);
         } catch (\Exception $e) {
 
         }
