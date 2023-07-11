@@ -19,4 +19,8 @@ class Buildersubcategory extends Model
         return $this->belongsTo(Buildercategory::class,'builder_category_id');
      }
 
+    public function projects() {
+        return $this->belongsToMany(Project::class, 'project_categories', 'sub_category_id', 'project_id');
+    }
+
 }

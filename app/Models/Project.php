@@ -39,8 +39,18 @@ class Project extends Model
     public function projectfiles(){
         return $this->hasMany(Projectfile::class);
     }
-    
+
     public function projectnotesandcommends(){
         return $this->hasMany(Projectnotesandcommend::class);
+    }
+
+    public function subCategories()
+    {
+        return $this->belongsToMany(Buildersubcategory::class, 'project_categories', 'project_id', 'sub_category_id');
+    }
+
+    public function estimates()
+    {
+        return $this->hasMany(Estimate::class);
     }
 }

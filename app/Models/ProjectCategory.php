@@ -9,4 +9,8 @@ class ProjectCategory extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'project_id',
+        'sub_category_id',
+    ];
 }

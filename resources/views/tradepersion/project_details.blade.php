@@ -80,6 +80,47 @@
        </form>
     </div>
  </section>
+
+@if(isset($recommended_projects) && count($recommended_projects) != 0)
+    <section class="pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                <div class="white_bg other-open-proj">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>Other open projects</h3>
+                            @foreach ($recommended_projects as $key=>$project)
+                                <div>
+                                    <h5><span>{{ $key+1 }}.</span> {{ $project->project_name }} </h5>
+                                    <p>Posted on: {{ time_diff($project->created_at) }}</p>
+                                </div>
+                            @endforeach
+                            {{-- <div>
+                                <h5><span>2.</span> Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Amet minim mollit non  </h5>
+                                <p>Posted on: 12/01/2023</p>
+                            </div>
+                            <div>
+                                <h5><span>3.</span> Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Amet minim mollit non  </h5>
+                                <p>Posted on: 11/01/2023</p>
+                            </div>
+                            <div>
+                                <h5><span>4.</span> Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Amet minim mollit non  </h5>
+                                <p>Posted on: 11/01/2023</p>
+                            </div>
+                            <div>
+                                <h5><span>5.</span> Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Amet minim mollit non  </h5>
+                                <p>Posted on: 10/01/2023</p>
+                            </div> --}}
+
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+@endif
  <!--Code area end-->
 
 @endsection

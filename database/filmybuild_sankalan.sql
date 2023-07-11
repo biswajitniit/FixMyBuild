@@ -48,3 +48,13 @@ ALTER TABLE `estimates` CHANGE `contingency` `contingency` VARCHAR(3) CHARACTER 
 --
 
 ALTER TABLE `project_estimate_files` CHANGE `file_original_name` `file_original_name` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+
+--
+-- ADD column county, town after sub_area_cover_id in tradersarea
+--
+ALTER TABLE `traderareas` ADD `county` VARCHAR(255) NOT NULL COMMENT 'areas' AFTER `sub_area_cover_id`, ADD `town` VARCHAR(255) NOT NULL COMMENT 'sub_areas' AFTER `county`;
+
+--
+-- ADD Indexing to county town in traderareas
+--
+ALTER TABLE `traderareas` ADD INDEX(`county`, `town`);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Reviewer;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProjectCategory;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Projectfile;
@@ -74,7 +75,7 @@ class ReviewerController extends Controller
             $builder_subcategory =  implode(',',$request->post('builder_subcategory'));
         }
             $data = array(
-                'reviewer_status'          => $request->post('reviewer_status'),
+                'reviewer_status'          => $request->post('reviewer_status'), // Approve Or Referred
                 'categories'               => $builder_category,
                 'subcategories'            => $builder_subcategory,
                 'customer_note'            => $request->post('notes_for_customer'),
@@ -83,6 +84,20 @@ class ReviewerController extends Controller
                 'status'                   => $status
             );
             Project::where('id', $request->projectid)->update($data);
+
+        $old_categories = ProjectCategory::where('project_id', $request->projectid)->get();
+
+        foreach ($request->post('builder_subcategory') as $sub_category) {
+            ProjectCategory::create([
+                'project_id'      => $request->projectid,
+                'sub_category_id' => $sub_category,
+            ]);
+        }
+
+        // Delete old categories
+        foreach ($old_categories as $old_category) {
+          $old_category->delete();
+        }
 
         $notes_for_customer = $request->input('notes_for_customer');
         $reviewer_status = $request->input('reviewer_status');
@@ -144,7 +159,7 @@ class ReviewerController extends Controller
                                     'notes_for_customer' => $notes_for_customer,
                                     'project_name'       => $project->project_name,
                                     'user_name'          => $user->name,
-                                    'reviewer_status'    =>$reviewer_status
+                                    'reviewer_status'    => $reviewer_status
                                     ])
                                 ->render();
                     $emaildata = array(

@@ -404,11 +404,13 @@
                             </div>
                             {{-- <input type="hidden" name="phone_code" value="" id="phone_code"> --}}
                             <div class="col-md-4">
-                               <input type="text" name="phone_number" class="form-control col-md-10" id="phone" placeholder="Phone" value="{{ old('phone_number') }}">
+															<input type="text" name="phone_number" class="form-control col-md-10" id="phone" placeholder="Phone" value="{{ old('phone_number') }}">
+															<small class="text-danger errors" id="phone_number_errors">Please provide a valid phone number</small>
                             </div>
                             <div class="col-md-4">
                                <div class="form-group">
                                   <input type="text" name="phone_office" class="form-control" id="phone_office" placeholder="Office number" value="{{ old('phone_office') }}">
+                                  <small class="text-danger errors" id="phone_office_errors">Please provide a valid phone number</small>
                                </div>
                             </div>
                             <div class="col-md-4">
@@ -784,6 +786,7 @@
                                   <li class="col-6">
                                      <div class="form-check areachkbx">
                                         <input type="checkbox" id="areacovers{{$ac->id}}" class="form-check-input"  name="subareacovers[]" value="{{$ac->id}}" {{ (old('subareacovers') && in_array($ac->id, old('subareacovers'))) ? 'checked': '' }}>
+                                        {{-- <input type="checkbox" id="areacovers{{$ac->id}}" class="form-check-input"  name="subareacovers[]" value='{"id":{{$ac->id}}, "county":"{{ $a->area_type }}", "town":"{{ $ac->sub_area_type }}" }' {{ (old('subareacovers') && in_array($ac->id, old('subareacovers'))) ? 'checked': '' }}> --}}
                                         <label class="form-check-label" for="areacovers{{$ac->id}}">{{$ac->sub_area_type}}</label>
                                      </div>
                                   </li>
@@ -835,7 +838,7 @@
                   </div>
                   <div class="modal-footer">
                     {{-- <button class="btn btn-danger">Submit</button> --}}
-                    <button class="btn btn-light" type="submit">Upload</button>
+                    <button class="btn btn-light" type="submit" id="capture_photo_upload">Upload</button>
                     <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal" id="close_image_modal">Close</button>
                   </div>
                 </form>
@@ -1039,11 +1042,34 @@
             initialCountry: "gb",
         });
 
+        input.addEventListener('countrychange', function(e) {
+            validatePhone(iti, "#phone_number_errors");
+          });
+
+          $("#phone_number_errors").hide();
+
+        $("#phone").on('blur keyup keypress change', function() {
+            validatePhone(iti, "#phone_number_errors");
+        });
+
+        // validatePhone(iti, "#phone_number_errors");
+
         let phone_office = document.querySelector("#phone_office");
         let office_iti = window.intlTelInput(phone_office, {
             separateDialCode: true,
             initialCountry: "gb",
         });
+
+        phone_office.addEventListener('countrychange', function(e) {
+            validatePhone(office_iti, "#phone_office_errors");
+        });
+
+        $("#phone_office").on('blur keyup keypress change', function() {
+            validatePhone(office_iti, "#phone_office_errors");
+        });
+
+        // validatePhone(office_iti, "#phone_office_errors");
+        $("#phone_office_errors").hide();
 
         if($('input[name=comp_reg_no]').val()){
             findcomp();
@@ -1112,6 +1138,8 @@
             confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    $("#capture_photo_upload").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+                    $("#capture_photo_upload").prop('disabled', true);
                     $.ajax({
                         url: '{{ route("capture-photo") }}',
                         type: 'POST',
@@ -1123,6 +1151,8 @@
                         success: (response) => {
                             closeBtn.trigger('click');
                             fetchAllMedia();
+                            $("#capture_photo_upload").html('Upload');
+                            $("#capture_photo_upload").prop('disabled', false);
                             Swal.fire({
                                 //position: 'top-end',
                                 icon: 'success',
@@ -1411,6 +1441,16 @@
                             dz.removeFile(this.files[0]);
                         }
                     });
+
+                    this.on("uploadprogress", function(file, progress) {
+                        $("#upload_single_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+                        $("#upload_single_file").prop('disabled', true);
+                    });
+
+                    this.on("queuecomplete", function(progress) {
+                        $("#upload_single_file").html('Upload');
+                        $("#upload_single_file").prop('disabled', false);
+                    });
                 }
             });
         }
@@ -1626,6 +1666,8 @@
             if (progress == 100) {
                 $(file.previewElement).find('.progress').hide(1000);
             }
+            $("#upload_multiple_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+            $("#upload_multiple_file").prop('disabled', true);
         });
 
         multiFileDropzone.on("sending", function(file) {
@@ -1640,7 +1682,8 @@
             // document.querySelector("#total-progress").style.opacity = "0";
             // $('#previews.files').find('.progress').hide();
             // $('#multiModal').modal('hide');
-
+            $("#upload_multiple_file").html('Upload');
+            $("#upload_multiple_file").prop('disabled', false);
         });
 
         multiFileDropzone.on("removedfile", function(file) {
@@ -1654,6 +1697,8 @@
         multiFileDropzone.on("successmultiple", function(file, responses) {
             $('#multiModal').modal('hide');
             multiFileDropzone.removeAllFiles(true);
+            $("#upload_multiple_file").html('Upload');
+            $("#upload_multiple_file").prop('disabled', false);
         });
 
         // Setup the buttons for all transfers
@@ -1805,6 +1850,19 @@
         });
     }
     // Dropzone Js For Previous Project Upload Ends
+
+
+    function validatePhone(iti, errorsId) {
+        if(iti.isValidNumber()) {
+            $(errorsId).hide();
+            // $('button[type="submit"]').prop('disabled', false);
+        }
+        else {
+            $(errorsId).show();
+            // $('button[type="submit"]').prop('disabled', true);
+        }
+        iti.setNumber(iti.getNumber()); //it removes alphabets from the number
+    }
 
 
 </script>

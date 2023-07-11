@@ -2,13 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProjectStatusChangeLog;
+// use App\Models\ProjectStatusChangeLog;
 use Illuminate\Http\Request;
-use App\Models\Projectaddresses;
-use App\Models\Project;
-use App\Models\User;
-use App\Models\Projectfile;
-use App\Models\{Estimate, Notification, NotificationDetail, ProjectStatusChangeLog, Task, TraderDetail, TradespersonFile, UserPersonalDataShare};
+// use App\Models\Projectaddresses;
+// use App\Models\Project;
+// use App\Models\User;
+// use App\Models\Projectfile;
+use App\Models\{
+    Estimate,
+    Notification,
+    NotificationDetail,
+    ProjectStatusChangeLog,
+    Task,
+    TraderDetail,
+    TradespersonFile,
+    UserPersonalDataShare,
+    Projectaddresses,
+    Project,
+    User,
+    Projectfile
+};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use App\Models\ProjectReview;
