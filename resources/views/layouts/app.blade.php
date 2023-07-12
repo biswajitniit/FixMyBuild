@@ -314,22 +314,6 @@
     //         el.siblings('.dropdown-block').first().removeClass('display-block');
     // }
 
-    // document.addEventListener('click', function(event) {
-    //     var dropdown = document.getElementById('dropdown');
-    //     if (event.target.closest('#dropdown')) {
-    //         toggleDropdown($(dropdown));
-    //     } else {
-    //         var dropdownBlock = $(dropdown).siblings('.dropdown-block').first();
-    //         if (dropdownBlock.hasClass('display-block')) {
-    //             dropdownBlock.removeClass('display-block');
-    //         }
-    //     }
-    // });
-    // function toggleDropdown(el) {
-    //     el.siblings('.dropdown-block').first().toggleClass('display-block');
-    // }
-
-
     $(document).ready(function() {
         $('#mark_as_read').click(function(event) {
             event.preventDefault();
@@ -355,9 +339,6 @@
     });
 
     </script>
-
-
-
 
     @stack('scripts')
   </body>

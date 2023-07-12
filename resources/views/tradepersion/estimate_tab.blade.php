@@ -64,15 +64,13 @@
                         <div class="col-6">
                             Initial payment
                         </div>
-                        @if($estimate->initial_payment_type == 'Percentage')
-                            <div class="col-6">
-                                    <span>{{ $initial_payment_percentage }}({{ $estimate->initial_payment }}%)</span>
-                            </div>
-                        @else
                         <div class="col-6">
-                                <span>£{{ number_format($estimate->initial_payment) }}</span>
+                            @foreach($tasks as $key=>$task)
+                                @if($task->is_initial == 1)
+                                    <span>£{{ $task->price }}</span>
+                                @endif
+                            @endforeach
                         </div>
-                        @endif
                     </div>
                 @endif
                 <div class="row mt-4 mb-3 cost_b">
@@ -129,7 +127,7 @@
                 <div class="col-6 mt-2">
                     <small>Available to start</small>
                     @if($estimate->project_start_date == null)
-                        <div class="price_ec">{{ ucwords($estimate->project_start_date_type) }}</div>
+                        <div class="price_ec">{{ str_replace('_', ' ', ucwords($estimate->project_start_date_type)) }}</div>
                     @else
                         <div class="price_ec">{{ date('d-m-Y',strtotime($estimate->project_start_date)) }}</div>
                     @endif
