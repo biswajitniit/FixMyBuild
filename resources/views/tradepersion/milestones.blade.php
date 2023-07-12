@@ -14,7 +14,7 @@
                       </tr>
                    </thead>
                    <tbody>
-                        {{-- <tr data-id="{{ $estimate->id }}">
+                        <tr data-id="{{ $estimate->id }}">
                             <td>1</td>
                             <td>
                                 <a href="#">
@@ -25,28 +25,15 @@
                                 </a>
                             </td>
                             <td>
-                                @if($estimate->payment_required_upfront == 1)
-                                    @if($estimate->initial_payment_type == 'Percentage')
+                                @foreach($tasks as $key=>$task)
+                                    @if($task->is_initial == 1)
                                         <div class="col-6">
-                                            <span>{{ number_format($initial_payment_percentage, 2) }}({{ $estimate->initial_payment }}%)</span>
+                                            <span>£{{ number_format($task->price, 2) }}</span>
                                         </div>
-                                    @else
-                                    <div class="col-6">
-                                        <span>£{{ number_format($estimate->initial_payment, 2) }}</span>
-                                    </div>
                                     @endif
-                                @endif
+                                @endforeach
                             </td>
-                            <td><span class="displayValue">£{{ $taskAmountWithContingency }}</span>
-                                <input type="number" class="d-none inputVal" id="quantity" name="quantity" min="1" max="{{ $taskAmountWithContingency }}">
-                                <span class="max_">(Max. £{{ $taskAmountWithContingency }})</span>
-                                <a href="javascript:void(0);">
-                                    <i class="fa fa-pencil ml-2 pencilForIP" onclick="edit(this)"></i>
-                                </a>
-                                <a href="javascript:void(0);">
-                                    <i class="fa fa-check ml-2 d-none clickForSave" onclick="save(this)"></i>
-                                </a>
-                            </td>
+                            <td>NA</td>
                             <td class="text-warning">Pending</td>
                             <td>
                                 <label class="form-check-label" data-bs-toggle="modal" data-bs-target="#Confirm_wp">
@@ -76,61 +63,63 @@
                                </div>
                                </div>
                             </div><!-- Modal END -->
-                        </tr> --}}
-                    @foreach($tasks as $key=>$task)
-                        <tr data-id="{{ $task->id }}">
-                            <td>{{ $key+1 }}</td>
-                            <td>
-                                <a href="javascript:void(0)" onclick="signChange(this,{{ $key }})" id="plus">
-                                    <span class="plus-icon">
-                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M11.8346 6.83171H6.83464V11.8317H5.16797V6.83171H0.167969V5.16504H5.16797V0.165039H6.83464V5.16504H11.8346V6.83171Z" fill="#EE5719"/>
-                                        </svg>
-                                    </span>
-                                    <span class="minus-icon d-none">
-                                        <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M0 0.75C0 0.551088 0.0790175 0.360322 0.21967 0.21967C0.360322 0.0790175 0.551088 0 0.75 0H10.75C10.9489 0 11.1397 0.0790175 11.2803 0.21967C11.421 0.360322 11.5 0.551088 11.5 0.75C11.5 0.948912 11.421 1.13968 11.2803 1.28033C11.1397 1.42098 10.9489 1.5 10.75 1.5H0.75C0.551088 1.5 0.360322 1.42098 0.21967 1.28033C0.0790175 1.13968 0 0.948912 0 0.75Z" fill="#EE5719"/>
-                                        </svg>
-                                    </span>
-                                    <span>Milestone {{ $key+1 }}</span>
-                                </a>
-                            </td>
-                            <td>£{{ sprintf("%.2f",$task->price) }}</td>
-                            <td>
-                                @if($task->contingency == null)
-                                    <span class="displayVal">{{ sprintf("%.2f", (($task->price * $estimate->contingency)/100) + $task->price) }}</span>
-                                @else
-                                    <span class="displayVal">{{ sprintf("%.2f",$task->contingency) }}</span>
-                                @endif
-
-                                <input type="number" class="d-none inputValue" id="quantity" name="quantity" min="1" max="{{ sprintf("%.2f",(($task->price * $estimate->contingency)/100) + $task->price) }}" >
-                                <span class="max_">(Max. £{{ sprintf("%.2f",(($task->price * $estimate->contingency)/100) + $task->price) }})</span>
-
-                                @if($task->status == null || $task->status == 'Inactive')
-                                    <a href="javascript:void(0);">
-                                        <i class="fa fa-pencil ml-2 clickPencil" id='pencil{{ $task->id }}' onclick="edit(this)"></i>
-                                    </a>
-                                    <a href="javascript:void(0);">
-                                        <i class="fa fa-check ml-2 d-none clickSave" onclick="save(this)"></i>
-                                    </a>
-                                @endif
-                            </td>
-
-                            {{-- <td>£{{ $contingency_per_task }} <span class="max_">(Max. £{{ $contingency_per_task }})</span> <a href="#"><i class="fa fa-pencil ml-2"></i></a></td> --}}
-                            <td class="text-warning" id="status">Pending</td>
-                            <td>
-                                <label class="form-check-label">
-                                @if($task->status == 'completed')
-                                    <input type="checkbox" class="form-check-input toggle-class" checked disabled value="">
-                                @else
-                                    <input type="checkbox" class="form-check-input toggle-class" value="{{ Hashids_encode($task->id) }}">
-                                @endif
-                                </label>
-                            </td>
-                            <div class="bg-gradient p-5 d-none">
-                                duiop
-                            </div>
                         </tr>
+                    @foreach($tasks as $key=>$task)
+                        @if($task->is_initial == 0)
+                            <tr data-id="{{ $task->id }}">
+                                <td>{{ $key+2 }}</td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="signChange(this,{{ $key }})" id="plus">
+                                        <span class="plus-icon">
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.8346 6.83171H6.83464V11.8317H5.16797V6.83171H0.167969V5.16504H5.16797V0.165039H6.83464V5.16504H11.8346V6.83171Z" fill="#EE5719"/>
+                                            </svg>
+                                        </span>
+                                        <span class="minus-icon d-none">
+                                            <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M0 0.75C0 0.551088 0.0790175 0.360322 0.21967 0.21967C0.360322 0.0790175 0.551088 0 0.75 0H10.75C10.9489 0 11.1397 0.0790175 11.2803 0.21967C11.421 0.360322 11.5 0.551088 11.5 0.75C11.5 0.948912 11.421 1.13968 11.2803 1.28033C11.1397 1.42098 10.9489 1.5 10.75 1.5H0.75C0.551088 1.5 0.360322 1.42098 0.21967 1.28033C0.0790175 1.13968 0 0.948912 0 0.75Z" fill="#EE5719"/>
+                                            </svg>
+                                        </span>
+                                        <span>Milestone {{ $key }}</span>
+                                    </a>
+                                </td>
+                                <td>£{{ sprintf("%.2f",$task->price) }}</td>
+                                <td>
+                                    @if($task->contingency == null)
+                                        <span class="displayVal">{{ sprintf("%.2f", (($task->price * $estimate->contingency)/100) + $task->price) }}</span>
+                                    @else
+                                        <span class="displayVal">{{ sprintf("%.2f",$task->contingency) }}</span>
+                                    @endif
+
+                                    <input type="number" class="d-none inputValue" id="quantity" name="quantity" min="1" max="{{ sprintf("%.2f",(($task->price * $estimate->contingency)/100) + $task->price) }}" >
+                                    <span class="max_">(Max. £{{ sprintf("%.2f",(($task->price * $estimate->contingency)/100) + $task->price) }})</span>
+
+                                    @if($task->status == null || $task->status == 'Inactive')
+                                        <a href="javascript:void(0);">
+                                            <i class="fa fa-pencil ml-2 clickPencil" id='pencil{{ $task->id }}' onclick="edit(this)"></i>
+                                        </a>
+                                        <a href="javascript:void(0);">
+                                            <i class="fa fa-check ml-2 d-none clickSave" onclick="save(this)"></i>
+                                        </a>
+                                    @endif
+                                </td>
+
+                                {{-- <td>£{{ $contingency_per_task }} <span class="max_">(Max. £{{ $contingency_per_task }})</span> <a href="#"><i class="fa fa-pencil ml-2"></i></a></td> --}}
+                                <td class="text-warning" id="status">Pending</td>
+                                <td>
+                                    <label class="form-check-label">
+                                    @if($task->status == 'completed')
+                                        <input type="checkbox" class="form-check-input toggle-class" checked disabled value="">
+                                    @else
+                                        <input type="checkbox" class="form-check-input toggle-class" value="{{ Hashids_encode($task->id) }}">
+                                    @endif
+                                    </label>
+                                </td>
+                                <div class="bg-gradient p-5 d-none">
+                                    duiop
+                                </div>
+                            </tr>
+                        @endif
                         <tr class="d-none description-ms_">
                             <td colspan="6">
                                 <div class="col-12" >

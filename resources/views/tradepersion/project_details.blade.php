@@ -54,10 +54,21 @@
                          <div class="card-header">
                             <nav>
                                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                    <a class="nav-item nav-link" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
+                                @if (tradesperson_project_status($project->id) == 'estimate_accepted' || tradesperson_project_status($project->id) == 'project_started')
+                                    <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
+                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
                                     <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                @endif
+                                @if (tradesperson_project_status($project->id) == 'estimate_submitted' || tradesperson_project_status($project->id) == 'estimate_recalled' || tradesperson_project_status($project->id) == 'estimate_rejected')
+                                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                @endif
+                                @if (tradesperson_project_status($project->id) == 'write_estimate')
                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                @endif
                                </div>
                             </nav>
                          </div>
@@ -65,12 +76,19 @@
                             <div class="tab-content" id="nav-tabContent">
                                 @if (tradesperson_project_status($project->id) == 'estimate_accepted' || tradesperson_project_status($project->id) == 'project_started')
                                     @include('tradepersion.milestones')
+                                    @include('tradepersion.details')
+                                    @include('tradepersion.estimate_tab')
+                                    {{-- @include('tradepersion.chat') --}}
                                 @endif
                                 @if (tradesperson_project_status($project->id) == 'estimate_submitted' || tradesperson_project_status($project->id) == 'estimate_recalled' || tradesperson_project_status($project->id) == 'estimate_rejected')
                                     @include('tradepersion.estimate_tab')
+                                    @include('tradepersion.details')
+                                    {{-- @include('tradepersion.chat') --}}
                                 @endif
-                                @include('tradepersion.details')
-                                @include('tradepersion.chat')
+                                @if (tradesperson_project_status($project->id) == 'write_estimate')
+                                    @include('tradepersion.details')
+                                    {{-- @include('tradepersion.chat') --}}
+                                @endif
                             </div>
                          </div>
                       </div>
@@ -91,7 +109,7 @@
                         <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" class="btn btn-primary">Edit estimate</a>
                     @endif
                 </div>
-                <!-- The ModalChange password-->
+                <!-- Reject Project password-->
                 <div class="modal fade select_address" id="reject-project" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -135,7 +153,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- The Modal Change password END-->
+                <!-- The Modal Reject Project END-->
           </div>
           <!--// END-->
        </form>
@@ -196,8 +214,8 @@
         });
         // When the user clicks on div, open the popup
         function myFunction() {
-        var popup = document.getElementById("myPopup");
-        popup.classList.toggle("show");
+            var popup = document.getElementById("myPopup");
+            popup.classList.toggle("show");
         }
 
 

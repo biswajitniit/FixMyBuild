@@ -130,11 +130,17 @@ class TradepersionDashboardController extends Controller
         ];
 
         $errors = new MessageBag();
-        if ( $request->phone_office_with_dial_code && !is_numeric(substr($request->phone_office_with_dial_code,1,-1)) )
-            $errors->add('phone_office', 'Please provide a valid office phone number');
-        if ( $request->phone_number && !is_numeric($request->phone_number) )
-            $errors->add('phone_number', 'Please provide a valid phone number');
+        if ( $request->phone_office_with_dial_code ) {
+            $phone_office_with_dial_code = str_replace('-', '', str_replace(' ', '', substr($request->phone_office_with_dial_code,1,-1)));
+            if ( !is_numeric($phone_office_with_dial_code) )
+                $errors->add('phone_office', 'Please provide a valid office phone number');
+        }
 
+        if ( $request->phone_number ) {
+            $phone_number = str_replace('-', '', str_replace(' ', '', $request->phone_number));
+            if( !is_numeric($phone_number) )
+                $errors->add('phone_number', 'Please provide a valid phone number');
+        }
 
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails() || count($errors) != 0) {
@@ -900,7 +906,8 @@ class TradepersionDashboardController extends Controller
                                         //     $query->where('projects.status', 'project_started')
                                         // })
                                         ->orderBy('projects.created_at', 'desc')
-                                        ->paginate(5);
+                                        // ->paginate(5);
+                                        ->get();
 
                                         // dd($estimate_projects);
         // print_r(DB::getQueryLog());
@@ -939,7 +946,8 @@ class TradepersionDashboardController extends Controller
                                                                                 ->toArray()
                                                         );
                                             })
-                                            ->paginate(1);
+                                            // ->paginate(1);
+                                            ->get();
 
         // $estimate_project_histories = Project::whereIn('id', Estimate::where('tradesperson_id', Auth::user()->id)
         //                                             ->pluck('project_id')
@@ -1341,34 +1349,6 @@ class TradepersionDashboardController extends Controller
         $project = Project::where('id', $id)->first();
         $projectid = Projectfile::where('project_id', $request->project_id)->get();
         $trader_detail = TraderDetail::where('user_id', Auth::user()->id)->first();
-        $estimate = Estimate::where('project_id', $request->project_id)
-                            ->where('tradesperson_id', Auth::user()->id)
-                            ->first();
-        $tasks = Task::where('estimate_id', $estimate->id)->get();
-        $amount = 0;
-            foreach ($tasks as $task) {
-                $price = $task->price;
-                $amount += $task->price;
-            }
-        $taskTotalAmount = ($amount != 0)? (($estimate->apply_vat == 0)? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
-        $taskAmountWithContingency = (($taskTotalAmount * $estimate->contingency)/100) + $taskTotalAmount;
-        $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * 20)/100) + $taskAmountWithContingency;
-        $initial_payment_percentage = $estimate->initial_payment;
-        $contingency_per_task = ($price * $estimate->contingency)/100;
-
-        if($estimate->apply_vat == 1){
-            if($estimate->initial_payment_type == 'Percentage'){
-                $initial_payment_percentage = ($taskAmountWithContingencyAndVat * $estimate->initial_payment)/100;
-            }
-        } elseif($estimate->apply_vat == 0){
-            $initial_payment_percentage = ($taskAmountWithContingency * $estimate->initial_payment)/100;
-        }
-        // for showing amounts in 2 decimal
-        $taskTotalAmount = round($taskTotalAmount, 2);
-        $taskAmountWithContingency = round($taskAmountWithContingency, 2);
-        $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
-        $initial_payment_percentage = number_format($initial_payment_percentage, 2);
-        $contingency_per_task = number_format($contingency_per_task, 2);
 
         // Fetch Trader Areas And Works
         // $trader_areas = Traderareas::where(['user_id' => Auth::user()->id])->get();
@@ -1412,8 +1392,39 @@ class TradepersionDashboardController extends Controller
         //                                 ->select('projects.*')
         //                                 ->get();
 
+        if(tradesperson_project_status($project->id) == 'estimate_submitted' || tradesperson_project_status($project->id) == 'project_started' || tradesperson_project_status($project->id) == 'estimate_accepted') {
+            $estimate = Estimate::where('project_id', $request->project_id)
+                            ->where('tradesperson_id', Auth::user()->id)
+                            ->first();
+            $tasks = Task::where('estimate_id', $estimate->id)->get();
+            $amount = 0;
+                foreach ($tasks as $task) {
+                    $price = $task->price;
+                    $amount += $task->price;
+                }
+            $taskTotalAmount = ($amount != 0)? (($estimate->apply_vat == 0)? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
+            $taskAmountWithContingency = (($taskTotalAmount * $estimate->contingency)/100) + $taskTotalAmount;
+            $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * 20)/100) + $taskAmountWithContingency;
+            $initial_payment_percentage = $estimate->initial_payment;
+            $contingency_per_task = ($price * $estimate->contingency)/100;
 
-        return view('tradepersion.project_details',compact('projectid','project','trader_detail','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task', 'recommended_projects'));
+            if($estimate->apply_vat == 1){
+                if($estimate->initial_payment_type == 'Percentage'){
+                    $initial_payment_percentage = ($taskAmountWithContingencyAndVat * $estimate->initial_payment)/100;
+                }
+            } elseif($estimate->apply_vat == 0){
+                $initial_payment_percentage = ($taskAmountWithContingency * $estimate->initial_payment)/100;
+            }
+            // for showing amounts in 2 decimal
+            $taskTotalAmount = round($taskTotalAmount, 2);
+            $taskAmountWithContingency = round($taskAmountWithContingency, 2);
+            $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
+            $initial_payment_percentage = number_format($initial_payment_percentage, 2);
+            $contingency_per_task = number_format($contingency_per_task, 2);
+            return view('tradepersion.project_details',compact('projectid','project','trader_detail','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task', 'recommended_projects'));
+        }
+
+        return view('tradepersion.project_details',compact('projectid','project','trader_detail','recommended_projects'));
     }
 
 
@@ -1446,6 +1457,31 @@ class TradepersionDashboardController extends Controller
 
         }
     }
+
+    public function reject_project(Request $request){
+        try {
+            $estimate = new Estimate();
+            $estimate->project_id = $request->project_id;
+            $estimate->tradesperson_id = Auth::user()->id;
+            $estimate->project_awarded = 0;
+            $estimate->status = null;
+            $estimate->describe_mode = $request->reason;
+            $estimate->unable_to_describe_type = null;
+            $estimate->more_info = $request->more_details;
+            $estimate->covers_customers_all_needs = 0;
+            $estimate->payment_required_upfront = 0;
+            $estimate->contingency = null;
+            $estimate->initial_payment = null;
+            $estimate->initial_payment_type = null;
+            $estimate->project_start_date_type = null;
+            $estimate->project_start_date = null;
+            $estimate->total_time = null;
+            $estimate->total_time_type = null;
+            $estimate->terms_and_conditions = null;
+            $estimate->save();
+
+            return response()->json(['redirect_url' => route('tradepersion.projects')]);
+        } catch (\Exception $e) {
 
         }
     }
