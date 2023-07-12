@@ -33,7 +33,8 @@ use Session;
 use Aws\S3\Exception\S3Exception;
 use App\Models\Tempmedia;
 use League\Flysystem\File;
-
+use Stripe;
+use App\Models\Transactionhistory;
 class CustomerController extends Controller
 {
     public function customer_newproject(Request $request){
@@ -365,7 +366,7 @@ class CustomerController extends Controller
             if(Auth::user()->id == $projects->user_id){
                 $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
                 $doc= projectfile::where('project_id', $id)->get();
-                $project_id=$id;;
+                $project_id=$id;
 
                 if($projects->status == 'submitted_for_review'){
                     $doc= projectfile::where('project_id', $id)->get();
@@ -410,7 +411,6 @@ class CustomerController extends Controller
 
                 if($projects->status == 'estimation') {
                     $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
-
                     foreach($estimates as $estimate) {
                         $amount = $estimate->tasks->sum('price');
                         $estimate->price = ($amount != 0) ? (($estimate->apply_vat == 0) ? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
@@ -437,6 +437,12 @@ class CustomerController extends Controller
                     };
 
                     return view('customer.project_details',compact('projects','projectaddress','proj_logs','doc','project_id','estimates'));
+                }
+
+                if($projects->status == 'project_started') {
+                    $estimates = Estimate::where('project_id', $projects->id)->first();
+                    $task = Task::where('estimate_id',$estimates->id)->get();
+                    return view('customer.project_details',compact('projects','projectaddress','doc','estimates','task'));
                 }
 
                 return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
@@ -811,5 +817,67 @@ class CustomerController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => $request->input('status')]);
         }
+    }
+
+
+
+
+
+    function project_pay_now(Request $request, $taskid){
+        $task = Task::where('id',Hashids_decode($taskid))->first();
+        return view("customer.pay-now", compact('task'));
+    }
+
+    function project_all_payment(Request $request){
+
+        $orderid= "FIXMYBUILD".date('Ymd').rand();
+
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        $customer = Stripe\Customer::create(array(
+                "email" => Auth::user()->email,
+                "source" => $request->stripeToken
+             ));
+
+        $charge = Stripe\Charge::create ([
+                "amount" => $request->totalamount * 100,
+                "currency" => "gbp",
+                "customer" => $customer->id,
+                "description" => $orderid,
+        ]);
+        if (!empty($charge) && $charge['status'] == 'succeeded') {
+
+
+            $task = Task::where('estimate_id',$request->estimates_id)->where('payment_status',null)->get();
+            foreach ($task as $row){
+                $data = array(
+                    'payment_status'           => $charge['status'],
+                    'status'                   => $charge['status'],
+                    'payment_type'             => 'card',
+                    'payment_transaction_id'   => $charge['balance_transaction'],
+                    'payment_capture_log'      => $charge,
+                    'payment_date'             => date('Y-m-d H:i:s')
+                );
+                Task::where('id', $row->id)->update($data);
+
+                // Transaction history save
+                $th = new Transactionhistory();
+                $th->order_id               = $orderid;
+                $th->user_id                = Auth::user()->id;
+                $th->task_id                = $row->id;
+                $th->totalamount            = $request->totalamount;
+                $th->payment_status         = $charge['status'];
+                $th->payment_type           = 'card';
+                $th->payment_transaction_id = $charge['balance_transaction'];
+                $th->payment_capture_log    = $charge;
+                $th->payment_date           = date('Y-m-d H:i:s');
+                $th->save();
+
+            }
+            $request->session()->flash('message', 'Payment completed.');
+        } else {
+            $request->session()->flash('danger', 'Payment failed.');
+        }
+
+        return back();
     }
 }

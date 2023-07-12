@@ -15136,3 +15136,52 @@ color: #6D717A !important;
     background-color: #d1cabf;
     border-radius: 50%;
 }
+
+.checkout_ h2{
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--color_orange);
+    margin-top: 15px;
+    }
+    .checkout_ {
+      color: #FFF;
+    }
+    .payment-type h5{
+      font-weight: 500;
+      font-size: 20px;
+      color: #6D717A;
+      margin-top: 15px;
+    }
+    .ta_ hr {
+      background: #444;
+      margin: 0 0;
+      height: 2px;
+    }
+
+    .ta_ h5{
+      color: #061A48;
+    }
+
+    .ed_ h4 {
+      color: #061A48;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 2.4;
+    }
+
+    .spt_ {
+      position: relative;
+    }
+    .spt_ em {
+      position: absolute;
+      top: 0;
+      right: 15px;
+    }
+    .ccv_{
+      position: relative;
+    }
+    .ccv_ em {
+      position: absolute;
+      top: 0;
+      right: 15px;
+    }
