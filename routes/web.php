@@ -23,7 +23,7 @@ use App\Http\Controllers\Admin\Cms\CmsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationDetailsController;
-
+use App\Http\Controllers\StripeController;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -63,11 +63,6 @@ Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login'
 Route::post('/admin/login', [AdminLoginController::class, 'postlogin'])->name('adminLoginPost');
 // Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin/dashboard');
 // Route::get('/admin/logout', [LogoutController::class, 'adminlogout'])->name('/admin/logout');
-
-
-
-
-
 
 
 // Route::middleware(['middleware'=>'PreventBackHistory'])->group(function () {
@@ -185,6 +180,13 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('getprojectmediafiles', [CustomerController::class,'getprojectmediafiles'])->name('customer.getprojectmediafiles');
 
         Route::post('deletecustomermediafiles', [CustomerController::class,'deletecustomermediafiles'])->name('customer.deletecustomermediafiles');
+
+        Route::post('project-all-payment', [CustomerController::class,'project_all_payment'])->name('customer.project-all-payment');
+        Route::get('project-pay-now/{taskid}', [CustomerController::class,'project_pay_now'])->name('customer.project-pay-now');
+
+        Route::get('stripe', [StripeController::class, 'stripe']);
+        Route::post('stripe', [StripeController::class, 'stripePost'])->name('stripe.post');
+
 
         // Notification Route
         Route::get('/notification', [NotificationController::class, 'index'])->name('customer.notifications.index');
