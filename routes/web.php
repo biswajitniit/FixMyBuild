@@ -227,6 +227,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('reject-project', [TradepersionDashboardController::class, 'reject_project'])->name('reject-project');
 
         Route::group(['as' => 'tradesperson.'], function () {
+            Route::get('paginate-project-history', [TradepersionDashboardController::class, 'paginateProjectHisory'])->name('paginateProjectHistory');
+            Route::get('search-project-history', [TradepersionDashboardController::class, 'searchProjectHistory'])->name('searchProjectHistory');
             Route::get('get-temp-team-image', [TradepersionDashboardController::class, 'getTempTeamImages'])->name('getTeamImages');
             Route::get('get-temp-prev-image', [TradepersionDashboardController::class, 'getTempPrevProjImages'])->name('getPrevProjImage');
             Route::get('get-temp-photo-id', [TradepersionDashboardController::class, 'getTempPhotoIdProof'])->name('getTempPhotoId');

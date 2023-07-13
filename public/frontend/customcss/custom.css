@@ -120,3 +120,11 @@ video.customer-video{
 .h-95 {
     height: 95% !important;
 }
+
+.pagination a.active_pagination svg path {
+    fill: var(--primary_color);
+}
+
+.pagination a.disabled_pagination svg path {
+    fill: #BDBDBD;
+}

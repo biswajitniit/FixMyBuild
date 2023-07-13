@@ -124,11 +124,11 @@
                 </div>
 
                 <div class="input-field col-md-12" id="passwordCriteria">
-                    <h6 id="pswd_length"><i class="fa fa-times" style="color:red;"></i> 8-32 character</h6>
-                    <h6 id="pswd_uppercase"><i class="fa fa-times" style="color:red;"></i> One upper case</h6>
-                    <h6 id="pswd_lowercase"><i class="fa fa-times" style="color:red;"></i> One lower case</h6>
-                    <h6 id="pswd_special"><i class="fa fa-times" style="color:red;"></i> One special character</h6>
-                    <h6 id="pswd_digit" class="mb-0"><i class="fa fa-times" style="color:red;"></i> One numeric character</h6>
+                    <h6 id="pswd_length"><i class="fa fa-times text-danger"></i> 8-32 character</h6>
+                    <h6 id="pswd_uppercase"><i class="fa fa-times text-danger"></i> One upper case</h6>
+                    <h6 id="pswd_lowercase"><i class="fa fa-times text-danger"></i> One lower case</h6>
+                    <h6 id="pswd_special"><i class="fa fa-times text-danger"></i> One special character</h6>
+                    <h6 id="pswd_digit" class="mb-0"><i class="fa fa-times text-danger"></i> One numeric character</h6>
                 </div>
 
                 <div class="row">
@@ -173,15 +173,18 @@
                 </div>
                 <div class="form-check mt-4">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif onclick="disableForm()" required/> I have read and agree to FixMyBuild's
+                        <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif required/> I have read and agree to FixMyBuild's
 
                         <a href="{{ url('/terms-of-service') }}">Terms of Service</a> and <a href="{{ url('/privacy-policy') }}">Privacy Policy</a>.
                     </label>
+                    <div class="form-group">
+                        <label for="terms_of_service" generated="true" class="error"></label>
+                    </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-12 mt-4">
-                        <button type="submit" id="register" class="btn btn-primary" disabled>Register</button>
+                        <button type="submit" id="register" class="btn btn-primary" >Register</button>
                     </div>
                 </div>
 
@@ -234,9 +237,15 @@
                 },
                 password: {
                     required: true,
+                    rangelength: [8, 32],
+                    includeUpperCase: true,
+                    includeLowerCase: true,
+                    includeSpecialCharacter: true,
+                    includeDigit: true
                 },
                 password_confirmation: {
                     required: true,
+                    equalTo: '#password'
                 },
                 phone: {
                     required: true,
@@ -255,9 +264,11 @@
                 },
                 password: {
                     required: "Please enter password",
+                    rangelength: jQuery.validator.format("At least 8 characters and maximum 32 characters are required!")
                 },
                 password_confirmation: {
-                    required: "Please confirm password",
+                    required: "Please re-enter your password for confirmation",
+                    equalTo: "Confirm password doesn't match with password field"
                 },
                 phone: {
                     required: "Please enter phone number",
@@ -266,9 +277,29 @@
                 customer_or_tradesperson: {
                     required: "Are you a customer or tradeperson?",
                 },
+                terms_of_service: {
+                    required: "Please agree to FixMyBuild's Terms of Service and Privacy Policy."
+                }
             },
 
         });
+
+        // Jquery Validations
+        $.validator.addMethod('includeUpperCase', function(value, element){
+            return value.match(/[A-Z]/);
+        }, 'Please include a upper case letter.');
+
+        $.validator.addMethod('includeLowerCase', function(value, element){
+            return value.match(/[a-z]/);
+        }, 'Please include a lower case letter.');
+
+        $.validator.addMethod('includeDigit', function(value, element){
+            return value.match(/[0-9]/);
+        }, 'Please include a numeric character.');
+
+        $.validator.addMethod('includeSpecialCharacter', function(value, element){
+            return value.match(/([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/);
+        }, 'Please include a special characters.');
 
         // Hide the password Criteria div on page load
         $("#passwordCriteria").hide();
@@ -282,49 +313,42 @@
 
         // Jquery Validation
         $.validator.addMethod('phoneNumber', function(value, element) {
-            iti.setNumber(iti.getNumber());
-            return iti.isValidNumber();
+            let phone = $('#phone').val();
+            return /[a-z]/i.test(phone) ? !/[a-z]/i.test(phone) : iti.isValidNumber();
         }, 'Please enter a valid phone number');
 
         input.addEventListener('countrychange', function(e) {
             $("#userregistration").validate().element('#phone');
         });
 
-        $("#fullname").bind("keypress", function (event) {
-            if (event.charCode!=0) {
-                var regex = new RegExp("^[a-zA-Z ]+$");
-                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-                if (!regex.test(key)) {
-                    event.preventDefault();
-                    return false;
-                }
+        // $("#fullname").bind("keypress", function (event) {
+        //     if (event.charCode!=0) {
+        //         var regex = new RegExp("^[a-zA-Z ]+$");
+        //         var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+        //         if (!regex.test(key)) {
+        //             event.preventDefault();
+        //             return false;
+        //         }
+        //     }
+        // });
+
+        // $('#userregistration').submit(function(event) {
+        //     event.preventDefault();
+        //     $('#full_phone').val(iti.getNumber());
+        //     this.submit();
+        // });
+
+
+        $("#userregistration").validate({
+            submitHandler: function(form) {
+                $('#full_phone').val(iti.getNumber());
+                form.submit();
             }
         });
 
-        $('#userregistration').submit(function(event) {
-            event.preventDefault();
-            $('#full_phone').val(iti.getNumber());
-            this.submit();
-        });
-
-        $('#password').keyup(function (e) {
+        $('#password, #password_confirmation').on('keyup blur', function(){
             password_validation();
-            disableForm();
-        });
-
-        $('#password_confirmation').keyup(function (e) {
-            password_validation();
-            disableForm();
-        });
-
-        $('#password').blur(function (e) {
-            password_validation();
-            disableForm();
-        });
-
-        $('#password_confirmation').blur(function (e) {
-            password_validation();
-            disableForm();
+            // disableForm();
         });
 
         $('#password').focus(function (e) {
@@ -392,8 +416,8 @@
         let confirm_password = 'input[id=password_confirmation]';
         let pswd = $(password).val().trim();
         let confirm_pswd = $(confirm_password).val().trim();
-        let invalid = '<i class="fa fa-times" style="color:red;"></i>';
-        let valid = '<i class="fa fa-check" style="color:green;"></i>';
+        let invalid = '<i class="fa fa-times text-danger"></i>';
+        let valid = '<i class="fa fa-check text-success"></i>';
         let is_valid = true;
 
         $(password).val(pswd);
