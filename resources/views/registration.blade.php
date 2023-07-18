@@ -281,7 +281,10 @@
                     required: "Please agree to FixMyBuild's Terms of Service and Privacy Policy."
                 }
             },
-
+            submitHandler: function(form) {
+                $('#full_phone').val(iti.getNumber());
+                form.submit();
+            }
         });
 
         // Jquery Validations
@@ -339,12 +342,6 @@
         // });
 
 
-        $("#userregistration").validate({
-            submitHandler: function(form) {
-                $('#full_phone').val(iti.getNumber());
-                form.submit();
-            }
-        });
 
         $('#password, #password_confirmation').on('keyup blur', function(){
             password_validation();

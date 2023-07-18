@@ -98,10 +98,13 @@
                                         <input type="hidden" name="zipcode_selected_address_line_one" id="zipcode_selected_address_line_one" value="">
                                         <input type="hidden" name="zipcode_selected_address_line_two" id="zipcode_selected_address_line_two" value="">
                                         <input type="hidden" name="zipcode_selected_town_city" id="zipcode_selected_town_city" value="">
+                                        <input type="hidden" name="zipcode_selected_county" id="zipcode_selected_county" value="">
+                                        <input type="hidden" name="zipcode_selected_town" id="zipcode_selected_town" value="">
                                         <input type="hidden" name="zipcode_selected_postcode" id="zipcode_selected_postcode" value="">
                                         {{-- <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger col-4 pull-right">Find me</a> --}}
                                         <a class="btn btn-danger col-4 pull-right postcodefind">Find me</a>
                                     </div>
+                                    <div class="form-group"><label for="postcode" class="error"></label></div>
                                     <div id="errormsg"></div>
                                     <div id="postcodelist"></div>
                                     <p id="selected_post_code_html"></p>
@@ -130,7 +133,14 @@
                                     <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="3" checked>
                                     <h5>Last used address</h5>
                                  </div>
-                                 <p>{{ $projectaddresses->address_line_one }}, {{ $projectaddresses->address_line_two }}, {{ $projectaddresses->town_city }}, {{ $projectaddresses->postcode }} </p>
+                                 <p>
+                                    {{ !empty($project->projectaddress->address_line_one) ? \Str::title($project->projectaddress->address_line_one) : '' }}
+                                    {{ !empty($project->projectaddress->address_line_two) ? ', ' . \Str::title($project->projectaddress->address_line_two): '' }}
+                                    {{ !empty($project->town) ? ', ' . \Str::title($project->town): '' }}
+                                    {{ !empty($project->county) ? ', ' . \Str::title($project->county): '' }}
+                                    {{ !empty($project->postcode) ? ', ' . \Str::upper($project->postcode) : '' }}
+                                    {{-- {{ $projectaddresses->address_line_one }}, {{ $projectaddresses->address_line_two }}, {{ $projectaddresses->town_city }}, {{ $projectaddresses->postcode }} --}}
+                                </p>
 
                                 <div class="form-check mt-3">
                                     <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="2"/>
@@ -154,8 +164,13 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="address_type_postcode" placeholder="Postcode" name="postcode"/>
+                                            <input type="text" class="form-control" id="county" placeholder="County" name="county"/>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <input type="text" class="form-control" id="address_type_postcode" placeholder="Postcode" name="address_type_postcode"/>
                                     </div>
                                 </div>
                             </div>
@@ -879,7 +894,8 @@
         var dropzone = callDropzone({url: url, params: params, acceptedFiles: acceptedFiles});
 
         dropzone.on("successmultiple", function(file, responses) {
-            FetchfilesData();
+            // FetchfilesData();
+            fetchAllMedias();
         });
 
         // dropzone.on("error", function(file, errorMessage, xhr) {
@@ -901,62 +917,6 @@
     }
 
     $(document).ready(function(){
-        $("#savenewproject").validate({
-            // Specify validation rules
-            rules: {
-                forename: "required",
-                surname: "required",
-                project_name: "required",
-                contact_mobile_no: {
-                    required: true,
-                    phoneNumber: true
-                },
-                contact_home_phone: {
-                    required: true,
-                    phoneNumber: true
-                },
-                contact_email: "required",
-            },
-            messages: {
-                fullname: {
-                    forename: "Please enter forename",
-                },
-                surname: {
-                    surname: "Please enter surname",
-                },
-                project_name: {
-                    project_name: "Please enter project name",
-                },
-                contact_mobile_no: {
-                    required: 'Please enter a phone number',
-                    phoneNumber: 'Please enter a valid phone number'
-                },
-                contact_home_phone: {
-                    required: 'Please enter a phone number',
-                    phoneNumber: 'Please enter a valid phone number'
-                },
-                contact_email: {
-                    contact_email: "Please enter contact email",
-                },
-            },
-            // errorPlacement: function(error, element) {
-            //     if (element.attr('name') === 'contact_mobile_no') {
-            //         error.appendTo($('mobile_no_errors'));
-            //     } else {
-            //         error.insertAfter(element);
-            //     }
-            // },
-
-        });
-
-        // $.validator.addMethod('phoneNumber', function(value, element) {
-        // //     // var input = document.getElementById(element.id);
-        // //     // return window.intlTelInputGlobals.isValidNumber(input);
-        // //     // $(element).intlTelInput('isValidNumber');
-        // //     var input = document.getElementById(element.id);
-        // //     return input.intlTelInput.isValidNumber();
-        //     validatePhone(contact_mobile_iti, "#home_phone_errors");
-        // }, 'Please enter a valid phone number');
 
     });
 
@@ -967,11 +927,15 @@
         // $('#exampleModal').modal('toggle');
 
         var zipcode = $('input[name="zipcode"]:checked').val();
+        var county = $('input[name="zipcode"]:checked').attr('data-county');
+        var town = $('input[name="zipcode"]:checked').attr('data-town');
 
         $("#zipcode_selected_address_line_one").attr('value',zipcode.split(",")[0]);
         $("#zipcode_selected_address_line_two").attr('value',zipcode.split(",")[1]);
         $("#zipcode_selected_town_city").attr('value',zipcode.split(",")[2]+','+ zipcode.split(",")[3]);
-        $("#zipcode_selected_postcode").attr('value',$("#postcode").val());
+        $("#zipcode_selected_county").val(county);
+        $("#zipcode_selected_town").val(town);
+        $("#zipcode_selected_postcode").val($("#postcode").val());
 
         $("#selected_post_code_html").html(zipcode);
         $('#exampleModal').modal('toggle');
@@ -1097,7 +1061,8 @@
                                 fulladdress += value.country;
                             }
 
-                            addresshtml += '<div class="form-check"><input type="radio" class="form-check-input" id="radio'+counter+'" name="zipcode" value="'+fulladdress+'" />'+fulladdress+'<label class="form-check-label" for="radio'+counter+'"></label></div>';
+                            // addresshtml += '<div class="form-check"><input type="radio" class="form-check-input" id="radio'+counter+'" name="zipcode" value="'+fulladdress+'" />'+fulladdress+'<label class="form-check-label" for="radio'+counter+'"></label></div>';
+                            addresshtml += `<div class='form-check target'><input type='radio' class='form-check-input' id='radio${counter}' name='zipcode' value='${fulladdress}' data-county='${value.county}' data-town='${value.town_or_city}' /><label for='radio${counter}'>${fulladdress}</label></div>`;
                             counter++;
                         });
                         $(".zipcode-modal-header").html('<h5 class="modal-title" id="exampleModalLabel">Select your address<span>Postcode: '+$postcode+'</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/></svg></button>');
@@ -1145,18 +1110,26 @@
 
 
 
-    function Searchpostcode() {
-        var input = document.getElementById("Search");
-        var filter = input.value.toLowerCase();
-        var nodes = document.getElementsByClassName('target');
+    // function Searchpostcode() {
+    //     var input = document.getElementById("Search");
+    //     var filter = input.value.toLowerCase();
+    //     var nodes = document.getElementsByClassName('target');
 
-        for (i = 0; i < nodes.length; i++) {
-            if (nodes[i].innerText.toLowerCase().includes(filter)) {
-            nodes[i].style.display = "block";
-            } else {
-            nodes[i].style.display = "none";
-            }
-        }
+    //     for (i = 0; i < nodes.length; i++) {
+    //         if (nodes[i].innerText.toLowerCase().includes(filter)) {
+    //         nodes[i].style.display = "block";
+    //         } else {
+    //         nodes[i].style.display = "none";
+    //         }
+    //     }
+    // }
+
+    function Searchpostcode() {
+        var filter = $('#Search').val().trim().toLowerCase();
+        $('.target').each(function () {
+            var label = $(this).children('label').text().toLowerCase();
+            $(this).toggle(label.includes(filter));
+        });
     }
 
     // $('#summernote').summernote({
@@ -1291,6 +1264,31 @@
         });
     }
 
+    function disableAddressField(addresstype = $('input[name="addresstype"]:checked').val()) {
+        if(addresstype != 2)
+            $(`
+                #address_line_one,
+                #address_line_two,
+                #town_city,
+                #county,
+                #address_type_postcode
+             `).attr('disabled',true);
+        else
+            $(`
+                #address_line_one,
+                #address_line_two,
+                #town_city,
+                #county,
+                #address_type_postcode
+             `).attr('disabled',false);
+
+
+        if(addresstype == 1)
+            $("#postcode").attr('disabled',false);
+        else
+            $("#postcode").attr('disabled',true);
+    }
+
     $(document).ready(function(){
         // $("form#capturephoto").submit(function(e){
         //     e.preventDefault();
@@ -1330,15 +1328,13 @@
         //         }
         //     })
         // });
-
+        disableAddressField();
         fetchAllMedias();
 
         $("form#capturephoto").submit(function(e){
                 e.preventDefault();
                 var success=1
                 var modalId = '#'+$(this).closest('.modal').attr('id');
-                // var images = document.getElementById('image');
-                // var formData = new FormData(this);
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You want to upload this image?",
@@ -1366,16 +1362,16 @@
                             success: (response) => {
                                 $("#capture_photo_upload").html('Upload');
                                 $("#capture_photo_upload").prop('disabled', false);
-                                success='1'
+                                success='1';
+                                fetchAllMedias();
                             },
                             error: (response) => {
                                 console.log(response);
                                 success=response
                             }
                         });
+
                         if(success=='1'){
-                            // fetchProductImages();
-                            console.log(modalId);
                             $(modalId).modal('hide');
                             Swal.fire({
                                 //position: 'top-end',
@@ -1384,84 +1380,46 @@
                                 showConfirmButton: false,
                                 timer: 1500
                             })
-                        } else{console.log(success);}
-
+                        } else {
+                            console.log(success);
                         }
+
+                    }
                 })
             });
 
 
-        // addresstype
-        var addresstype = $('input[name="addresstype"]:checked').val();
-        if(addresstype == 1){
-            $("#address_line_one").attr('disabled',true);
-            $("#address_line_two").attr('disabled',true);
-            $("#town_city").attr('disabled',true);
-            $("#address_type_postcode").attr('disabled',true);
-        }
+        // // addresstype
+        // var addresstype = $('input[name="addresstype"]:checked').val();
+        // if(addresstype == 1){
+        //     $("#address_line_one").attr('disabled',true);
+        //     $("#address_line_two").attr('disabled',true);
+        //     $("#town_city").attr('disabled',true);
+        //     $("#address_type_postcode").attr('disabled',true);
+        // }
 
-        if(addresstype == 2){
-            $("#address_line_one").attr('disabled',false);
-            $("#address_line_two").attr('disabled',false);
-            $("#town_city").attr('disabled',false);
-            $("#address_type_postcode").attr('disabled',false);
-        }
+        // if(addresstype == 2){
+        //     $("#address_line_one").attr('disabled',false);
+        //     $("#address_line_two").attr('disabled',false);
+        //     $("#town_city").attr('disabled',false);
+        //     $("#address_type_postcode").attr('disabled',false);
+        // }
 
-        if(addresstype == 3){
-            $("#address_line_one").attr('disabled',true);
-            $("#address_line_two").attr('disabled',true);
-            $("#town_city").attr('disabled',true);
-            $("#address_type_postcode").attr('disabled',true);
-            $("#postcode").attr('disabled',true);
-        }
+        // if(addresstype == 3){
+        //     $("#address_line_one").attr('disabled',true);
+        //     $("#address_line_two").attr('disabled',true);
+        //     $("#town_city").attr('disabled',true);
+        //     $("#address_type_postcode").attr('disabled',true);
+        //     $("#postcode").attr('disabled',true);
+        // }
 
-        $("input[name='addresstype']").change(function(e){
-            var addresstype = $('input[name="addresstype"]:checked').val();
-            if(addresstype == 1){
-                $("#address_line_one").attr('disabled',true);
-                $("#address_line_two").attr('disabled',true);
-                $("#town_city").attr('disabled',true);
-                $("#address_type_postcode").attr('disabled',true);
-                $("#postcode").attr('disabled',false);
-            }
-
-            if(addresstype == 2){
-                $("#address_line_one").attr('disabled',false);
-                $("#address_line_two").attr('disabled',false);
-                $("#town_city").attr('disabled',false);
-                $("#address_type_postcode").attr('disabled',false);
-
-                $("#postcode").attr('disabled',true);
-                $("#postcode").attr('required',true);
-            }
-
-            if(addresstype == 3){
-                $("#address_line_one").attr('disabled',true);
-                $("#address_line_two").attr('disabled',true);
-                $("#town_city").attr('disabled',true);
-                $("#address_type_postcode").attr('disabled',true);
-                $("#postcode").attr('disabled',true);
-            }
-
-
-
-        });
+        $("input[name='addresstype']").change(() => disableAddressField());
 
         // Phone Number Setup
         let contact_mobile_no = document.querySelector("#contact_mobile_no");
         let contact_mobile_iti = window.intlTelInput(contact_mobile_no, {
             separateDialCode: true,
             initialCountry: "gb",
-        });
-        validatePhone(contact_mobile_iti, "#mobile_no_errors");
-
-
-        $("#contact_mobile_no").on('blur keyup keypress change', function() {
-            validatePhone(contact_mobile_iti, "#mobile_no_errors");
-        });
-
-        contact_mobile_no.addEventListener('countrychange', function(e) {
-            validatePhone(contact_mobile_iti, "#mobile_no_errors");
         });
 
         // Home Phone Number Setup
@@ -1471,32 +1429,105 @@
             initialCountry: "gb",
         });
 
-
-        contact_home_phone.addEventListener('countrychange', function(e) {
-            validatePhone(home_phone_iti, "#home_phone_errors");
-        });
-
-        $("#contact_home_phone").on('blur keyup keypress change', function() {
-            validatePhone(home_phone_iti, "#home_phone_errors");
-        });
-
-        validatePhone(home_phone_iti, "#home_phone_errors");
-
-        $('#savenewproject').submit(function() {
-            $('#contact_mobile_no').val(contact_mobile_iti.getNumber());
-            $('#contact_home_phone').val(home_phone_iti.getNumber());
+        $("#savenewproject").validate({
+            // Specify validation rules
+            rules: {
+                forename: "required",
+                surname: "required",
+                project_name: "required",
+                contact_mobile_no: {
+                    required: true,
+                    phoneNumber: true
+                },
+                contact_home_phone: {
+                    required: true,
+                    phoneNumber: true
+                },
+                contact_email: "required",
+                postcode : {
+                    required: {
+                        depends: function(element) {
+                            return $('input[name="addresstype"]:checked').val() === "1";
+                        }
+                    },
+                    checkAddress: true
+                },
+                address_line_one: {
+                    required: {
+                        depends: function(element) {
+                            return $('input[name="addresstype"]:checked').val() === "2";
+                        }
+                    }
+                },
+                town_city: {
+                    required: {
+                        depends: function(element) {
+                            return $('input[name="addresstype"]:checked').val() === "2";
+                        }
+                    }
+                },
+                county: {
+                    required: {
+                        depends: function(element) {
+                            return $('input[name="addresstype"]:checked').val() === "2";
+                        }
+                    }
+                },
+                address_type_postcode: {
+                    required: {
+                        depends: function(element) {
+                            return $('input[name="addresstype"]:checked').val() === "2";
+                        }
+                    }
+                },
+                description: {
+                    required: true
+                },
+            },
+            messages: {
+                fullname: {
+                    forename: "Please enter forename",
+                },
+                surname: {
+                    surname: "Please enter surname",
+                },
+                project_name: {
+                    project_name: "Please enter project name",
+                },
+                contact_mobile_no: {
+                    required: 'Please enter a phone number',
+                    phoneNumber: 'Please enter a valid phone number'
+                },
+                contact_home_phone: {
+                    required: 'Please enter a phone number',
+                    phoneNumber: 'Please enter a valid phone number'
+                },
+                contact_email: {
+                    contact_email: "Please enter contact email",
+                },
+            },
+            submitHandler: function(form) {
+                $('#contact_mobile_no').val(contact_mobile_iti.getNumber());
+                $('#contact_home_phone').val(home_phone_iti.getNumber());
+                form.submit();
+            }
         });
 
         // Jquery Validation
+        $.validator.addMethod("checkAddress", function(value, element) {
+            return $("#selected_post_code_html").text().trim() !== "";
+        }, "Please select an address");
+
+
         $.validator.addMethod('phoneNumber', function(value, element) {
             if (element.id == 'contact_mobile_no')
-                return contact_mobile_iti.isValidNumber();
-            return home_phone_iti.isValidNumber();
+                return /[a-z]/i.test($('#contact_mobile_no').val()) ? !/[a-z]/i.test($('#contact_mobile_no').val()) : contact_mobile_iti.isValidNumber();
+            return /[a-z]/i.test($('#contact_home_phone').val()) ? !/[a-z]/i.test($('#contact_home_phone').val()) : home_phone_iti.isValidNumber();
         }, 'Please enter a valid phone number');
 
     });
 
-    function validatePhone(iti, errorsId) {
+    // function validatePhone(iti, errorsId) {
         // if(iti.isValidNumber()) {
         //     $(errorsId).hide();
         //     // $('button[type="submit"]').prop('disabled', false);
@@ -1505,8 +1536,8 @@
         //     $(errorsId).show();
         //     // $('button[type="submit"]').prop('disabled', true);
         // }
-        iti.setNumber(iti.getNumber()); //it removes alphabets from the number
-    }
+        // iti.setNumber(iti.getNumber()); //it removes alphabets from the number
+    // }
 
         // function validatePhone(iti) {
         //     return iti

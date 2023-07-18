@@ -25,7 +25,8 @@ class Project extends Model
      */
     public function projectaddress()
     {
-        return $this->belongsTo(Projectaddresses::class, 'project_address_id');
+        // return $this->belongsTo(Projectaddresses::class, 'project_address_id');
+        return $this->hasOne(Projectaddresses::class, 'project_id');
     }
 
     public function projectfile(){

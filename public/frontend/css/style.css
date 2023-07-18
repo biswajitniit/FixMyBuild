@@ -14535,6 +14535,7 @@ h2.company-name a:hover svg path {
 #nav-details .pv_top{
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 #nav-details .pv_top img{
