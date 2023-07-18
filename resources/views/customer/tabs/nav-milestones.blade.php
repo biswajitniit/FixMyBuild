@@ -54,7 +54,7 @@
                         @if($task->payment_status == 'paid')
                             <td></td>
                         @else
-                            <td><a href="{{route('customer.project-pay-now',[Hashids_encode($row->id)])}}" class="btn btn-view">Pay now</a></td>
+                            <td><a href="{{route('customer.project-pay-now',[Hashids_encode($task->id)])}}" class="btn btn-view">Pay now</a></td>
                         @endif
                     </tr>
                     @endif

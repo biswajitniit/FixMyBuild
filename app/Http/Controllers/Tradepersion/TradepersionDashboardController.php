@@ -1344,10 +1344,11 @@ class TradepersionDashboardController extends Controller
     }
 
 
-    public function details(Request $request, $id)
+    public function details($id)
     {
+        $id = Hashids_decode($id);
         $project = Project::where('id', $id)->first();
-        $projectid = Projectfile::where('project_id', $request->project_id)->get();
+        $projectid = Projectfile::where('project_id', $id)->get();
         $trader_detail = TraderDetail::where('user_id', Auth::user()->id)->first();
 
         // Fetch Trader Areas And Works
@@ -1393,18 +1394,25 @@ class TradepersionDashboardController extends Controller
         //                                 ->get();
 
         if(tradesperson_project_status($project->id) == 'estimate_submitted' || tradesperson_project_status($project->id) == 'project_started' || tradesperson_project_status($project->id) == 'estimate_accepted') {
-            $estimate = Estimate::where('project_id', $request->project_id)
+            $estimate = Estimate::where('project_id', $id)
                             ->where('tradesperson_id', Auth::user()->id)
                             ->first();
+             //for comany logo
+        $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
+        $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
+        $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
+
+            // $task_initial = Task::where('estimate_id', $estimate->id)->where('is_initial', 1)->first();
             $tasks = Task::where('estimate_id', $estimate->id)->get();
             $amount = 0;
+            $price = 0;
                 foreach ($tasks as $task) {
                     $price = $task->price;
                     $amount += $task->price;
                 }
-            $taskTotalAmount = ($amount != 0)? (($estimate->apply_vat == 0)? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
+            $taskTotalAmount = $amount;
             $taskAmountWithContingency = (($taskTotalAmount * $estimate->contingency)/100) + $taskTotalAmount;
-            $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * 20)/100) + $taskAmountWithContingency;
+            $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * config('const.vat_charge'))/100) + $taskAmountWithContingency;
             $initial_payment_percentage = $estimate->initial_payment;
             $contingency_per_task = ($price * $estimate->contingency)/100;
 
@@ -1421,7 +1429,7 @@ class TradepersionDashboardController extends Controller
             $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
             $initial_payment_percentage = number_format($initial_payment_percentage, 2);
             $contingency_per_task = number_format($contingency_per_task, 2);
-            return view('tradepersion.project_details',compact('projectid','project','trader_detail','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task', 'recommended_projects'));
+            return view('tradepersion.project_details',compact('projectid','project','trader_detail','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task', 'recommended_projects','prev_project_imgs','teams_photos','company_logo'));
         }
 
         return view('tradepersion.project_details',compact('projectid','project','trader_detail','recommended_projects'));
@@ -1450,11 +1458,19 @@ class TradepersionDashboardController extends Controller
         try {
             $task_id = Hashids_decode($request->task_id);
             Task::where('id', $task_id)->update(['status' => 'completed']);
-
             milestone_completion_notification($task_id);
-            return response()->json(['status' => $request->input('status')]);
-        } catch (\Exception $e) {
 
+            $task = Task::where('id', $task_id)
+                        ->first();
+            $tasks = Task::where('estimate_id', $task->estimate_id)
+                        ->where('status', null)
+                        ->get();
+            if($tasks->count() == null || $tasks->count() == 0){
+                project_completed_notification($task->estimate_id);
+            }
+            return response()->json(['status' => $tasks]);
+        } catch (\Exception $e) {
+            
         }
     }
 

@@ -852,7 +852,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
-<script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
+{{-- <script src="{{ asset('frontend/webcamjs/video.js') }}"></script> --}}
 <script src="{{ asset('frontend/js/utils.js') }}"></script>
 <script type="text/javascript">
 
@@ -1083,7 +1083,7 @@
         }
 
         // Initialise Webcam
-        var constraints = { audio: true, video: true };
+        var constraints  = { audio: true, video: true };
         navigator.mediaDevices.getUserMedia(constraints)
         .then(function(mediaStream) {
             Webcam.set({

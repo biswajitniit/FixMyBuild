@@ -33,8 +33,7 @@ use Session;
 use Aws\S3\Exception\S3Exception;
 use App\Models\Tempmedia;
 use League\Flysystem\File;
-use Stripe;
-use App\Models\Transactionhistory;
+
 class CustomerController extends Controller
 {
     public function customer_newproject(Request $request){
@@ -383,13 +382,14 @@ class CustomerController extends Controller
                     $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
 
                     $amount = 0;
+                    $price = 0;
                     foreach ($tasks as $task) {
                         $price = $task->price;
                         $amount += $task->price;
                     }
-                    $taskTotalAmount = ($amount != 0)? (($estimate->apply_vat == 0)? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
+                    $taskTotalAmount = $amount;
                     $taskAmountWithContingency = (($taskTotalAmount * $estimate->contingency)/100) + $taskTotalAmount;
-                    $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * 20)/100) + $taskAmountWithContingency;
+                    $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * config('const.vat_charge'))/100) + $taskAmountWithContingency;
                     $initial_payment_percentage = $estimate->initial_payment;
                     $contingency_per_task = ($price * $estimate->contingency)/100;
 
@@ -411,6 +411,7 @@ class CustomerController extends Controller
 
                 if($projects->status == 'estimation') {
                     $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
+
                     foreach($estimates as $estimate) {
                         $amount = $estimate->tasks->sum('price');
                         $estimate->price = ($amount != 0) ? (($estimate->apply_vat == 0) ? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
@@ -439,12 +440,6 @@ class CustomerController extends Controller
                     return view('customer.project_details',compact('projects','projectaddress','proj_logs','doc','project_id','estimates'));
                 }
 
-                if($projects->status == 'project_started') {
-                    $estimates = Estimate::where('project_id', $projects->id)->first();
-                    $task = Task::where('estimate_id',$estimates->id)->get();
-                    return view('customer.project_details',compact('projects','projectaddress','doc','estimates','task'));
-                }
-
                 return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
             } else{
                 // return redirect('/customer/projects');
@@ -460,6 +455,9 @@ class CustomerController extends Controller
     public function cancel_project(Request $request){
         try {
             Project::where('id', $request->project_id)->update(['status' => $request->status]);
+
+            cancel_project_notification($request->project_id);
+
             return response()->json(['redirect_url' => route('customer.project')]);
         } catch (\Exception $e) {
             echo 'error';
@@ -576,58 +574,57 @@ class CustomerController extends Controller
 
     }
 
-    // public function submit_review(Request $request)
-    // {
-    //     $request->validate([
-    //         'optradio1' => 'required',
-    //         'optradio2' => 'required',
-    //         'optradio3' => 'required',
-    //         'optradio4' => 'required',
-    //         'optradio5' => 'required',
-    //     ]);
-    //     try {
-    //         $project_id = Hashids_decode($request->project_id);
-    //         //dd($p_id);die;
-    //         // $review = ProjectReview::where('user_id','=', Auth::user()->id)
-    //         //     ->where('project_id', '=', $project_id)
-    //         //     ->get();
-    //         $tradeperson = Estimate::where('project_id', $project_id[0])
-    //             ->where('project_awarded', 1)
-    //             ->where('status', 'awarded')
-    //             ->value('tradesperson_id');
-    //         //if (count($review)==0) {
-    //             $review = new ProjectReview();
-    //             $review->user_id = Auth::user()->id;
-    //             $review->tradesperson_id = $tradeperson;
-    //             $review->project_id = $project_id[0];
-    //             $review->punctuality = $request->optradio1;
-    //             $review->workmanship = $request->optradio2;
-    //             $review->tidiness = $request->optradio3;
-    //             $review->price_accuracy = $request->optradio4;
-    //             $review->detailed_review = $request->optradio5;
-    //             $review->description = $request->detailed_review;
-    //             $review->save();
-    //             return 'Saved';
-    //         // } else {
-    //         //     $review = DB::table('project_reviews')
-    //         //     ->where('user_id', '=', Auth::user()->id,)
-    //         //     ->where('project_id','=', $project_id)
-    //         //     ->where('tradesperson_id','=', $tradeperson)
-    //         //     ->update([
-    //         //         'punctuality' => $request->optradio1,
-    //         //         'workmanship' => $request->optradio2,
-    //         //         'tidiness' => $request->optradio3,
-    //         //         'price_accuracy' => $request->optradio4,
-    //         //         'detailed_review' => $request->optradio5,
-    //         //         'description' => $request->detailed_review
-    //         //     ]);
-    //         //     return 'Review Updated';
-    //         // }
+    public function submit_review(Request $request)
+    {
+        $request->validate([
+            'optradio1' => 'required',
+            'optradio2' => 'required',
+            'optradio3' => 'required',
+            'optradio4' => 'required',
+            'optradio5' => 'required',
+        ]);
+        try {
+            $project_id = Hashids_decode($request->project_id);
+            // $review = ProjectReview::where('user_id','=', Auth::user()->id)
+            //     ->where('project_id', '=', $project_id)
+            //     ->get();
+            $tradeperson = Estimate::where('project_id', $project_id[0])
+                ->where('project_awarded', 1)
+                ->where('status', 'awarded')
+                ->value('tradesperson_id');
+            //if (count($review)==0) {
+                $review = new ProjectReview();
+                $review->user_id = Auth::user()->id;
+                $review->tradesperson_id = $tradeperson;
+                $review->project_id = $project_id[0];
+                $review->punctuality = $request->optradio1;
+                $review->workmanship = $request->optradio2;
+                $review->tidiness = $request->optradio3;
+                $review->price_accuracy = $request->optradio4;
+                $review->detailed_review = $request->optradio5;
+                $review->description = $request->detailed_review;
+                $review->save();
+                return 'Saved';
+            // } else {
+            //     $review = DB::table('project_reviews')
+            //     ->where('user_id', '=', Auth::user()->id,)
+            //     ->where('project_id','=', $project_id)
+            //     ->where('tradesperson_id','=', $tradeperson)
+            //     ->update([
+            //         'punctuality' => $request->optradio1,
+            //         'workmanship' => $request->optradio2,
+            //         'tidiness' => $request->optradio3,
+            //         'price_accuracy' => $request->optradio4,
+            //         'detailed_review' => $request->optradio5,
+            //         'description' => $request->detailed_review
+            //     ]);
+            //     return 'Review Updated';
+            // }
 
-    //     } catch(\Exception $e) {
-    //         echo $e;
-    //     }
-    // }
+        } catch(\Exception $e) {
+            echo $e;
+        }
+    }
 
     public function project_estimate(Request $request, $id)
     {
@@ -651,9 +648,9 @@ class CustomerController extends Controller
                 $price = $task->price;
                 $amount += $task->price;
             }
-        $taskTotalAmount = ($amount != 0)? (($estimate->apply_vat == 0)? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
+        $taskTotalAmount = $amount;
         $taskAmountWithContingency = (($taskTotalAmount * $estimate->contingency)/100) + $taskTotalAmount;
-        $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * 20)/100) + $taskAmountWithContingency;
+        $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * config('const.vat_charge'))/100) + $taskAmountWithContingency;
         $initial_payment_percentage = $estimate->initial_payment;
         $contingency_per_task = ($price * $estimate->contingency)/100;
 
@@ -774,110 +771,23 @@ class CustomerController extends Controller
                         'status' => 'rejected'
                     ]);
 
-            // Check Notification settings
-            $notify_settings = Notification::where('user_id', $request->tradesperson_id)->first();
-            if($notify_settings) {
-                if($notify_settings->settings != null){
-                    $noti_rejected = $notify_settings->settings['noti_quote_rejected'];
-                } else {
-                    $noti_rejected = 1;
-                }
-            }
-            // Notification
-            if($noti_rejected == 1){
-                $html = view('email.estimate-rejected-email')
-                                ->with('data', [
-                                'project_name'       => $project->project_name,
-                                'user_name'          => $tradeperson->name
-                                ])
-                                ->render();
-                $emaildata = array(
-                    'From'          => 'support@fixmybuild.com',
-                    'To'            =>  $tradeperson->email,
-                    'Subject'       => 'Your Given Estimate Has Been Rejected',
-                    'HtmlBody'      =>  $html,
-                    'MessageStream' => 'outbound'
-                );
-                $email_sent = send_email($emaildata);
+            estimate_rejected_notification($tradeperson, $project);
 
-                // Notificatin Insert in DB
-                $notificationDetail = new NotificationDetail();
-                $notificationDetail->user_id = $tradeperson->id;
-                $notificationDetail->from_user_id = Auth::user()->id;
-                $notificationDetail->from_user_type = 'customer';
-                $notificationDetail->related_to = 'project';
-                $notificationDetail->related_to_id = $project->id;
-                $notificationDetail->read_status = 0;
-                $notificationDetail->notification_text = 'Your Given Estimate Has Been Rejected';
-                $notificationDetail->reviewer_note = null;
-                $notificationDetail->save();
-            }
             return response()->json(['redirect_url' => route('customer.project')]);
-
         } catch (\Exception $e) {
             return response()->json(['status' => $request->input('status')]);
         }
     }
 
+    public function pause_project(Request $request){
+        try {
+            Project::where('id', $request->project_id)->update(['status' => $request->status]);
 
+            project_paused_notification($request->project_id);
 
-
-
-    function project_pay_now(Request $request, $taskid){
-        $task = Task::where('id',Hashids_decode($taskid))->first();
-        return view("customer.pay-now", compact('task'));
-    }
-
-    function project_all_payment(Request $request){
-
-        $orderid= "FIXMYBUILD".date('Ymd').rand();
-
-        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        $customer = Stripe\Customer::create(array(
-                "email" => Auth::user()->email,
-                "source" => $request->stripeToken
-             ));
-
-        $charge = Stripe\Charge::create ([
-                "amount" => $request->totalamount * 100,
-                "currency" => "gbp",
-                "customer" => $customer->id,
-                "description" => $orderid,
-        ]);
-        if (!empty($charge) && $charge['status'] == 'succeeded') {
-
-
-            $task = Task::where('estimate_id',$request->estimates_id)->where('payment_status',null)->get();
-            foreach ($task as $row){
-                $data = array(
-                    'payment_status'           => $charge['status'],
-                    'status'                   => $charge['status'],
-                    'payment_type'             => 'card',
-                    'payment_transaction_id'   => $charge['balance_transaction'],
-                    'payment_capture_log'      => $charge,
-                    'payment_date'             => date('Y-m-d H:i:s')
-                );
-                Task::where('id', $row->id)->update($data);
-
-                // Transaction history save
-                $th = new Transactionhistory();
-                $th->order_id               = $orderid;
-                $th->user_id                = Auth::user()->id;
-                $th->task_id                = $row->id;
-                $th->totalamount            = $request->totalamount;
-                $th->payment_status         = $charge['status'];
-                $th->payment_type           = 'card';
-                $th->payment_transaction_id = $charge['balance_transaction'];
-                $th->payment_capture_log    = $charge;
-                $th->payment_date           = date('Y-m-d H:i:s');
-                $th->save();
-
-            }
-            $request->session()->flash('message', 'Payment completed.');
-        } else {
-            $request->session()->flash('danger', 'Payment failed.');
+            return response()->json(['redirect_url' => route('customer.project')]);
+        } catch (\Exception $e) {
+            echo 'error';
         }
-
-        return back();
     }
 }

@@ -1,7 +1,7 @@
 <div class="tab-pane fade @if (tradesperson_project_status($project->id)=='estimate_submitted'||tradesperson_project_status($project->id)=='estimate_recalled'||tradesperson_project_status($project->id)=='estimate_rejected')active show @endif" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
     <div class="row mb-5">
        <div class="col-md-8">
-          <img src="" alt="" class="mr-2"> <span>{{ $trader_detail->comp_name }}</span>
+          <img src="{{ $company_logo->url }}" alt="" class="mr-2 c_logo"> <span>{{ $trader_detail->comp_name }}</span>
        </div>
        <div class="col-md-4 text-right mt-4">
           <h6>Posted on: <span class="date_time">{{ $estimate->created_at->format('d M Y,  H:i A') }}</span> </h6>
@@ -25,9 +25,9 @@
              <h3>Photo(s)/Video(s)</h3>
              <div class="row">
                 <div class="pv_top">
-                   <div class="d-inline mr-3"><img src="assets/img/Rectangle 63.jpg" alt=""></div>
-                   <div class="d-inline mr-3"><img src="assets/img/Rectangle 62.jpg" alt=""></div>
-                   <div class="d-inline mr-3"><img src="assets/img/Group 296.jpg" alt=""></div>
+                    @foreach($teams_photos as $teams_photo)
+                        <div class="d-inline mr-3"><img src="{{ $teams_photo->url }}" alt="" class="rectangle-img"></div>
+                    @endforeach
                 </div>
              </div>
           </div>

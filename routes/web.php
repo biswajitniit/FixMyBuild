@@ -202,6 +202,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('cancel-project', [CustomerController::class, 'cancel_project'])->name('cancel-project');
         Route::post('accept-estimation', [CustomerController::class, 'accept_estimation'])->name('accept-estimation');
         Route::post('reject-estimation', [CustomerController::class, 'reject_estimation'])->name('reject-estimation');
+        Route::post('pause-project', [CustomerController::class, 'pause_project'])->name('pause-project');
         /**
          * Logout Route
          */

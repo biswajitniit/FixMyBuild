@@ -287,7 +287,8 @@
         // checkbox for <tr>
 
         $('.toggle-class').on('change',function(){
-            let task_id = $(this).val();
+            let checkbox = $(this);
+            let task_id = checkbox.val();
             let pencil = $('#pencil'+task_id);
             $.ajax({
                 url: '{{ route("tradeperson.update-task-status") }}',
@@ -295,9 +296,12 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     task_id: task_id,
+
                 },
                 success: function(response) {
-                    $(this).prop('checked') ?pencil.addClass('d-none'):pencil.removeClass('d-none');
+                    checkbox.prop('checked', true);
+                    checkbox.prop('disabled', true);
+                    pencil.addClass('d-none');
                 },
                 error: function(xhr) {
 
@@ -305,6 +309,28 @@
             });
 
         });
+
+        function paid_initial(x){
+            let checkbox = $('#initial_payment_check');
+            let task_id = x;
+            $.ajax({
+                url: '{{ route("tradeperson.update-task-status") }}',
+                type: 'post',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    task_id: task_id,
+
+                },
+                success: function(response) {
+                    console.log(response)
+                    checkbox.prop('checked', true);
+                    checkbox.prop('disabled', true);
+                },
+                error: function(xhr) {
+
+                }
+            });
+        }
 
 
         function submitMessage(event){

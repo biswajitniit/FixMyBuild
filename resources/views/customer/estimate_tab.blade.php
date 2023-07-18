@@ -29,9 +29,9 @@
              <h3>Photo(s)/Video(s)</h3>
              <div class="row">
                 <div class="pv_top">
-                   <div class="d-inline mr-3"><img src="assets/img/Rectangle 63.jpg" alt=""></div>
-                   <div class="d-inline mr-3"><img src="assets/img/Rectangle 62.jpg" alt=""></div>
-                   <div class="d-inline mr-3"><img src="assets/img/Group 296.jpg" alt=""></div>
+                    @foreach($teams_photos as $teams_photo)
+                        <div class="d-inline mr-3"><img src="{{ $teams_photo->url }}" alt="" class="rectangle-img"></div>
+                    @endforeach
                 </div>
              </div>
           </div>
@@ -64,19 +64,17 @@
                    <h6>Cost breakdown including contingency</h6>
                 </div>
                 @if($estimate->payment_required_upfront == 1)
-                    <div class="row mt-4 mb-3 cost_b">
+                    <div class="row mt-4 cost_b">
                         <div class="col-6">
                             Initial payment
                         </div>
-                        @if($estimate->initial_payment_type == 'Percentage')
-                            <div class="col-6">
-                                    <span>{{ $initial_payment_percentage }}({{ $estimate->initial_payment }}%)</span>
-                            </div>
-                        @else
                         <div class="col-6">
-                                <span>£{{ number_format($estimate->initial_payment) }}</span>
+                            @foreach($tasks as $key=>$task)
+                                @if($task->is_initial == 1)
+                                    <span>£{{ $task->price }}</span>
+                                @endif
+                            @endforeach
                         </div>
-                        @endif
                     </div>
                 @endif
                 <div class="row mt-4 mb-3 cost_b">
@@ -133,7 +131,7 @@
                 <div class="col-6 mt-2">
                     <small>Available to start</small>
                     @if($estimate->project_start_date == null)
-                        <div class="price_ec">{{ ucwords($estimate->project_start_date_type) }}</div>
+                        <div class="price_ec">{{ str_replace('_', ' ', ucwords($estimate->project_start_date_type)) }}</div>
                     @else
                         <div class="price_ec">{{ date('d-m-Y',strtotime($estimate->project_start_date)) }}</div>
                     @endif

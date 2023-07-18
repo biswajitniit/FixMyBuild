@@ -18,9 +18,6 @@
                             <td>1</td>
                             <td>
                                 <a href="#">
-                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M11.8346 6.83171H6.83464V11.8317H5.16797V6.83171H0.167969V5.16504H5.16797V0.165039H6.83464V5.16504H11.8346V6.83171Z" fill="#EE5719"/>
-                                    </svg>
                                     Initial payment
                                 </a>
                             </td>
@@ -37,7 +34,13 @@
                             <td class="text-warning">Pending</td>
                             <td>
                                 <label class="form-check-label" data-bs-toggle="modal" data-bs-target="#Confirm_wp">
-                                    <input type="checkbox" class="form-check-input" value="">
+                                    @foreach($tasks as $key=>$task)
+                                        @if($task->is_initial == 1 && $task->status == 'completed')
+                                            <input type="checkbox" class="form-check-input" value="" id='initial_payment_check' checked disabled>
+                                        @elseif($task->is_initial == 1)
+                                            <input type="checkbox" class="form-check-input" value="" id='initial_payment_check'>
+                                        @endif
+                                    @endforeach
                                 </label>
                             </td>
                             <!-- Modal -->
@@ -57,8 +60,12 @@
                                        <p>Please take your decision carefully, because it's can't be revert if you mention mark as completed.</p>
                                    </div>
                                    <div class="modal-footer justify-content-center">
-                                       <button type="button" class="btn btn-light" data-bs-dismiss="modal">Yes</button>
-                                       <button type="button" class="btn btn-light">No</button>
+                                        @foreach($tasks as $key=>$task)
+                                            @if($task->is_initial == 1)
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal" onclick="paid_initial('{{ Hashids_encode($task->id) }}')">Yes</button>
+                                                <button type="button" class="btn btn-light">No</button>
+                                            @endif
+                                        @endforeach
                                    </div>
                                </div>
                                </div>
@@ -84,7 +91,7 @@
                                     </a>
                                 </td>
                                 <td>£{{ sprintf("%.2f",$task->price) }}</td>
-                                <td>
+                                <td class="contin_">
                                     @if($task->contingency == null)
                                         <span class="displayVal">{{ sprintf("%.2f", (($task->price * $estimate->contingency)/100) + $task->price) }}</span>
                                     @else
@@ -96,7 +103,7 @@
 
                                     @if($task->status == null || $task->status == 'Inactive')
                                         <a href="javascript:void(0);">
-                                            <i class="fa fa-pencil ml-2 clickPencil" id='pencil{{ $task->id }}' onclick="edit(this)"></i>
+                                            <i class="fa fa-pencil ml-2 clickPencil" id='pencil{{ Hashids_encode($task->id) }}' onclick="edit(this)"></i>
                                         </a>
                                         <a href="javascript:void(0);">
                                             <i class="fa fa-check ml-2 d-none clickSave" onclick="save(this)"></i>
