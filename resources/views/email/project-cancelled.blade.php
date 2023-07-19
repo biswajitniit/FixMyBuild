@@ -28,8 +28,7 @@
             border="0"
             cellpadding="0"
             cellspacing="0"
-            style="background: #f6f6f6; padding: 20px; color: #232f3e; font-family: helvetica, arial, sans-serif; font-size: 15px; line-height: 24px; margin: 20px auto 0; width: 600px;"
-        >
+            style="background: #f6f6f6; padding: 20px; color: #232f3e; font-family: helvetica, arial, sans-serif; font-size: 15px; line-height: 24px; margin: 20px auto 0; width: 600px;">
             <tbody>
                 <tr>
                     <td>
@@ -41,20 +40,15 @@
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <img src="{{ asset("frontend/emailtemplateimage/logo.png") }}" alt=''>
+                                                        <img src="{{ asset('frontend/emailtemplateimage/fix-my-build.svg') }}" alt="">
                                                     </td>
                                                 </tr>
-                                                <tr style="height: 30px;">
-                                                    <td></td>
+                                                <tr style="height: 40px;">
+                                                    <td><img src="{{ asset('frontend/emailtemplateimage/cancelled.svg') }}" alt=""></td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <img src="{{ asset("frontend/emailtemplateimage/Group180.png") }}" alt=''>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h2 style="font-size: 24px;">Hi {{ $user->name }},</h2>
+                                                        <h2 style="font-size: 32px;">Project cancelled</h2>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -66,11 +60,10 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
-                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">You have successfully deleted your account with the reason "{{ $user->account_deletion_reason }}".</h5>
-                                        <p style="font-size: 20px; margin-top: 20px;">
-                                            If you have any questions, reach out to us at <br />
-                                            <a href="#" style="font-size: 20px; text-decoration: none; color: #ee5719;">support@fixmybuild.com</a>
-                                        </p>
+                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">Unfortunately your estimate for the project titled "{{ ucwords($data['project_name']) }}" has been cancelled by the customer.</h5>
+                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">This could be due to a number of reasons, for example the customer changing their mind about the project.</h5>
+                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">There will be more project requests in the future, and we wish you good luck in securing your next project.</h5>
+
                                         <h5 style="color: #061a48; font-size: 16px; line-height: 23px; text-align: center; margin-bottom: 10px;">Team Fix My Build</h5>
                                         <a href="#" style="margin-right: 10px; text-decoration: none;">
                                             <img src="{{ asset('frontend/emailtemplateimage/facebook.svg') }}" alt="">

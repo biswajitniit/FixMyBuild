@@ -78,7 +78,7 @@
                 </div>
                 <div class="form-group col-md-12 mt-5 text-center pre_">
                     <a href="{{route('customer.project')}}" class="btn btn-light mr-3">Back</a>
-                    <a href="{{ route('customer.project') }}" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#reject">Reject</a>
+                    <a href="#" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#reject">Reject</a>
                     <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" data-bs-toggle="modal" data-bs-target="#accept" class="btn btn-primary">Accept</a>
                 </div>
                 <!-- The Modal Accept received-->
@@ -361,10 +361,11 @@
                     tradesperson_id : tradeperson_id
                 },
                 success: function(response) {
+                    console.log('Project rejected successfully done');
                     window.location.href = response.redirect_url;
                 },
                 error: function(xhr, error) {
-                    // console.error('Error cancelling project:', error);
+                    console.error('Error rejecting project:', error);
                 }
             });
         }

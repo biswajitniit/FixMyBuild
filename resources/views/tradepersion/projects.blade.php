@@ -72,47 +72,6 @@
                             </div>
                          </div>
                       </div>
-                      {{-- <div class="col-6 status_wp">
-                         <div class="dropdown" id="sel1">
-                            <label class="dropdown-label">Status</label>
-                            <div class="dropdown-list">
-                              <div class="checkbox">
-                                <input type="checkbox" name="new_project_status[]" class="check-all checkbox-custom" id="checkbox-main"/>
-                                <label for="checkbox-main" class="checkbox-custom-label">All</label>
-                              </div>
-
-                              <div class="checkbox">
-                                <input type="checkbox" name="new_project_status[]" class="check checkbox-custom" id="checkbox-custom_01"/>
-                                <label for="checkbox-custom_01" class="checkbox-custom-label">Write estimate</label>
-                              </div>
-
-                              <div class="checkbox">
-                                <input type="checkbox" name="new_project_status[]" class="check checkbox-custom" id="checkbox-custom_02"/>
-                                <label for="checkbox-custom_02" class="checkbox-custom-label">Estimate submitted</label>
-                              </div>
-
-                              <div class="checkbox">
-                                <input type="checkbox" name="new_project_status[]" class="check checkbox-custom" id="checkbox-custom_03"/>
-                                <label for="checkbox-custom_03" class="checkbox-custom-label">Estimate recalled</label>
-                              </div>
-
-                              <div class="checkbox">
-                                <input type="checkbox" name="new_project_status[]" class="check checkbox-custom" id="checkbox-custom_04"/>
-                                <label for="checkbox-custom_04" class="checkbox-custom-label">Estimate rejected</label>
-                              </div>
-
-                              <div class="checkbox">
-                               <input type="checkbox" name="new_project_status[]" class="check checkbox-custom" id="checkbox-custom_05"/>
-                               <label for="checkbox-custom_05" class="checkbox-custom-label">Estimate accepted</label>
-                             </div>
-
-                             <div class="checkbox">
-                               <input type="checkbox" name="new_project_status[]" class="check checkbox-custom" id="checkbox-custom_06"/>
-                               <label for="checkbox-custom_06" class="checkbox-custom-label">Project started</label>
-                             </div>
-                            </div>
-                          </div>
-                      </div> --}}
                     </div>
                     <div class="row table_wrap mt-5" id="new_projects">
                         @include('tradepersion.project_lists.new_project_list')

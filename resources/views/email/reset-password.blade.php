@@ -28,7 +28,7 @@
                                          <tbody>
                                             <tr>
                                                <td>
-                                                  <img src=".url("frontend/emailtemplateimage/logo.png")." alt=''>
+                                                  <img src="{{ asset('frontend/emailtemplateimage/fix-my-build.svg') }}" alt="Fix My Build">
                                                </td>
                                             </tr>
                                             <tr style='height: 40px;'>
@@ -48,23 +48,35 @@
                                 </tr>
                                 <tr>
                                    <td style='text-align: center;background: #FFF;padding:20px 30px;border-radius: 10px;'>
-                                      <h5 style='color: #6D717A;font-size: 20px;line-height: 23px;'>If you've lost your password or wish to reset it, use the link below to get started.</h5>
+                                      <h5 style='color: #6D717A;font-size: 20px;line-height: 23px;'>If you would like to reset your password use the link below to get started.</h5>
                                       <h4><a href="{{ route('reset.password.get', $token) }}" style='color: #FFF;text-align: center;background: #EE5719;padding: 15px 50px;border-radius: 50px;margin: 10px auto;text-decoration: none;display: inline-block;'>
                                          Reset your password.
                                          </a>
                                       </h4>
                                       <p>If you did not request a password reset, you can safely ignore this email. Only a person with access to your email can reset your account password.</p>
+
+                                      <h5 style="color: #061a48; font-size: 16px; line-height: 23px; text-align: center; margin-bottom: 10px;">Team Fix My Build</h5>
+                                        <a href="#" style="margin-right: 10px; text-decoration: none;">
+                                            <img src="{{ asset('frontend/emailtemplateimage/facebook.svg') }}" alt="">
+                                        </a>
+                                        <a href="#">
+                                            <img src="{{ asset('frontend/emailtemplateimage/twitter.svg') }}" alt="">
+                                        </a>
                                    </td>
                                 </tr>
                                 <tr style='height: 70px;'>
-                                   <td></td>
+                                    <td>
+                                        <h5>
+                                            If you would like to unsubscribe from this notification please amend your settings <a href="{{ route('customer.notifications') }}">here.</a>
+                                        <h5>
+                                    </td>
                                 </tr>
                                 <tr>
-                                   <td style='text-align:center'>
-                                      <p>Copyright © 2022 FixMyBuild. All Rights Reserved.</p>
-                                      <a href='#' style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src=".url("frontend/emailtemplateimage/phone.svg")." alt=''> +447975777666</a>
-                                      <a href='#' style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src=".url("frontend/emailtemplateimage/mail.svg")." alt=''> help@fixmybuild.com</a>
-                                   </td>
+                                    <td style='text-align:center'>
+                                       <p>Copyright &copy; {{ date('Y') }} FixMyBuild. All Rights Reserved.</p>
+                                       <a href="tel:+447975777666" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/phone.svg') }}" alt=''> +447975777666</a>
+                                       <a href="support@fixmybuild.com" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/mail.svg') }}" alt=''> help@fixmybuild.com</a>
+                                    </td>
                                 </tr>
                              </tbody>
                           </table>

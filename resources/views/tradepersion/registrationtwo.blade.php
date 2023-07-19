@@ -1064,7 +1064,7 @@
         }
 
         // Initialise Webcam
-        var constraints = { audio: true, video: true };
+        var constraints  = { audio: true, video: true };
         navigator.mediaDevices.getUserMedia(constraints)
         .then(function(mediaStream) {
             Webcam.set({

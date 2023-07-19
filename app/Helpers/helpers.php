@@ -168,42 +168,244 @@ function time_diff($created_at){
     } else {
         return date('F j, Y', strtotime($created));
     }
-  }
-    function milestone_completion_notification($task_id){
-        $task = Task::where('id', $task_id)->first();
-        $estimate = Estimate::where('id', $task->estimate_id)->first();
-        $project = Project::where('id', $estimate->project_id)->first();
-        $user = User::where('id', $project->user_id)->first();
-        $notify_settings = Notification::where('user_id', $project->user_id)->first();
-        if($notify_settings) {
-            if($notify_settings->settings != null){
-              $project_milestone = $notify_settings->settings['project_milestone_complete'];
-            }
-        }
-        if($project_milestone == 1){
-            $html = view('email.milestone-complete')
-                ->with('data', [
-                'project_name'       => $project->project_name,
-                'user_name'          => $user->name
-                ])
-                ->render();
-            $emaildata = array(
-                'From'          => 'support@fixmybuild.com',
-                'To'            => $user->email,
-                'Subject'       => 'Milestone Completed',
-                'HtmlBody'      => $html,
-                'MessageStream' => 'outbound'
-            );
-            $email_sent = send_email($emaildata);
-            $notificationDetail = new NotificationDetail();
-            $notificationDetail->user_id = $user->id;
-            $notificationDetail->from_user_id = Auth::user()->id;
-            $notificationDetail->from_user_type = Auth::user()->type;
-            $notificationDetail->related_to = 'project';
-            $notificationDetail->related_to_id = $project->id;
-            $notificationDetail->read_status = 0;
-            $notificationDetail->notification_text = 'Your project milestone has been completed';
-            $notificationDetail->reviewer_note = null;
-            $notificationDetail->save();
+}
+function milestone_completion_notification($task_id){
+    $task = Task::where('id', $task_id)->first();
+    $estimate = Estimate::where('id', $task->estimate_id)->first();
+    $project = Project::where('id', $estimate->project_id)->first();
+    $user = User::where('id', $project->user_id)->first();
+    $notify_settings = Notification::where('user_id', $project->user_id)->first();
+    if($notify_settings) {
+        if($notify_settings->settings != null){
+            $project_milestone = $notify_settings->settings['project_milestone_complete'];
         }
     }
+    if($project_milestone == 1){
+        $html = view('email.milestone-complete')
+            ->with('data', [
+            'project_name'       => $project->project_name,
+            'user_name'          => $user->name
+            ])
+            ->render();
+        $emaildata = array(
+            'From'          => 'support@fixmybuild.com',
+            'To'            => $user->email,
+            'Subject'       => 'Milestone Completed',
+            'HtmlBody'      => $html,
+            'MessageStream' => 'outbound'
+        );
+        $email_sent = send_email($emaildata);
+        $notificationDetail = new NotificationDetail();
+        $notificationDetail->user_id = $user->id;
+        $notificationDetail->from_user_id = Auth::user()->id;
+        $notificationDetail->from_user_type = Auth::user()->type;
+        $notificationDetail->related_to = 'project';
+        $notificationDetail->related_to_id = $project->id;
+        $notificationDetail->read_status = 0;
+        $notificationDetail->notification_text = 'Your project milestone has been completed';
+        $notificationDetail->reviewer_note = null;
+        $notificationDetail->save();
+    }
+}
+
+function project_paused_notification($project_id){
+    $project = Project::where('id', $project_id)->first();
+    $estimate = Estimate::where('project_id', $project_id)->first();
+    $customer = Auth::user();
+    $tradeperson = User::where('id', $estimate->tradesperson_id)->first();
+    $notify_settings_customer = Notification::where('user_id', Auth::user()->id)->first();
+    $notify_settings_trader = Notification::where('user_id', $estimate->tradesperson_id)->first();
+    $project_paused = 0;
+    // For customer
+    if($notify_settings_customer)
+        $project_paused = $notify_settings_customer->settings['paused'];
+
+    if($project_paused == 1){
+        $html = view('email.project-paused-customer')
+            ->with('data', [
+            'project_name'       => $project->project_name,
+            'user_name'          => $customer->name
+            ])
+            ->render();
+        $emaildata = array(
+            'From'          => 'support@fixmybuild.com',
+            'To'            =>  $customer->email,
+            'Subject'       => 'Project Paused',
+            'HtmlBody'      =>  $html,
+            'MessageStream' => 'outbound'
+        );
+        $email_sent = send_email($emaildata);
+
+        $notificationDetail = new NotificationDetail();
+        $notificationDetail->user_id = $customer->id;
+        $notificationDetail->from_user_id = Auth::user()->id;
+        $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
+        $notificationDetail->related_to = 'project';
+        $notificationDetail->related_to_id = $project->id;
+        $notificationDetail->read_status = 0;
+        $notificationDetail->notification_text = 'Your project has been paused';
+        $notificationDetail->reviewer_note = null;
+        $notificationDetail->save();
+    }
+
+    // For tradeperson
+    if($notify_settings_trader) {
+        if($notify_settings_trader->settings != null){
+            $project_paused_trader = $notify_settings_trader->settings['noti_project_stopped'];
+        }
+    }
+
+    if($project_paused_trader == 1){
+        $html = view('email.project-paused-trader')
+            ->with('data', [
+            'project_name'       => $project->project_name,
+            'user_name'          => $tradeperson->name
+            ])
+            ->render();
+        $emaildata = array(
+            'From'          => 'support@fixmybuild.com',
+            'To'            =>  $tradeperson->email,
+            'Subject'       => 'Paused Project',
+            'HtmlBody'      =>  $html,
+            'MessageStream' => 'outbound'
+        );
+        $email_sent = send_email($emaildata);
+
+        $notificationDetail = new NotificationDetail();
+        $notificationDetail->user_id = $tradeperson->id;
+        $notificationDetail->from_user_id = Auth::user()->id;
+        $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
+        $notificationDetail->related_to = 'project';
+        $notificationDetail->related_to_id = $project->id;
+        $notificationDetail->read_status = 0;
+        $notificationDetail->notification_text = 'Customer has paused the project';
+        $notificationDetail->reviewer_note = null;
+        $notificationDetail->save();
+    }
+}
+function estimate_rejected_notification($tradeperson, $project){
+    // Check Notification settings
+    $notify_settings = Notification::where('user_id', $tradeperson->id)->first();
+    if($notify_settings) {
+        if($notify_settings->settings != null){
+            $noti_rejected = $notify_settings->settings['noti_quote_rejected'];
+        } else {
+            $noti_rejected = 1;
+        }
+    }
+    // Notification
+    if($noti_rejected == 1){
+        $html = view('email.estimate-rejected-email')
+                        ->with('data', [
+                        'project_name'       => $project->project_name,
+                        'user_name'          => $tradeperson->name
+                        ])
+                        ->render();
+        $emaildata = array(
+            'From'          => 'support@fixmybuild.com',
+            'To'            =>  $tradeperson->email,
+            'Subject'       => 'Your Given Estimate Has Been Rejected',
+            'HtmlBody'      =>  $html,
+            'MessageStream' => 'outbound'
+        );
+        $email_sent = send_email($emaildata);
+
+        // Notificatin Insert in DB
+        $notificationDetail = new NotificationDetail();
+        $notificationDetail->user_id = $tradeperson->id;
+        $notificationDetail->from_user_id = Auth::user()->id;
+        $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
+        $notificationDetail->related_to = 'project';
+        $notificationDetail->related_to_id = $project->id;
+        $notificationDetail->read_status = 0;
+        $notificationDetail->notification_text = 'Your Given Estimate Has Been Rejected';
+        $notificationDetail->reviewer_note = null;
+        $notificationDetail->save();
+    }
+}
+function cancel_project_notification($projectId){
+    $project = Project::where('id', $projectId)->first();
+    $estimate = Estimate::where('project_id', $projectId)->first();
+    $user = User::where('id', $estimate->tradesperson_id)->first();
+    // Check Notification settings
+    $notify_settings = Notification::where('user_id', $user->id)->first();
+    if($notify_settings) {
+        if($notify_settings->settings != null){
+            $noti_cancelled = $notify_settings->settings['noti_quote_rejected'];
+        } else {
+            $noti_cancelled = 1;
+        }
+    }
+    // Notification
+    if($noti_cancelled == 1){
+        $html = view('email.project-cancelled')
+                        ->with('data', [
+                        'project_name'       => $project->project_name,
+                        'user_name'          => $user->name
+                        ])
+                        ->render();
+        $emaildata = array(
+            'From'          => 'support@fixmybuild.com',
+            'To'            =>  $user->email,
+            'Subject'       => 'Your project has been Cancelled',
+            'HtmlBody'      =>  $html,
+            'MessageStream' => 'outbound'
+        );
+        $email_sent = send_email($emaildata);
+
+        // Notificatin Insert in DB
+        $notificationDetail = new NotificationDetail();
+        $notificationDetail->user_id = $user->id;
+        $notificationDetail->from_user_id = Auth::user()->id;
+        $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
+        $notificationDetail->related_to = 'project';
+        $notificationDetail->related_to_id = $project->id;
+        $notificationDetail->read_status = 0;
+        $notificationDetail->notification_text = 'Your project has been Cancelled';
+        $notificationDetail->reviewer_note = null;
+        $notificationDetail->save();
+    }
+}
+function project_completed_notification($estimateId){
+    $estimate = Estimate::where('id', $estimateId)->first();
+    $project = Project::where('id', $estimate->project_id)->first();
+    $user = User::where('id', $project->user_id)->first();
+
+    // Check Notification settings
+    $notify_settings = Notification::where('user_id', $user->id)->first();
+    if($notify_settings) {
+        if($notify_settings->settings != null){
+            $noti_complete = $notify_settings->settings['project_complete'];
+        } else {
+            $noti_complete = 1;
+        }
+    }
+    // Notification
+    if($noti_complete == 1){
+        $html = view('email.project-completed')
+                        ->with('data', [
+                        'project_name'       => $project->project_name,
+                        ])
+                        ->render();
+        $emaildata = array(
+            'From'          => 'support@fixmybuild.com',
+            'To'            =>  $user->email,
+            'Subject'       => 'Your project has been Ccompleted',
+            'HtmlBody'      =>  $html,
+            'MessageStream' => 'outbound'
+        );
+        $email_sent = send_email($emaildata);
+
+        // Notificatin Insert in DB
+        $notificationDetail = new NotificationDetail();
+        $notificationDetail->user_id = $user->id;
+        $notificationDetail->from_user_id = Auth::user()->id;
+        $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
+        $notificationDetail->related_to = 'project';
+        $notificationDetail->related_to_id = $project->id;
+        $notificationDetail->read_status = 0;
+        $notificationDetail->notification_text = 'Your project has been Ccompleted';
+        $notificationDetail->reviewer_note = null;
+        $notificationDetail->save();
+    }
+}

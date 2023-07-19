@@ -40,7 +40,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <img src="{{ asset("frontend/emailtemplateimage/logo.png") }}" alt="">
+                                                        <img src="{{ asset('frontend/emailtemplateimage/fix-my-build.svg') }}" alt="">
                                                     </td>
                                                 </tr>
                                                 <tr style="height: 40px;">
@@ -60,17 +60,25 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
-                                        <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">{{ ucwords($data['project_name']) }} project estimate has been rejected by the customer</h5>
+                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">{{ ucwords($data['project_name']) }} project estimate has been rejected by the customer</h5>
+
+                                        <h5 style="color: #061a48; font-size: 16px; line-height: 23px; text-align: center; margin-bottom: 10px;">Team Fix My Build</h5>
+                                        <a href="#" style="margin-right: 10px; text-decoration: none;">
+                                            <img src="{{ asset('frontend/emailtemplateimage/facebook.svg') }}" alt="">
+                                        </a>
+                                        <a href="#">
+                                            <img src="{{ asset('frontend/emailtemplateimage/twitter.svg') }}" alt="">
+                                        </a>
                                     </td>
                                 </tr>
-                                <tr style="height: 70px;">
-                                    <td></td>
+                                <tr style='height: 70px;'>
+                                    <td><h5>If you would like to unsubscribe from this notification please amend your settings <a href="{{ route('customer.notifications') }}">here.</a><h5></td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align: center;">
-                                        <p>Copyright &copy; {{ date('Y') }} FixMyBuild. All Rights Reserved.</p>
-                                        <a href="#" style="font-size: 14px; margin-right: 5px; text-decoration: none; color: #ee5719;"><img src="{{ asset("frontend/emailtemplateimage/phone.svg") }}" alt=""> +447975777666</a>
-                                        <a href="#" style="font-size: 14px; margin-right: 5px; text-decoration: none; color: #ee5719;"><img src="{{ asset("frontend/emailtemplateimage/mail.svg") }}" alt=""> help@fixmybuild.com</a>
+                                    <td style='text-align:center'>
+                                       <p>Copyright &copy; {{ date('Y') }} FixMyBuild. All Rights Reserved.</p>
+                                       <a href="tel:+447975777666" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/phone.svg') }}" alt=''> +447975777666</a>
+                                       <a href="support@fixmybuild.com" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/mail.svg') }}" alt=''> help@fixmybuild.com</a>
                                     </td>
                                 </tr>
                             </tbody>

@@ -124,7 +124,7 @@
                                           @endif
                                           @if(Auth::user()->customer_or_tradesperson == 'Tradesperson' && Auth::user()->status == 'Active')
                                           <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My profile</a></li>
-                                          <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My projects</a></li>
+                                          <li><a class="dropdown-item" href="{{ route('tradepersion.projects') }}">My projects</a></li>
                                           <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">New project</a></li>
                                           @endif
                                           <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
@@ -206,17 +206,18 @@
                                             </li>
                                             @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
                                              <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
                                              <li><a class="dropdown-item" @if(Auth::user()->is_email_verified == 0) href="javascript:void(0)" @else href="{{ route('customer.newproject') }}" @endif>New project</a></li>
                                              @endif
                                              @if(Auth::user()->customer_or_tradesperson == 'Tradesperson' && Auth::user()->status == 'Active')
                                              <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My profile</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My projects</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('tradepersion.projects') }}">My projects</a></li>
                                              <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">New project</a></li>
-                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                              @endif
+                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                                         </ul>
                                     </div>
+
                                 @endif
                            </div>
                         </div>
