@@ -58,3 +58,15 @@ ALTER TABLE `traderareas` ADD `county` VARCHAR(255) NOT NULL COMMENT 'areas' AFT
 -- ADD Indexing to county town in traderareas
 --
 ALTER TABLE `traderareas` ADD INDEX(`county`, `town`);
+
+--
+-- CREATE VIEW county_towns
+--
+CREATE VIEW county_towns AS SELECT DISTINCT `Post Town` AS county, `Dependent Locality` AS town FROM `postcodes`;
+
+-- CREATE VIEW id_county_town AS SELECT ROW_NUMBER() OVER() AS id, `Post Town` AS county, `Dependent Locality` AS town FROM `postcodes` GROUP BY `Post Town`, `Dependent Locality` ORDER BY 'id';
+
+--
+-- CHANGE sub_area_cover_id OF TRADER_AREAS TO NULL
+--
+ALTER TABLE `traderareas` CHANGE `sub_area_cover_id` `sub_area_cover_id` BIGINT(20) UNSIGNED NULL;

@@ -732,36 +732,17 @@
                       <div class="col-md-4">
                          <nav class="nav-sidebar">
                             <ul class="nav tabs">
-                              <?php $j=1;?>
-                             @foreach($areas as $a)
-                                @php
-                                    $buildersubareas = array_map(function($sa) {
-                                        return (array) $sa;
-                                    }, $a->subareas->toArray());
-                                    $ids = array_column($buildersubareas, 'id');
-                                    $diff = array_intersect(old('subareacovers') ? array_unique(old('subareacovers')) : [], $ids);
-                                @endphp
-                               <li class="areaschkboxsec @if($j == 1) active @endif">
-                                  <a href="#tab0{{$j}}" data-toggle="tab" onclick="changeAreaActiveStatus(this)" @if ((count($diff) > 0))class="secondary-font-color" @endif>
-                                     {{$a->area_type}}
-                                     {{-- <div class="pull-right">{{count($a->subareas)}}</div> --}}
-                                     <div class="pull-right">{{ (count($diff) > 0) ? count($diff) : '' }}</div>
-                                  </a>
-                               </li>
-                               <?php $j++; ?>
-                               @endforeach
-
-                              {{-- <?//php $j=1;?>
-                               @foreach ($counties as $county)
-                                <li class="areaschkboxsec @if($j == 1) active @endif">
-                                    <a href="#tab0{{$j}}" data-toggle="tab" onclick="changeAreaActiveStatus(this)" @if ((count($diff) > 0))class="secondary-font-color" @endif>
-                                        {{ $county }}
-                                    <!-- <div class="pull-right">{{count($a->subareas)}}</div> -->
-                                    <div class="pull-right">{{ (count($diff) > 0) ? count($diff) : '' }}</div>
-                                    </a>
-                                </li>
-                               <?//php $j++; ?>
-                               @endforeach --}}
+                                <?php $j=1;?>
+                                @foreach($areas as $county=>$towns)
+                                    <li class="areaschkboxsec @if($j == 1) active @endif">
+                                        <a href="#tab0{{$j}}" data-toggle="tab" onclick="changeAreaActiveStatus(this)" {{-- @if((count($diff)>0))class="secondary-font-color"@endif --}}>
+                                            {{ \Str::title($county) }}
+                                            {{-- <div class="pull-right">{{count($a->subareas)}}</div> --}}
+                                            <div class="pull-right">{{-- (count($diff)>0)?count($diff):'' --}}</div>
+                                        </a>
+                                    </li>
+                                    <?php $j++; ?>
+                                @endforeach
                             </ul>
                          </nav>
                       </div>
@@ -778,24 +759,24 @@
                                    id="areaSearch">
                                 </div>
                              </div>
-                           <?php $j=1;?>
-                            @foreach($areas as $a)
-                            <div class="tab-pane @if($j == 1) active @endif text-style" id="tab0{{$j}}">
-                               <div class="row tab_cont">
-                                 @foreach($a->subareas as $ac)
-                                  <li class="col-6">
-                                     <div class="form-check areachkbx">
-                                        <input type="checkbox" id="areacovers{{$ac->id}}" class="form-check-input"  name="subareacovers[]" value="{{$ac->id}}" {{ (old('subareacovers') && in_array($ac->id, old('subareacovers'))) ? 'checked': '' }}>
-                                        {{-- <input type="checkbox" id="areacovers{{$ac->id}}" class="form-check-input"  name="subareacovers[]" value='{"id":{{$ac->id}}, "county":"{{ $a->area_type }}", "town":"{{ $ac->sub_area_type }}" }' {{ (old('subareacovers') && in_array($ac->id, old('subareacovers'))) ? 'checked': '' }}> --}}
-                                        <label class="form-check-label" for="areacovers{{$ac->id}}">{{$ac->sub_area_type}}</label>
-                                     </div>
-                                  </li>
-                                  @endforeach
-
-                               </div>
-                            </div>
-                            <?php $j++; ?>
-                           @endforeach
+                            <?php $j=1;?>
+                            @foreach($areas as $county=>$towns)
+                                <div class="tab-pane @if($j == 1) active @endif text-style" id="tab0{{$j}}">
+                                    <div class="row tab_cont">
+                                        @foreach($towns as $town)
+                                            <li class="col-6">
+                                                <div class="form-check areachkbx">
+                                                    <input type="checkbox" id="areacovers-{{ $town == '' ? $county.'|Others' : $county.'|'.$town }}" class="form-check-input town-checkbox"  name="subareacovers[]" value="{{ $town == '' ? $county.'|Others' : $county.'|'.$town }}" {{ (old('subareacovers') && in_array( $town == '' ? $county.'|Others' : $county.'|'.$town , old('subareacovers'))) ? 'checked': '' }} />
+                                                    <label class="form-check-label" for="areacovers-{{$town}}">
+                                                        {{ $town == '' ? 'Others' : \Str::title($town) }}
+                                                    </label>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <?php $j++; ?>
+                            @endforeach
                          </div>
                       </div>
                    </div>
@@ -852,7 +833,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
-<script src="{{ asset('frontend/webcamjs/video.js') }}"></script>
+{{-- <script src="{{ asset('frontend/webcamjs/video.js') }}"></script> --}}
 <script src="{{ asset('frontend/js/utils.js') }}"></script>
 <script type="text/javascript">
 
@@ -1169,6 +1150,15 @@
             })
         });
 
+        // If the Form Validation fails, fill the left panel of areas covered with count of how many checkboxes had been checked for each areas
+        for(let i = 1; i <= {{ count($areas) }}; i++) {
+            total_checked_towns = $(`#tab0${i} .town-checkbox:checked`).length;
+            $(`a[href='#tab0${i}'] .pull-right`).text(total_checked_towns == 0 ? '' : total_checked_towns);
+            if(total_checked_towns != 0)
+                $(`a[href='#tab0${i}']`).addClass('secondary-font-color');
+            else
+                $(`a[href='#tab0${i}']`).removeClass('secondary-font-color');
+        }
     });
 
 //    input.addEventListener("countrychange", function() {

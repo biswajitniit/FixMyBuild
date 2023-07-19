@@ -39,9 +39,10 @@ class CustomerController extends Controller
 {
     public function customer_newproject(Request $request){
         if(Auth::user()->is_email_verified == 0){
-            return view("customer/profile");
+            return view("customer.profile");
         }else{
-            return view("customer/newproject");
+            $last_project = Project::where('user_id', Auth::id())->with('projectaddress')->latest()->first();
+            return view("customer.newproject", compact('last_project'));
         }
     }
     public function customer_profile(Request $request){
@@ -86,6 +87,20 @@ class CustomerController extends Controller
             $project->contact_mobile_no         =  $request['contact_mobile_no'];
             $project->contact_home_phone        =  $request['contact_home_phone'];
             $project->contact_email             =  $request['contact_email'];
+            if($request->addresstype == 1) { // Enter your postcode
+                $project->postcode              =  $request['zipcode_selected_postcode'];
+                $project->county                =  $request['zipcode_selected_county'];
+                $project->town                  =  $request['zipcode_selected_town'];
+            } elseif($request->addresstype == 2) { // Type your address
+                $project->town                  = $request['town_city'];
+                $project->county                = $request['county'];
+                $project->postcode              = $request['address_type_postcode'];
+            } else { // Use Old address
+                $latest_project = Project::where('user_id', Auth::id())->latest()->first();
+                $project->town = $latest_project->town;
+                $project->county = $latest_project->county;
+                $project->postcode = $latest_project->postcode;
+            }
             $project->Status                    =  'submitted_for_review';
         $project->save();
 
@@ -105,13 +120,23 @@ class CustomerController extends Controller
                 $address->town_city         = $request['zipcode_selected_town_city'];
                 $address->postcode          = $request['zipcode_selected_postcode'];
             $address->save();
-        }else{
+        } elseif($request->addresstype == 2) {
             $address = new Projectaddresses();
                 $address->project_id        = $project->id;
                 $address->address_line_one  = $request['address_line_one'];
                 $address->address_line_two  = $request['address_line_two'];
                 $address->town_city         = $request['town_city'];
-                $address->postcode          = $request['postcode'];
+                $address->postcode          = $request['address_type_postcode'];
+            $address->save();
+        } else {
+            $last_project_id = Project::where('user_id', Auth::id())->where('id', '<>', $project->id)->latest()->first()->id;
+            $last_project_address = Projectaddresses::where('project_id', $last_project_id)->first();
+            $address = new Projectaddresses();
+                $address->project_id        = $project->id;
+                $address->address_line_one  = $last_project_address->address_line_one;
+                $address->address_line_two  = $last_project_address->address_line_two;
+                $address->town_city         = $last_project_address->town_city;
+                $address->postcode          = $last_project_address->postcode;
             $address->save();
         }
 
@@ -269,7 +294,7 @@ class CustomerController extends Controller
 
 
     public function project_return_for_review(Request $request, $id){
-        $project = Project::where('id',Hashids_decode($id))->first();
+        $project = Project::where('id',Hashids_decode($id))->with('projectaddress')->first();
         $projectaddresses = Projectaddresses::where('project_id',Hashids_decode($id))->first();
         $projectfile = Projectfile::where('project_id',Hashids_decode($id))->first();
         return view("customer.project-returned-for-review",compact('project','projectaddresses','projectfile'));
@@ -302,6 +327,17 @@ class CustomerController extends Controller
             'status'                   => 'submitted_for_review',
             'reviewer_status'          => ''
         );
+
+        if($request->addresstype == 1) { // Enter your postcode
+            $data['postcode']              =  $request['zipcode_selected_postcode'];
+            $data['county']                =  $request['zipcode_selected_county'];
+            $data['town']                  =  $request['zipcode_selected_town'];
+        } elseif($request->addresstype == 2) { // Type your address
+            $data['town']                  = $request['town_city'];
+            $data['county']                = $request['county'];
+            $data['postcode']              = $request['address_type_postcode'];
+        }
+
         Project::where('id', Hashids_decode($projectid))->update($data);
 
         ProjectStatusChangeLog::create([
@@ -321,12 +357,12 @@ class CustomerController extends Controller
             );
             Projectaddresses::where('id', Hashids_decode($projectid))->update($datapostcode);
 
-        }elseif($request->addresstype == 2){ // type your address
+        } elseif($request->addresstype == 2) { // type your address
             $datapostcode = array(
                 'address_line_one'      => $request['address_line_one'],
                 'address_line_two'      => $request['address_line_two'],
                 'town_city'             => $request['town_city'],
-                'postcode'              => $request['postcode']
+                'postcode'              => $request['address_type_postcode']
             );
             Projectaddresses::where('id', Hashids_decode($projectid))->update($datapostcode);
         }
