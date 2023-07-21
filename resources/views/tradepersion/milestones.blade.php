@@ -1,4 +1,4 @@
-        <div class="tab-pane fade @if (tradesperson_project_status($project->id) == 'estimate_accepted' || tradesperson_project_status($project->id) == 'project_started')active show @endif" id="nav-milestones" role="tabpanel" aria-labelledby="nav-milestones-tab">
+        <div class="tab-pane fade @if ($projectStatus == 'estimate_accepted' || $projectStatus == 'project_started')active show @endif" id="nav-milestones" role="tabpanel" aria-labelledby="nav-milestones-tab">
           <div class="row table_wrap">
              <div class="table-responsive">
                 <table class="table milestones">

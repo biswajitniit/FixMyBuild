@@ -66,7 +66,7 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
-                                        <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">Welcome to our platform! You have successfully created an account and we're looking forward to your first project</h5>
+                                        <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">Welcome to our platform!<img src="{{ asset('frontend/emailtemplateimage/smiling-face.svg') }}"> have successfully created an account and we're looking forward to your first project</h5>
                                         <p style="font-size: 20px; margin-top: 20px;">
                                             If you have any questions feel free to reach out to us at <br />
                                             <a href="support@fixmybuild.com" style="font-size: 20px; text-decoration: none; color: #ee5719;">support@fixmybuild.com</a>
@@ -81,7 +81,7 @@
                                     </td>
                                 </tr>
                                 <tr style='height: 70px;'>
-                                    <td><h5>If you would like to unsubscribe from this notification please amend your settings <a href="{{ route('customer.notifications') }}">here.</a><h5></td>
+                                    <td><h5>If you would like to unsubscribe from this notification please amend your settings <a href="{{ route('customer.notifications.index') }}" style='color:#EE5719;'>here.</a><h5></td>
                                 </tr>
                                 <tr>
                                     <td style='text-align:center'>

@@ -206,9 +206,9 @@ class UserController extends Controller
             $email_sent = send_email($emaildata);
 
             return redirect()->route('home');
-            } catch (\Exception $e) {
-                $request->session()->flash('alert-danger', $e->getMessage());
-                echo $e->getMessage();
+        } catch (\Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            echo $e->getMessage();
         }
     }
 }

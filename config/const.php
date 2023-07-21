@@ -31,4 +31,10 @@ return [
     'trader_notification_project_cancelled'             => env('TRADER_NOTIFICATION_PROJECT_CANCELLED', "0"),
     'trader_notification_share_contact_info'            => env('TRADER_NOTIFICATION_SHARE_CONTACT_INFO', "0"),
     'trader_notification_trader_new_message'            => env('TRADER_NOTIFICATION_TRADER_NEW_MESSAGE', "0"),
+
+    'customer_feedback_accepted_files'                  => env('CUSTOMER_FEEDBACK_ACCEPTED_FILE_TYPES', "image/heic, image/heif, image/jpeg, image/png, image/svg+xml, image/webp, image/gif, application/pdf, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword, application/vnd.oasis.opendocument.text"),
+    'customer_feedback_file_size'                       => env('CUSTOMER_FEEDBACK_MAX_IMAGE_SIZE', 2),
+    'customer_feedback_parallel_file_upload'            => env('CUSTOMER_FEEDBACK_PARALLEL_FILE_UPLOAD', 6),
+    'customer_feedback_max_file_upload'                 => env('CUSTOMER_FEEDBACK_MAX_FILE_UPLOAD', 6),
+
 ];

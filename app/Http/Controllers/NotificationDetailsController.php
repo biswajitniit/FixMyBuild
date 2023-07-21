@@ -25,7 +25,7 @@ class NotificationDetailsController extends Controller
                             ]);
             return response()->json(['success' => true]);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             echo 'error';die;
         }
     }

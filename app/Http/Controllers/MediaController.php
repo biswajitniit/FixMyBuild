@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FeedbackFile;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -382,5 +384,68 @@ class MediaController extends Controller
         })->get();
 
         return $temp_medias;
+    }
+
+    //feedback file submit from review page to feedback_files table
+    public function feedback_img(Request $request){
+        try{
+            $user = Auth::user()->id;
+
+            $this->validate($request, [
+                'media_type' => 'required|string',
+            ]);
+
+            $files = $request->file('file');
+            $response = [];
+
+            foreach($files as $file) {
+                $fileName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $s3FileName = \Str::uuid().'.'.$extension;
+                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+
+                $single_file_uploads = ['company_logo'];
+
+                if( in_array($request->file_related_to, $single_file_uploads)){
+                    $delete_medias_after_save = tempmedia::where(['file_related_to'=> $request->file_related_to, 'media_type'=> 'tradesperson', 'user_id' => $user])->get();
+                }
+
+                $fileType  = '';
+                $image_ext = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'heic', 'heif'];
+                $video_ext = ['avi', 'mp4', 'm4v', 'ogv', '3gp', '3g2'];
+                // if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'gif' || $extension == 'svg' || $extension == 'webp' || $extension == 'heic' || $extension == 'heif')
+                if ( in_array($extension, $image_ext) )
+                    $fileType = 'image';
+                elseif ( in_array($extension, $video_ext) )
+                    $fileType = 'video';
+                else
+                    $fileType = 'document';
+
+                $feedback_file = new FeedbackFile();
+                $feedback_file->project_id                = Hashids_decode($request->project_id)[0];
+                $feedback_file->file_type                 = $fileType;
+                $feedback_file->file_name                 = $fileName;
+                $feedback_file->file_original_name        = $fileName;
+                $feedback_file->file_extension            = $extension;
+                $feedback_file->url                       = $path;
+                $feedback_file->created_at                = now()->toDateString();
+                $feedback_file->save();
+                $saved_file                 = $feedback_file->id;
+
+                $uploaded_file = ['image_link' => $path, 'file_name' => $fileName, 'file_id' => $saved_file];
+                array_push($response, $uploaded_file);
+
+                if (isset($delete_medias_after_save) && !empty($delete_medias_after_save)) {
+                    $delete_medias_after_save->each(function ($media) {
+                        $media->delete();
+                    });
+                }
+            }
+
+            return response()->json($response);
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Failed to store data'],500);
+        }
     }
 }

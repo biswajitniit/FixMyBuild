@@ -1,4 +1,4 @@
-<div class="tab-pane fade @if (tradesperson_project_status($project->id)=='estimate_submitted'||tradesperson_project_status($project->id)=='estimate_recalled'||tradesperson_project_status($project->id)=='estimate_rejected')active show @endif" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+<div class="tab-pane fade @if ($projectStatus=='estimate_submitted'||$projectStatus=='estimate_recalled'||$projectStatus=='estimate_rejected')active show @endif" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
     <div class="row mb-5">
        <div class="col-md-8">
           <img src="{{ $company_logo->url }}" alt="" class="mr-2 c_logo"> <span>{{ $trader_detail->comp_name }}</span>
@@ -26,7 +26,11 @@
              <div class="row">
                 <div class="pv_top">
                     @foreach($teams_photos as $teams_photo)
-                        <div class="d-inline mr-3"><img src="{{ $teams_photo->url }}" alt="" class="rectangle-img"></div>
+                        <div class="d-inline mr-3">
+                            <a href="{{ $teams_photo->url }}" target="_blank">
+                                <img src="{{ $teams_photo->url }}" alt="" class="rectangle-img">
+                            </a>
+                        </div>
                     @endforeach
                 </div>
              </div>
@@ -127,7 +131,7 @@
                 <div class="col-6 mt-2">
                     <small>Available to start</small>
                     @if($estimate->project_start_date == null)
-                        <div class="price_ec">{{ str_replace('_', ' ', ucwords($estimate->project_start_date_type)) }}</div>
+                        <div class="price_ec">{{ str_replace('_', ' ', \Str::title($estimate->project_start_date_type)) }}</div>
                     @else
                         <div class="price_ec">{{ date('d-m-Y',strtotime($estimate->project_start_date)) }}</div>
                     @endif

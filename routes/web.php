@@ -57,6 +57,7 @@ Route::post('/dropzonedestroy', [MediaController::class, 'dropzonedestroy'])->na
 Route::delete('/delete-temp-file', [MediaController::class, 'deleteTempFile'])->name('deleteTempFile');
 Route::delete('/delete-proj-file', [MediaController::class, 'deleteProjectFile'])->name('deleteProjectFile');
 Route::get('/get-temp-file', [MediaController::class, 'getTempFile'])->name('getTempFile');
+Route::post('feedback-img', [MediaController::class, 'feedback_img'])->name('feedback-img');
 
 
 Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login');

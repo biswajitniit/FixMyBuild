@@ -62,7 +62,7 @@
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
                                         <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">Congratulations! You have received estimate(s) from one or more tradespeople.</h5>
                                         <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">
-                                            To view them please click on the "{{ ucwords($data['project_name']) }}" link on our <a href="" >website.</a>
+                                            To view them please click on the "{{ ucwords($data['project_name']) }}" link on our <a href="#" style='color:#EE5719;'>website.</a>
                                         </h5>
 
                                         <h5 style="color: #061a48; font-size: 16px; line-height: 23px; text-align: center; margin-bottom: 10px;">Team Fix My Build</h5>

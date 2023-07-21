@@ -73,7 +73,7 @@
                                     </td>
                                 </tr>
                                 <tr style='height: 70px;'>
-                                    <td><h5>If you would like to unsubscribe from this notification please amend your settings <a href="{{ route('customer.notifications') }}">here.</a><h5></td>
+                                    <td><h5>If you would like to unsubscribe from this notification please amend your settings <a href="{{ route('customer.notifications.index') }}" style='color:#EE5719;'>here.</a><h5></td>
                                 </tr>
                                 <tr>
                                     <td style='text-align:center'>

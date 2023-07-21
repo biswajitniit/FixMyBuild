@@ -1506,9 +1506,8 @@ class TradepersionDashboardController extends Controller
             if($tasks->count() == null || $tasks->count() == 0){
                 project_completed_notification($task->estimate_id);
             }
-            return response()->json(['status' => $tasks]);
+            return response()->json(['success' => true]);
         } catch (\Exception $e) {
-
         }
     }
 

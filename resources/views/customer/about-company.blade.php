@@ -21,7 +21,11 @@
                 <div class="row">
                     <div class="pv_top">
                         @foreach($teams_photos as $teams_photo)
-                            <div class="d-inline mr-3"><img class="rectangle-img" src="{{ $teams_photo->url }}" alt=""></div>
+                            <div class="d-inline mr-3">
+                                <a href="{{ $teams_photo->url }}" target="_blank">
+                                    <img src="{{ $teams_photo->url }}" alt="" class="rectangle-img mb-2">
+                                </a>
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -31,7 +35,11 @@
                 <div class="row">
                     <div class="pv_top">
                         @foreach($prev_project_imgs as $prev_project_img)
-                            <div class="d-inline mr-3"><img class="rectangle-img" src="{{ $prev_project_img->url }}" alt=""></div>
+                            <div class="d-inline mr-3">
+                                <a href="{{ $prev_project_img->url }}" target="_blank">
+                                    <img src="{{ $prev_project_img->url }}" alt="" class="rectangle-img">
+                                </a>
+                            </div>
                         @endforeach
                     </div>
                 </div>
