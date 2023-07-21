@@ -30,7 +30,12 @@
                     <span class="text-primary">View estimates</span>
                     @break
                 @case('project_started')
-                    <span class="text-success">Project started</span>
+                        <span class="text-success">
+                            Project started
+                            @foreach($tasks as $task)
+                                @if($task->is_initial == 1 && $task->status == 'completed') (Initial payment paid) @endif
+                            @endforeach
+                        </span>
                     @break
                 @case('awaiting_your_review')
                     <span class="text-awaiting">Awaiting your review</span>

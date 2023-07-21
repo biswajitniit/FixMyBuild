@@ -2,8 +2,8 @@
 
 @section('content')
  <!--Code area start-->
- @php
- $status=$project->status;
+@php
+    $status=$project->status;
 @endphp
  <section>
     <div class="container">
@@ -20,6 +20,9 @@
     </div>
  </section>
  <!--Code area end-->
+ @php
+    $status=$project->status;
+@endphp
  <!--Code area start-->
  <section class="pb-5">
     <div class="container">

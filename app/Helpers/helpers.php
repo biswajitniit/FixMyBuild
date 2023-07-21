@@ -110,13 +110,13 @@ if (!function_exists('tradesperson_project_status')) {
     function tradesperson_project_status($project_id)
     {
         $project = Project::where('id', $project_id)->first();
-        if ($project->status === 'cancelled') {
+        if ($project->status === 'project_cancelled') {
             return 'project_cancelled';
         }
-        if ($project->status === 'paused') {
+        if ($project->status === 'project_paused') {
             return 'project_paused';
         }
-        if ($project->status === 'completed' || $project->status === 'awaiting_your_review') {
+        if ($project->status === 'project_completed' || $project->status === 'awaiting_your_review') {
             return 'project_completed';
         }
 
@@ -128,13 +128,13 @@ if (!function_exists('tradesperson_project_status')) {
             if (empty($estimate_recalled)) {
                 return 'write_estimate';
             }
-            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'recalled') {
+            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'estimate_recalled') {
                 return 'estimate_recalled';
             }
             if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == null) {
                 return 'estimate_submitted';
             }
-            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'rejected') {
+            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'estimate_rejected') {
                 return 'estimate_rejected';
             }
         }
@@ -174,6 +174,8 @@ function milestone_completion_notification($task_id){
     $estimate = Estimate::where('id', $task->estimate_id)->first();
     $project = Project::where('id', $estimate->project_id)->first();
     $user = User::where('id', $project->user_id)->first();
+    $tasks = Task::where('estimate_id', $estimate->id)->get();
+    //For notification
     $notify_settings = Notification::where('user_id', $project->user_id)->first();
     if($notify_settings) {
         if($notify_settings->settings != null){
@@ -184,7 +186,8 @@ function milestone_completion_notification($task_id){
         $html = view('email.milestone-complete')
             ->with('data', [
             'project_name'       => $project->project_name,
-            'user_name'          => $user->name
+            'user_name'          => $user->name,
+            'tasks'              => $tasks
             ])
             ->render();
         $emaildata = array(
@@ -198,7 +201,7 @@ function milestone_completion_notification($task_id){
         $notificationDetail = new NotificationDetail();
         $notificationDetail->user_id = $user->id;
         $notificationDetail->from_user_id = Auth::user()->id;
-        $notificationDetail->from_user_type = Auth::user()->type;
+        $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
@@ -390,7 +393,7 @@ function project_completed_notification($estimateId){
         $emaildata = array(
             'From'          => 'support@fixmybuild.com',
             'To'            =>  $user->email,
-            'Subject'       => 'Your project has been Ccompleted',
+            'Subject'       => 'Your project has been Completed',
             'HtmlBody'      =>  $html,
             'MessageStream' => 'outbound'
         );

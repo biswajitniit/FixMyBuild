@@ -14,6 +14,7 @@ use App\Models\{
     UserPersonalDataShare,
     Projectaddresses,
     Project,
+    ProjectEstimateFile,
     User,
     Projectfile
 };
@@ -380,6 +381,8 @@ class CustomerController extends Controller
                     $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
                     $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
                     $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
+                    $project_estimate_files = ProjectEstimateFile::where('estimate_id', $estimate->id)->get();
+
 
                     $amount = 0;
                     $price = 0;
@@ -406,7 +409,7 @@ class CustomerController extends Controller
                     $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
                     $initial_payment_percentage = number_format($initial_payment_percentage, 2);
                     $contingency_per_task = number_format($contingency_per_task, 2);
-                    return view('customer.project_details',compact('projects','estimate','tasks','proj_logs','doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
+                    return view('customer.project_details',compact('projects','project_estimate_files','estimate','tasks','proj_logs','doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
                 }
 
                 if($projects->status == 'estimation') {
@@ -632,14 +635,15 @@ class CustomerController extends Controller
         $estimate = Estimate::where('id', $id)
                             ->first();
         $project = Project::where('id', $estimate->project_id)->first();
-        // $projectid = Projectfile::where('project_id', $estimate->project_id)->get();
+        $projectfiles = Projectfile::where('project_id', $estimate->project_id)->get();
+        $projectid = Projectfile::where('project_id', $estimate->project_id)->get();
         $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
         $user = User::where('id', $trader_detail->user_id)->first();
         $project_reviews = ProjectReview::where('project_id', $estimate->project_id)->get();
         $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
         $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
         $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
-
+        $project_estimate_files = ProjectEstimateFile::where('estimate_id', $id)->get();
 
         $tasks = Task::where('estimate_id', $estimate->id)->get();
         $amount = 0;
@@ -668,7 +672,7 @@ class CustomerController extends Controller
         $initial_payment_percentage = number_format($initial_payment_percentage, 2);
         $contingency_per_task = number_format($contingency_per_task, 2);
 
-        return view('customer.estimate_details',compact('project','trader_detail','company_logo','teams_photos','prev_project_imgs','project_reviews','user','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task'));
+        return view('customer.estimate_details',compact('project','project_estimate_files','projectid','projectfiles','trader_detail','company_logo','teams_photos','prev_project_imgs','project_reviews','user','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task'));
 
     }
 
@@ -787,7 +791,7 @@ class CustomerController extends Controller
 
             return response()->json(['redirect_url' => route('customer.project')]);
         } catch (\Exception $e) {
-            echo 'error';
+            echo ($e);
         }
     }
 }

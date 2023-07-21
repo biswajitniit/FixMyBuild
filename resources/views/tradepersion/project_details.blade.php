@@ -17,6 +17,9 @@
     </div>
  </section>
  <!--Code area end-->
+ @php
+    $projectStatus = tradesperson_project_status($project->id);
+@endphp
  <!--Code area start-->
  <section class="pb-5">
     <div class="container">
@@ -54,40 +57,50 @@
                          <div class="card-header">
                             <nav>
                                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                @if (tradesperson_project_status($project->id) == 'estimate_accepted' || tradesperson_project_status($project->id) == 'project_started')
+                                @if ($projectStatus == 'estimate_accepted' || $projectStatus == 'project_started')
                                     <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
                                     <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                 @endif
-                                @if (tradesperson_project_status($project->id) == 'estimate_submitted' || tradesperson_project_status($project->id) == 'estimate_recalled' || tradesperson_project_status($project->id) == 'estimate_rejected')
+                                @if ($projectStatus == 'estimate_submitted' || $projectStatus == 'estimate_recalled' || $projectStatus == 'estimate_rejected')
                                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                 @endif
-                                @if (tradesperson_project_status($project->id) == 'write_estimate')
+                                @if ($projectStatus == 'write_estimate')
                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                @endif
+                                @if ($projectStatus == 'project_completed' || $projectStatus == 'project_paused' || $projectStatus == 'project_cancelled')
+                                    <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                    <a class="nav-item nav-link" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
                                 @endif
                                </div>
                             </nav>
                          </div>
                          <div class="card-body">
                             <div class="tab-content" id="nav-tabContent">
-                                @if (tradesperson_project_status($project->id) == 'estimate_accepted' || tradesperson_project_status($project->id) == 'project_started')
+                                @if ($projectStatus == 'estimate_accepted' || $projectStatus == 'project_started')
                                     @include('tradepersion.milestones')
                                     @include('tradepersion.details')
                                     @include('tradepersion.estimate_tab')
                                     {{-- @include('tradepersion.chat') --}}
                                 @endif
-                                @if (tradesperson_project_status($project->id) == 'estimate_submitted' || tradesperson_project_status($project->id) == 'estimate_recalled' || tradesperson_project_status($project->id) == 'estimate_rejected')
+                                @if ($projectStatus == 'estimate_submitted' || $projectStatus == 'estimate_recalled' || $projectStatus == 'estimate_rejected')
                                     @include('tradepersion.estimate_tab')
                                     @include('tradepersion.details')
                                     {{-- @include('tradepersion.chat') --}}
                                 @endif
-                                @if (tradesperson_project_status($project->id) == 'write_estimate')
+                                @if ($projectStatus == 'write_estimate')
                                     @include('tradepersion.details')
                                     {{-- @include('tradepersion.chat') --}}
+                                @endif
+                                @if ($projectStatus == 'project_completed' || $projectStatus == 'project_paused' || $projectStatus == 'project_cancelled')
+                                    @include('tradepersion.details')
+                                    @include('tradepersion.estimate_tab')
+                                    @include('tradepersion.milestones')
                                 @endif
                             </div>
                          </div>
@@ -95,17 +108,17 @@
                    </div>
                 </div>
                 <div class="form-group col-md-12 mt-5 text-center pre_">
-                    <a href="projects-tradesperson.html" class="btn btn-light mr-3">Back</a>
-                    @if (tradesperson_project_status($project->id) == 'write_estimate')
+                    <a href="{{ route('tradepersion.projects') }}" class="btn btn-light mr-3">Back</a>
+                    @if ($projectStatus == 'write_estimate')
                         <a href="#" data-bs-toggle="modal" data-bs-target="#reject-project"  class="btn btn-light mr-3">Reject project</a>
                         <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" class="btn btn-primary">Estimate now</a>
                     @endif
 
-                    @if (tradesperson_project_status($project->id) == 'estimate_submitted')
+                    @if ($projectStatus == 'estimate_submitted')
                         <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" class="btn btn-primary">Recall estimate</a>
                     @endif
 
-                    @if (tradesperson_project_status($project->id) == 'estimate_recalled' || tradesperson_project_status($project->id) == 'estimate_rejected')
+                    @if ($projectStatus == 'estimate_recalled' || $projectStatus == 'estimate_rejected')
                         <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" class="btn btn-primary">Edit estimate</a>
                     @endif
                 </div>
@@ -437,6 +450,14 @@
                 }
             });
         }
+
+        // $(document).ready(function() {
+        //     $('.btn-gallery').on('click', function(event) {
+        //     event.preventDefault();
+        //     var imageUrl = $(this).find('img').attr('src');
+        //     alert('You clicked on the image! Image URL: ' + imageUrl);
+        //     });
+        // });
 
     </script>
 @endpush

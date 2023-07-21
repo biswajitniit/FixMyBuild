@@ -60,7 +60,11 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
-                                        <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">Milestone 4 in your project titled "{{ $data['project_name'] }}" has been completed.</h5>
+                                        {{-- @foreach($tasks as $key=>$task)
+                                            @if($task->is_initial == 0) --}}
+                                                <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">Milestone in your project titled "{{ $data['project_name'] }}" has been completed.</h5>
+                                            {{-- @endif
+                                        @endforeach --}}
                                         <h5 style="color: #6d717a; font-size: 20px; line-height: 23px;">If there is a payment due for this milestone, please make the payment through our website.</h5>
 
                                         <h5 style="color: #061a48; font-size: 16px; line-height: 23px; text-align: center; margin-bottom: 10px;">Team Fix My Build</h5>
@@ -73,7 +77,7 @@
                                     </td>
                                 </tr>
                                 <tr style='height: 70px;'>
-                                    <td><h5>If you would like to unsubscribe from this notification please amend your settings <a href="{{ route('customer.notifications') }}">here.</a><h5></td>
+                                    <td><h5>If you would like to unsubscribe from this notification please amend your settings <a href="{{ route('customer.notifications.index') }}" style='color:#EE5719;'>here.</a><h5></td>
                                 </tr>
                                 <tr>
                                     <td style='text-align:center'>

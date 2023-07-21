@@ -29,8 +29,12 @@
              <h3>Photo(s)/Video(s)</h3>
              <div class="row">
                 <div class="pv_top">
-                    @foreach($teams_photos as $teams_photo)
-                        <div class="d-inline mr-3"><img src="{{ $teams_photo->url }}" alt="" class="rectangle-img"></div>
+                    @foreach($project_estimate_files as $project_estimate_file)
+                        <div class="d-inline mr-3">
+                            <a href="{{ $project_estimate_file->url }}" target="_blank">
+                                <img src="{{ $project_estimate_file->url }}" alt="" class="rectangle-img">
+                            </a>
+                        </div>
                     @endforeach
                 </div>
              </div>
@@ -131,7 +135,7 @@
                 <div class="col-6 mt-2">
                     <small>Available to start</small>
                     @if($estimate->project_start_date == null)
-                        <div class="price_ec">{{ str_replace('_', ' ', ucwords($estimate->project_start_date_type)) }}</div>
+                        <div class="price_ec">{{ str_replace('_', ' ', \Str::title($estimate->project_start_date_type)) }}</div>
                     @else
                         <div class="price_ec">{{ date('d-m-Y',strtotime($estimate->project_start_date)) }}</div>
                     @endif

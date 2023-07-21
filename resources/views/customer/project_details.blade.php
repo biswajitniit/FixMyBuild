@@ -305,10 +305,6 @@
                                             @endif
                                             {{-- Dynamic Div Ends --}}
 
-
-
-
-
                                         </div>
                                     </div>
                                 </div>
