@@ -388,101 +388,116 @@ class CustomerController extends Controller
         return redirect()->back()->with('message', 'Project return for review send successfully.');
     }
 
+    public function resumeProject(Request $request, $id) {
+        // try {
 
+        // } catch (\Exception $e) {
+
+        // }
+        Project::where('id', Hashids_decode($id))->update(['status' => 'project_started']);
+        ProjectStatusChangeLog::create([
+            'project_id'        => Hashids_decode($id)[0],
+            'action_by_id'      => Auth::id(),
+            'action_by_type'    => 'user',
+            'status'            => 'project_started',
+            'status_changed_at' => now(),
+        ]);
+        if(\Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
+            return response()->json(['status'=>'success', 'redirect_url' => route('tradepersion.projects')]);
+        return response()->json(['status'=>'success', 'redirect_url' => route('customer.project')]);
+    }
 
     public function details($project_id){
 
-        $id=Hashids_decode($project_id);
-        // DB::enableQueryLog();
-        $projects = Project::where('id',$id)->first();
-        // dd(DB::getQueryLog());
-        $proj_logs = ProjectStatusChangeLog::where('project_id', $projects->id)->get();
         try{
-            if(Auth::user()->id == $projects->user_id){
-                $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
+            $id=Hashids_decode($project_id);
+            $projects = Project::where('id',$id)->first();
+            $proj_logs = ProjectStatusChangeLog::where('project_id', $projects->id)->get();
+
+            if(Auth::id() != $projects->user_id)
+                abort(403);
+
+            $projectaddress = Projectaddresses::where('id', Auth::user()->id)->first();
+            $doc= projectfile::where('project_id', $id)->get();
+            $project_id=$id;
+
+            if($projects->status == 'submitted_for_review'){
                 $doc= projectfile::where('project_id', $id)->get();
-                $project_id=$id;
-
-                if($projects->status == 'submitted_for_review'){
-                    $doc= projectfile::where('project_id', $id)->get();
-                    return view('customer.project_details',compact('projects','doc'));
-                }
-
-                if($projects->status == 'project_started'){
-                    $estimate = Estimate::where('project_id', $id)->first();
-                    $tasks = Task::where('estimate_id', $estimate->id)->get();
-                    $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
-                    $project_reviews = ProjectReview::where('project_id', $estimate->project_id)->get();
-                    $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
-                    $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
-                    $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
-
-                    $amount = 0;
-                    $price = 0;
-                    foreach ($tasks as $task) {
-                        $price = $task->price;
-                        $amount += $task->price;
-                    }
-                    $taskTotalAmount = $amount;
-                    $taskAmountWithContingency = (($taskTotalAmount * $estimate->contingency)/100) + $taskTotalAmount;
-                    $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * config('const.vat_charge'))/100) + $taskAmountWithContingency;
-                    $initial_payment_percentage = $estimate->initial_payment;
-                    $contingency_per_task = ($price * $estimate->contingency)/100;
-
-                    if($estimate->apply_vat == 1){
-                        if($estimate->initial_payment_type == 'Percentage'){
-                            $initial_payment_percentage = ($taskAmountWithContingencyAndVat * $estimate->initial_payment)/100;
-                        }
-                    } elseif($estimate->apply_vat == 0){
-                        $initial_payment_percentage = ($taskAmountWithContingency * $estimate->initial_payment)/100;
-                    }
-                    // for showing amounts in 2 decimal
-                    $taskTotalAmount = round($taskTotalAmount, 2);
-                    $taskAmountWithContingency = round($taskAmountWithContingency, 2);
-                    $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
-                    $initial_payment_percentage = number_format($initial_payment_percentage, 2);
-                    $contingency_per_task = number_format($contingency_per_task, 2);
-                    return view('customer.project_details',compact('projects','estimate','tasks','proj_logs','doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
-                }
-
-                if($projects->status == 'estimation') {
-                    $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
-
-                    foreach($estimates as $estimate) {
-                        $amount = $estimate->tasks->sum('price');
-                        $estimate->price = ($amount != 0) ? (($estimate->apply_vat == 0) ? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
-
-                        // $query = ProjectReview::where('tradesperson_id', $estimate->tradesperson->id);
-                        // $reviewCount = $query->count();
-
-                        // $estimate->totalRatings = $reviewCount;
-                        // $estimate->workmanshipPercentage = $reviewCount ? (($query->sum('workmanship') / (2 * $reviewCount)) * 100) : null;
-                        // $estimate->punctualityPercentage = $reviewCount ? ( $query->sum('punctuality') / $reviewCount) * 100 : null;
-                        // $estimate->tidinessPercentage = $reviewCount ? ( $query->sum('tidiness') / $reviewCount) * 100 : null;
-                        // $estimate->priceAccuracy = $reviewCount ? (  $query->sum('price_accuracy') / $reviewCount) * 100 : null;
-
-                        $query = ProjectReview::where('tradesperson_id', $estimate->tradesperson->id);
-                        $estimate->totalRatings = $query->count();
-
-                        if($estimate->totalRatings) {
-                            $reviewCount = $estimate->totalRatings;
-                            $estimate->workmanshipPercentage = ($query->sum('workmanship') / (2 * $reviewCount)) * 100;
-                            $estimate->punctualityPercentage = ($query->sum('punctuality') / $reviewCount) * 100;
-                            $estimate->tidinessPercentage    = ($query->sum('tidiness') / $reviewCount) * 100;
-                            $estimate->priceAccuracy         = ($query->sum('price_accuracy') / $reviewCount) * 100;
-                        }
-                    };
-
-                    return view('customer.project_details',compact('projects','projectaddress','proj_logs','doc','project_id','estimates'));
-                }
-
-                return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
-            } else{
-                // return redirect('/customer/projects');
-                return redirect()->route('customer.project');
+                return view('customer.project_details',compact('projects','doc'));
             }
+
+            if($projects->status == 'project_started' || $projects->status == 'project_paused'){
+                $estimate = Estimate::where('project_id', $id)->first();
+                $tasks = Task::where('estimate_id', $estimate->id)->get();
+                $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
+                $project_reviews = ProjectReview::where('project_id', $estimate->project_id)->get();
+                $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
+                $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
+                $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
+
+                $amount = 0;
+                $price = 0;
+                foreach ($tasks as $task) {
+                    $price = $task->price;
+                    $amount += $task->price;
+                }
+                $taskTotalAmount = $amount;
+                $taskAmountWithContingency = (($taskTotalAmount * $estimate->contingency)/100) + $taskTotalAmount;
+                $taskAmountWithContingencyAndVat = (($taskAmountWithContingency * config('const.vat_charge'))/100) + $taskAmountWithContingency;
+                $initial_payment_percentage = $estimate->initial_payment;
+                $contingency_per_task = ($price * $estimate->contingency)/100;
+
+                if($estimate->apply_vat == 1){
+                    if($estimate->initial_payment_type == 'Percentage'){
+                        $initial_payment_percentage = ($taskAmountWithContingencyAndVat * $estimate->initial_payment)/100;
+                    }
+                } elseif($estimate->apply_vat == 0){
+                    $initial_payment_percentage = ($taskAmountWithContingency * $estimate->initial_payment)/100;
+                }
+                // for showing amounts in 2 decimal
+                $taskTotalAmount = round($taskTotalAmount, 2);
+                $taskAmountWithContingency = round($taskAmountWithContingency, 2);
+                $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
+                $initial_payment_percentage = number_format($initial_payment_percentage, 2);
+                $contingency_per_task = number_format($contingency_per_task, 2);
+                return view('customer.project_details',compact('projects','estimate','tasks','proj_logs','doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
+            }
+
+            if($projects->status == 'estimation') {
+                $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
+
+                foreach($estimates as $estimate) {
+                    $amount = $estimate->tasks->sum('price');
+                    $estimate->price = ($amount != 0) ? (($estimate->apply_vat == 0) ? $amount : ($amount + (env('VAT_CHARGE') * $amount) / 100)) : 0;
+
+                    // $query = ProjectReview::where('tradesperson_id', $estimate->tradesperson->id);
+                    // $reviewCount = $query->count();
+
+                    // $estimate->totalRatings = $reviewCount;
+                    // $estimate->workmanshipPercentage = $reviewCount ? (($query->sum('workmanship') / (2 * $reviewCount)) * 100) : null;
+                    // $estimate->punctualityPercentage = $reviewCount ? ( $query->sum('punctuality') / $reviewCount) * 100 : null;
+                    // $estimate->tidinessPercentage = $reviewCount ? ( $query->sum('tidiness') / $reviewCount) * 100 : null;
+                    // $estimate->priceAccuracy = $reviewCount ? (  $query->sum('price_accuracy') / $reviewCount) * 100 : null;
+
+                    $query = ProjectReview::where('tradesperson_id', $estimate->tradesperson->id);
+                    $estimate->totalRatings = $query->count();
+
+                    if($estimate->totalRatings) {
+                        $reviewCount = $estimate->totalRatings;
+                        $estimate->workmanshipPercentage = ($query->sum('workmanship') / (2 * $reviewCount)) * 100;
+                        $estimate->punctualityPercentage = ($query->sum('punctuality') / $reviewCount) * 100;
+                        $estimate->tidinessPercentage    = ($query->sum('tidiness') / $reviewCount) * 100;
+                        $estimate->priceAccuracy         = ($query->sum('price_accuracy') / $reviewCount) * 100;
+                    }
+                };
+
+                return view('customer.project_details',compact('projects','projectaddress','proj_logs','doc','project_id','estimates'));
+            }
+
+            return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
         } catch (\Exception $e){
-            // return redirect('/customer/projects');
+            if(\Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
+                return redirect()->route('tradepersion.projects');
             return redirect()->route('customer.project');
         }
 

@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Tradepersion;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EstimateProjectResource;
-// use App\Models\UkTown;
-use App\Models\CountyTown;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use App\Models\{
@@ -23,7 +21,8 @@ use App\Models\{
   Projectfile,
   Estimate,
   Task,
-  ProjectEstimateFile
+  ProjectEstimateFile,
+  CountyTown
 };
 use Illuminate\Support\Facades\{
     Http,
@@ -880,38 +879,28 @@ class TradepersionDashboardController extends Controller
         // Fetch Trader Areas And Works
         $trader_areas = Traderareas::where(['user_id' => Auth::user()->id])->get();
         $trader_works = Traderworks::where('user_id', Auth::user()->id)->get();
-        $estimate_projects = Project::where('reviewer_status', 'approved')
-                                      ->where( function($query) use($trader_works) {
-                                            $query->distinct('projects.id')
-                                                    ->whereHas('subCategories', function($query) use($trader_works) {
-                                                        $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
-                                                    })
-                                                    ->whereDoesntHave('estimates', function ($query) {
-                                                        $query->where('project_awarded', 1);
-                                                    })
-                                                    ->where('projects.user_id', '<>', Auth::user()->id)
-                                                    ->select('projects.*')
-                                                    ->join('traderareas', function($query) { $query->on(DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)'));});
-                                        }) // Recommends new projects | status: Write Estimate
-                                        ->orWhere(function ($query) {
-                                            $query->where(function($q) {
-                                                    $q->whereIn('id', Estimate::where('tradesperson_id', Auth::user()->id)->pluck('project_id')->toArray())
-                                                      ->whereNotIn('status', ['cancelled', 'paused', 'completed', 'awaiting_your_review']);
-                                                })
-                                                ->orWhere(function ($q) {
-                                                    $q->whereIn('projects.id', Estimate::where(['tradesperson_id'=> Auth::user()->id, 'project_awarded'=> 1, 'status'=>'awarded'])
-                                                        ->pluck('project_id')
-                                                        ->toArray()
-                                                    );
-                                                });
-                                        })
-                                        ->orderBy('projects.created_at', 'desc')
-                                        ->get();
+        $estimate_projects = recommended_projects($trader_areas, $trader_works)
+                             ->orWhere(function ($query) {
+                                 $query->where(function($q) {
+                                         $q->whereIn('id', Estimate::where('tradesperson_id', Auth::user()->id)->pluck('project_id')->toArray())
+                                             ->where('reviewer_status', 'approved')
+                                             ->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review']);
+                                     })
+                                     ->orWhere(function ($q) {
+                                         $q->where('reviewer_status', 'approved')
+                                             ->whereIn('projects.id', Estimate::where(['tradesperson_id'=> Auth::user()->id, 'project_awarded'=> 1, 'status'=>'awarded'])
+                                             ->pluck('project_id')
+                                             ->toArray()
+                                         );
+                                     });
+                             })
+                             ->orderBy('projects.created_at', 'desc')
+                             ->get();
 
 
 
         $estimate_project_histories = Project::where(function ($query) {
-                                                $query->whereIn('status', ['cancelled', 'paused', 'completed', 'awaiting_your_review'])
+                                                $query->whereIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
                                                         ->whereIn('id', Estimate::where('tradesperson_id', Auth::user()->id)
                                                             ->pluck('project_id')
                                                             ->toArray()
@@ -928,44 +917,66 @@ class TradepersionDashboardController extends Controller
                                             ->orderBy('created_at', 'desc')
                                             ->get();
 
-        return view('tradepersion.projects', compact('estimate_projects', 'estimate_project_histories'));
+        // Tradesperson as a customer
+        $project = Project::where('user_id', Auth::id())
+                            ->whereIn('status', ['awaiting_your_review', 'submitted_for_review','project_started','estimation','returned_for_review'])
+                            ->get();
+        $projecthistory = Project::where('user_id', Auth::id())
+                                    ->whereIn('status', ['project_cancelled', 'project_completed','project_paused'])
+                                    ->get();
+
+        return view('tradepersion.projects', compact('estimate_projects', 'estimate_project_histories', 'project', 'projecthistory'));
     }
 
     public function searchProject(Request $request)
     {
         $trader_works = Traderworks::where('user_id', Auth::user()->id)->get();
+        $trader_areas = Traderareas::where(['user_id' => Auth::user()->id])->get();
 
-        $estimate_projects = Project::where('reviewer_status', 'approved')
-                                      ->where( function($query) use($trader_works, $request) {
-                                            $query->distinct('projects.id')
-                                                    ->whereHas('subCategories', function($query) use($trader_works) {
-                                                        $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
-                                                    })
-                                                    ->whereDoesntHave('estimates', function ($query) {
-                                                        $query->where('project_awarded', 1);
-                                                    })
-                                                    ->where('projects.user_id', '<>', Auth::user()->id)
-                                                    ->when(($request->has('keyword') && !empty($request->keyword)), function ($q) use ($request) {
-                                                        $q->where('projects.project_name', 'like', '%' . $request->keyword . '%');
-                                                    })
-                                                    ->select('projects.*')
-                                                    ->join('traderareas', function($query) { $query->on(DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)'));});
+        $estimate_projects = Project::where( function($query) use($trader_works, $trader_areas, $request) {
+                                            // $query->where('reviewer_status', 'approved')
+                                            //         ->distinct('projects.id')
+                                            //         ->whereHas('subCategories', function($query) use($trader_works) {
+                                            //             $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
+                                            //         })
+                                            //         ->whereDoesntHave('estimates', function ($query) {
+                                            //             $query->where('project_awarded', 1);
+                                            //         })
+                                            //         ->where('projects.user_id', '<>', Auth::user()->id)
+                                            //         ->when(($request->has('keyword') && !empty($request->keyword)), function ($q) use ($request) {
+                                            //             $q->where('projects.project_name', 'like', '%' . $request->keyword . '%');
+                                            //         })
+                                            //         ->select('projects.*');
+                                            // $query->where(function ($q) use ($trader_areas) {
+                                            //             foreach ($trader_areas as $trader_area) {
+                                            //                 $q->orWhere(function ($subQuery) use ($trader_area) {
+                                            //                     $subQuery->where('town', $trader_area->town)
+                                            //                     ->where('county', $trader_area->county);
+                                            //                 });
+                                            //             }
+                                            //         });
+                                            recommended_projects($trader_areas, $trader_works)
+                                            ->when(($request->has('keyword') && !empty($request->keyword)), function ($q) use ($request) {
+                                                $q->where('projects.project_name', 'like', '%' . $request->keyword . '%');
+                                            });
                                         }) // Recommends new projects | status: Write Estimate
                                       ->orWhere(function ($query) use($request) {
                                           $query->where(function($q) use($request) {
                                                   $q->when(($request->has('keyword') && !empty($request->keyword)), function ($sql) use ($request) {
                                                     $sql->where('projects.project_name', 'like', '%' . $request->keyword . '%');
                                                   })->whereIn('id', Estimate::where('tradesperson_id', Auth::user()->id)->pluck('project_id')->toArray())
-                                                    ->whereNotIn('status', ['cancelled', 'paused', 'completed', 'awaiting_your_review']);
+                                                    ->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
+                                                    ->where('reviewer_status', 'approved');
                                               })
                                               ->orWhere(function ($q) use($request){
                                                   $q->when(($request->has('keyword') && !empty($request->keyword)), function ($sql) use ($request) {
                                                         $sql->where('projects.project_name', 'like', '%' . $request->keyword . '%');
                                                     })
                                                     ->whereIn('projects.id', Estimate::where(['tradesperson_id'=> Auth::user()->id, 'project_awarded'=> 1, 'status'=>'awarded'])
-                                                      ->pluck('project_id')
-                                                      ->toArray()
-                                                  );
+                                                        ->pluck('project_id')
+                                                        ->toArray()
+                                                    )
+                                                    ->where('reviewer_status', 'approved');
                                               });
                                         }) // Estimates already submitted by the user | Estimates Other Than Write Estimate
                                       ->orderBy('projects.created_at', 'desc')
@@ -981,7 +992,7 @@ class TradepersionDashboardController extends Controller
                                                 })
                                                 ->where(function($sql) {
                                                     $sql->where(function ($query) {
-                                                        $query->whereIn('status', ['cancelled', 'paused', 'completed', 'awaiting_your_review'])
+                                                        $query->whereIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
                                                                 ->whereIn('id', Estimate::where('tradesperson_id', Auth::user()->id)
                                                                     ->pluck('project_id')
                                                                     ->toArray()
@@ -1378,31 +1389,32 @@ class TradepersionDashboardController extends Controller
         $trader_detail = TraderDetail::where('user_id', Auth::user()->id)->first();
 
         // Fetch Trader Areas And Works
-        // $trader_areas = Traderareas::where(['user_id' => Auth::user()->id])->get();
+        $trader_areas = Traderareas::where(['user_id' => Auth::id()])->get();
         $trader_works = Traderworks::where('user_id', Auth::user()->id)->get();
 
-        $recommended_projects = Project::where('reviewer_status', 'approved')
-                                ->distinct('projects.id')
-                                // ->whereIn('county', \Arr::pluck($trader_areas, 'county')) // projects that have the same county as the county where trader provides services
-                                // ->whereIn('town', \Arr::pluck($trader_areas, 'town')) // projects that have the same town as the town where trader provides services
-                                ->whereHas('subCategories', function($query) use($trader_works) {
-                                    $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
-                                }) // projects that have the same category for which the trader provides services
-                                ->whereDoesntHave('estimates', function ($query) {
-                                    $query->where('project_awarded', 1);
-                                }) // projects that doesn't have an estimate or the project which have not started yet
-                                ->where('projects.id', '<>', $id) // Don't recommend the current project as shown in the current page
-                                ->where('projects.user_id', '<>', Auth::user()->id) // Don't recommend the project which is submitted by the current tradesperson
-                                ->join('traderareas', function($query) {
-                                    $query->on(
-                                        DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)')
-                                    );
-                                })
-                                ->orderBy('projects.created_at', 'desc') // Recommend as per the most recent created project
-                                ->select('projects.*')
-                                ->limit(5)
-                                ->get();
+        $other_open_projects = recommended_projects($trader_areas, $trader_works)->limit(5)->get();
 
+        // $recommended_projects = Project::where('reviewer_status', 'approved')
+        //                         ->distinct('projects.id')
+        //                         // ->whereIn('county', \Arr::pluck($trader_areas, 'county')) // projects that have the same county as the county where trader provides services
+        //                         // ->whereIn('town', \Arr::pluck($trader_areas, 'town')) // projects that have the same town as the town where trader provides services
+        //                         ->whereHas('subCategories', function($query) use($trader_works) {
+        //                             $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
+        //                         }) // projects that have the same category for which the trader provides services
+        //                         ->whereDoesntHave('estimates', function ($query) {
+        //                             $query->where('project_awarded', 1);
+        //                         }) // projects that doesn't have an estimate or the project which have not started yet
+        //                         ->where('projects.id', '<>', $id) // Don't recommend the current project as shown in the current page
+        //                         ->where('projects.user_id', '<>', Auth::user()->id) // Don't recommend the project which is submitted by the current tradesperson
+        //                         ->join('traderareas', function($query) {
+        //                             $query->on(
+        //                                 DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)')
+        //                             );
+        //                         })
+        //                         ->orderBy('projects.created_at', 'desc') // Recommend as per the most recent created project
+        //                         ->select('projects.*')
+        //                         ->limit(5)
+        //                         ->get();
         // $recommended_projects = Project::join('traderareas', function ($join) {
         //                                     $join->on(DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)'));
         //                                 })
@@ -1424,9 +1436,9 @@ class TradepersionDashboardController extends Controller
                             ->where('tradesperson_id', Auth::user()->id)
                             ->first();
              //for comany logo
-        $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
-        $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
-        $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
+            $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
+            $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
+            $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
 
             // $task_initial = Task::where('estimate_id', $estimate->id)->where('is_initial', 1)->first();
             $tasks = Task::where('estimate_id', $estimate->id)->get();
@@ -1455,10 +1467,10 @@ class TradepersionDashboardController extends Controller
             $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
             $initial_payment_percentage = number_format($initial_payment_percentage, 2);
             $contingency_per_task = number_format($contingency_per_task, 2);
-            return view('tradepersion.project_details',compact('projectid','project','trader_detail','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task', 'recommended_projects','prev_project_imgs','teams_photos','company_logo'));
+            return view('tradepersion.project_details',compact('projectid','project','trader_detail','other_open_projects','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task', 'recommended_projects','prev_project_imgs','teams_photos','company_logo'));
         }
 
-        return view('tradepersion.project_details',compact('projectid','project','trader_detail','recommended_projects'));
+        return view('tradepersion.project_details',compact('projectid','project','trader_detail','other_open_projects'));
     }
 
 
@@ -1496,7 +1508,7 @@ class TradepersionDashboardController extends Controller
             }
             return response()->json(['status' => $tasks]);
         } catch (\Exception $e) {
-            
+
         }
     }
 

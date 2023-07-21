@@ -40,7 +40,7 @@
                 </td>
                 <td>
                     {{-- <a href="#" class="btn btn-view">View</a> --}}
-                    <a href="{{ route('tradeperson.project_details', ['project_id' => $estimate_proj->id]) }}" class="btn btn-view">View</a>
+                    <a href="{{ route('tradeperson.project_details', ['project_id' => Hashids_encode($estimate_proj->id)]) }}" class="btn btn-view">View</a>
                 </td>
             </tr>
         @empty

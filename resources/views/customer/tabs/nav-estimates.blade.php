@@ -76,7 +76,9 @@
                             <td><a href="{{ route('Customer.project-estimate', [Hashids_encode($estimate->id)]) }}" class="btn btn-view">View</a></td>
                         </tr>
                     @empty
-                        <tr><td colspan='6' class="text-center text-danger">No Data Found<td></tr>
+                        <tr>
+                            <td colspan="6" class="text-center"> No Estimates Available For This Project Right Now. </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

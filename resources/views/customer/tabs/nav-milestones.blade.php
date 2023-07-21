@@ -1,4 +1,4 @@
-<div class="tab-pane fade @if ($status == 'project_started' || $status == 'awaiting_your_review') show active @endif" id="nav-milestones" role="tabpanel" aria-labelledby="nav-milestones-tab">
+<div class="tab-pane fade @if ($status == 'project_started') show active @endif" id="nav-milestones" role="tabpanel" aria-labelledby="nav-milestones-tab">
     <div class="row table_wrap">
         <div class="table-responsive">
         <table class="table">

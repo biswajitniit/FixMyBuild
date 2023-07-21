@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-md-12 supported_">
                         <img src="" alt="" />
-                        <video controls="controls" src=""> </video>
+                        <video controls="controls" src="" class="w-100"> </video>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
                 @endphp
 
                 {{-- Project Timeline Widgets Starts --}}
-                @if ($status == 'project_started' || $status == 'awaiting_your_review')
+                @if ($status == 'project_started' || $status == 'project_completed' || $status == 'project_paused' )
                     <div class="row mb-5">
                         <div class="col-md-10 offset-md-1">
                         <div class="bs-wizard row">
@@ -276,18 +276,36 @@
                                     <div class="card-header">
                                     <nav>
                                         <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                            @if ($status == 'submitted_for_review')
-                                                <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
-                                            @elseif ($status == 'estimation')
-                                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
-                                                <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
-                                            @elseif ($status == 'project_started' || $status == 'awaiting_your_review')
-                                                <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
-                                                <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
-                                                <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
-                                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">About company</a>
-                                                <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
-                                            @endif
+                                            @switch($status)
+                                                @case('submitted_for_review')
+                                                    <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                                    @break
+                                                @case('estimation')
+                                                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
+                                                    @break
+                                                @case('project_started')
+                                                    <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
+                                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
+                                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
+                                                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">About company</a>
+                                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                                    @break
+                                                @case('project_completed')
+                                                    <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
+                                                    <a class="nav-item nav-link" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="false">Milestones</a>
+                                                    @break
+                                                @case('project_paused')
+                                                    <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
+                                                    @break
+                                                @case('project_cancelled')
+                                                    <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
+                                                    <a class="nav-item nav-link" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="false">Milestones</a>
+                                                    @break
+                                            @endswitch
                                         </div>
                                     </nav>
                                     </div>
@@ -295,14 +313,28 @@
                                         <div class="tab-content" id="nav-tabContent">
                                             {{-- Dynamic Div Starts --}}
                                             @include('customer.tabs.nav-details')
-                                            @if ($status == 'estimation')
-                                                @include('customer.tabs.nav-estimates')
-                                            @elseif ($status == 'project_started' || $status == 'awaiting_your_review')
-                                                @include('customer.tabs.nav-milestones')
-                                                @include('customer.estimate_tab')
-                                                @include('customer.about-company')
-                                                @include('customer.tabs.nav-chat')
-                                            @endif
+                                            @switch($status)
+                                                @case('estimation')
+                                                    @include('customer.tabs.nav-estimates')
+                                                    @break
+                                                @case('project_started')
+                                                    @include('customer.tabs.nav-milestones')
+                                                    @include('customer.estimate_tab')
+                                                    @include('customer.about-company')
+                                                    @include('customer.tabs.nav-chat')
+                                                    @break
+                                                @case('project_completed')
+                                                    @include('customer.tabs.nav-milestones')
+                                                    @include('customer.estimate_tab')
+                                                    @break
+                                                @case('project_cancelled')
+                                                    @include('customer.tabs.nav-milestones')
+                                                    @include('customer.estimate_tab')
+                                                    @break
+                                                @case('project_paused')
+                                                    @include('customer.estimate_tab')
+                                                    @break
+                                            @endswitch
                                             {{-- Dynamic Div Ends --}}
 
 
@@ -315,13 +347,16 @@
                             </div>
                         </div>
                         {{-- Buttons Starts --}}
+                        @php
+                            $userType = \Str::lower(Auth::user()->customer_or_tradesperson);
+                            $backRoute = $userType == 'customer' ? route('customer.project') : route('tradepersion.projects');
+                        @endphp
                         <div class="form-group col-md-12 mt-5 text-center pre_">
                             @if ($status == 'estimation')
                                 <a href="javascript:void(0);" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#cancel_project">Cancel project</a>
-                                <a href="{{route('customer.project')}}" class="btn btn-primary">Back</a>
-                            @else
-                                <a href="{{route('customer.project')}}" class="btn btn-light mr-3">Back</a>
                             @endif
+                            <a href="{{ $backRoute }}" class="btn {{ $status == 'estimation' ? 'btn-primary' : 'btn-light mr-3' }}">Back</a>
+
                             @if ($status == 'project_started')
                                 <a href="javascript:void(0);" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#pause">Pause project </a>
                                 {{-- <a href="#" class="btn btn-primary">Pay all</a> --}}
@@ -357,11 +392,13 @@
                                 />
 
                             @endif
-                            @if ($status == 'awaiting_your_review')
-                                <a href="{{ route('customer.project_review',[Hashids_encode($projects->id)]) }}" class="btn btn-primary">Review</a>
+
+                            @if ($status == 'project_completed')
+                                <a href="#" class="btn btn-primary">Download Invoice</a>
                             @endif
-                            @if ($status == 'submitted_for_review')
-                                <a href="{{ route('customer.project_review',[Hashids_encode($projects->id)]) }}" class="btn btn-primary">Review</a>
+
+                            @if ($status == 'project_paused')
+                                <button type="button" class="btn btn-primary" id="start-again-btn">Start Again</button>
                             @endif
                         </div>
                         {{-- Buttons Ends --}}
@@ -460,8 +497,7 @@ $(document).ready(function() {
 
         $('#nav-details .pv_top .video-mask video').on('click', function(){
             console.log('Clicking on Video');
-            let video_url = $(this).find('source').attr('src');
-            console.log(video_url);
+            let video_url = $(this).attr('src');
 
             $('#project_media_modal').on('show.bs.modal', function(event){
                 modal_video.removeClass('hidden');
@@ -475,6 +511,23 @@ $(document).ready(function() {
             $('#project_media_modal').modal('show');
         });
 
+        // When the user hovers on tooltip, open the popup
+        $('#customer_feedback_tooltip').hover(function(e) {
+            customerFeedbackInfo();
+        });
+
+        $('#start-again-btn').click(function() {
+            $.post({
+                url: "{{ route('customer.resume-project', ['id' => Hashids_encode($projects->id) ]) }}",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    '_method': "patch",
+                },
+                success: function(response) {
+                    window.location.replace(response.redirect_url);
+                }
+            });
+        });
     });
 
     function myFunction() {
@@ -491,11 +544,6 @@ $(document).ready(function() {
 
         $('#myPopup').toggleClass("show");
     }
-
-    // When the user hovers on tooltip, open the popup
-    $('#customer_feedback_tooltip').hover(function(e) {
-        customerFeedbackInfo();
-    });
 
     function confirmDeletePopup(file, divId){
         $('#cancel_project').modal('show');

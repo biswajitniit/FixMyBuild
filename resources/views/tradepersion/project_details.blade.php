@@ -160,7 +160,7 @@
     </div>
  </section>
 
-@if(isset($recommended_projects) && count($recommended_projects) != 0)
+@if(isset($other_open_projects) && count($other_open_projects) != 0)
     <section class="pb-5">
         <div class="container">
             <div class="row">
@@ -169,7 +169,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h3>Other open projects</h3>
-                            @foreach ($recommended_projects as $key=>$project)
+                            @foreach ($other_open_projects as $key=>$project)
                                 <div>
                                     <h5><span>{{ $key+1 }}.</span> {{ $project->project_name }} </h5>
                                     <p>Posted on: {{ time_diff($project->created_at) }}</p>

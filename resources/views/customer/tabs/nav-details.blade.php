@@ -1,4 +1,4 @@
-<div class="tab-pane fade @if ($status == 'submitted_for_review')active show @endif" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+<div class="tab-pane fade @if ($status == 'submitted_for_review' || $status == 'project_completed' || $status == 'project_paused' || $status == 'project_cancelled')active show @endif" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
     <div class="row mb-3">
         <div class="col-md-8">
             @if ($status == 'project_started' || $status == 'awaiting_your_review')
@@ -35,6 +35,15 @@
                 @case('awaiting_your_review')
                     <span class="text-awaiting">Awaiting your review</span>
                     @break
+                @case('project_cancelled')
+                    <span class="text-danger">Project Cancelled</span>
+                    @break
+                @case('project_paused')
+                    <span class="text-paused">Project paused</span>
+                    @break
+                @case('project_completed')
+                    <span class="text-success">Project completed</span>
+                    @break
             @endswitch
             </h6>
         </div>
@@ -56,14 +65,14 @@
                     @if (strtolower($docs->file_type) == 'image')
                         @php $is_media_present = true; @endphp
                         <a href="javascript:void(0);">
-                            <img src="{{ $docs->url }}" />
+                            <img src="{{ $docs->url }}" class="rectangle-img"/>
                         </a>
                     @endif
                     @if (strtolower($docs->file_type) == 'video')
                         @php $is_media_present = true; @endphp
                         <div class="video-mask">
                             <a href="javascript:void(0);">
-                                <video width="100" height="69" src="{{ $docs->url }}" >  </video>
+                                <video width="100" height="69" src="{{ $docs->url }}" class="rectangle-video" >  </video>
                             </a>
                         </div>
                     @endif

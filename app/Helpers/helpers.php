@@ -409,3 +409,30 @@ function project_completed_notification($estimateId){
         $notificationDetail->save();
     }
 }
+
+if(!function_exists('recommended_projects')) {
+    function recommended_projects($trader_areas, $trader_works) {
+        $recommended_proj = Project::where( function($query) use($trader_areas, $trader_works) {
+                                $query->where('reviewer_status', 'approved')
+                                        ->distinct('projects.id')
+                                        ->whereHas('subCategories', function($query) use($trader_works) {
+                                            $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
+                                        })
+                                        ->whereDoesntHave('estimates', function ($query) {
+                                            $query->where('project_awarded', 1);
+                                        })
+                                        ->where('projects.user_id', '<>', Auth::user()->id)
+                                        ->select('projects.*');
+                                        // ->join('traderareas', function($query) { $query->on(DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)'));});
+                                $query->where(function ($q) use ($trader_areas) {
+                                            foreach ($trader_areas as $trader_area) {
+                                                $q->orWhere(function ($subQuery) use ($trader_area) {
+                                                    $subQuery->where('town', $trader_area->town)
+                                                    ->where('county', $trader_area->county);
+                                                });
+                                            }
+                                        });
+                            });
+        return $recommended_proj;
+    }
+}

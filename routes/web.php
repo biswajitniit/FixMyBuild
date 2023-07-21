@@ -175,6 +175,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('project/{project_id}', [CustomerController::class,'details'])->name('customer.project_details');
         Route::get('project-return-for-review/{id}', [CustomerController::class,'project_return_for_review'])->name('customer.project-return-for-review');
         Route::post('editproject-return-for-review/{projectid}', [CustomerController::class,'customer_editproject'])->name('customer.editproject-return-for-review');
+        Route::patch('resume-project/{id}', [CustomerController::class,'resumeProject'])->name('customer.resume-project');
 
         Route::post('getcustomermediafiles', [CustomerController::class,'getcustomermediafiles'])->name('customer.getcustomermediafiles');
         Route::post('getprojectmediafiles', [CustomerController::class,'getprojectmediafiles'])->name('customer.getprojectmediafiles');
