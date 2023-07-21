@@ -4,7 +4,7 @@
             <h3>
                 New project(s)
                 <span>
-                    <a @if(Auth::user()->is_email_verified == 0) href="javascript:void(0)" @else href="{{ route('customer.newproject') }}" @endif> <i class="fa fa-plus"></i> Add new</a>
+                    <a href="{{ route('customer.newproject') }}"> <i class="fa fa-plus"></i> Add new</a>
                 </span>
             </h3>
         </div>

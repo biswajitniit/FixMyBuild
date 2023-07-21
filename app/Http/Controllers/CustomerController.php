@@ -38,12 +38,12 @@ use League\Flysystem\File;
 class CustomerController extends Controller
 {
     public function customer_newproject(Request $request){
-        if(Auth::user()->is_email_verified == 0){
-            return view("customer.profile");
-        }else{
+        // if(Auth::user()->is_email_verified == 0){
+        //     return view("customer.profile");
+        // }else{
             $last_project = Project::where('user_id', Auth::id())->with('projectaddress')->latest()->first();
             return view("customer.newproject", compact('last_project'));
-        }
+        // }
     }
     public function customer_profile(Request $request){
         return view("customer.profile");
