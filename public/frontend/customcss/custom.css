@@ -131,3 +131,14 @@ video.customer-video{
 .contin_ {
     width: 200px;
 }
+.warning_svg{
+    margin-left: 70px;
+}
+.verify_text{
+    margin-left: 46px;
+    margin-top: 5px;
+    color:rgb(241, 121, 9);
+}
+.white_box{
+    margin-top: -47px;
+}

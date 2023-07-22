@@ -26,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $userId = Auth::id();
-        $unread_notifications = NotificationDetail::where('read_status', 0)->where('user_id', 10)->count();
-        $notifications = NotificationDetail::where('user_id', 10)->get();
+        $unread_notifications = NotificationDetail::where('read_status', 0)->where('user_id', 3)->count();
+        $notifications = NotificationDetail::where('user_id', 3)->get();
         // $unread_notifications = NotificationDetail::count_all();
         view()->share('unread_notifications', $unread_notifications);
         view()->share('notifications', $notifications);

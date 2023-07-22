@@ -85,9 +85,9 @@
                                             @if($file_ext=="jpg" || $file_ext=="png" || $file_ext=="JPG" || $file_ext=="PNG")
                                                 <div class="col-lg-4 col-xl-4">
                                                     <!-- Simple card -->
-                                                    <div class="card mb-4 mb-xl-0">
+                                                    <div class="mb-4 mb-xl-0">
                                                         <a href="{{@$rowprojectmedia->url}}" target="_blank" title="View image">
-                                                            <img class="card-img-top img-fluid" src="{{@$rowprojectmedia->url}}" alt="jpg" style="width:100%;height:auto;"/>
+                                                            <img class="card-img-top img-fluid" src="{{@$rowprojectmedia->url}}" alt="jpg" style="width:50%;height:auto;"/>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -97,9 +97,9 @@
                                             @if($file_ext=="xlsx" || $file_ext=="xls")
                                                 <div class="col-lg-4 col-xl-4">
                                                     <!-- Simple card -->
-                                                    <div class="card mb-4 mb-xl-0">
+                                                    <div class="mb-4 mb-xl-0">
                                                         <a href="{{@$rowprojectmedia->url}}" target="_blank" title="View Excels" download>
-                                                            <img class="card-img-top img-fluid" src="{{ asset('adminpanel/file/excels.webp') }}" alt="xls" style="width:100%;height:auto;"/>
+                                                            <img class="card-img-top img-fluid" src="{{ asset('adminpanel/file/excels.webp') }}" alt="xls" style="width:25%;height:auto;"/>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -109,21 +109,21 @@
                                             @if($file_ext=="pdf")
                                                 <div class="col-lg-4 col-xl-4">
                                                     <!-- Simple card -->
-                                                    <div class="card mb-4 mb-xl-0">
+                                                    <div class="mb-4 mb-xl-0">
                                                         <a href="{{@$rowprojectmedia->url}}" target="_blank" title="View Excels" download>
-                                                            <img class="card-img-top img-fluid" src="{{ asset('adminpanel/file/pdf.png') }}" alt="pdf" style="width:100%;height:auto;"/>
+                                                            <img class="card-img-top img-fluid" src="{{ asset('adminpanel/file/pdf.png') }}" alt="pdf" style="width:25%;height:auto;"/>
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <!-- end col -->
                                             @endif
 
-                                            @if($file_ext=="mov" || $file_ext=="mp4" || $file_ext=="3gp" || $file_ext=="ogg" || $file_ext=="webm" || $file_ext=="avi" || $file_ext=="mov" || $file_ext=="wmv")
+                                            @if($file_ext=="mov" || $file_ext=="mp4" || $file_ext=="3gp" || $file_ext=="ogg" || $file_ext=="webm" || $file_ext=="avi" || $file_ext=="mov" || $file_ext=="wmv" || $file_ext=="mkv")
                                                 <div class="col-lg-4 col-xl-4">
                                                     <!-- Simple card -->
-                                                    <div class="card mb-4 mb-xl-0">
+                                                    <div class="mb-4 mb-xl-0">
                                                         <a href="{{@$rowprojectmedia->url}}" target="_blank" title="View video">
-                                                            <img class="card-img-top img-fluid" src="{{ asset('adminpanel/file/video.jpg') }}" alt="pdf" style="width:100%;height:auto;"/>
+                                                            <img class="card-img-top img-fluid" src="{{ asset('adminpanel/file/video.jpg') }}" alt="video" style="width:30%;height:auto;"/>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -138,7 +138,7 @@
                             <div class="mb-3 row">
                                 <label class="col-lg-3 col-form-label" for="example-textarea">Your Decision</label>
                                 <div class="col-lg-9  mt-2">
-                                    <select name="reviewer_status" class="reviewer-status form-control" required>
+                                    <select name="reviewer_status" id="reviewer_status" class="reviewer-status form-control" required>
                                         <option value="">Select Status</option>
                                         <option value="approved" {{ $project->reviewer_status == 'approved' ? 'selected' : '' }}>Approved</option>
                                         <option value="referred" {{ $project->reviewer_status == 'referred' ? 'selected' : '' }}>Referred</option>
@@ -264,6 +264,12 @@
                                         <p id="for_tradeperson" name="for_tradeperson"></p>
                                     </div>
                                 </div>
+                                <div class="mb-3 row">
+                                <label class="col-lg-3 col-form-label" for="example-textarea"><b>Your Decision :</b></label>
+                                    <div class="col-lg-9 mt-3">
+                                        <p id="for_your_decision" name="for_your_decision"></p>
+                                    </div>
+                                </div>
 
                             </div>
                             <div class="modal-footer">
@@ -327,11 +333,12 @@ function confirmYourReviews(){
     var forTradeperson = $('#notes_for_tradespeople').val();
     var forCustomer = $('#notes_for_customer').val();
     var forInternal = $('#notes_for_internal').val();
+    var forYourDesicion = $('#reviewer_status').val();
 
     $('#for_tradeperson').text(forTradeperson);
     $('#for_customer').text(forCustomer);
     $('#for_internal').text(forInternal);
-
+    $('#for_your_decision').text(forYourDesicion);
 }
 
 </script>

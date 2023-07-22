@@ -112,11 +112,11 @@
                                         <div class="progress-bar"></div>
                                     </div>
                                     <a href="#" class="bs-wizard-dot"></a>
-                                    @foreach($proj_logs as $proj_log)
-                                        @if ($proj_log->action_by_type == 'reviewer' && $proj_log->status == 'approved')
-                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}</div>
+                                    {{-- @foreach($proj_logs as $proj_log) --}}
+                                        @if ($proj_logs->action_by_type == 'reviewer' && $proj_logs->status == 'approved')
+                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_logs->status_changed_at)) }}</div>
                                         @endif
-                                    @endforeach
+                                    {{-- @endforeach --}}
                                 </div>
                                 @if($status == 'awaiting_your_review')
                                     <div class="col bs-wizard-step complete">
@@ -129,11 +129,11 @@
                                         <div class="progress-bar"></div>
                                     </div>
                                     <a href="#" class="bs-wizard-dot"></a>
-                                    @foreach($proj_logs as $proj_log)
-                                        @if($proj_log->action_by_type == 'user' && $proj_log->status == 'project_started')
-                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}
+                                    {{-- @foreach($proj_logs as $proj_log) --}}
+                                        @if($proj_logs->status == 'project_started')
+                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_logs->status_changed_at)) }}
                                         @endif
-                                    @endforeach
+                                    {{-- @endforeach --}}
                                     </div>
                                 </div>
                             @if($status == 'awaiting_your_review')
@@ -156,7 +156,9 @@
                                     <div class="progress-bar"></div>
                                 </div>
                                 <a href="#" class="bs-wizard-dot"></a>
-                                <div class="bs-wizard-info text-center"></div>
+                                @if($proj_logs->status == 'project_completed')
+                                    <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_logs->status_changed_at)) }}</div>
+                                @endif
                             </div>
                         </div>
                         </div>
@@ -454,7 +456,7 @@
 
 @push('scripts')
 <script src="https://checkout.stripe.com/v2/checkout.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
     $(':submit').on('click', function(event) {
@@ -556,11 +558,21 @@ $(document).ready(function() {
                 project_id : projectid
             },
             success: function(response) {
-                console.log('Project cancelled successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'success: You have successfully cancelled your project'
+                    showConfirmButton: false,
+                    timer: 3000
+                });
                 window.location.href = response.redirect_url;
             },
             error: function(xhr, status, error) {
-                console.error('Error cancelling project:', error);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Bad Request: Oops!! something went wrong',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             }
         });
     }
@@ -592,13 +604,29 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if(response == 'error') {
-                    console.error('Error on pausing project');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Bad Request: Oops!! something went wrong',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'success: You have successfully paused your project'
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     window.location.href = response.redirect_url;
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error on pausing project:', error);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Bad Request: Oops!! something went wrong',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             }
         });
     }

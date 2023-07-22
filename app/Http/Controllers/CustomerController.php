@@ -413,7 +413,7 @@ class CustomerController extends Controller
         try{
             $id=Hashids_decode($project_id);
             $projects = Project::where('id',$id)->first();
-            $proj_logs = ProjectStatusChangeLog::where('project_id', $projects->id)->get();
+            $proj_logs = ProjectStatusChangeLog::where('project_id', $projects->id)->first();
 
             if(Auth::id() != $projects->user_id)
                 abort(403);

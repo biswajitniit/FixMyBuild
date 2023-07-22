@@ -219,6 +219,7 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
     <script src="{{ asset('frontend/js/chat.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $('#summernote').summernote({
         placeholder: '',
@@ -442,22 +443,24 @@
                     project_id : projectid
                 },
                 success: function(response) {
-                    console.log('Project cancelled successfully');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'success: You have successfully rejected the project'
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     window.location.href = response.redirect_url;
                 },
                 error: function(xhr, error) {
-                    console.error('Error cancelling project:', error);
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Bad Request: Oops!! something went wrong',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 }
             });
         }
-
-        // $(document).ready(function() {
-        //     $('.btn-gallery').on('click', function(event) {
-        //     event.preventDefault();
-        //     var imageUrl = $(this).find('img').attr('src');
-        //     alert('You clicked on the image! Image URL: ' + imageUrl);
-        //     });
-        // });
 
     </script>
 @endpush

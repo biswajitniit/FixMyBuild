@@ -82,7 +82,11 @@
                 <div class="form-group col-md-12 mt-5 text-center pre_">
                     <a href="{{route('customer.project')}}" class="btn btn-light mr-3">Back</a>
                     <a href="#" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#reject">Reject</a>
-                    <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" data-bs-toggle="modal" data-bs-target="#accept" class="btn btn-primary">Accept</a>
+                    @if(Auth::user()->is_email_verified == 0)
+                        <a href="#" class="btn btn-primary" disabled>Accept</a>
+                    @else
+                        <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" data-bs-toggle="modal" data-bs-target="#accept" class="btn btn-primary">Accept</a>
+                    @endif
                 </div>
                 <!-- The Modal Accept received-->
                 <div class="modal fade select_address accept" id="accept" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -165,7 +169,7 @@
                              </div>
                           </div>
                           <div class="modal-footer justify-content-center">
-                             <button type="button" class="btn btn-light">Back</button> <button type="button" id="continue_" onclick="forAccept()" class="btn btn-light" disabled>Continue</button>
+                            <button type="button" class="btn btn-light">Back</button> <button type="button" id="continue_" onclick="forAccept()" class="btn btn-light" disabled>Continue</button>
                           </div>
                        </div>
                     </div>
@@ -202,6 +206,7 @@
 @endsection
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $('#summernote').summernote({
         placeholder: '',
@@ -342,10 +347,22 @@
                     settings : settings
                 },
                 success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'success: You have successfully accepted the estimate'
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     window.location.href = response.redirect_url;
                 },
                 error: function(xhr, error) {
                     // console.error('Error cancelling project:', error);
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Bad Request: Oops!! something went wrong',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 }
             });
         }
@@ -363,12 +380,22 @@
                     project_id : projectid,
                     tradesperson_id : tradeperson_id
                 },
-                success: function(response) {
-                    console.log('Project rejected successfully done');
+                success: function(data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'success: Your project has been rejected successfully'
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     window.location.href = response.redirect_url;
                 },
                 error: function(xhr, error) {
-                    console.error('Error rejecting project:', error);
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Bad Request: Oops!! something went wrong',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 }
             });
         }

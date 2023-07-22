@@ -147,13 +147,24 @@
                         icon: 'success',
                         title: 'New OTP has been sent to your mobile!!',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2000
                         });
                     }else{
-                        alert('OTP not sent')
+                        Swal.fire({
+                        icon: 'warning',
+                        title: 'Bad Request: Oops!! something went wrong',
+                        showConfirmButton: false,
+                        timer: 3000
+                        });
                     }
                 },
                 error: function(data) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Bad Request: Oops!! something went wrong',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 }
                 });
             }
