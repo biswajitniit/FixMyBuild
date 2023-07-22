@@ -459,6 +459,9 @@ class TradepersionDashboardController extends Controller
 
     public function dashboard()
     {
+        if (!empty(lock_trader_dashboard_access()))
+            return lock_trader_dashboard_access();
+
         $works = Buildercategory::where('status', 'Active')->get();
         $areas = DB::table('county_towns')
                     ->select('*')
@@ -876,6 +879,9 @@ class TradepersionDashboardController extends Controller
 
     public function projects(Request $request)
     {
+        if (!empty(lock_trader_dashboard_access()))
+            return lock_trader_dashboard_access();
+
         // Fetch Trader Areas And Works
         $trader_areas = Traderareas::where(['user_id' => Auth::user()->id])->get();
         $trader_works = Traderworks::where('user_id', Auth::user()->id)->get();
@@ -1099,6 +1105,9 @@ class TradepersionDashboardController extends Controller
 
     public function settings()
     {
+        if (!empty(lock_trader_dashboard_access()))
+            return lock_trader_dashboard_access();
+
         $notification = Notification::where('user_id',Auth::user()->id)->first()->settings;
         return view('tradepersion.settings', compact('notification'));
     }

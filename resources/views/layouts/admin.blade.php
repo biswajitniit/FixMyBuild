@@ -116,6 +116,15 @@
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.users') }}">
+                <i class="mdi mdi-account-multiple-outline menu-icon"></i>
+                <span class="menu-title">Users</span>
+            </a>
+          </li>
+
+
           @if (Auth::guard('admin')->user()->type == "superadmin")
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#category" aria-expanded="false" aria-controls="apps">
@@ -129,13 +138,6 @@
                             <li class="nav-item"><a class="nav-link" href="{{ route('buildersubcategory.index') }}">Sub Category</a></li>
                         </ul>
                     </div>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.users') }}">
-                        <i class="mdi mdi-account-multiple-outline menu-icon"></i>
-                        <span class="menu-title">Users</span>
-                    </a>
                 </li>
 
                 <li class="nav-item">

@@ -9,6 +9,7 @@ use App\Models\Notification;
 use App\Models\NotificationDetail;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\TraderDetail;
 use Illuminate\Support\Facades\Auth;
 use Hashids\Hashids;
 use Carbon\Carbon;
@@ -437,5 +438,17 @@ if(!function_exists('recommended_projects')) {
                                         });
                             });
         return $recommended_proj;
+    }
+}
+
+
+if(!function_exists('lock_trader_dashboard_access')) {
+    function lock_trader_dashboard_access() {
+        $user = TraderDetail::where('user_id', Auth::id())->first();
+
+        if (empty($user))
+            return redirect()->route('tradepersion.compregistration');
+        elseif (empty($user->contingency) || is_null($user->contingency))
+            return redirect()->route('tradepersion.bankregistration');
     }
 }

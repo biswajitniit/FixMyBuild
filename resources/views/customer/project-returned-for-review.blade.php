@@ -31,12 +31,6 @@
                         </ul>
                     </div>
                 @endif
-
-                @if(session()->has('message'))
-                    <div class="alert alert-success mt-15">
-                        {{ session()->get('message') }}
-                    </div>
-                @endif
             </div>
         </div>
     </div>
@@ -93,7 +87,7 @@
                                 </div>
 
                                 <div class="col-md-10 post_code">
-                                    <div class="form-control d-inline">
+                                    <div class="form-control d-inline" id="zipcode-container">
                                         <input type="text" class="col-6 mt-2" name="postcode" id="postcode" placeholder="Postcode" />
                                         <input type="hidden" name="zipcode_selected_address_line_one" id="zipcode_selected_address_line_one" value="">
                                         <input type="hidden" name="zipcode_selected_address_line_two" id="zipcode_selected_address_line_two" value="">
@@ -133,44 +127,42 @@
                                     <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="3" checked>
                                     <h5>Last used address</h5>
                                  </div>
-                                 <p>
-                                    {{ !empty($project->projectaddress->address_line_one) ? \Str::title($project->projectaddress->address_line_one) : '' }}
-                                    {{ !empty($project->projectaddress->address_line_two) ? ', ' . \Str::title($project->projectaddress->address_line_two): '' }}
-                                    {{ !empty($project->town) ? ', ' . \Str::title($project->town): '' }}
-                                    {{ !empty($project->county) ? ', ' . \Str::title($project->county): '' }}
-                                    {{ !empty($project->postcode) ? ', ' . \Str::upper($project->postcode) : '' }}
+                                 <p class="last_used_address">
+                                    {{ !empty($project->projectaddress->address_line_one) ? \Str::title($project->projectaddress->address_line_one) : '' }}{{ !empty($project->projectaddress->address_line_two) ? ', ' . \Str::title($project->projectaddress->address_line_two): '' }}{{ !empty($project->town) ? ', ' . \Str::title($project->town): '' }}{{ !empty($project->county) ? ', ' . \Str::title($project->county): '' }}{{ !empty($project->postcode) ? ', ' . \Str::upper($project->postcode) : '' }}
                                     {{-- {{ $projectaddresses->address_line_one }}, {{ $projectaddresses->address_line_two }}, {{ $projectaddresses->town_city }}, {{ $projectaddresses->postcode }} --}}
-                                </p>
+                                 </p>
 
                                 <div class="form-check mt-3">
                                     <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="2"/>
                                     <h5>Or type your address</h5>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group mb-3">
-                                        <input type="text" class="form-control" id="address_line_one" placeholder="Address line 1" name="address_line_one"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group mb-3">
-                                        <input type="text" class="form-control" id="address_line_two" placeholder="Address line 2" name="address_line_two"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
+                                <div id="typed_address">
+                                    <div class="col-md-12">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="town_city" placeholder="Town/City" name="town_city"/>
+                                            <input type="text" class="form-control" id="address_line_one" placeholder="Address line 1" name="address_line_one"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="county" placeholder="County" name="county"/>
+                                            <input type="text" class="form-control" id="address_line_two" placeholder="Address line 2" name="address_line_two"/>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group mb-3">
-                                        <input type="text" class="form-control" id="address_type_postcode" placeholder="Postcode" name="address_type_postcode"/>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <input type="text" class="form-control" id="town_city" placeholder="Town/City" name="town_city"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <input type="text" class="form-control" id="county" placeholder="County" name="county"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group mb-3">
+                                            <input type="text" class="form-control" id="address_type_postcode" placeholder="Postcode" name="address_type_postcode"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +191,7 @@
                             </div>
                             <div class="col-md-12 mb-4">
                                 {{-- <textarea name="description" id="summernote">{!! $project->description !!}</textarea> --}}
-                                <textarea name="description" class="description">{{ $project->description }}</textarea>
+                                <textarea name="description" class="description p-2">{{ $project->description }}</textarea>
                             </div>
 
                             <div class="col-md-12 mb-4">
@@ -323,148 +315,6 @@
             <!--// END-->
         </form>
     </div>
-
-    <!-- The Modal Upload Video file-->
-    <!--
-    <div class="modal fade select_address" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Take video</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                                fill="black"
-                            />
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12 supported_">
-                            <div id="my_camera_video"></div>
-                            <div id='gUMArea'>
-                                {{-- <div>
-                                <input type="radio" name="media" value="video" checked id='mediaVideo'>Video
-                                </div> --}}
-                                <button class="btn btn-outline-danger mt-3"  id='gUMbtn'>Request Stream</button>
-                            </div>
-                            <div id='btns' style="display: none;">
-                                <button  class="btn btn-outline-danger mt-3" id='start'>Start</button>
-                                <button  class="btn btn-outline-danger mt-3" id='stop'>Stop</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
-    <!-- The Modal Upload Video file END-->
-
-    <!-- The Modal Upload Photo file-->
-    <!--
-    <div class="modal fade select_address" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Take photo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
-                                fill="black"
-                            />
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    {{-- <form method="POST" action="{{ route('capture-photo') }}" enctype="multipart/form-data"> --}}
-                    <form id="capturephoto">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div id="my_camera"></div>
-                                        <input type="button" class="btn btn-outline-danger btn-block" value="Take Snapshot" onClick="take_snapshot()">
-                                        <input type="hidden" name="image" class="image-tag" >
-                                        <input type="hidden" name="projectid" value="{{ $project->id }}">
-                                    </div>
-                                    <div class="col-md-6 ml-100">
-                                        {{-- <div id="results">Your captured image will appear here...</div> --}}
-                                        <div id="results"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                {{-- <button class="btn btn-danger">Submit</button> --}}
-                                <button class="btn btn-primary" type="submit">Submit</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link btn-close" data-bs-dismiss="modal">Close</button>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
-    <!-- The Modal Upload Photo file END-->
-
-
-    {{-- <!-- The Modal Upload files-->
-    <div class="modal fade select_address" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Upload files</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6 supported_">
-                    <h4>Supported file type list:</h4>
-                    <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
-                    <h6><strong>Documents:</strong> .doc, .docx .key .odt .pdf .ppt, .pptx, .pps, .ppsx .xls, .xlsx</h6>
-                    <h6><strong>Audio:</strong> .mp3 .m4a .ogg .wav</h6>
-                    <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6>
-                    </div>
-                    <div class="col-md-6">
-                        <form method="post" action="{{route('dropzonesave')}}" enctype="multipart/form-data" class="dropzone" id="dropzone">
-                            @csrf
-                            <div class="text-center upload_wrap dz-message">
-                                <img src="{{ asset('frontend/img/upload.svg') }}" alt="">
-                                <p>Drag and drop files here</p>
-                                <h4>OR</h4>
-                                <button type="button" id="file_upload_btn" class="btn btn-light mt-3" style="width:180px;">Browse files</button>
-                            </div>
-                        </form>
-                        <div class='invalid-file'></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" id="uploadfiles" class="btn btn-light">Upload</button>
-            </div>
-        </div>
-        </div>
-    </div>
-    <!-- The Modal Upload files END--> --}}
 
     <!-- The Modal Upload Video file-->
     <div class="modal fade select_address" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -632,6 +482,33 @@
     </div>
     <!-- Delete Image Modal END -->
 
+
+    {{-- Success Modal Starts --}}
+    <div class="modal fade select_address" id="success_modal" tabindex="-1" aria-labelledby="successLabelModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center p-5">
+                    <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_519_1019)">
+                        <path d="M41.5002 4.61133C34.2043 4.61133 27.0722 6.77482 21.0059 10.8282C14.9395 14.8816 10.2114 20.6429 7.41934 27.3834C4.62731 34.124 3.89679 41.5411 5.32015 48.6969C6.74352 55.8526 10.2568 62.4256 15.4159 67.5846C20.5749 72.7436 27.1478 76.2569 34.3036 77.6803C41.4593 79.1037 48.8764 78.3731 55.617 75.5811C62.3576 72.7891 68.1188 68.0609 72.1722 61.9946C76.2256 55.9282 78.3891 48.7962 78.3891 41.5002C78.3891 31.7167 74.5026 22.3338 67.5846 15.4158C60.6666 8.49783 51.2838 4.61133 41.5002 4.61133ZM41.5002 73.778C35.1163 73.778 28.8757 71.8849 23.5677 68.3382C18.2596 64.7915 14.1225 59.7504 11.6795 53.8524C9.23643 47.9544 8.59722 41.4644 9.84266 35.2031C11.0881 28.9419 14.1623 23.1905 18.6764 18.6764C23.1905 14.1623 28.9419 11.0881 35.2032 9.84265C41.4644 8.5972 47.9544 9.23641 53.8524 11.6794C59.7504 14.1225 64.7915 18.2596 68.3382 23.5676C71.885 28.8757 73.778 35.1163 73.778 41.5002C73.778 50.0608 70.3773 58.2708 64.3241 64.3241C58.2708 70.3773 50.0608 73.778 41.5002 73.778Z" fill="#061A48"/>
+                        <path d="M64.5554 27.897C64.1235 27.4676 63.5391 27.2266 62.93 27.2266C62.3209 27.2266 61.7366 27.4676 61.3046 27.897L35.7129 53.3734L21.8796 39.5401C21.4577 39.0845 20.8721 38.8152 20.2516 38.7914C19.6312 38.7677 19.0267 38.9913 18.5711 39.4133C18.1156 39.8352 17.8463 40.4208 17.8225 41.0412C17.7987 41.6617 18.0224 42.2662 18.4443 42.7217L35.7129 59.9442L64.5554 31.1709C64.7715 30.9566 64.9431 30.7016 65.0601 30.4206C65.1772 30.1397 65.2374 29.8383 65.2374 29.5339C65.2374 29.2296 65.1772 28.9282 65.0601 28.6473C64.9431 28.3663 64.7715 28.1113 64.5554 27.897Z" fill="#061A48"/>
+                        </g>
+                        <defs>
+                        <clipPath id="clip0_519_1019">
+                        <rect width="83" height="83" fill="white"/>
+                        </clipPath>
+                        </defs>
+                    </svg>
+                    <h5>Success</h5>
+                    <p>{{ session()->get('message') }}</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Success Modal Ends--}}
 
 </section>
 <!--Code area end-->
@@ -852,6 +729,10 @@
             $("#upload_multiple_file").prop('disabled', false);
         });
 
+        multiFileDropzone.on("error", function(file, errorMessage, xhr) {
+            setTimeout(() => multiFileDropzone.removeFile(file), 5000);
+        });
+
         // Setup the buttons for all transfers
         // The "add files" button doesn't need to be setup because the config
         // `clickable` has already been specified.
@@ -916,9 +797,6 @@
         });
     }
 
-    $(document).ready(function(){
-
-    });
 
     function Get_zipcode(){
         // var zipcode = $('input[name="zipcode"]:checked').val();
@@ -941,22 +819,6 @@
         $('#exampleModal').modal('toggle');
     }
 
-    // gUMbtn1 = id('gUMbtn1'),
-    // gUMbtn1.onclick = e => {
-    //     var constraints = { audio: true, video: true };
-    //     navigator.mediaDevices.getUserMedia(constraints)
-    //     .then(function(mediaStream) {
-    //             Webcam.set({
-    //                 width: 300,
-    //                 height: 250,
-    //                 image_format: 'jpeg',
-    //                 jpeg_quality: 100
-    //             });
-    //             Webcam.attach( '#my_camera' );
-    //     })
-    //     .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
-    // }
-
     gUMbtn1 = id('gUMbtn1'),
     gUMbtn1.onclick = e => {
         var constraints = { audio: true, video: true };
@@ -970,7 +832,36 @@
             });
             Webcam.attach( '#my_camera' );
         })
-        .catch(function(err) { console.log(err.name + ": " + err.message); });
+        .catch(function (err) {
+            Swal.fire({
+                title: 'Camera and Microphone Access Required',
+                html: `<small>Please close other apps using them and grant permission to proceed.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Grant Permission',
+                cancelButtonText: 'Deny',
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function (mediaStream) {
+                        Webcam.set({
+                            width: 450,
+                            height: 350,
+                            image_format: 'jpeg',
+                            jpeg_quality: 100
+                        });
+                        Webcam.attach('#my_camera');
+                    })
+                    .catch(function (err) {
+                        $('#exampleModal4').modal('hide');
+                        Swal.fire('Error', 'Failed to access webcam and microphone.', 'error');
+                    });
+                } else {
+                    $('#exampleModal4').modal('hide');
+                    Swal.fire('Permission Denied', 'You have denied access to your webcam and microphone.', 'error');
+                }
+            });
+        });
     }
 
     let imagesArray = [];
@@ -1031,7 +922,36 @@
             Webcam.attach( '#my_camera_video' );
             $("#gUMbtn").click();
         })
-        .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+        .catch(function (err) {
+            Swal.fire({
+                title: 'Camera and Microphone Access Required',
+                html: `<small>Please close other apps using them and grant permission to proceed.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Grant Permission',
+                cancelButtonText: 'Deny',
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function (mediaStream) {
+                        Webcam.set({
+                            width: 450,
+                            height: 350,
+                            image_format: 'jpeg',
+                            jpeg_quality: 100
+                        });
+                        Webcam.attach('#my_camera_video');
+                    })
+                    .catch(function (err) {
+                        $('#exampleModal3').modal('hide');
+                        Swal.fire('Error', 'Failed to access webcam and microphone.', 'error');
+                    });
+                } else {
+                    $('#exampleModal3').modal('hide');
+                    Swal.fire('Permission Denied', 'You have denied access to your webcam and microphone.', 'error');
+                }
+            });
+        }); // always check for errors at the end.
     }
 
 
@@ -1095,9 +1015,6 @@
             }
 
         });
-
-
-
     });
 
     function geturldata(e){
@@ -1132,12 +1049,6 @@
         });
     }
 
-    // $('#summernote').summernote({
-    //     //placeholder: 'FixMyBuild',
-    //     tabsize: 2,
-    //     height: 200
-    // });
-    // setInterval(function() { FetchfilesData(); }, 5000);
 
     function FetchfilesData() {
         $.ajax({
@@ -1265,153 +1176,106 @@
     }
 
     function disableAddressField(addresstype = $('input[name="addresstype"]:checked').val()) {
-        if(addresstype != 2)
-            $(`
-                #address_line_one,
-                #address_line_two,
-                #town_city,
-                #county,
-                #address_type_postcode
-             `).attr('disabled',true);
-        else
-            $(`
-                #address_line_one,
-                #address_line_two,
-                #town_city,
-                #county,
-                #address_type_postcode
-             `).attr('disabled',false);
+        if(addresstype == 1) {
+            $('#typed_address').hide();
+            $('#typed_address input').val('');
+            $('#typed_address label.error').hide();
+            $('#typed_address input.error').removeClass('error');
 
+            $('.post_code').show();
 
-        if(addresstype == 1)
-            $("#postcode").attr('disabled',false);
-        else
-            $("#postcode").attr('disabled',true);
+            $('.last_used_address').hide();
+        }
+
+        if(addresstype == 2) {
+            $('#typed_address').show();
+
+            $('.last_used_address').hide();
+
+            $('#postcode').val('');
+            $('#selected_post_code_html').html('');
+            $('.post_code').hide();
+            $('#zipcode-container input').val('');
+            $('.post_code label.error').hide();
+            $('.post_code input.error').removeClass('error');
+        }
+
+        if(addresstype == 3) {
+            $('#typed_address').hide();
+            $('#typed_address input').val('');
+            $('#typed_address label.error').hide();
+
+            $('.last_used_address').show();
+
+            $('#postcode').val('');
+            $('#selected_post_code_html').html('');
+            $('.post_code').hide();
+            $('#zipcode-container input').val('');
+            $('.post_code label.error').hide();
+            $('.post_code input.error').removeClass('error');
+
+            $('#typed_address input.error').removeClass('error');
+            $('#typed_address label.error').hide();
+        }
     }
 
     $(document).ready(function(){
-        // $("form#capturephoto").submit(function(e){
-        //     e.preventDefault();
-        //     var formData = new FormData(this);
-        //     Swal.fire({
-        //     title: 'Are you sure?',
-        //     text: "You want to upload this image?",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#3085d6',
-        //     cancelButtonColor: '#d33',
-        //     confirmButtonText: 'Yes'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             $.ajax({
-        //                 url: '{{ route("capture-photo-project-return-for-review") }}',
-        //                 type: 'POST',
-        //                 contentType: 'multipart/form-data',
-        //                 cache: false,
-        //                 contentType: false,
-        //                 processData: false,
-        //                 data: formData,
-        //                 success: (response) => {
-        //                     // success
-        //                     Swal.fire({
-        //                         //position: 'top-end',
-        //                         icon: 'success',
-        //                         title: 'Image uploaded successfully.',
-        //                         showConfirmButton: false,
-        //                         timer: 1500
-        //                     })
-        //                 },
-        //                 error: (response) => {
-        //                     console.log(response);
-        //                 }
-        //             });
-        //         }
-        //     })
-        // });
         disableAddressField();
         fetchAllMedias();
 
-        $("form#capturephoto").submit(function(e){
-                e.preventDefault();
-                var success=1
-                var modalId = '#'+$(this).closest('.modal').attr('id');
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You want to upload this image?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        //for (i = 0; i < imagesArray.length; i++){
-                        $("#capture_photo_upload").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
-                        $("#capture_photo_upload").prop('disabled', true);
-                        var formData = new FormData($("#capturephoto")[0]);
-                        formData.append('media_type', 'project');
-                        $.ajax({
-                            data: formData,
-                            async: false,
-                            url: '{{ route("capture-photo") }}',
-                            type: 'POST',
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            dataType: "json",
-                            success: (response) => {
-                                $("#capture_photo_upload").html('Upload');
-                                $("#capture_photo_upload").prop('disabled', false);
-                                success='1';
-                                fetchAllMedias();
-                            },
-                            error: (response) => {
-                                console.log(response);
-                                success=response
-                            }
-                        });
+        @if(session()->has('message'))
+            $('#success_modal').modal('show');
+        @endif
 
-                        if(success=='1'){
+        $("form#capturephoto").submit(function(e){
+            e.preventDefault();
+            var success=1
+            var modalId = '#'+$(this).closest('.modal').attr('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to upload this image?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#capture_photo_upload").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+                    $("#capture_photo_upload").prop('disabled', true);
+                    var formData = new FormData($("#capturephoto")[0]);
+                    formData.append('media_type', 'project');
+                    $.ajax({
+                        data: formData,
+                        async: false,
+                        url: '{{ route("capture-photo") }}',
+                        type: 'POST',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        dataType: "json",
+                        success: (response) => {
+                            imagesArray = [];
+                            displayImages();
                             $(modalId).modal('hide');
+                            $("#capture_photo_upload").html('Upload');
+                            $("#capture_photo_upload").prop('disabled', false);
+                            fetchAllMedias();
                             Swal.fire({
-                                //position: 'top-end',
                                 icon: 'success',
                                 title: 'Image uploaded successfully.',
                                 showConfirmButton: false,
                                 timer: 1500
-                            })
-                        } else {
-                            console.log(success);
+                            });
+                        },
+                        error: (response) => {
+                            console.log(response);
+                            success=response
                         }
-
-                    }
-                })
+                    });
+                }
             });
-
-
-        // // addresstype
-        // var addresstype = $('input[name="addresstype"]:checked').val();
-        // if(addresstype == 1){
-        //     $("#address_line_one").attr('disabled',true);
-        //     $("#address_line_two").attr('disabled',true);
-        //     $("#town_city").attr('disabled',true);
-        //     $("#address_type_postcode").attr('disabled',true);
-        // }
-
-        // if(addresstype == 2){
-        //     $("#address_line_one").attr('disabled',false);
-        //     $("#address_line_two").attr('disabled',false);
-        //     $("#town_city").attr('disabled',false);
-        //     $("#address_type_postcode").attr('disabled',false);
-        // }
-
-        // if(addresstype == 3){
-        //     $("#address_line_one").attr('disabled',true);
-        //     $("#address_line_two").attr('disabled',true);
-        //     $("#town_city").attr('disabled',true);
-        //     $("#address_type_postcode").attr('disabled',true);
-        //     $("#postcode").attr('disabled',true);
-        // }
+        });
 
         $("input[name='addresstype']").change(() => disableAddressField());
 
@@ -1432,9 +1296,15 @@
         $("#savenewproject").validate({
             // Specify validation rules
             rules: {
-                forename: "required",
-                surname: "required",
-                project_name: "required",
+                forename: {
+                    required: true,
+                },
+                surname: {
+                    required: true,
+                },
+                project_name: {
+                    required: true,
+                },
                 contact_mobile_no: {
                     required: true,
                     phoneNumber: true
@@ -1443,7 +1313,10 @@
                     required: true,
                     phoneNumber: true
                 },
-                contact_email: "required",
+                contact_email: {
+                    required: true,
+                    email: true
+                },
                 postcode : {
                     required: {
                         depends: function(element) {
@@ -1485,32 +1358,51 @@
                 },
             },
             messages: {
-                fullname: {
-                    forename: "Please enter forename",
+                forename: {
+                    required: "Please enter forename",
                 },
                 surname: {
-                    surname: "Please enter surname",
+                    required: "Please enter surname",
                 },
                 project_name: {
-                    project_name: "Please enter project name",
+                    required: "Please enter project name",
                 },
                 contact_mobile_no: {
                     required: 'Please enter a phone number',
-                    phoneNumber: 'Please enter a valid phone number'
+                    phoneNumber: 'Invalid phone number'
                 },
                 contact_home_phone: {
                     required: 'Please enter a phone number',
-                    phoneNumber: 'Please enter a valid phone number'
+                    phoneNumber: 'Invalid phone number'
                 },
                 contact_email: {
-                    contact_email: "Please enter contact email",
+                    required: "Please enter contact email",
                 },
+            },
+            onfocusout: function(element) {
+                var excludedFields = [
+                    "postcode",
+                    "address_line_one",
+                    "town_city",
+                    "county",
+                    "address_type_postcode"
+                ];
+
+                if (!excludedFields.includes(element.name)) {
+                    this.element(element);
+                }
+            },
+            onkeyup: function(element) {
+                if (element.name !== "postcode") {
+                    this.element(element);
+                }
             },
             submitHandler: function(form) {
                 $('#contact_mobile_no').val(contact_mobile_iti.getNumber());
                 $('#contact_home_phone').val(home_phone_iti.getNumber());
                 form.submit();
             }
+
         });
 
         // Jquery Validation
@@ -1523,25 +1415,12 @@
             if (element.id == 'contact_mobile_no')
                 return /[a-z]/i.test($('#contact_mobile_no').val()) ? !/[a-z]/i.test($('#contact_mobile_no').val()) : contact_mobile_iti.isValidNumber();
             return /[a-z]/i.test($('#contact_home_phone').val()) ? !/[a-z]/i.test($('#contact_home_phone').val()) : home_phone_iti.isValidNumber();
-        }, 'Please enter a valid phone number');
+        }, 'Invalid phone number');
 
+        $('#exampleModal').on('hide.bs.modal', function(e) {
+            $('#postcode').valid();
+        });
     });
-
-    // function validatePhone(iti, errorsId) {
-        // if(iti.isValidNumber()) {
-        //     $(errorsId).hide();
-        //     // $('button[type="submit"]').prop('disabled', false);
-        // }
-        // else {
-        //     $(errorsId).show();
-        //     // $('button[type="submit"]').prop('disabled', true);
-        // }
-        // iti.setNumber(iti.getNumber()); //it removes alphabets from the number
-    // }
-
-        // function validatePhone(iti) {
-        //     return iti
-        // }
 </script>
 @endpush
 

@@ -204,7 +204,7 @@
  <section class="pb-5">
     <div class="container">
       @if($errors->any())
-         <div class="alert alert-danger">
+         <div class="alert alert-danger col-md-10 offset-md-1">
             <ul>
                   @foreach ($errors->all() as $error)
                      <li>{{ $error }}</li>
@@ -271,7 +271,7 @@
                       </div>
                       <div class="col-md-12 mb-4">
                         {{-- <textarea id="editor" name="comp_description"></textarea> --}}
-                        <textarea id="summernote" name="comp_description">{{ old('comp_description') }}</textarea>
+                        <textarea name="comp_description" class="description p-2">{{ old('comp_description') }}</textarea>
                       </div>
                       <div class="col-md-5 mb-4">
                          <h3>Upload company logo
@@ -829,7 +829,7 @@
     <!-- The Modal Upload Photo file END-->
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('frontend/webcamjs/webcam.min.js') }}"></script>
@@ -838,20 +838,50 @@
 <script type="text/javascript">
 
 
-    // function initialiseWebCam () {
-    //     var constraints = { audio: true, video: true };
-    //     navigator.mediaDevices.getUserMedia(constraints)
-    //     .then(function(mediaStream) {
-    //         Webcam.set({
-    //             width: 450,
-    //             height: 350,
-    //             image_format: 'jpeg',
-    //             jpeg_quality: 100
-    //         });
-    //         Webcam.attach( '#my_camera' );
-    //     })
-    //     .catch(function(err) { console.log(err.name + ": " + err.message); });
-    // }
+    function initialiseWebCam () {
+        var constraints = { audio: true, video: true };
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then(function (mediaStream) {
+            Webcam.set({
+                width: 450,
+                height: 350,
+                image_format: 'jpeg',
+                jpeg_quality: 100
+            });
+            Webcam.attach('#my_camera');
+        })
+        .catch(function (err) {
+            Swal.fire({
+                title: 'Camera and Microphone Access Required',
+                html: `<small>Please close other apps using them and grant permission to proceed.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Grant Permission',
+                cancelButtonText: 'Deny',
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function (mediaStream) {
+                        Webcam.set({
+                            width: 450,
+                            height: 350,
+                            image_format: 'jpeg',
+                            jpeg_quality: 100
+                        });
+                        Webcam.attach('#my_camera');
+                    })
+                    .catch(function (err) {
+                        $('#exampleModal4').modal('hide');
+                        Swal.fire('Error', 'Failed to access webcam and microphone.', 'error');
+                    });
+                } else {
+                    $('#exampleModal4').modal('hide');
+                    Swal.fire('Permission Denied', 'You have denied access to your webcam and microphone.', 'error');
+                }
+            });
+        });
+
+    }
     // console.log(gUMbtn1);
     // console.log(document.querySelector('#gUMbtn1'));
 
@@ -894,27 +924,27 @@
 
 
     function captureCompAddrProof(file_related_to){
-        // initialiseWebCam();
+        initialiseWebCam();
         $('#file_related_to').val(file_related_to);
     }
 
     function capturePhotoIdProof(file_related_to){
-        // initialiseWebCam();
+        initialiseWebCam();
         $('#file_related_to').val(file_related_to);
     }
 
     function captureTeamPhoto(file_related_to){
-        // initialiseWebCam();
+        initialiseWebCam();
         $('#file_related_to').val(file_related_to);
     }
 
     function capturePrevProjImg(file_related_to){
-        // initialiseWebCam();
+        initialiseWebCam();
         $('#file_related_to').val(file_related_to);
     }
 
     function capturePublicLiabilityIns(file_related_to){
-        // initialiseWebCam();
+        initialiseWebCam();
         $('#file_related_to').val(file_related_to);
     }
 
@@ -1015,6 +1045,7 @@
     $(document).ready(function(){
         //   var selectedtel = $(".iti__selected-dial-code").text();
         //   $('#phone_code').val(selectedtel);
+
         fetchAllMedia();
         // phone number setup
         let input = document.querySelector("#phone");
@@ -1064,18 +1095,18 @@
         }
 
         // Initialise Webcam
-        var constraints  = { audio: true, video: true };
-        navigator.mediaDevices.getUserMedia(constraints)
-        .then(function(mediaStream) {
-            Webcam.set({
-                width: 450,
-                height: 350,
-                image_format: 'jpeg',
-                jpeg_quality: 100
-            });
-            Webcam.attach( '#my_camera' );
-        })
-        .catch(function(err) { console.log(err.name + ": " + err.message); });
+        // var constraints  = { audio: true, video: true };
+        // navigator.mediaDevices.getUserMedia(constraints)
+        // .then(function(mediaStream) {
+        //     Webcam.set({
+        //         width: 450,
+        //         height: 350,
+        //         image_format: 'jpeg',
+        //         jpeg_quality: 100
+        //     });
+        //     Webcam.attach( '#my_camera' );
+        // })
+        // .catch(function(err) { console.log(err.name + ": " + err.message); });
 
         $('#company-general-form').submit(function(event) {
             event.preventDefault();
@@ -1130,6 +1161,8 @@
                         processData: false,
                         data: formData,
                         success: (response) => {
+                            imagesArray = [];
+                            displayImages();
                             closeBtn.trigger('click');
                             fetchAllMedia();
                             $("#capture_photo_upload").html('Upload');
@@ -1150,6 +1183,14 @@
             })
         });
 
+        $('#exampleModal4').on('hide.bs.modal', function (e) {
+            window.Webcam.reset();
+        });
+
+        // Webcam.on( 'error', function(err) {
+		//     // an error occurred (see 'err')
+        //     con
+	    // });
         // If the Form Validation fails, fill the left panel of areas covered with count of how many checkboxes had been checked for each areas
         for(let i = 1; i <= {{ count($areas) }}; i++) {
             total_checked_towns = $(`#tab0${i} .town-checkbox:checked`).length;
@@ -1166,18 +1207,18 @@
 //       $('#phone_code').val(selectedtel);
 //    });
 
-    $('#summernote').summernote({
-        //placeholder: 'FixMyBuild',
-        tabsize: 2,
-        height: 200,
-        toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'clear']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ]
-    });
+    // $('#summernote').summernote({
+    //     //placeholder: 'FixMyBuild',
+    //     tabsize: 2,
+    //     height: 200,
+    //     toolbar: [
+    //     ['style', ['style']],
+    //     ['font', ['bold', 'underline', 'clear']],
+    //     ['color', ['color']],
+    //     ['para', ['ul', 'ol', 'paragraph']],
+    //     ['table', ['table']],
+    //     ]
+    // });
 
         // Webcam.set({
         //     width: 490,
@@ -1691,6 +1732,10 @@
             $("#upload_multiple_file").prop('disabled', false);
         });
 
+        multiFileDropzone.on("error", function(file, errorMessage, xhr) {
+            setTimeout(() => multiFileDropzone.removeFile(file), 5000);
+        });
+
         // Setup the buttons for all transfers
         // The "add files" button doesn't need to be setup because the config
         // `clickable` has already been specified.
@@ -1718,7 +1763,7 @@
         };
         let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
                     <h6><strong>Documents:</strong> .doc, .docx .odt .pdf .ppt, .pptx </h6>`;
-        var acceptedFiles = "{{ config('const.trader_public_liability') }}";
+        var acceptedFiles = "{{ config('const.company_address_proof') }}";
 
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
@@ -1772,8 +1817,9 @@
             file_related_to: 'company_address',
             file_type: 'image',
         };
-        let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>`;
-        var acceptedFiles = "{{ config('const.dropzone_accepted_image') }}";
+        let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
+                    <h6><strong>Documents:</strong> .doc, .docx .odt .pdf .ppt, .pptx </h6>`;
+        var acceptedFiles = "{{ config('const.company_address_proof') }}";
 
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');

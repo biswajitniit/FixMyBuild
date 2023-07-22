@@ -107,18 +107,17 @@ function deleteVideo(index) {
 $(document).ready(function(){
   $('#upload_video').click(function(){
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You want to upload this image?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
-      }).then((result) => {
+        title: 'Are you sure?',
+        text: "You want to upload this video?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((result) => {
         if (result.isConfirmed) {
-        //   $("#upload_video").html('<img class="video-upload-loading" src="/images/loading.gif" alt=""/> Upload');
           $("#upload_video").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
-          $("#upload_video").disabled = true;
+          $("#upload_video").prop('disabled', true);
           const formData = new FormData();
           formData.append('_token',  $('meta[name="csrf-token"]').attr('content'));
           formData.append('video_count',  videoArray.length);
@@ -131,16 +130,18 @@ $(document).ready(function(){
             body: formData
           })
           .then(response => {
-            console.log(response);
+            // console.log(response);
+            videoArray = [];
+            counter = 0;
             $("#upload_video").html('Upload');
-            $("#upload_video").disabled = false;
+            $("#upload_video").prop('disabled', false);
             $('#close_video_modal').click();
             FetchfilesData();
             if (typeof fetchAllMedias === 'function')
                 fetchAllMedias();
             formData.forEach(function(val, key, fD){
-            // here you can add filtering conditions
-            formData.delete(key)
+                // here you can add filtering conditions
+                formData.delete(key)
             });
             $('#video-captutes').html('');
           })

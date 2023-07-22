@@ -32,11 +32,6 @@
                     </div>
                 @endif
 
-                @if(session()->has('message'))
-                    <div class="alert alert-success mt-15">
-                        {{ session()->get('message') }}
-                    </div>
-                @endif
             </div>
         </div>
     </div>
@@ -93,7 +88,7 @@
 
                                 <div class="col-md-10 post_code">
                                     <div class="form-control d-inline">
-                                        <input type="text" class="col-6 mt-2" name="postcode" id="postcode" placeholder="Postcode" />
+                                        <input type="text" class="col-6 mt-2" name="postcode" id="postcode" placeholder="Postcode" autocomplete="off"/>
                                         <input type="hidden" name="zipcode_selected_address_line_one" id="zipcode_selected_address_line_one" value="">
                                         <input type="hidden" name="zipcode_selected_address_line_two" id="zipcode_selected_address_line_two" value="">
                                         <input type="hidden" name="zipcode_selected_town_city" id="zipcode_selected_town_city" value="">
@@ -133,12 +128,8 @@
                                         <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="3" checked>
                                         <h5>Last used address</h5>
                                     </div>
-                                    <p>
-                                        {{ !empty($last_project->projectaddress->address_line_one) ? \Str::title($last_project->projectaddress->address_line_one): '' }}
-                                        {{ !empty($last_project->projectaddress->address_line_two) ?', ' . \Str::title($last_project->projectaddress->address_line_two): '' }}
-                                        {{ !empty($last_project->town) ?', ' . \Str::title($last_project->town): '' }}
-                                        {{ !empty($last_project->county) ?', ' . \Str::title($last_project->county) : '' }}
-                                        {{ !empty($last_project->postcode) ?', ' . \Str::upper($last_project->postcode): '' }}
+                                    <p class="last_used_address">
+                                        {{ !empty($last_project->projectaddress->address_line_one) ? \Str::title($last_project->projectaddress->address_line_one): '' }}{{ !empty($last_project->projectaddress->address_line_two) ?', ' . \Str::title($last_project->projectaddress->address_line_two): '' }}{{ !empty($last_project->town) ?', ' . \Str::title($last_project->town): '' }}{{ !empty($last_project->county) ?', ' . \Str::title($last_project->county) : '' }}{{ !empty($last_project->postcode) ?', ' . \Str::upper($last_project->postcode): '' }}
                                     </p>
 
                                 @endif
@@ -147,31 +138,33 @@
                                     <input type="radio" class="form-check-input mb" id="addresstype" name="addresstype" value="2"/>
                                     <h5>Or type your address</h5>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group mb-3">
-                                        <input type="text" class="form-control" id="address_line_one" placeholder="Address line 1" name="address_line_one"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group mb-3">
-                                        <input type="text" class="form-control" id="address_line_two" placeholder="Address line 2" name="address_line_two"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
+                                <div id="typed_address">
+                                    <div class="col-md-12">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="town_city" placeholder="Town/City" name="town_city"/>
+                                            <input type="text" class="form-control" id="address_line_one" placeholder="Address line 1" name="address_line_one"/>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group mb-3">
-                                            <input type="text" class="form-control" id="county" placeholder="County" name="county"/>
+                                            <input type="text" class="form-control" id="address_line_two" placeholder="Address line 2" name="address_line_two"/>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group mb-3">
-                                        <input type="text" class="form-control" id="address_type_postcode" placeholder="Postcode" name="address_type_postcode"/>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <input type="text" class="form-control" id="town_city" placeholder="Town/City" name="town_city"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <input type="text" class="form-control" id="county" placeholder="County" name="county"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group mb-3">
+                                            <input type="text" class="form-control" id="address_type_postcode" placeholder="Postcode" name="address_type_postcode"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -200,7 +193,7 @@
                             </div>
                             <div class="col-md-12 mb-4">
                                 {{-- <div id="summernote"></div> --}}
-                                <textarea name="description" class="description"></textarea>
+                                <textarea name="description" class="description p-2"></textarea>
                             </div>
                             <div class="col-md-12 mb-4">
                                 <h3>Please upload at least one photo, video or design of the work to be undertaken.</h3>
@@ -504,6 +497,33 @@
     </div>
     <!-- Delete Image Modal END -->
 
+        {{-- Success Modal Starts --}}
+        <div class="modal fade select_address" id="success_modal" tabindex="-1" aria-labelledby="successLabelModal" aria-hidden="true">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-body text-center p-5">
+                      <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <g clip-path="url(#clip0_519_1019)">
+                          <path d="M41.5002 4.61133C34.2043 4.61133 27.0722 6.77482 21.0059 10.8282C14.9395 14.8816 10.2114 20.6429 7.41934 27.3834C4.62731 34.124 3.89679 41.5411 5.32015 48.6969C6.74352 55.8526 10.2568 62.4256 15.4159 67.5846C20.5749 72.7436 27.1478 76.2569 34.3036 77.6803C41.4593 79.1037 48.8764 78.3731 55.617 75.5811C62.3576 72.7891 68.1188 68.0609 72.1722 61.9946C76.2256 55.9282 78.3891 48.7962 78.3891 41.5002C78.3891 31.7167 74.5026 22.3338 67.5846 15.4158C60.6666 8.49783 51.2838 4.61133 41.5002 4.61133ZM41.5002 73.778C35.1163 73.778 28.8757 71.8849 23.5677 68.3382C18.2596 64.7915 14.1225 59.7504 11.6795 53.8524C9.23643 47.9544 8.59722 41.4644 9.84266 35.2031C11.0881 28.9419 14.1623 23.1905 18.6764 18.6764C23.1905 14.1623 28.9419 11.0881 35.2032 9.84265C41.4644 8.5972 47.9544 9.23641 53.8524 11.6794C59.7504 14.1225 64.7915 18.2596 68.3382 23.5676C71.885 28.8757 73.778 35.1163 73.778 41.5002C73.778 50.0608 70.3773 58.2708 64.3241 64.3241C58.2708 70.3773 50.0608 73.778 41.5002 73.778Z" fill="#061A48"/>
+                          <path d="M64.5554 27.897C64.1235 27.4676 63.5391 27.2266 62.93 27.2266C62.3209 27.2266 61.7366 27.4676 61.3046 27.897L35.7129 53.3734L21.8796 39.5401C21.4577 39.0845 20.8721 38.8152 20.2516 38.7914C19.6312 38.7677 19.0267 38.9913 18.5711 39.4133C18.1156 39.8352 17.8463 40.4208 17.8225 41.0412C17.7987 41.6617 18.0224 42.2662 18.4443 42.7217L35.7129 59.9442L64.5554 31.1709C64.7715 30.9566 64.9431 30.7016 65.0601 30.4206C65.1772 30.1397 65.2374 29.8383 65.2374 29.5339C65.2374 29.2296 65.1772 28.9282 65.0601 28.6473C64.9431 28.3663 64.7715 28.1113 64.5554 27.897Z" fill="#061A48"/>
+                          </g>
+                          <defs>
+                          <clipPath id="clip0_519_1019">
+                          <rect width="83" height="83" fill="white"/>
+                          </clipPath>
+                          </defs>
+                      </svg>
+                      <h5>Success</h5>
+                      <p>{{ session()->get('message') }}</p>
+                  </div>
+                  <div class="modal-footer justify-content-center">
+                      <button type="button" class="btn btn-light" data-dismiss="modal">Ok</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      {{-- Success Modal Ends--}}
+
 </section>
 <!--Code area end-->
 
@@ -518,79 +538,6 @@
 <script language="JavaScript">
 
     var currentFile = null;
-    // var myDropzone = new Dropzone(".dropzone", {
-    //   maxFiles:10,
-    //   autoProcessQueue: false,
-    //   clickable: "#file_upload_btn",
-    //   dictDefaultMessage: "Drag and drop a file here",
-    //   parallelUploads: 10, // Number of files process at a time (default 2)
-    //   addRemoveLinks: true,
-    //   removedfile: function(file)
-    //   {
-    //     Swal.fire({
-    //     title: 'Are you sure?',
-    //     text: "You want to delete this item?",
-    //     icon: 'warning',
-    //     showCancelButton: true,
-    //     confirmButtonColor: '#3085d6',
-    //     cancelButtonColor: '#d33',
-    //     confirmButtonText: 'Yes'
-    //     }).then((result) => {
-    //       if (result.isConfirmed) {
-    //         var name = file.upload.filename;
-    //         $.ajax({
-    //           headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //           },
-    //           type: 'POST',
-    //           url: '{{ url("dropzonedestroy") }}',
-    //           data: {filename: name},
-    //           success: function (data){
-    //             //console.log("File has been successfully removed!!");
-    //             //alert('File has been successfully removed!!'); return false;
-    //             Swal.fire({
-    //               //position: 'top-end',
-    //               icon: 'warning',
-    //               title: 'File has been successfully removed!!',
-    //               showConfirmButton: false,
-    //               timer: 1500
-    //             });
-    //           },
-    //           error: function(e) {
-    //             console.log(e);
-    //           }
-    //         });
-    //         var fileRef;
-    //         return (fileRef = file.previewElement) != null ?
-    //         fileRef.parentNode.removeChild(file.previewElement) : void 0;
-    //       }
-    //     })
-    //   },
-    //   success: function (file, response) {
-    //     Swal.fire({
-    //       //position: 'top-end',
-    //       icon: 'success',
-    //       title: 'File has been successfully uploaded!!',
-    //       showConfirmButton: false,
-    //       timer: 1500
-    //     });
-    //     $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").css("display", "none");
-    //   },
-    //   uploadprogress: function(file, progress, bytesSent) {
-    //       if (file.previewElement) {
-    //           // var progressElement = file.previewElement.querySelector("[data-dz-uploadprogress]");
-    //           // progressElement.style.width = progress + "%";
-    //           // progressElement.querySelector(".progress-text").textContent = progress + "%";
-
-    //           swal.fire({
-    //               title:"",
-    //               text:"Loading...",
-    //               icon: "{{ asset('frontend/dropzone/loading2.gif') }}",
-    //           });
-    //       }
-    //   },
-
-    // });
 
     $('#uploadfiles').click(function(){
         myDropzone.processQueue();
@@ -630,7 +577,36 @@
         });
         Webcam.attach( '#my_camera' );
       })
-      .catch(function(err) { console.log(err.name + ": " + err.message); });
+      .catch(function (err) {
+            Swal.fire({
+                title: 'Camera and Microphone Access Required',
+                html: `<small>Please close other apps using them and grant permission to proceed.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Grant Permission',
+                cancelButtonText: 'Deny',
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function (mediaStream) {
+                        Webcam.set({
+                            width: 450,
+                            height: 350,
+                            image_format: 'jpeg',
+                            jpeg_quality: 100
+                        });
+                        Webcam.attach('#my_camera');
+                    })
+                    .catch(function (err) {
+                        $('#exampleModal4').modal('hide');
+                        Swal.fire('Error', 'Failed to access webcam and microphone.', 'error');
+                    });
+                } else {
+                    $('#exampleModal4').modal('hide');
+                    Swal.fire('Permission Denied', 'You have denied access to your webcam and microphone.', 'error');
+                }
+            });
+        });
     }
     let imagesArray = []
     function take_snapshot() {
@@ -681,11 +657,44 @@
             Webcam.attach( '#my_camera_video' );
             $("#gUMbtn").click();
         })
-        .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
+        .catch(function (err) {
+            Swal.fire({
+                title: 'Camera and Microphone Access Required',
+                html: `<small>Please close other apps using them and grant permission to proceed.</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Grant Permission',
+                cancelButtonText: 'Deny',
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function (mediaStream) {
+                        Webcam.set({
+                            width: 450,
+                            height: 350,
+                            image_format: 'jpeg',
+                            jpeg_quality: 100
+                        });
+                        Webcam.attach('#my_camera_video');
+                    })
+                    .catch(function (err) {
+                        $('#exampleModal3').modal('hide');
+                        Swal.fire('Error', 'Failed to access webcam and microphone.', 'error');
+                    });
+                } else {
+                    $('#exampleModal3').modal('hide');
+                    Swal.fire('Permission Denied', 'You have denied access to your webcam and microphone.', 'error');
+                }
+            });
+        }); // always check for errors at the end.
     }
 
 
     $(document).ready(function(){
+        @if(session()->has('message'))
+            $('#success_modal').modal('show');
+        @endif
+
         $('.postcodefind').on('click', function () {
             $postcode = $("#postcode").val();
             if($postcode !=''){
@@ -950,6 +959,10 @@
             multiFileDropzone.removeAllFiles(true);
         });
 
+        multiFileDropzone.on("error", function(file, errorMessage, xhr) {
+            setTimeout(() => multiFileDropzone.removeFile(file), 5000);
+        });
+
         // Setup the buttons for all transfers
         // The "add files" button doesn't need to be setup because the config
         // `clickable` has already been specified.
@@ -999,28 +1012,47 @@
     }
 
     function disableAddressField(addresstype = $('input[name="addresstype"]:checked').val()) {
-        if(addresstype != 2)
-            $(`
-                #address_line_one,
-                #address_line_two,
-                #town_city,
-                #county,
-                #address_type_postcode
-             `).attr('disabled',true);
-        else
-            $(`
-                #address_line_one,
-                #address_line_two,
-                #town_city,
-                #county,
-                #address_type_postcode
-             `).attr('disabled',false);
+        if(addresstype == 1) {
+            $('#typed_address').hide();
+            $('#typed_address input').val('');
+            $('#typed_address label.error').hide();
+            $('#typed_address input.error').removeClass('error');
 
+            $('.post_code').show();
 
-        if(addresstype == 1)
-            $("#postcode").attr('disabled',false);
-        else
-            $("#postcode").attr('disabled',true);
+            $('.last_used_address').hide();
+        }
+
+        if(addresstype == 2) {
+            $('#typed_address').show();
+
+            $('.last_used_address').hide();
+
+            $('#postcode').val('');
+            $('#selected_post_code_html').html('');
+            $('.post_code').hide();
+            $('#zipcode-container input').val('');
+            $('.post_code label.error').hide();
+            $('.post_code input.error').removeClass('error');
+        }
+
+        if(addresstype == 3) {
+            $('#typed_address').hide();
+            $('#typed_address input').val('');
+            $('#typed_address label.error').hide();
+
+            $('.last_used_address').show();
+
+            $('#postcode').val('');
+            $('#selected_post_code_html').html('');
+            $('.post_code').hide();
+            $('#zipcode-container input').val('');
+            $('.post_code label.error').hide();
+            $('.post_code input.error').removeClass('error');
+
+            $('#typed_address input.error').removeClass('error');
+            $('#typed_address label.error').hide();
+        }
     }
 
     $(document).ready(function(){
@@ -1060,21 +1092,23 @@
                       }
                     });
                     if(success=='1'){
+                      imagesArray = [];
+                      displayImages();
                       FetchfilesData();
-                      console.log(modalId);
                       $(modalId).modal('hide');
                       Swal.fire({
-                      //position: 'top-end',
-                      icon: 'success',
-                      title: 'Image uploaded successfully.',
-                      showConfirmButton: false,
-                      timer: 1500
-                    })
+                            //position: 'top-end',
+                            icon: 'success',
+                            title: 'Image uploaded successfully.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
                   } else{console.log(success);}
 
                 }
             })
         });
+
 
         disableAddressField();
 
@@ -1116,6 +1150,7 @@
                 },
                 contact_email: {
                     required: true,
+                    email: true
                 },
                 postcode : {
                     required: {
@@ -1123,7 +1158,7 @@
                             return $('input[name="addresstype"]:checked').val() === "1";
                         }
                     },
-                    checkAddress: true
+                    checkAddress: true,
                 },
                 address_line_one: {
                     required: {
@@ -1169,15 +1204,33 @@
                 },
                 contact_mobile_no: {
                     required: 'Please enter a phone number',
-                    phoneNumber: 'Please enter a valid phone number'
+                    phoneNumber: 'Invalid phone number'
                 },
                 contact_home_phone: {
                     required: 'Please enter a phone number',
-                    phoneNumber: 'Please enter a valid phone number'
+                    phoneNumber: 'Invalid phone number'
                 },
                 contact_email: {
                     required: "Please enter contact email",
                 },
+            },
+            onfocusout: function(element) {
+                var excludedFields = [
+                    "postcode",
+                    "address_line_one",
+                    "town_city",
+                    "county",
+                    "address_type_postcode"
+                ];
+
+                if (!excludedFields.includes(element.name)) {
+                    this.element(element);
+                }
+            },
+            onkeyup: function(element) {
+                if (element.name !== "postcode") {
+                    this.element(element);
+                }
             },
             submitHandler: function(form) {
                 $('#contact_mobile_no').val(contact_mobile_iti.getNumber());
@@ -1197,8 +1250,11 @@
             if (element.id == 'contact_mobile_no')
                 return /[a-z]/i.test($('#contact_mobile_no').val()) ? !/[a-z]/i.test($('#contact_mobile_no').val()) : contact_mobile_iti.isValidNumber();
             return /[a-z]/i.test($('#contact_home_phone').val()) ? !/[a-z]/i.test($('#contact_home_phone').val()) : home_phone_iti.isValidNumber();
-        }, 'Please enter a valid phone number');
+        }, 'Invalid phone number');
 
+        $('#exampleModal').on('hide.bs.modal', function(e) {
+            $('#postcode').valid();
+        });
     });
 </script>
 @endpush

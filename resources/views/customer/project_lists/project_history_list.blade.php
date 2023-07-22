@@ -10,9 +10,9 @@
                 <thead>
                     <tr>
                         <th style="width:80px;">#</th>
-                        <th style="width:140px;">Name</th>
-                        <th style="width:140px;">Posting date</th>
-                        <th style="width:340px;">Status</th>
+                        <th style="width:200px;">Name</th>
+                        <th style="width:200px;">Posting date</th>
+                        <th style="width:220px;">Status</th>
                         <th style="width:80px;"></th>
                         <th style="width:auto;"></th>
                     </tr>
