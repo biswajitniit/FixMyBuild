@@ -219,7 +219,8 @@
                                     <div class="row">
                                         @foreach ($trader_areas as $trader_area)
                                             <div class="mb-1">
-                                                {{ $trader_area->subareas->sub_area_type }}
+                                                {{-- {{ $trader_area->subareas->sub_area_type }} --}}
+                                                {{ \Str::title($trader_area->town) }}{{ !empty($trader_area->county) ? ', '.\Str::title($trader_area->county) : '' }}
                                             </div>
                                         @endforeach
                                     </div>

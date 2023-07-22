@@ -272,7 +272,7 @@
                 },
                 phone: {
                     required: "Please enter phone number",
-                    phoneNumber: 'Please enter a valid phone number'
+                    phoneNumber: 'Invalid phone number'
                 },
                 customer_or_tradesperson: {
                     required: "Are you a customer or tradeperson?",
@@ -318,7 +318,7 @@
         $.validator.addMethod('phoneNumber', function(value, element) {
             let phone = $('#phone').val();
             return /[a-z]/i.test(phone) ? !/[a-z]/i.test(phone) : iti.isValidNumber();
-        }, 'Please enter a valid phone number');
+        }, 'Invalid phone number');
 
         input.addEventListener('countrychange', function(e) {
             $("#userregistration").validate().element('#phone');

@@ -9,7 +9,7 @@
         <div class="modal-content">
             <div class="modal-header pb-0">
 
-                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <h5 class="modal-title" id="exampleModalLabel">Photo/Video</h5>
 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,11 +20,11 @@
                     </svg>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body px-2 pb-3 pt-0">
                 <div class="row">
                     <div class="col-md-12 supported_">
                         <img src="" alt="" />
-                        <video controls="controls" src="" class="w-100"> </video>
+                        <video controls="controls" src="" class="w-100 mt-0"> </video>
                     </div>
                 </div>
             </div>

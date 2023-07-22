@@ -1286,6 +1286,10 @@
                 $("#upload_multiple_file").prop('disabled', false);
             });
 
+            multiFileDropzone.on("error", function(file, errorMessage, xhr) {
+                setTimeout(() => multiFileDropzone.removeFile(file), 5000);
+            });
+
             // Setup the buttons for all transfers
             // The "add files" button doesn't need to be setup because the config
             // `clickable` has already been specified.

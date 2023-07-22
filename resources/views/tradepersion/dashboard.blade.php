@@ -357,7 +357,7 @@
                      </div>
                      <div style="display:none;" id="tradernameedit">
                         <h2 class="company-name">
-                           <input type="text" value="{{$trader_details->trader_name}}" id="editTraderName">
+                           <input type="text" value="{{$trader_details->trader_name}}" id="editTraderName" onkeydown="onEnter(event, updateTraderName)">
                            <p id="editTraderNameResp"></p>
                         </h2>
                         <span class="acme_right">
@@ -578,7 +578,7 @@
                         <div class="mb-4">
                            <h6>Contact name</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
-                              <input type="text" class="form-control" value="{{$trader_details->name}}" id="editContactName">
+                              <input type="text" class="form-control" value="{{$trader_details->name}}" id="editContactName" onkeydown="onEnter(event, updateTraderContactInfo)">
                               <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -591,7 +591,7 @@
                         <div>
                            <h6>Mobile number</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
-                              <input type="text" class="form-control" value="{{$trader_details->phone_number}}" id="editContactMobile">
+                              <input type="text" class="form-control" value="{{$trader_details->phone_number}}" id="editContactMobile" onkeydown="onEnter(event, updateTraderContactInfo)">
                               <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -606,7 +606,7 @@
                         <div class="mb-4">
                            <h6>Email</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
-                              <input type="text" class="form-control" value="{{$trader_details->email}}" id="editContactEmail">
+                              <input type="text" class="form-control" value="{{$trader_details->email}}" id="editContactEmail" onkeydown="onEnter(event, updateTraderContactInfo)">
                               <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -619,7 +619,7 @@
                         <div>
                            <h6>Office number</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
-                              <input type="text" class="form-control" value="{{$trader_details->phone_office}}" id="editContactOfficeMobile">
+                              <input type="text" class="form-control" value="{{$trader_details->phone_office}}" id="editContactOfficeMobile" onkeydown="onEnter(event, updateTraderContactInfo)">
                               <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -678,7 +678,7 @@
                   <div class="row" style="display:none" id="vatnoEdit">
                      <div class="col-md-8 col-8">
                         <h2>
-                           <input type="text" value="{{$trader_details->vat_no}}" id="editVatno">
+                           <input type="text" value="{{$trader_details->vat_no}}" id="editVatno" onkeydown="onEnter(event, verifyAndUpdateVat)">
                            <input type="hidden" name="vat_comp_name" id="vat_comp_nameid" value="">
                            <input type="hidden" name="vat_comp_address" id="vat_comp_addressid" value="">
                         </h2>
@@ -890,7 +890,7 @@
                         <h6>Default</h6>
                      </div>
                      <div class="col-2 pr-0">
-                        <input type="text" class="form-control border-bottom-0" value="{{$trader_details->contingency}}" id="editContigencyval">
+                        <input type="text" class="form-control border-bottom-0" value="{{$trader_details->contingency}}" id="editContigencyval" onkeydown="onEnter(event, updateContingency)">
                      </div>
                      <div class="col-6 pl-0">
                         <h6 class="font-44">% </h6>
@@ -952,15 +952,15 @@
                   </div>
                   <div class="col-md-6">
                      <h6>Account holder’s name</h6>
-                     <input type="text" class="form-control" value="{{$trader_details->bnk_account_name}}" id="editAccountHolder">
+                     <input type="text" class="form-control text-dark" value="{{$trader_details->bnk_account_name}}" id="editAccountHolder" onkeydown="onEnter(event, updateAccountInfo)">
                   </div>
                   <div class="col-md-6">
                      <h6>Sort code </h6>
-                     <input type="text" class="form-control" value="{{$trader_details->bnk_sort_code}}" id="editAccountCode">
+                     <input type="text" class="form-control text-dark" value="{{$trader_details->bnk_sort_code}}" id="editAccountCode" onkeydown="onEnter(event, updateAccountInfo)">
                   </div>
                   <div class="col-md-6">
                      <h6>Account number </h6>
-                     <input type="text" class="form-control" value="{{$trader_details->bnk_account_number}}" id="editAccountNum">
+                     <input type="text" class="form-control text-dark" value="{{$trader_details->bnk_account_number}}" id="editAccountNum" onkeydown="onEnter(event, updateAccountInfo)">
                   </div>
                   <div class="col-md-12 mt-2">
                      <div class="form-group form-check">
@@ -1092,6 +1092,11 @@
 
    function refreshPage(){
       location.reload();
+   }
+
+   function onEnter(event, func) {
+       if (event.keyCode === 13)
+           func();
    }
 
    $('.workchkboxsec').click(function(){
@@ -1315,6 +1320,11 @@
 
    }
 
+//    function resizeInput(element) {
+//         // $(element).css('width', $(element).val().length + 'ch');
+//         $(element).css('width', '3ch');
+//     }
+
    function updatebuildercat(){
       var list = $("input[name='subworktype[]']:checked").map(function () {
          return this.value;
@@ -1388,18 +1398,6 @@
    }
 
     Dropzone.autoDiscover = false;
-    //
-
-    // let multiFileUpload = $('#multi_file_dropzone').dropzone({
-    //     url: "{{ route('tradesperson.updateCompLogo') }}",
-    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
-    //     acceptedFiles: "{{ config('const.dropzone_accepted_file') }}",
-    //     thumbnailWidth: 100,
-    //     thumbnailHeight: 69,
-    //     previewTemplate: previewTemplate,
-    //     autoProcessQueue: false,
-
-    // });
 
     var previewNode = document.querySelector("#template");
     previewNode.id = "";
@@ -1572,203 +1570,6 @@
     }
     // Dropzone Js For Company Logo Ends
 
-    /*
-    var myDropzone = new Dropzone("#multi_file_dropzone", {
-        url: "{{ route('tradesperson.storeTraderFile') }}",
-        params: {
-            file_related_to: 'public_liability_insurance',
-        },
-        thumbnailWidth: 100,
-        thumbnailHeight: 69,
-        previewTemplate: previewTemplate,
-        autoQueue: false,
-        previewsContainer: "#previews", // Define the container to display the previews
-        clickable: "#multi_file_upload_btn"
-    });
-
-    myDropzone.on("addedfile", function(file) {
-    // Hookup the start button
-    // file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
-        $('#file-upload-logo').hide();
-        $('#previews').removeClass('d-none');
-        $('#multi_file_dropzone.cpp_wrap').addClass('uploading');
-    });
-
-    // Update the total progress bar
-    myDropzone.on("totaluploadprogress", function(progress) {
-        // document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
-    });
-
-    myDropzone.on("sending", function(file) {
-        // Show the total progress bar when upload starts
-        // document.querySelector("#total-progress").style.opacity = "1";
-        // And disable the start button
-        // file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
-    });
-
-    // Hide the total progress bar when nothing's uploading anymore
-    myDropzone.on("queuecomplete", function(progress) {
-        // document.querySelector("#total-progress").style.opacity = "0";
-    });
-
-    myDropzone.on("removedfile", function(file) {
-
-      if(myDropzone.files.length == 0) {
-        $('#file-upload-logo').show();
-        $('#previews').addClass('d-none');
-        $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
-      }
-    });
-
-    // Setup the buttons for all transfers
-    // The "add files" button doesn't need to be setup because the config
-    // `clickable` has already been specified.
-    document.querySelector("#upload_multiple_file").onclick = function() {
-        myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
-    };
-
-    document.querySelector("#cancel_multiple_file_upload").onclick = function() {
-        myDropzone.removeAllFiles(true);
-    };
-
-    $('#multiModal').on('hidden.bs.modal', function(e){
-        myDropzone.removeAllFiles(true);
-    });
-    */
-
-    // function callDropzone(url, params, acceptedFiles="{{ config('const.dropzone_accepted_file') }}", maxFileSize={{ config('const.dropzone_max_file_size') }}) {
-    //     var multiFileDropzoneElement = document.querySelector("#multi_file_dropzone");
-    //     var multiFileDropzone = multiFileDropzoneElement.dropzone;
-    //     var thumbnailMapping = {
-    //         'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
-    //         'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
-    //         'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.png') }}",
-    //     };
-
-    //     // If a Dropzone instance doesn't exist, create a new one
-    //     if (!multiFileDropzone) {
-    //         multiFileDropzone = new Dropzone(multiFileDropzoneElement, {
-    //             url: url,
-    //             params: params,
-    //             maxFilesize: maxFileSize,
-    //             acceptedFiles: acceptedFiles,
-    //             thumbnailWidth: 100,
-    //             thumbnailHeight: 69,
-    //             previewTemplate: previewTemplate,
-    //             autoQueue: false,
-    //             previewsContainer: "#previews",
-    //             clickable: "#multi_file_upload_btn",
-    //         });
-    //     }
-
-    //     // If a Dropzone instance exists, update the old instance
-    //     multiFileDropzone.options.url = url;
-    //     multiFileDropzone.options.params = params;
-
-    //     // var multiFileDropzone = new Dropzone("#multi_file_dropzone", {
-    //     //     url: url,
-    //     //     params: params,
-    //     //     thumbnailWidth: 100,
-    //     //     thumbnailHeight: 69,
-    //     //     previewTemplate: previewTemplate,
-    //     //     autoQueue: false,
-    //     //     previewsContainer: "#previews", // Define the container to display the previews
-    //     //     clickable: "#multi_file_upload_btn",
-    //     // });
-
-    //     multiFileDropzone.on("addedfile", function(file) {
-    //         // Hookup the start button
-    //         // file.previewElement.querySelector(".start").onclick = function() { multiFileDropzone.enqueueFile(file); };
-    //         // var videoElement = file.previewElement.querySelector('video[data-dz-video]');
-    //         // var imageElement = file.previewElement.querySelector('img[data-dz-thumbnail]');
-    //         var videoElement   = $(file.previewElement).find('video[data-dz-video]');
-    //         var imageElement   = $(file.previewElement).find('img[data-dz-thumbnail]');
-    //         var uploadProgress = $(file.previewElement).find('.progress');
-
-    //         uploadProgress.hide();
-
-    //         if (file.type.startsWith('image/')) {
-    //            //  videoElement.remove();
-    //             videoElement.hide();
-    //             imageElement.show();
-    //             multiFileDropzone.emit("thumbnail", file, file.thumbnail);
-    //         } else if (file.type.startsWith('video/')) {
-    //            //  imageElement.remove();
-    //             imageElement.hide();
-    //             videoElement.show();
-    //             var videoUrl = URL.createObjectURL(file);
-    //             //  videoElement.src = videoUrl;
-    //             videoElement.attr('src', videoUrl);
-    //            //  videoElement.load();
-    //            //  multiFileDropzone.emit("thumbnail", file, videoUrl);
-    //         } else {
-    //            //  videoElement.remove();
-    //             videoElement.hide();
-    //             imageElement.show();
-    //             var thumbnailUrl = thumbnailMapping[file.type] || "{{ asset('frontend/img/file_logo.png') }}";
-    //             multiFileDropzone.emit("thumbnail", file, thumbnailUrl);
-    //         }
-    //         $('#file-upload-logo').hide();
-    //         $('#previews').removeClass('d-none');
-    //         $('#multi_file_dropzone.cpp_wrap').addClass('uploading');
-    //     });
-
-    //     // Update the total progress bar
-    //     multiFileDropzone.on("totaluploadprogress", function(progress) {
-    //         // document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
-    //     });
-
-    //     multiFileDropzone.on("uploadprogress", function(file, progress) {
-    //         if (progress == 100) {
-    //             $(file.previewElement).find('.progress').hide();
-    //         }
-    //     });
-
-    //     multiFileDropzone.on("sending", function(file) {
-    //         // Show the total progress bar when upload starts
-    //         // document.querySelector("#total-progress").style.opacity = "1";
-    //         // And disable the start button
-    //         // file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
-    //         $(file.previewElement).find('.progress').show();
-    //     });
-
-    //     multiFileDropzone.on("queuecomplete", function(progress) {
-    //         // document.querySelector("#total-progress").style.opacity = "0";
-    //         // $('#previews.files').find('.progress').hide();
-    //         // $('#multiModal').modal('hide');
-
-    //     });
-
-    //     multiFileDropzone.on("removedfile", function(file) {
-    //         if(multiFileDropzone.files.length == 0) {
-    //             $('#file-upload-logo').show();
-    //             $('#previews').addClass('d-none');
-    //             $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
-    //         }
-    //     });
-
-    //     // multiFileDropzone.on("successmultiple", function(file) {
-    //     //     $(modalId).modal('hide');
-    //     // });
-
-    //     // Setup the buttons for all transfers
-    //     // The "add files" button doesn't need to be setup because the config
-    //     // `clickable` has already been specified.
-    //     document.querySelector("#upload_multiple_file").onclick = function() {
-    //         multiFileDropzone.enqueueFiles(multiFileDropzone.getFilesWithStatus(Dropzone.ADDED));
-    //     };
-
-    //     document.querySelector("#cancel_multiple_file_upload").onclick = function() {
-    //         multiFileDropzone.removeAllFiles(true);
-    //     };
-
-    //     // $('#multiModal').on('hidden.bs.modal', function(e){
-    //     //     multiFileDropzone.removeAllFiles(true);
-    //     // });
-
-    //     return multiFileDropzone;
-    // }
-
     function callDropzone(
         {
             url,
@@ -1776,7 +1577,8 @@
             acceptedFiles="{{ config('const.dropzone_accepted_file') }}",
             maxFileSize={{ config('const.dropzone_max_file_size') }},
             parallelUploads={{ config('const.dropzone_parallel_file_upload') }},
-            maxFiles={{ config('const.dropzone_max_file_upload') }}
+            maxFiles={{ config('const.dropzone_max_file_upload') }},
+            successMultipleCallback
         }
     ) {
         var multiFileDropzoneElement = document.querySelector("#multi_file_dropzone");
@@ -1850,6 +1652,8 @@
             if (progress == 100) {
                 $(file.previewElement).find('.progress').hide(1000);
             }
+            $("#upload_multiple_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+            $("#upload_multiple_file").prop('disabled', true);
         });
 
         multiFileDropzone.on("sending", function(file) {
@@ -1864,7 +1668,8 @@
             // document.querySelector("#total-progress").style.opacity = "0";
             // $('#previews.files').find('.progress').hide();
             // $('#multiModal').modal('hide');
-
+            $("#upload_multiple_file").html('Upload');
+            $("#upload_multiple_file").prop('disabled', false);
         });
 
         multiFileDropzone.on("removedfile", function(file) {
@@ -1878,6 +1683,13 @@
         multiFileDropzone.on("successmultiple", function(file, responses) {
             $('#multiModal').modal('hide');
             multiFileDropzone.removeAllFiles(true);
+            if (successMultipleCallback && typeof successMultipleCallback === 'function') {
+               successMultipleCallback(file, responses);
+            }
+        });
+
+        multiFileDropzone.on("error", function(file, errorMessage, xhr) {
+            setTimeout(() => multiFileDropzone.removeFile(file), 5000);
         });
 
         // Setup the buttons for all transfers
@@ -1911,9 +1723,11 @@
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
-        var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
-
-        dropzone.on("successmultiple", function(file, responses) {
+        var dropzone = callDropzone({
+         url:url,
+         params:params,
+         acceptedFiles:acceptedFiles,
+         successMultipleCallback: function(file, responses) {
             let html = '';
             for(let response of responses) {
                 html += `<div class="mb-3" id="publicLiabilityInsurance-${response.id}">
@@ -1931,13 +1745,15 @@
                             </div>`;
             }
             $(html).insertBefore('#addPLIdocs');
-        });
+         }
+      });
 
-        dropzone.on("error", function(file, errorMessage, xhr) {
-            console.log(file);
-            console.log(errorMessage);
-            console.log(xhr);
-        });
+
+        // dropzone.on("error", function(file, errorMessage, xhr) {
+        //     console.log(file);
+        //     console.log(errorMessage);
+        //     console.log(xhr);
+        // });
     }
 
     function team_photo_upload() {
