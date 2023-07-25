@@ -410,7 +410,7 @@
                             <div class="col-md-4">
                                <div class="form-group">
                                   <input type="text" name="phone_office" class="form-control" id="phone_office" placeholder="Office number" value="{{ old('phone_office') }}">
-                                  <small class="text-danger errors" id="phone_office_errors">Please provide a valid phone number</small>
+                                  <small class="text-danger errors" id="phone_office_errors">Invalid phone number</small>
                                </div>
                             </div>
                             <div class="col-md-4">
@@ -669,6 +669,14 @@
                    </div>
                    <div class="row">
                       <div class="col-md-4">
+                         <div class="search">
+                            <button type="button" class="searchButton" onclick="SearchWorkCategory()">
+                               <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M8.59174 2.00025C7.01698 2.00025 5.50672 2.68507 4.3932 3.90406C3.27968 5.12305 2.65411 6.77635 2.65411 8.50025C2.65411 10.2242 3.27968 11.8775 4.3932 13.0964C5.50672 14.3154 7.01698 15.0003 8.59174 15.0003C10.1665 15.0003 11.6768 14.3154 12.7903 13.0964C13.9038 11.8775 14.5294 10.2242 14.5294 8.50025C14.5294 6.77635 13.9038 5.12305 12.7903 3.90406C11.6768 2.68507 10.1665 2.00025 8.59174 2.00025ZM0.827148 8.50025C0.827254 7.14485 1.12345 5.80912 1.69102 4.60451C2.25859 3.3999 3.08109 2.36135 4.08988 1.57549C5.09867 0.789633 6.2645 0.279263 7.49012 0.0869618C8.71573 -0.10534 9.96558 0.0260029 11.1354 0.470032C12.3052 0.914061 13.3611 1.6579 14.2149 2.63949C15.0687 3.62108 15.6957 4.81196 16.0435 6.11277C16.3914 7.41358 16.4501 8.7866 16.2147 10.1173C15.9792 11.448 15.4565 12.6977 14.6901 13.7623L18.0262 17.4143C18.1926 17.6029 18.2846 17.8555 18.2826 18.1177C18.2805 18.3799 18.1844 18.6307 18.015 18.8161C17.8457 19.0015 17.6166 19.1066 17.377 19.1089C17.1375 19.1112 16.9068 19.0104 16.7345 18.8283L13.3985 15.1763C12.2535 16.1642 10.8776 16.7794 9.42823 16.9514C7.97884 17.1233 6.5145 16.8451 5.20281 16.1485C3.89112 15.4519 2.78506 14.3651 2.01123 13.0126C1.2374 11.66 0.827051 10.0962 0.827148 8.50025ZM7.67826 5.00025C7.67826 4.73504 7.7745 4.48068 7.94581 4.29315C8.11712 4.10561 8.34947 4.00025 8.59174 4.00025C9.68195 4.00025 10.7275 4.47436 11.4984 5.31827C12.2693 6.16219 12.7024 7.30678 12.7024 8.50025C12.7024 8.76547 12.6062 9.01982 12.4348 9.20736C12.2635 9.3949 12.0312 9.50025 11.7889 9.50025C11.5466 9.50025 11.3143 9.3949 11.143 9.20736C10.9717 9.01982 10.8754 8.76547 10.8754 8.50025C10.8754 7.83721 10.6348 7.20133 10.2066 6.73249C9.77828 6.26365 9.19741 6.00025 8.59174 6.00025C8.34947 6.00025 8.11712 5.8949 7.94581 5.70736C7.7745 5.51982 7.67826 5.26547 7.67826 5.00025Z" fill="#6D717A"></path>
+                               </svg>
+                            </button>
+                            <input type="text" class="searchTerm" placeholder="Search..." onkeyup="SearchWorkCategory()" id="workCategory">
+                         </div>
                          <nav class="nav-sidebar">
                             <ul class="nav tabs">
                               <?php $i=1; ?>
@@ -730,6 +738,14 @@
                    </div>
                    <div class="row">
                       <div class="col-md-4">
+                        <div class="search">
+                            <button type="button" class="searchButton" onclick="SearchCounty()">
+                               <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M8.59174 2.00025C7.01698 2.00025 5.50672 2.68507 4.3932 3.90406C3.27968 5.12305 2.65411 6.77635 2.65411 8.50025C2.65411 10.2242 3.27968 11.8775 4.3932 13.0964C5.50672 14.3154 7.01698 15.0003 8.59174 15.0003C10.1665 15.0003 11.6768 14.3154 12.7903 13.0964C13.9038 11.8775 14.5294 10.2242 14.5294 8.50025C14.5294 6.77635 13.9038 5.12305 12.7903 3.90406C11.6768 2.68507 10.1665 2.00025 8.59174 2.00025ZM0.827148 8.50025C0.827254 7.14485 1.12345 5.80912 1.69102 4.60451C2.25859 3.3999 3.08109 2.36135 4.08988 1.57549C5.09867 0.789633 6.2645 0.279263 7.49012 0.0869618C8.71573 -0.10534 9.96558 0.0260029 11.1354 0.470032C12.3052 0.914061 13.3611 1.6579 14.2149 2.63949C15.0687 3.62108 15.6957 4.81196 16.0435 6.11277C16.3914 7.41358 16.4501 8.7866 16.2147 10.1173C15.9792 11.448 15.4565 12.6977 14.6901 13.7623L18.0262 17.4143C18.1926 17.6029 18.2846 17.8555 18.2826 18.1177C18.2805 18.3799 18.1844 18.6307 18.015 18.8161C17.8457 19.0015 17.6166 19.1066 17.377 19.1089C17.1375 19.1112 16.9068 19.0104 16.7345 18.8283L13.3985 15.1763C12.2535 16.1642 10.8776 16.7794 9.42823 16.9514C7.97884 17.1233 6.5145 16.8451 5.20281 16.1485C3.89112 15.4519 2.78506 14.3651 2.01123 13.0126C1.2374 11.66 0.827051 10.0962 0.827148 8.50025ZM7.67826 5.00025C7.67826 4.73504 7.7745 4.48068 7.94581 4.29315C8.11712 4.10561 8.34947 4.00025 8.59174 4.00025C9.68195 4.00025 10.7275 4.47436 11.4984 5.31827C12.2693 6.16219 12.7024 7.30678 12.7024 8.50025C12.7024 8.76547 12.6062 9.01982 12.4348 9.20736C12.2635 9.3949 12.0312 9.50025 11.7889 9.50025C11.5466 9.50025 11.3143 9.3949 11.143 9.20736C10.9717 9.01982 10.8754 8.76547 10.8754 8.50025C10.8754 7.83721 10.6348 7.20133 10.2066 6.73249C9.77828 6.26365 9.19741 6.00025 8.59174 6.00025C8.34947 6.00025 8.11712 5.8949 7.94581 5.70736C7.7745 5.51982 7.67826 5.26547 7.67826 5.00025Z" fill="#6D717A"></path>
+                               </svg>
+                            </button>
+                            <input type="text" class="searchTerm" placeholder="Search..." onkeyup="SearchCounty()" id="countySearch">
+                        </div>
                          <nav class="nav-sidebar">
                             <ul class="nav tabs">
                                 <?php $j=1;?>
@@ -1056,9 +1072,9 @@
 
         input.addEventListener('countrychange', function(e) {
             validatePhone(iti, "#phone_number_errors");
-          });
+        });
 
-          $("#phone_number_errors").hide();
+        $("#phone_number_errors").hide();
 
         $("#phone").on('blur keyup keypress change', function() {
             validatePhone(iti, "#phone_number_errors");
@@ -1073,11 +1089,19 @@
         });
 
         phone_office.addEventListener('countrychange', function(e) {
-            validatePhone(office_iti, "#phone_office_errors");
+            if($('#phone_office').val().trim() == '') {
+                $('#phone_office_errors').hide();
+            } else {
+                validatePhone(office_iti, "#phone_office_errors");
+            }
         });
 
         $("#phone_office").on('blur keyup keypress change', function() {
-            validatePhone(office_iti, "#phone_office_errors");
+            if($(this).val().trim() == '') {
+                $('#phone_office_errors').hide();
+            } else {
+                validatePhone(office_iti, "#phone_office_errors");
+            }
         });
 
         // validatePhone(office_iti, "#phone_office_errors");
@@ -1244,6 +1268,7 @@
         var input = document.getElementById("workSearch");
         var filter = input.value.trim().toLowerCase();
         var nodes = document.getElementsByClassName('subworktypechk');
+        var tabs = $('.workchkboxsec');
 
         for (i = 0; i < nodes.length; i++) {
             if (nodes[i].innerText.toLowerCase().includes(filter)) {
@@ -1252,6 +1277,14 @@
                 $(nodes[i]).closest("li").hide();
             }
         }
+    }
+
+    function SearchWorkCategory() {
+        var filter = $('#workCategory').val().trim().toLowerCase();
+
+        $('.workchkboxsec').each(function(){
+            $(this).find('a').text().toLowerCase().includes(filter) ? $(this).show() : $(this).hide();
+        });
     }
 
     function SearchArea() {
@@ -1266,6 +1299,13 @@
                 $(nodes[i]).closest("li").hide();
             }
         }
+    }
+
+    function SearchCounty() {
+        var filter = $('#countySearch').val().trim().toLowerCase();
+        $('.areaschkboxsec').each(function(){
+            $(this).find('a').text().toLowerCase().includes(filter) ? $(this).show() : $(this).hide();
+        });
     }
 
     function findcomp(){

@@ -82,7 +82,7 @@
                     @endforelse
                 </tbody>
             </table>
-            <p><img src="assets/img/in-addition.svg" class="mr-2" alt=""> In addition, we're currently waiting on estimates from 10 tradespeople.</p>
+            <p><img src="{{ asset('frontend/img/in-addition.svg') }}" class="mr-2" alt=""> In addition, we're currently waiting on estimates from 10 tradespeople.</p>
         </div>
         </div>
     </div>

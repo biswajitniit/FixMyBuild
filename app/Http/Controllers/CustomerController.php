@@ -544,15 +544,14 @@ class CustomerController extends Controller
                 'new_password.required' => 'Please enter your new password',
                 'new_password.confirmed' => "Your new password and confirm password fields don't match",
                 'new_password_confirmation.required' => 'Please enter your confirm password',
-                'password.required' => 'Please enter your password',
+                'current_password.required' => 'Please enter your password',
             ]);
 
             try {
                 if (Hash::check($request->current_password, auth()->user()->password)) {
-                    $user = auth()->user()->id;
-                    User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
+                    User::find(Auth::id())->update(['password'=> Hash::make($request->new_password)]);
                 } else {
-                    return response()->json(['error'=>'Invalid current password credentials'], 400);
+                    return response()->json(['error'=>'Invalid current password credentials'], 401);
                 }
             } catch(\Exception $e) {
                 return response()->json(['error'=>'Failed to update password!'], 500);

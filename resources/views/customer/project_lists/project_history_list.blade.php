@@ -47,7 +47,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">No Project History Available.</td>
+                            <td colspan="5" class="text-center">No project history available.</td>
                         </tr>
                     @endforelse
                  </tbody>

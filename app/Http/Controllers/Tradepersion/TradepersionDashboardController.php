@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tradepersion;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EstimateProjectResource;
+use App\Rules\BankSortCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use App\Models\{
@@ -128,28 +129,29 @@ class TradepersionDashboardController extends Controller
         }
 
         $messages = [
-            'comp_reg_no.required'      => 'Please enter company registration number and validate',
-            'comp_reg_no.unique'        => 'Company with this registration number has already been registered',
-            'comp_name.required'        => 'Please enter company registration number and validate',
-            'trader_name.required'      => 'Please enter your trader name',
-            'comp_description.required' => 'Please enter your company descriptions',
-            'company_role.required'     => 'Please select your role in company',
-            'name.required'             => 'Please enter your name',
-            'phone_code.required'       => 'Please select your phone code',
-            'phone_number.required'     => 'Please enter your phone number',
-            'email.required'            => 'Please enter your email',
-            'designation.required'      => 'Please enter your designation',
-            'designation.max'           => 'Designation shouldn\'t be longer than 255 characters',
-            'vat_reg.required'          => 'Please enter your vat number and validate',
-            'subworktype.required'      => 'Please select work you do',
-            'subareacovers.required'    => 'Please select area do you cover',
+            'comp_reg_no.required'      => 'Please provide your company registration number and press the “Find” button.',
+            'comp_reg_no.unique'        => 'Company with this registration number has already been registered.',
+            'comp_name.required'        => 'Please provide your company registration number and press the “Find” button.',
+            'trader_name.required'      => 'Please provide your trading name.',
+            'comp_description.required' => 'Please provide a description about your company.',
+            'company_role.required'     => 'Please select your role in company.',
+            'name.required'             => 'Please enter your name.',
+            'phone_code.required'       => 'Please select your phone code.',
+            'phone_number.required'     => 'Please enter your phone number.',
+            'email.required'            => 'Please provide the email address to which customers can contact you.',
+            'designation.required'      => 'Please enter your designation.',
+            'designation.max'           => 'Designation shouldn\'t be longer than 255 characters.',
+            'vat_reg.required'          => 'Please enter your vat number and validate.',
+            'subworktype.required'      => 'Please select work you do.',
+            'subareacovers.required'    => 'Please select area do you cover.',
+            'vat_no.required'           => 'If your company is VAT registered please provide the VAT number. If not, please click “No” on that option below.'
         ];
 
         $errors = new MessageBag();
         if ( $request->phone_office_with_dial_code ) {
             $phone_office_with_dial_code = str_replace('-', '', str_replace(' ', '', substr($request->phone_office_with_dial_code,1,-1)));
             if ( !is_numeric($phone_office_with_dial_code) )
-                $errors->add('phone_office', 'Please provide a valid office phone number');
+                $errors->add('phone_office', 'Invalid office phone number provided.');
         }
 
         if ( $request->phone_number ) {
@@ -157,6 +159,23 @@ class TradepersionDashboardController extends Controller
             if( !is_numeric($phone_number) )
                 $errors->add('phone_number', 'Please provide a valid phone number');
         }
+
+        $temp_medias = Tempmedia::where(['user_id'=>Auth::id(), 'sessionid'=>session()->getId()])->get();
+        if($temp_medias->count() == 0) {
+            $errors->add('public_liability_insurance_file', 'Please upload the file for public liability insurance.');
+            $errors->add('photo_id_proof', 'Please upload a photo identification file for verification purposes.');
+            $errors->add('company_addr_id_proof', 'Please upload the proof of company address file.');
+        } else {
+            $file_types = $temp_medias->pluck('file_related_to')->toArray();
+            if (!in_array('public_liability_insurance', $file_types))
+                $errors->add('public_liability_insurance', 'Please upload copy of public liability insurance.');
+            if (!in_array('trader_img', $file_types))
+                $errors->add('photo_id_proof', 'Please upload a photo identification file for verification purposes.');
+            if (!in_array('company_address', $file_types))
+                $errors->add('company_addr_id_proof', 'Please upload the proof of company address file.');
+        }
+
+
 
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails() || count($errors) != 0) {
@@ -291,23 +310,25 @@ class TradepersionDashboardController extends Controller
 
     public function saveregistrationstepthree(Request $request){
         $this->validate($request, [
-			'contingency'           => 'required',
+			'contingency'           => 'required|numeric|between:0,100',
 			'bnk_account_type'      => 'required',
 			'bnk_account_name'      => 'required',
-			'bnk_sort_code'         => 'required',
-			'bnk_account_number'    => 'required',
+			'bnk_sort_code'         => ['required', new BankSortCode()],
+			'bnk_account_number'    => 'required|size:8',
         ],[
-            'contingency.required'      => 'Please enter contingency',
-            'bnk_account_type.required' => 'Please select your bank account type',
-            'bnk_account_name.required' => 'Please enter your account holder name',
-            'bnk_sort_code.required'    => 'Please enter your bank sort code',
-            'bnk_account_number.required'   => 'Please enter your bank account number',
+            'contingency.required'      => 'Please enter contingency.',
+            'bnk_account_type.required' => 'Please select your bank account type.',
+            'bnk_account_name.required' => 'Please enter your account holder name.',
+            'bnk_sort_code.required'    => 'Please enter your bank sort code.',
+            'bnk_account_number.required'   => 'Please enter your bank account number.',
+            'bnk_account_number.size'   => 'We support UK bank account numbers that are 8 digits in length. If you have a shorter account number, please check with your bank if the number can be padded with 0s in front and be 8 digits in length.',
+            'contingency.between'       => 'The amount of contingency can be between 0% and 100%.',
         ]);
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
         $traderdetails->contingency = $request->contingency;
         $traderdetails->bnk_account_type = $request->bnk_account_type;
         $traderdetails->bnk_account_name = $request->bnk_account_name;
-        $traderdetails->bnk_sort_code = $request->bnk_sort_code;
+        $traderdetails->bnk_sort_code = (int)implode('', $request->bnk_sort_code);
         $traderdetails->bnk_account_number = $request->bnk_account_number;
         $traderdetails->builder_amendment = $request->builder_amendment ?? 0;
         // $traderdetails->email_notification = json_encode([

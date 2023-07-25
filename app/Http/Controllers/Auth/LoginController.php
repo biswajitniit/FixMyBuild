@@ -70,11 +70,11 @@ class LoginController extends Controller
 
             }else{
                 if(Auth::user()->steps_completed == 1){
-                    return redirect()->intended('/tradeperson/company-registration');
+                    return redirect()->route('tradepersion.compregistration');
                 }else if(Auth::user()->steps_completed == 2){
-                    return redirect()->intended('/tradeperson/bank-registration');
+                    return redirect()->route('tradepersion.bankregistration');
                 }else if(Auth::user()->steps_completed == 3){
-                    return redirect()->intended('/');
+                    return redirect()->intended(route('home'));
                 }
             }
 		}else{
