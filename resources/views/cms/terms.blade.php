@@ -9,8 +9,8 @@
               <div class="col-md-12 text-center pt-5 fmb_titel">
                  <h1>TERMS & CONDITIONS</h1>
                  <ol class="breadcrumb mb-5">
-                    <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
-                    <li class="breadcrumb-item" aria-current="page"><a href="{{ route('termspage') }}">Summary</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Summary</li>
                  </ol>
               </div>
            </div>
@@ -44,7 +44,7 @@
                                 <p class=Style1NB>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </span><b><span>Background</span></b></p>
 
-                                <p class=Style1NB style='margin-left:0cm;margin-bottom:0cm;text-indent:35.45pt'>Please read these
+                                <p class=Style1NB style='margin-left:0cm;margin-bottom:0cm;'>Please read these
                                 Terms and Conditions carefully before using the Website.</p>
 
                                 <p class=Style2n>These Conditions explain who we are, how Tradespeople’ Goods

@@ -9,8 +9,8 @@
               <div class="col-md-12 text-center pt-5 fmb_titel">
                  <h1>TERMS & CONDITIONS</h1>
                  <ol class="breadcrumb mb-5">
-                    <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
-                    <li class="breadcrumb-item" aria-current="page">Website Terms & Conditions</li>
+                    <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Website Terms & Conditions</li>
                  </ol>
               </div>
            </div>

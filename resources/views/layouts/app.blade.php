@@ -33,9 +33,9 @@
       <link rel="stylesheet" href="{{ asset('frontend/css/intlTelInput.css') }}"/>
       <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
 
-      @if(Request::segment(1) != '')
+      {{-- @if(Request::segment(1) != '')
       <link href="{{ asset('frontend/css/login-style.css') }}" rel="stylesheet">
-      @endif
+      @endif --}}
 
       <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
       <link href="{{ asset('frontend/customcss/custom.css') }}" rel="stylesheet">
