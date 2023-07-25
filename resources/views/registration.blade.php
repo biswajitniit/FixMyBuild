@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>FixMyBuild | Sign Up</title>
+    <title>Fix my build | Sign Up</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -158,11 +158,11 @@
                     <label for="phone" generated="true" class="error"></label>
                     <input type="hidden" name="full_phone" id="full_phone"  value="{{old('full_phone')}}"/>
                 </div>
-
-                <div class="form-check mt-4 pl-0 mb-2">
+                <input type="hidden" name="customer_or_tradesperson" value="Tradesperson">
+                {{-- <div class="form-check mt-4 pl-0 mb-2">
                     <label class="form-check-label">Are you a customer or tradesperson?</label>
-                </div>
-                <div class="form-group col-md-12 mt-4">
+                </div> --}}
+                {{-- <div class="form-group col-md-12 mt-4">
                 <div class="form-check-inline">
                     <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2"   @if(old('customer_or_tradesperson') == 'Customer') checked @endif name="optradio"  required/>Customer </label>
                 </div>
@@ -170,7 +170,7 @@
                 <div class="form-check-inline">
                     <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" @if(old('customer_or_tradesperson') == 'Tradesperson') checked @endif name="optradio"  required/>Tradesperson </label>
                 </div>
-                </div>
+                </div> --}}
                 <div class="form-check mt-4">
                     <label class="form-check-label">
                         <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif required/> I have read and agree to FixMyBuild's
@@ -211,7 +211,7 @@
 
         </div>
       </div>
-      <p class="font-14px text-center mt-5">Copyright &copy; {{date('Y')}} FIX MY BUILD LTD. All Rights Reserved.</p>
+      <p class="font-14px text-center mt-5">Copyright &copy; {{date('Y')}} Fix My Build Ltd. All Rights Reserved.</p>
     </section>
 
   </div>

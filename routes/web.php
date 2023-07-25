@@ -84,11 +84,14 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
 
 
-    Route::get('/about-us', [HomeController::class, 'about_us'])->name('about-us');
-    Route::get('/contact-us', [HomeController::class, 'contact_us'])->name('contact-us');
-    Route::get('/privacy-policy', [HomeController::class, 'privacy_policy'])->name('privacy-policy');
-    Route::get('/termspage/{pageid}', [HomeController::class, 'termspage'])->name('termspage');
-    Route::get('/terms-of-service', [HomeController::class, 'terms_of_service'])->name('terms-of-service');
+    Route::get('/about-us.html', [HomeController::class, 'about_us'])->name('about-us');
+    Route::get('/contact-us.html', [HomeController::class, 'contact_us'])->name('contact-us');
+    Route::get('/privacy-policy.html', [HomeController::class, 'privacy_policy'])->name('privacy-policy');
+    Route::get('/terms.html', [HomeController::class, 'termspage'])->name('termspage');
+    Route::get('/terms-of-service.html', [HomeController::class, 'terms_of_service'])->name('terms-of-service');
+    Route::get('/website-terms.html', [HomeController::class, 'website_terms'])->name('website-terms');
+    Route::get('/acceptable-use-policy.html', [HomeController::class, 'acceptable_use_policy'])->name('acceptable-use-policy');
+    Route::get('/complaints', [HomeController::class, 'complaints'])->name('complaints');
 
     Route::get('testTwilio', [ForgotPasswordController::class, 'testTwilio'])->name('forget.password.get');
 

@@ -98,7 +98,7 @@
 
                </div>
             </div>
-            <p class="font-14px text-center mt-5">Copyright © 2022 FIX MY BUILD LTD. All Rights Reserved.</p>
+            <p class="font-14px text-center mt-5">Copyright © 2022 Fix My Build Ltd. All Rights Reserved.</p>
          </section>
       </div>
       <!-- Bootstrap core JavaScript -->

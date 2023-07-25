@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
-      <title>FixMyBuild</title>
+      <title>Fix my build</title>
       <meta name="csrf-token" content="{{ csrf_token() }}">
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -79,8 +79,8 @@
                      <div class="middel_right justify-content-start">
                         <div class="middel_right_info">
                            <div class="header_wishlist">
-                              <a href="{{ url('/about-us') }}">About us</a>
-                              <a href="{{ url('/contact-us') }}">Contact us</a>
+                              <a href="{{ route('about-us') }}">About us</a>
+                              <a href="{{ route('contact-us') }}">Contact us</a>
                            </div>
                            <div class="header_wishlist d-md-block d-lg-none">
                             @if (!Auth::check())
@@ -164,7 +164,7 @@
 
                                 <div class="dropdown-block dropdown-content" id="notification-block">
                                     <div class="head_">
-                                        <h5>Notifications <a href="#" id="mark_as_read">Close all</a></h5>
+                                        <h5>Notifications <a href="#" id="mark_as_read">Mark all as read</a></h5>
                                     </div>
                                     <div class="mid_cont">
                                         <div class="row mb-3">
@@ -241,12 +241,24 @@
               <div class="row copyright_area">
                  <div class="col-lg-6 col-md-6">
                     <ul>
-                       <li><a href="{{ url('/privacy-policy') }}">Privacy policy</a></li>
-                       <li><a href="{{ route('termspage',[1]) }}">Terms</a></li>
+                       <li><a href="{{ route('privacy-policy') }}">Privacy policy</a></li>
+                       <li><a href="{{ route('termspage') }}">Terms</a></li>
                     </ul>
                  </div>
                  <div class="col-lg-6 col-md-6">
-                    <p>Copyright &copy; {{ date('Y') }} FIX MY BUILD LTD. All Rights Reserved.</p>
+                    <p>Copyright &copy; {{ date('Y') }} Fix My Build Ltd. All Rights Reserved.</p>
+                    <div id="siteseal" style="float:right">
+                        <!-- DigiCert Seal HTML -->
+                    <!-- Place HTML on your site where the seal should appear -->
+                    <div id="DigiCertClickID_nzPAYd9C"></div>
+                    <!-- DigiCert Seal Code -->
+                    <!-- Place with DigiCert Seal HTML or with other scripts -->
+                    <script type="text/javascript">
+                        var __dcid = __dcid || [];
+                        __dcid.push({"cid":"DigiCertClickID_nzPAYd9C","tag":"nzPAYd9C","seal_format":"dynamic"});
+                        (function(){var cid=document.createElement("script");cid.async=true;cid.src="//seal.digicert.com/seals/cascade/seal.min.js";var s = document.getElementsByTagName("script");var ls = s[(s.length - 1)];ls.parentNode.insertBefore(cid, ls.nextSibling);}());
+                    </script>
+                  </div>
                  </div>
               </div>
            </div>

@@ -44,20 +44,20 @@ class ForgotPasswordController extends Controller
         $receiverNumber = "+447729905832";
         //$receiverNumber = "+919832307855";
         $message = "Hi Jehan, This is testing from Chandra. FixMyBuild. Please confirm in skype";
-  
+
         try {
-  
+
             $account_sid = env("TWILIO_SID");
             $auth_token = env("TWILIO_TOKEN");
             $twilio_number = env("TWILIO_FROM");
-  
+
             $client = new Client($account_sid, $auth_token);
             $client->messages->create($receiverNumber, [
-                'from' => $twilio_number, 
+                'from' => $twilio_number,
                 'body' => $message]);
-  
+
             dd('SMS Sent Successfully.');
-  
+
         } catch (Exception $e) {
             dd("Error: ". $e->getMessage());
         }
@@ -77,6 +77,10 @@ class ForgotPasswordController extends Controller
 
           $request->validate([
               'email' => 'required|email|exists:users',
+          ],
+
+          [
+            'email.exists'    => 'We cannot locate your account.',
           ]);
 
           $token = Str::random(64);
@@ -175,7 +179,7 @@ class ForgotPasswordController extends Controller
             return redirect()->route('otpVerify.get', ['user_id' => $user->id])
                             ->with('success',  "OTP has been sent on Your Mobile Number.");
         } else {
-            return back()->with('message', $request->phone.' is Not Register With Us');
+            return back()->with('message', ' We cannot locate your account.');
         }
 
     }

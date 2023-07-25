@@ -178,7 +178,7 @@ class UserController extends Controller
 
         $email_sent = send_email($emaildata);
 
-        return 'Please check your inbox for email verification .';
+        return 'Please check your inbox for email verification.';
       } catch (Exception $e) {
         return "error";
       }

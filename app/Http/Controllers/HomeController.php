@@ -29,26 +29,32 @@ class HomeController extends Controller
     }
 
     public function about_us(){
-        $cms = Cms::where('cms_pagename','about-us')->first();
-        return view('cms.about-us',compact('cms'));
+        return view('cms.about-us');
     }
     public function contact_us(){
-        $cms = Cms::where('cms_pagename','contact-us')->first();
-        return view('cms.contact-us',compact('cms'));
+        return view('cms.contact-us');
     }
     public function privacy_policy(){
-        $cms = Cms::where('cms_pagename','privacy-policy')->first();
-        return view('cms.privacy-policy',compact('cms'));
+        return view('cms.privacy-policy');
     }
     public function terms_of_service(){
-        $cms = Cms::where('cms_pagename','terms-of-service')->first();
-        return view('cms.terms-of-service',compact('cms'));
+        return view('cms.terms-of-service');
     }
 
-    public function termspage(Request $request, $pageid){
-        $terms = Terms::where('id',$pageid)->first();
-        $termspagename = Terms::where('status','Active')->get();
-        return view('cms.terms',compact('terms','termspagename'));
+    public function termspage(){
+        return view('cms.terms');
+    }
+
+    public function website_terms(){
+        return view('cms.website-terms');
+    }
+
+    public function acceptable_use_policy(){
+        return view('cms.acceptable-use-policy');
+    }
+
+    public function complaints(){
+        return view('cms.complaints');
     }
 
 }

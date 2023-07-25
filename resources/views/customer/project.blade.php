@@ -40,10 +40,10 @@
                         </span>
                         </div>
                         <div class="col-md-4">
-                            <p class="verify_text">Please Verify Your Email.</p>
+                            <p class="verify_text">Please verify your email address.</p>
                         </div>
                         <div class="col-md-6 mb-3 mr-5">
-                            <button class="btn btn-primary" id="verify_mail">Resend Verification Link</button>
+                            <button class="btn btn-primary" id="verify_mail">Resend verification link</button>
                         </div>
                     </div>
                 </div>

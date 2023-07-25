@@ -40,10 +40,10 @@
                             </span>
                             </div>
                             <div class="col-md-4">
-                                <p class="verify_text">Please Verify Your Email.</p>
+                                <p class="verify_text">Please verify your email address.</p>
                             </div>
                             <div class="col-md-6 mb-3 mr-5">
-                                <button class="btn btn-primary" id="verify_mail">Resend Verification Link</button>
+                                <button class="btn btn-primary" id="verify_mail">Resend verification link</button>
                             </div>
                         </div>
                     </div>
@@ -132,15 +132,14 @@
                                         <option>I want to create a new account</option>
                                         <option>Account security concerns/Unauthorized activity</option>
                                         <option>Privacy concerns</option>
-                                        <option>I have open issues with Fix my build</option>
-                                        <option>I have open issues with Fix my build</option>
+                                        <option>Other reasons</option>
                                         </select>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="delete_permanently" value="1" name="delete_permanently" onclick="clickCheckBox()" required="">
                                         <label class="form-check-label">Yes, I want to permanently close my Fix my build account and delete my data.</label>
                                     </div>
                                     <div class="form-group pre_ col-md-5 mt-3">
-                                        <button type="submit" id="submitted" class="btn btn-light" disabled>Close your account</button>
+                                        <button type="submit" id="submitted" class="btn btn-light ac_close" disabled>Close your account</button>
                                     </div>
                                 </form>
                             </div>

@@ -72,6 +72,18 @@
                   </div>
                   @endif
 
+                  @if ($errors->has('email'))
+                  <div class="alert alert-warning" role="alert">
+                    {{ $errors->first('email') }}
+                 </div>
+                  @endif
+
+                @if ($errors->has('phone'))
+                    <div class="alert alert-warning" role="alert">
+                        {{ $errors->first('phone') }}
+                    </div>
+                @endif
+
                   <form action="{{ route('forget.password.post') }}" method="post" class="fwrap">
                     @csrf
                      <div class="row">
@@ -80,9 +92,7 @@
                             <div class="col-md-10 col-10 p-4">
                                 <label>Send an email to</label>
                                 <input type="email" id="email_address" name="email" required class="form-control" placeholder="Email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" value="{{old('email')}}">
-                                @if ($errors->has('email'))
-                                <span class="text-danger">{{ $errors->first('email') }}</span>
-                                @endif
+
                             </div>
                             <div class="input-group-append col-md-2 p-0 fget_">
                               <span class="input-group-text">
@@ -101,9 +111,7 @@
                            <div class="col-md-10 col-10 p-4">
                                <label>Send a message to</label>
                                <input type="tel" required class="form-control" placeholder="Phone number" name="phone">
-                                @if ($errors->has('phone'))
-                                    <span class="text-danger">{{ $errors->first('phone') }}</span>
-                                @endif
+
                            </div>
                            <div class="input-group-append col-md-2 p-0 fget_">
                              <span class="input-group-text">
@@ -116,7 +124,7 @@
                  </form>
                </div>
             </div>
-            <p class="font-14px text-center mt-5">Copyright &copy; <?php echo date('Y') ?> FixMyBuild. All Rights Reserved.</p>
+            <p class="font-14px text-center mt-5">Copyright &copy; <?php echo date('Y') ?> Fix My Build Ltd. All Rights Reserved.</p>
          </section>
       </div>
       <!-- Bootstrap core JavaScript -->
