@@ -64,3 +64,7 @@ CREATE TABLE `user_personal_data_shares` (
 
 INSERT INTO `user_personal_data_shares` (`id`, `user_id`, `project_id`, `tradeperson_id`, `settings`, `created_at`, `updated_at`) VALUES
 (1, 1, 3, 4, '{\"name\":\"1\",\"address\":\"1\",\"home_phone\":\"0\",\"mobile_phone\":\"0\",\"email\":\"0\"}', '2023-07-07 12:28:12', '2023-07-07 06:58:12');
+
+
+
+ALTER TABLE `users` DROP INDEX `users_email_unique`;

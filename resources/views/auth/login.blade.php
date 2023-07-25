@@ -142,7 +142,7 @@
                  </div>
                </div>
             </div>
-            <p class="font-14px text-center mt-5">Copyright &copy; <?php echo date('Y') ?> FIX MY BUILD LTD. All Rights Reserved.</p>
+            <p class="font-14px text-center mt-5">Copyright &copy; <?php echo date('Y') ?> Fix My Build Ltd. All Rights Reserved.</p>
          </section>
       </div>
       <!-- Bootstrap core JavaScript -->

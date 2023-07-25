@@ -14416,6 +14416,9 @@ h2.company-name a:hover svg path {
     display: block;
     margin-left: -10px;
 }
+.dashboard_wrapper .num_change button.ac_close {
+    border: 1px solid var(--secondary_color);
+}
 
 .cookies-wrap{
   background: #061A48;
