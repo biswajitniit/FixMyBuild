@@ -124,7 +124,7 @@
                     <input type="email" name="email" id="email" class="form-control" placeholder="Email" id="email" value="{{old('email')}}" required pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" autocomplete="off"/>
                 </div>
 
-                <div class="input-field col-md-12" id="passwordCriteria">
+                <div class="input-field col-md-12" id="passwordCriteria" style="display: none">
                     <h6 id="pswd_length"><i class="fa fa-times text-danger"></i> 8-32 character</h6>
                     <h6 id="pswd_uppercase"><i class="fa fa-times text-danger"></i> One upper case</h6>
                     <h6 id="pswd_lowercase"><i class="fa fa-times text-danger"></i> One lower case</h6>
@@ -166,11 +166,14 @@
                     <label for="phone" generated="true" class="error"></label>
                     <input type="hidden" name="full_phone" id="full_phone"  value="{{old('full_phone')}}"/>
                 </div>
+                @production
                 <input type="hidden" name="customer_or_tradesperson" value="Tradesperson">
-                {{-- <div class="form-check mt-4 pl-0 mb-2">
+                @endproduction
+                @env(['staging', 'development'])
+                <div>
                     <label class="form-check-label">Are you a customer or tradesperson?</label>
-                </div> --}}
-                {{-- <div class="form-group col-md-12 mt-4">
+                </div> 
+                <div class="form-group col-md-12 mt-4">
                 <div class="form-check-inline">
                     <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2"   @if(old('customer_or_tradesperson') == 'Customer') checked @endif name="optradio"  required/>Customer </label>
                 </div>
@@ -178,7 +181,8 @@
                 <div class="form-check-inline">
                     <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" @if(old('customer_or_tradesperson') == 'Tradesperson') checked @endif name="optradio"  required/>Tradesperson </label>
                 </div>
-                </div> --}}
+                </div>
+                @endenv
                 <div class="form-check mt-4">
                     <label class="form-check-label">
                         <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif required/> I have read and agree to our
@@ -314,8 +318,6 @@
             return value.match(/([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/);
         }, 'Please include a special characters.');
 
-        // Hide the password Criteria div on page load
-        $("#passwordCriteria").hide();
 
         // phone number setup
         let input = document.querySelector("#phone");
@@ -352,6 +354,7 @@
         // });
 
 
+        $('#name').focus();
 
         $('#password, #password_confirmation').on('keyup blur', function(){
             password_validation();
@@ -364,7 +367,7 @@
             $("#passwordCriteria").show('slow');
         });
 
-        $('#password').focusout(function (e) {
+        $('#password').blur(function (e) {
             $('#password').closest('.form-group').removeClass('mt-2').addClass('mt-4');
             $("#passwordCriteria").hide('slow');
         });
