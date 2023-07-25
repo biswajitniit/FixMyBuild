@@ -45,7 +45,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="5" class="text-center">No Projects Available For You Right Now.</td>
+                <td colspan="5" class="text-center">There are currently no running projects.</td>
             </tr>
         @endforelse
       </tbody>

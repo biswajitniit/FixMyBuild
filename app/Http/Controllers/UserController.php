@@ -22,7 +22,7 @@ class UserController extends Controller
     public function save_user(Request $request){
         $this->validate($request, [
           'name'                          => 'required',
-          'email'                         => 'required|unique:users|max:191',
+          'email'                         => 'required|string|email|max:191|unique:users,email,NULL,id,deleted_at,NULL',
           'phone'                         => 'required',
           'password'                      => 'required|min:6|confirmed',
           'password_confirmation'         => 'required|min:6',
@@ -103,7 +103,13 @@ class UserController extends Controller
 
         $email_sent = send_email($emaildata);
 
-        return redirect()->back()->with('message', 'Thanks for your registration, please check your inbox! for email verification .');
+        // return redirect()->back()->with('message', 'Thanks for your registration, please check your inbox! for email verification .');
+        if (\Str::lower($user->customer_or_tradesperson) == "customer")
+            return redirect()->route('user.registration')->with('message', 'Please check your inbox for our email verification link.');
+
+        // Log in the tradesperson
+        Auth::login($user);
+        return redirect()->route('tradepersion.compregistration');
     }
 
 

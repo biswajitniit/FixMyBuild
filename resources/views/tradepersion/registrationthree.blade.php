@@ -55,7 +55,7 @@
     <div class="container">
 
       @if($errors->any())
-         <div class="alert alert-danger">
+         <div class="alert alert-danger col-md-10 offset-md-1">
             <ul>
                   @foreach ($errors->all() as $error)
                      <li>{{ $error }}</li>
@@ -99,7 +99,7 @@
                          <h6>Default contingency</h6>
                       </div>
                       <div class="col-2">
-                         <input type="text" name="contingency" class="form-control text-center font-24"  value="20">
+                         <input type="text" name="contingency" class="form-control text-center font-24"  value={{ old('contingency') ? old('contingency') : "20" }}>
                       </div>
                       <div class="col-2">
                          <h6 class="font-44">%</h6>
@@ -129,12 +129,12 @@
                             <div class="col-md-12">
                                <div class="form-check-inline mr-5">
                                   <label class="form-check-label">
-                                  <input type="radio" class="form-check-input mr-2" name="bnk_account_type" value="Personal">Personal
+                                  <input type="radio" class="form-check-input mr-2" name="bnk_account_type" value="Personal" @if(old('bnk_account_type') == "Personal") checked @endif />Personal
                                   </label>
                                </div>
                                <div class="form-check-inline">
                                   <label class="form-check-label">
-                                  <input type="radio" class="form-check-input mr-2" name="bnk_account_type" value="Business">Business
+                                  <input type="radio" class="form-check-input mr-2" name="bnk_account_type" value="Business" @if(old('bnk_account_type') == "Business") checked @endif />Business
                                   </label>
                                </div>
                             </div>
@@ -142,23 +142,46 @@
                          <!--//-->
                          <div class="row mt-3">
                             <div class="col-md-12">
-                               <input type="text" name="bnk_account_name" class="form-control pb-3"  placeholder="Account holder’s name">
+                               <input type="text" name="bnk_account_name" class="form-control pb-3"  placeholder="Account holder’s name" value="{{ old('bnk_account_name') ?? '' }}">
                             </div>
                          </div>
                          <!--//-->
                          <div class="row mt-3">
                             <div class="col-md-6">
-                               <input type="text" class="form-control pb-3" name="bnk_sort_code"  id="sortcode" placeholder="Sort code                   __                  __">
+                               {{-- <input type="text" class="form-control pb-3" name="bnk_sort_code"  id="sortcode" placeholder="Sort code                   __                  __"> --}}
+                               {{-- <div class="row sort-code">
+                                    <div class="col-3 label"><label>Sort code</label></div>
+                                    <div class="col-2">
+                                        <input type="text" placeholder="00" class="form-control">
+                                    </div>
+                                    <div class="col-1"><label class="">__</label></div>
+                                    <div class="col-2">
+                                        <input type="text" placeholder="00" class="form-control">
+                                    </div>
+                                    <div class="col-1"><label>__</label></div>
+                                    <div class="col-2">
+                                        <input type="text" placeholder="00" class="form-control">
+                                    </div>
+                               </div> --}}
+                                <div class="d-flex sort-code justify-content-between">
+                                    <div class="label"><label>Sort code</label></div>
+                                    <input type="text" name="bnk_sort_code[]" class="form-control" maxlength="2" value="{{ old('bnk_sort_code.0') ?? '' }}" oninput="handleInput(this, 2)" placeholder="00">
+                                    <label>__</label>
+                                    <input type="text" name="bnk_sort_code[]" class="form-control" maxlength="2" value="{{ old('bnk_sort_code.1') ?? '' }}" oninput="handleInput(this, 2)" placeholder="00">
+                                    <label>__</label>
+                                    <input type="text" name="bnk_sort_code[]" class="form-control mr-15" maxlength="2" value="{{ old('bnk_sort_code.2') ?? '' }}" placeholder="00">
+                                </div>
+
                             </div>
                             <div class="col-md-6">
-                               <input type="text" class="form-control pb-3" name="bnk_account_number"  placeholder="Account number">
+                               <input type="text" class="form-control pb-3" name="bnk_account_number"  placeholder="Account number" value="{{ old('bnk_account_number') ?? '' }}">
                             </div>
                          </div>
                          <!--//-->
                          <div class="row mt-3">
                             <div class="col-md-12">
                                <div class="form-check">
-                                  <input class="form-check-input" type="checkbox" value="1" id="builder_amendment" name="builder_amendment">
+                                  <input class="form-check-input" type="checkbox" value="1" id="builder_amendment" name="builder_amendment" @if(old('builder_amendment') == '1') checked @endif>
                                   <label class="form-check-label">I confirm that the account belongs myself / my company and the above details are correct</label>
                                   {{-- <label class="form-check-label">Builder registration page amendment</label> --}}
                                </div>
@@ -186,7 +209,18 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch1" name="noti_new_quotes" value="1" {{ $notification['noti_new_quotes'] ? 'checked' : '' }}>
+                                     {{-- <input type="checkbox" id="switch1" name="noti_new_quotes" value="1" {{ $notification['noti_new_quotes'] ? 'checked' : '' }}> --}}
+                                     <input type="checkbox" id="switch1" name="noti_new_quotes" value="1"
+                                        @php
+                                            if(old('noti_new_quotes') == 1)
+                                                echo "checked";
+                                            else if(!empty(old()))
+                                                echo "";
+                                            else {
+                                                echo $notification['noti_new_quotes'] ? 'checked' : '';
+                                            }
+                                        @endphp
+                                     />
                                      <label for="switch1">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When new estimates are requested</label>
@@ -196,7 +230,17 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch2" name="noti_quote_accepted" value="1" {{ $notification['noti_quote_accepted'] ? 'checked' : '' }}>
+                                     <input type="checkbox" id="switch2" name="noti_quote_accepted" value="1"
+                                     @php
+                                        if(old('noti_quote_accepted') == 1)
+                                            echo "checked";
+                                        else if(!empty(old()))
+                                            echo "";
+                                        else {
+                                            echo $notification['noti_quote_accepted'] ? 'checked' : '';
+                                        }
+                                    @endphp
+                                 />
                                      <label for="switch2">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When your estimate is accepted and, where applicable, upfront payment received</label>
@@ -206,7 +250,17 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch3" name="noti_project_stopped" value="1" {{ $notification['noti_project_stopped'] ? 'checked' : '' }}>
+                                     <input type="checkbox" id="switch3" name="noti_project_stopped" value="1"
+                                        @php
+                                            if(old('noti_project_stopped') == 1)
+                                                echo "checked";
+                                            else if(!empty(old()))
+                                                echo "";
+                                            else {
+                                                echo $notification['noti_project_stopped'] ? 'checked' : '';
+                                            }
+                                        @endphp
+                                     />
                                      <label for="switch3">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When a project is stopped</label>
@@ -216,7 +270,17 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch4" name="noti_quote_rejected" value="1" {{ $notification['noti_quote_rejected'] ? 'checked' : '' }}>
+                                     <input type="checkbox" id="switch4" name="noti_quote_rejected" value="1"
+                                     @php
+                                        if(old('noti_quote_rejected') == 1)
+                                            echo "checked";
+                                        else if(!empty(old()))
+                                            echo "";
+                                        else {
+                                            echo $notification['noti_quote_rejected'] ? 'checked' : '';
+                                        }
+                                     @endphp
+                                     />
                                      <label for="switch4">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When your estimate is rejected</label>
@@ -226,7 +290,17 @@
                             <div class="col-md-12">
                                <div class="form-check form-switch">
                                   <div class="switchToggle">
-                                     <input type="checkbox" id="switch5" name="noti_project_cancelled" value="1" {{ $notification['noti_project_cancelled'] ? 'checked' : '' }}>
+                                     <input type="checkbox" id="switch5" name="noti_project_cancelled" value="1"
+                                     @php
+                                     if(old('noti_project_cancelled') == 1)
+                                         echo "checked";
+                                     else if(!empty(old()))
+                                         echo "";
+                                     else {
+                                         echo $notification['noti_project_cancelled'] ? 'checked' : '';
+                                     }
+                                     @endphp
+                                     />
                                      <label for="switch5">Toggle</label>
                                  </div>
                                   <label class="form-check-label" for="mySwitch">When a project is cancelled before it starts</label>
@@ -250,13 +324,13 @@
                 <!--//-->
                 <div class="col-md-12 justify-content-center d-flex mt-4">
                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="terms_and_condition" name="option1">
+                      <input class="form-check-input" type="checkbox" id="terms_and_condition" name="terms_and_condition" value="1" @if(old('terms_and_condition') == '1') checked @endif>
                       <label class="form-check-label">Please confirm you have read and agree to our <a href="{{ route('termspage', 1) }}">Terms & Conditions</a>.</label>
                    </div>
                 </div>
                 <div class="form-group col-md-12 mt-4 mb-4 text-center pre_">
                    {{-- <a href="{{ route('tradepersion.compregistration') }}" class="btn btn-light">Previous</a> --}}
-                   <button type="submit" class="btn btn-primary" id="form-submit-btn">Submit</button>
+                   <button type="submit" class="btn btn-primary disable-btn" id="form-submit-btn">Submit</button>
                 </div>
              </div>
           </div>
@@ -272,6 +346,7 @@
         @if (session('status'))
             $('#successRegister').modal('show');
         @endif
+
     });
 
     $("#terms_and_condition").change(function(){
@@ -285,6 +360,26 @@
             $('#form-submit-btn').attr("disabled", true);
         }
     }
+
+    function handleInput(inputElement, maxLength) {
+        const input = inputElement.value;
+        const currentLength = input.length;
+        if (currentLength === maxLength) {
+            const nextInput = getNextInput(inputElement);
+            if (nextInput) {
+                nextInput.focus();
+            }
+        }
+    }
+
+    function getNextInput(currentInput) {
+        const allInputs = document.querySelectorAll('input[type="text"]');
+        const currentIndex = Array.from(allInputs).indexOf(currentInput);
+        const nextInput = allInputs[currentIndex + 1];
+
+        return nextInput;
+    }
+
 </script>
 @endpush
 @endsection

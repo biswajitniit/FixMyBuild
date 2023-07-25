@@ -111,8 +111,12 @@
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
                             <input type="password" id="password" class="form-control" name="password" placeholder="Password" required autofocus onkeyup="checkPasswordStrength();" onChange="Chkpassword_and_conpassword()">
-                            <em onclick="tooglepassword()">
-                                <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
+                            <em onclick="tooglepassword($(this))">
+                                <a href="#">
+                                    {{-- <i class="fa fa-eye-slash" id="eye"></i> --}}
+                                    <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                    <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                                </a>
                             </em>
 
                             @if ($errors->has('password'))
@@ -126,8 +130,12 @@
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
                             <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" placeholder="Retype password" required autofocus onkeyup="checkPasswordStrength_One();" onChange="Chkpassword_and_conpassword()">
-                            <em onclick="tooglepasswordconfirm()">
-                                <a href="#"><i class="fa fa-eye-slash" id="eyeconfirm"></i></a>
+                            <em onclick="tooglepasswordconfirm($(this))">
+                                <a href="#">
+                                    {{-- <i class="fa fa-eye-slash" id="eyeconfirm"></i> --}}
+                                    <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                    <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                                </a>
                             </em>
                             @if ($errors->has('password_confirmation'))
                                 <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
@@ -179,30 +187,58 @@
         }
 
 
-       function tooglepassword(){
-           var x = document.getElementById("password");
-           if (x.type === "password") {
-               x.type = "text";
-               $("#eye").removeClass("fa fa-eye-slash");
-               $("#eye").addClass("fa fa-eye");
-           } else {
-               x.type = "password";
-               $("#eye").removeClass("fa fa-eye");
-               $("#eye").addClass("fa fa-eye-slash");
-           }
-       }
-       function tooglepasswordconfirm(){
-           var x = document.getElementById("password_confirmation");
-           if (x.type === "password") {
-               x.type = "text";
-               $("#eyeconfirm").removeClass("fa fa-eye-slash");
-               $("#eyeconfirm").addClass("fa fa-eye");
-           } else {
-               x.type = "password";
-               $("#eyeconfirm").removeClass("fa fa-eye");
-               $("#eyeconfirm").addClass("fa fa-eye-slash");
-           }
-       }
+    //    function tooglepassword(){
+    //        var x = document.getElementById("password");
+    //        if (x.type === "password") {
+    //            x.type = "text";
+    //            $("#eye").removeClass("fa fa-eye-slash");
+    //            $("#eye").addClass("fa fa-eye");
+    //        } else {
+    //            x.type = "password";
+    //            $("#eye").removeClass("fa fa-eye");
+    //            $("#eye").addClass("fa fa-eye-slash");
+    //        }
+    //    }
+        function tooglepassword(element){
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+                x.type = "text";
+                $(element).find('.eye-icon').removeClass('d-none');
+                $(element).find('.eye-slash-icon').addClass('d-none');
+            } else {
+                x.type = "password";
+                $(element).find('.eye-icon').addClass('d-none');
+                $(element).find('.eye-slash-icon').removeClass('d-none');
+            }
+        }
+    //    function tooglepasswordconfirm(){
+    //        var x = document.getElementById("password_confirmation");
+    //        if (x.type === "password") {
+    //            x.type = "text";
+    //            $("#eyeconfirm").removeClass("fa fa-eye-slash");
+    //            $("#eyeconfirm").addClass("fa fa-eye");
+    //        } else {
+    //            x.type = "password";
+    //            $("#eyeconfirm").removeClass("fa fa-eye");
+    //            $("#eyeconfirm").addClass("fa fa-eye-slash");
+    //        }
+    //    }
+        function tooglepasswordconfirm(element){
+            var x = document.getElementById("password_confirmation");
+            if (x.type === "password") {
+                x.type = "text";
+                // $("#eyeconfirm").removeClass("fa fa-eye-slash");
+                // $("#eyeconfirm").addClass("fa fa-eye");
+                $(element).find('.eye-icon').removeClass('d-none');
+                $(element).find('.eye-slash-icon').addClass('d-none');
+            } else {
+                x.type = "password";
+                // $("#eyeconfirm").removeClass("fa fa-eye");
+                // $("#eyeconfirm").addClass("fa fa-eye-slash");
+                $(element).find('.eye-icon').addClass('d-none');
+                $(element).find('.eye-slash-icon').removeClass('d-none');
+            }
+        }
 
        function checkPasswordStrength() {
            var number = /([0-9])/;

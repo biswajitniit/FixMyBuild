@@ -70,3 +70,9 @@ CREATE VIEW county_towns AS SELECT DISTINCT `Post Town` AS county, `Dependent Lo
 -- CHANGE sub_area_cover_id OF TRADER_AREAS TO NULL
 --
 ALTER TABLE `traderareas` CHANGE `sub_area_cover_id` `sub_area_cover_id` BIGINT(20) UNSIGNED NULL;
+
+--
+-- ADD UNIQUE ON COMPOSITE KEY (email, deleted_at) instead of email
+--
+--ALTER TABLE `users` DROP INDEX `users_email_unique`;
+--ALTER TABLE users ADD CONSTRAINT unique_email_deleted_at UNIQUE (email, deleted_at);

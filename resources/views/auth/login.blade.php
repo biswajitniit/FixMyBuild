@@ -61,7 +61,7 @@
                         <h2 class="heading1 mb-2 text-center color-blue">Sign in</h2>
                         <p  class="heading2">
                            Not a member?
-                           <span><a class="link-color" href="{{ url('user/registration') }}">Register Now</a></span>
+                           <span><a class="link-color" href="{{ route('user.registration') }}">Register Now</a></span>
                          </p>
                      </div>
                   </div>
@@ -94,8 +94,11 @@
                      <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
                            <input type="password" name="password" class="form-control" id="password" placeholder="Password*" required >
-                           <em onclick="tooglepassword()">
-                             <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
+                           <em onclick="tooglepassword($(this))">
+                             <a href="#">
+                                <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                             </a>
                            </em>
                         </div>
                      </div>
@@ -172,16 +175,16 @@
 
             });
         });
-        function tooglepassword(){
+        function tooglepassword(element){
             var x = document.getElementById("password");
             if (x.type === "password") {
                 x.type = "text";
-                $("#eye").removeClass("fa fa-eye-slash");
-                $("#eye").addClass("fa fa-eye");
+                $(element).find('.eye-icon').removeClass('d-none');
+                $(element).find('.eye-slash-icon').addClass('d-none');
             } else {
                 x.type = "password";
-                $("#eye").removeClass("fa fa-eye");
-                $("#eye").addClass("fa fa-eye-slash");
+                $(element).find('.eye-icon').addClass('d-none');
+                $(element).find('.eye-slash-icon').removeClass('d-none');
             }
         }
 

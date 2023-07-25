@@ -791,3 +791,7 @@ form.fwrap .card {
     margin-bottom: 90px;
   }
 }
+
+::-ms-reveal {
+    display: none;
+}

@@ -66,7 +66,7 @@
               <h2 class="heading1 mb-2 text-center color-blue ">Create an Account </h2>
               <p  class="heading2">
                 Already have an account?
-                <span><a class="link-color" href="{{ url('login') }}">Sign in</a></span>
+                <span><a class="link-color" href="{{ route('login') }}">Sign in</a></span>
               </p>
             </div>
           </div>
@@ -102,6 +102,7 @@
                                 </clipPath>
                                 </defs>
                             </svg>
+                            <h5 class="color-blue mt-4">Thank you for registering for an account!</h5>
                             <p>{{ session()->get('message') }}</p>
                         </div>
                         <div class="modal-footer justify-content-center">
@@ -134,8 +135,12 @@
                 <div class="row">
                     <div class="form-group col-md-12 mt-4 pw_">
                         <input type="password" name="password" id="password" class="form-control" placeholder="Password" onkeyup="checkPasswordStrength();" onChange="Chkpassword_and_conpassword()" required autocomplete="off"/>
-                        <em onclick="tooglepassword()">
-                            <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
+                        <em onclick="tooglepassword($(this))">
+                            <a href="#">
+                                {{-- <i class="fa fa-eye-slash" id="eye"></i> --}}
+                                <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                            </a>
                         </em>
                     </div>
                 </div>
@@ -145,8 +150,11 @@
                 <div class="row">
                     <div class="form-group col-md-12 mt-4 pw_">
                         <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password*"  onkeyup="checkPasswordStrength_confirm();" onChange="Chkpassword_and_conpassword()" required/>
-                        <em onclick="tooglepasswordconfirm()">
-                            <a href="#"><i class="fa fa-eye-slash" id="eyeconfirm"></i></a>
+                        <em onclick="tooglepasswordconfirm($(this))">
+                            <a href="#">
+                                <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                            </a>
                         </em>
                     </div>
                 </div>
@@ -159,21 +167,25 @@
                     <input type="hidden" name="full_phone" id="full_phone"  value="{{old('full_phone')}}"/>
                 </div>
 
-                <div class="form-check mt-4 pl-0 mb-2">
-                    <label class="form-check-label">Are you a customer or tradesperson?</label>
-                </div>
-                <div class="form-group col-md-12 mt-4">
-                <div class="form-check-inline">
-                    <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2"   @if(old('customer_or_tradesperson') == 'Customer') checked @endif name="optradio"  required/>Customer </label>
-                </div>
+                @env(['staging', 'development'])
+                    <label class="form-check-label font-weight-bold color-blue">Are you a customer or tradesperson?</label>
+                    <div class="form-group col-md-12 mt-4">
+                        <div class="form-check-inline">
+                            <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2"   @if(old('customer_or_tradesperson') == 'Customer') checked @endif name="optradio"  required/>Customer </label>
+                        </div>
+                        <div class="form-check-inline">
+                            <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" @if(old('customer_or_tradesperson') == 'Tradesperson') checked @endif name="optradio"  required/>Tradesperson </label>
+                        </div>
+                    </div>
+                @endenv
 
-                <div class="form-check-inline">
-                    <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" @if(old('customer_or_tradesperson') == 'Tradesperson') checked @endif name="optradio"  required/>Tradesperson </label>
-                </div>
-                </div>
+                @production
+                    <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" checked name="optradio"  hidden/>
+                @endproduction
+
                 <div class="form-check mt-4">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif required/> I have read and agree to FixMyBuild's
+                        <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif required/> I have read and agree to our
 
                         <a href="{{ url('/terms-of-service') }}">Terms of Service</a> and <a href="{{ url('/privacy-policy') }}">Privacy Policy</a>.
                     </label>
@@ -191,22 +203,24 @@
             </form>
 
 
-          <div class="row">
-            <div class="form-group col-md-12 mt-5 text-center sign_with">
-               <p>Or register with</p>
-               <ul>
-                  <li><a href="{{ route('google-auth') }}"><i class="fa fa-google"></i></a></li>
-                  <li>
-                     <a href="#">
-                        <svg width="31" height="32" viewBox="0 0 31 32" xmlns="http://www.w3.org/2000/svg">
-                           <path d="M0.212402 4.06183V27.6025L18.1206 31.3574V0.595734L0.212402 4.06183ZM9.23465 21.3069C3.54169 20.9397 4.12803 10.6781 9.36755 10.5966C14.9805 10.9676 14.4299 21.225 9.23465 21.3069ZM9.31672 12.6058C6.31752 12.814 6.4518 19.2392 9.27046 19.2907C12.2567 19.0983 12.0814 12.6557 9.31672 12.6058ZM21.172 16.6981C21.4424 16.8968 21.7681 16.6981 21.7681 16.6981C21.4434 16.8968 30.6379 10.7896 30.6379 10.7896V21.8488C30.6379 23.0526 29.8673 23.5575 29.0007 23.5575H19.2517L19.2523 15.3798L21.172 16.6981ZM19.2528 7.11781V13.135L21.3556 14.459C21.411 14.4752 21.5312 14.4763 21.5867 14.459L30.6367 8.35747C30.6367 7.63541 29.9631 7.11781 29.583 7.11781H19.2528Z" fill="black"/>
-                        </svg>
-                     </a>
-                  </li>
-                  <li><a href="#"><i class="fa fa-apple"></i></a></li>
-               </ul>
+          @env(['staging', 'development'])
+            <div class="row">
+              <div class="form-group col-md-12 mt-5 text-center sign_with">
+                <p>Or register with</p>
+                <ul>
+                    <li><a href="{{ route('google-auth') }}"><i class="fa fa-google"></i></a></li>
+                    <li>
+                      <a href="#">
+                          <svg width="31" height="32" viewBox="0 0 31 32" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.212402 4.06183V27.6025L18.1206 31.3574V0.595734L0.212402 4.06183ZM9.23465 21.3069C3.54169 20.9397 4.12803 10.6781 9.36755 10.5966C14.9805 10.9676 14.4299 21.225 9.23465 21.3069ZM9.31672 12.6058C6.31752 12.814 6.4518 19.2392 9.27046 19.2907C12.2567 19.0983 12.0814 12.6557 9.31672 12.6058ZM21.172 16.6981C21.4424 16.8968 21.7681 16.6981 21.7681 16.6981C21.4434 16.8968 30.6379 10.7896 30.6379 10.7896V21.8488C30.6379 23.0526 29.8673 23.5575 29.0007 23.5575H19.2517L19.2523 15.3798L21.172 16.6981ZM19.2528 7.11781V13.135L21.3556 14.459C21.411 14.4752 21.5312 14.4763 21.5867 14.459L30.6367 8.35747C30.6367 7.63541 29.9631 7.11781 29.583 7.11781H19.2528Z" fill="black"/>
+                          </svg>
+                      </a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-apple"></i></a></li>
+                </ul>
+              </div>
             </div>
-         </div>
+          @endenv
 
 
         </div>
@@ -257,13 +271,13 @@
             },
             messages: {
                 name: {
-                    required: "Please enter full name",
+                    required: "Please enter your full name",
                 },
                 email: {
-                    required: "Please enter email address",
+                    required: "Please enter your email address",
                 },
                 password: {
-                    required: "Please enter password",
+                    required: "Please enter your password",
                     rangelength: jQuery.validator.format("At least 8 characters and maximum 32 characters are required!")
                 },
                 password_confirmation: {
@@ -271,14 +285,14 @@
                     equalTo: "Confirm password doesn't match with password field"
                 },
                 phone: {
-                    required: "Please enter phone number",
+                    required: "Please enter your phone number",
                     phoneNumber: 'Invalid phone number'
                 },
                 customer_or_tradesperson: {
                     required: "Are you a customer or tradeperson?",
                 },
                 terms_of_service: {
-                    required: "Please agree to FixMyBuild's Terms of Service and Privacy Policy."
+                    required: "Please agree to our Terms of Service and Privacy Policy."
                 }
             },
             submitHandler: function(form) {
@@ -383,28 +397,32 @@
     //     $("#userregistration").validationEngine();
     // });
 
-    function tooglepassword(){
+    function tooglepassword(element){
         var x = document.getElementById("password");
         if (x.type === "password") {
             x.type = "text";
-            $("#eye").removeClass("fa fa-eye-slash");
-            $("#eye").addClass("fa fa-eye");
+            $(element).find('.eye-icon').removeClass('d-none');
+            $(element).find('.eye-slash-icon').addClass('d-none');
         } else {
             x.type = "password";
-            $("#eye").removeClass("fa fa-eye");
-            $("#eye").addClass("fa fa-eye-slash");
+            $(element).find('.eye-icon').addClass('d-none');
+            $(element).find('.eye-slash-icon').removeClass('d-none');
         }
     }
-    function tooglepasswordconfirm(){
+    function tooglepasswordconfirm(element){
         var x = document.getElementById("password_confirmation");
         if (x.type === "password") {
             x.type = "text";
-            $("#eyeconfirm").removeClass("fa fa-eye-slash");
-            $("#eyeconfirm").addClass("fa fa-eye");
+            // $("#eyeconfirm").removeClass("fa fa-eye-slash");
+            // $("#eyeconfirm").addClass("fa fa-eye");
+            $(element).find('.eye-icon').removeClass('d-none');
+            $(element).find('.eye-slash-icon').addClass('d-none');
         } else {
             x.type = "password";
-            $("#eyeconfirm").removeClass("fa fa-eye");
-            $("#eyeconfirm").addClass("fa fa-eye-slash");
+            // $("#eyeconfirm").removeClass("fa fa-eye");
+            // $("#eyeconfirm").addClass("fa fa-eye-slash");
+            $(element).find('.eye-icon').addClass('d-none');
+            $(element).find('.eye-slash-icon').removeClass('d-none');
         }
     }
 

@@ -443,12 +443,22 @@ if(!function_exists('recommended_projects')) {
 
 
 if(!function_exists('lock_trader_dashboard_access')) {
-    function lock_trader_dashboard_access() {
-        $user = TraderDetail::where('user_id', Auth::id())->first();
+    // function lock_trader_dashboard_access() {
+    //     $user = TraderDetail::where('user_id', Auth::id())->first();
 
-        if (empty($user))
+    //     if (empty($user))
+    //         return redirect()->route('tradepersion.compregistration');
+    //     elseif (empty($user->contingency) || is_null($user->contingency))
+    //         return redirect()->route('tradepersion.bankregistration');
+    // }
+
+    function lock_trader_dashboard_access() {
+        $user = User::where('id', Auth::id())->first();
+        if (\Str::lower($user->customer_or_tradesperson) == 'customer')
+            return redirect()->route('customer.profile');
+        if ($user->steps_completed == 1)
             return redirect()->route('tradepersion.compregistration');
-        elseif (empty($user->contingency) || is_null($user->contingency))
+        elseif ($user->steps_completed == 2)
             return redirect()->route('tradepersion.bankregistration');
     }
 }

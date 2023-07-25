@@ -3,9 +3,11 @@
         <div class="col-md-12">
             <h3>
                 New project(s)
-                <span>
-                    <a href="{{ route('customer.newproject') }}"> <i class="fa fa-plus"></i> Add new</a>
-                </span>
+                @env(['staging', 'development'])
+                    <span>
+                        <a href="{{ route('customer.newproject') }}"> <i class="fa fa-plus"></i> Add new</a>
+                    </span>
+                @endenv
             </h3>
         </div>
     </div>
@@ -65,7 +67,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">No Projects Available For You Right Now.</td>
+                            <td colspan="5" class="text-center">There are currently no running projects.</td>
                         </tr>
                     @endforelse
                 </tbody>

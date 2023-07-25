@@ -272,7 +272,6 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <form action="#" id="changePasswordForm" method="post">
-                                                @csrf
                                                 <div class="modal-header pb-0">
                                                     <h5 class="modal-title" id="exampleModalLabel">Change password</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -292,7 +291,11 @@
                                                                 <div class="form-group col-md-12 pw_">
                                                                     <input type="password" class="form-control" name="current_password" id="currentPassword" placeholder="Enter your current password here" required/>
                                                                     <em>
-                                                                        <a href="#"><i class="fa fa-eye-slash"></i></a>
+                                                                        <a href="#">
+                                                                            {{-- <i class="fa fa-eye-slash"></i> --}}
+                                                                            <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                                                            <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                                                                        </a>
                                                                     </em>
                                                                 </div>
                                                             </div>
@@ -309,16 +312,28 @@
                                                             <div class="row">
                                                                 <div class="form-group col-md-12 mt-1 pw_">
                                                                     <input type="password" class="form-control" name="new_password" id="newPassword" placeholder="New password" required/>
-                                                                    <em>
+                                                                    {{-- <em>
                                                                         <a href="#"><i class="fa fa-eye-slash"></i></a>
+                                                                    </em> --}}
+                                                                    <em>
+                                                                        <a href="#">
+                                                                            <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                                                            <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                                                                        </a>
                                                                     </em>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="form-group col-md-12 mt-3 mb-3 pw_">
                                                                     <input type="password" class="form-control" name="new_password_confirmation" id="newConfirmPassword" placeholder="Confirm password" required/>
-                                                                    <em>
+                                                                    {{-- <em>
                                                                         <a href="#"><i class="fa fa-eye-slash"></i></a>
+                                                                    </em> --}}
+                                                                    <em>
+                                                                        <a href="#">
+                                                                            <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                                                            <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                                                                        </a>
                                                                     </em>
                                                                 </div>
                                                             </div>
@@ -390,7 +405,8 @@
 
         $(document).on("submit", "#changePasswordForm", function (e) {
             e.preventDefault();
-            let form_data = $(this).serialize();
+            let form_data = $(this).serializeArray();
+            form_data.push({ name: '_token', value: '{{ csrf_token() }}' });
             $('.password-messages').empty();
             changePassword(form_data);
         });
@@ -418,14 +434,18 @@
         // Toggle Password show/hide
         $('.pw_ a').click(function() {
             var input = $(this).closest('.pw_').find('input');
-            var icon = $(this).find('i');
+            // var icon = $(this).find('i');
 
             if(input.attr('type') === 'password'){
                 input.attr('type', 'text');
-                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                // icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                $(this).find('.eye-icon').removeClass('d-none');
+                $(this).find('.eye-slash-icon').addClass('d-none');
             } else {
                 input.attr('type', 'password');
-                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                // icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                $(this).find('.eye-slash-icon').removeClass('d-none');
+                $(this).find('.eye-icon').addClass('d-none');
             }
         });
 

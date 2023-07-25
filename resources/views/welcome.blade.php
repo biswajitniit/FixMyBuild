@@ -9,11 +9,13 @@
                <div class="col-md-6 col-sm-12 position-relative order-2 order-xl-1 order-lg-1 order-md-1 order-sm-2">
                   <div class="pt-lg-5 pt-sm-1 pb-4 text-middel h-100">
                      <h2 class="pt-md-3 pt-sm-1 font-64 font-weight-bold">Good quality work at sensible prices</h2>
-                     <p>118 reputable builders registered on our platform so far.</p>
-                     <div class="price-display mt-4">
-                        <a class="btn mr-3" href="{{ route('customer.newproject') }}">Start your project</a>
-                        <a class="btn mr-3 cy-project" href="{{ route('customer.project') }}">Continue your project</a>
-                     </div>
+                     @env(['staging', 'development'])
+                        <p>118 reputable builders registered on our platform so far.</p>
+                        <div class="price-display mt-4">
+                            <a class="btn mr-3" href="{{ route('customer.newproject') }}">Start your project</a>
+                            <a class="btn mr-3 cy-project" href="{{ route('customer.project') }}">Continue your project</a>
+                        </div>
+                     @endenv
                   </div>
                </div>
                <div class="col-md-6 col-sm-12 text-center order-1 order-xl-2 order-lg-2 order-md-2 order-sm-1">

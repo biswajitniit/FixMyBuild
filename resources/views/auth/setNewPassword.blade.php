@@ -75,16 +75,28 @@
                     <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
                             <input type="password" class="form-control" id="pswd" placeholder="Password" name="Password1">
-                            <em onclick="tooglepassword1()">
+                            {{-- <em onclick="tooglepassword1()">
                                 <a href="#"><i class="fa fa-eye-slash" id="eye"></i></a>
+                            </em> --}}
+                            <em onclick="tooglepassword1($(this))">
+                                <a href="#">
+                                    <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                    <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                                </a>
                             </em>
                         </div>
                      </div>
                      <div class="row">
                         <div class="form-group col-md-12 mt-4 pw_">
                             <input type="password" class="form-control" id="pswd2" placeholder="Retype password" name="Password2">
-                            <em onclick="tooglepassword2()">
+                            {{-- <em onclick="tooglepassword2()">
                                 <a href="#"><i class="fa fa-eye-slash" id="eye1"></i></a>
+                            </em> --}}
+                            <em onclick="tooglepassword2($(this))">
+                                <a href="#">
+                                    <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
+                                    <img class="eye-icon d-none" src="{{ asset('frontend/img/show_password.svg') }}" alt="">
+                                </a>
                             </em>
                         </div>
                      </div>
@@ -191,29 +203,55 @@
 
 
     //   To see password
-           function tooglepassword1(){
+        //    function tooglepassword1(){
+        //     var x = document.getElementById("pswd");
+        //     if (x.type === "password") {
+        //         x.type = "text";
+        //         $("#eye").removeClass("fa fa-eye-slash");
+        //         $("#eye").addClass("fa fa-eye");
+        //     } else {
+        //         x.type = "password";
+        //         $("#eye").removeClass("fa fa-eye");
+        //         $("#eye").addClass("fa fa-eye-slash");
+        //     }
+        // }
+
+        // function tooglepassword2(){
+        //     var x = document.getElementById("pswd2");
+        //     if (x.type === "password") {
+        //         x.type = "text";
+        //         $("#eye1").removeClass("fa fa-eye-slash");
+        //         $("#eye1").addClass("fa fa-eye");
+        //     } else {
+        //         x.type = "password";
+        //         $("#eye1").removeClass("fa fa-eye");
+        //         $("#eye1").addClass("fa fa-eye-slash");
+        //     }
+        // }
+
+        function tooglepassword1(element){
             var x = document.getElementById("pswd");
             if (x.type === "password") {
                 x.type = "text";
-                $("#eye").removeClass("fa fa-eye-slash");
-                $("#eye").addClass("fa fa-eye");
+                $(element).find('.eye-icon').removeClass('d-none');
+                $(element).find('.eye-slash-icon').addClass('d-none');
             } else {
                 x.type = "password";
-                $("#eye").removeClass("fa fa-eye");
-                $("#eye").addClass("fa fa-eye-slash");
+                $(element).find('.eye-icon').addClass('d-none');
+                $(element).find('.eye-slash-icon').removeClass('d-none');
             }
         }
 
-        function tooglepassword2(){
+        function tooglepassword2(element){
             var x = document.getElementById("pswd2");
             if (x.type === "password") {
                 x.type = "text";
-                $("#eye1").removeClass("fa fa-eye-slash");
-                $("#eye1").addClass("fa fa-eye");
+                $(element).find('.eye-icon').removeClass('d-none');
+                $(element).find('.eye-slash-icon').addClass('d-none');
             } else {
                 x.type = "password";
-                $("#eye1").removeClass("fa fa-eye");
-                $("#eye1").addClass("fa fa-eye-slash");
+                $(element).find('.eye-icon').addClass('d-none');
+                $(element).find('.eye-slash-icon').removeClass('d-none');
             }
         }
       </script>
