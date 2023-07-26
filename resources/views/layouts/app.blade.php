@@ -154,6 +154,11 @@
                                  Login
                               </a>
                             @else
+                              @php
+                                $notification_details = get_notification_details();
+                                $unread_notifications = $notification_details['unread_notifications'];
+                                $notifications = $notification_details['notifications'];
+                              @endphp
                               <div class="dropdown">
                                 <a href="#" @if($unread_notifications > 0) onclick="toggleDropdown($(this))" @endif class="alert notification-bell-icon" id="dropdown">
                                     <svg width="27" height="29" viewBox="0 0 27 29" fill="none" xmlns="http://www.w3.org/2000/svg">
