@@ -14609,6 +14609,7 @@ h2.company-name a:hover svg path {
 .rounded-img {
     object-fit: cover;
     border-radius: 50%;
+    aspect-ratio: 1/1;
 }
 
 .rectangle-video {

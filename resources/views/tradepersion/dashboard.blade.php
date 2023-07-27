@@ -23,110 +23,7 @@
 <!-- Delete Image Modal END -->
 
 {{-- Multiple File Upload Image Modal Starts --}}
-<div class="modal fade select_address" id="multiModal" tabindex="-1" aria-labelledby="multiModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="multiModalLabel">Upload files</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z" fill="black"/>
-                </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                <div class="col-md-6 supported_">
-                    <h4>Supported file type list:</h4>
-                    <div class="accepted-file-list"></div>
-                    {{-- <h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
-                    <h6><strong>Documents:</strong> .doc, .docx .key .odt .pdf .ppt, .pptx, .pps, .ppsx .xls, .xlsx</h6>
-                    <h6><strong>Audio:</strong> .mp3 .m4a .ogg .wav</h6>
-                    <h6><strong>Video:</strong> .avi .mpg .mp4, .m4v .mov .ogv .vtt .wmv .3gp .3g2</h6> --}}
-                </div>
-                <div class="col-md-6">
-                    <form method="post" enctype="multipart/form-data" id="multi_file_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
-                        @csrf
-                        <div class="dz-default dz-message" id="file-upload-logo">
-                            <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
-                        </div>
-
-                        <div class="files d-none" id="previews">
-                            <div id="template" class="dz-image-preview">
-                                {{-- <div>
-                                    <span class="preview d-inline mr-2">
-                                        <img class="rectangle-img" data-dz-thumbnail>
-                                        <video class="rectangle-video" data-dz-video src="" ></video>
-                                        <div class="progress progress-bar-striped active mx-auto center-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                            <div class="progress-bar bg-success" style="width:0%;" data-dz-uploadprogress></div>
-                                        </div>
-                                    </span>
-                                </div> --}}
-
-                                {{-- <div class="card">
-                                    <img class="card-img" data-dz-thumbnail>
-                                    <video class="card-img" data-dz-video src="" ></video>
-                                    <div class="card-img-overlay d-flex">
-                                        <div class="align-self-center mx-auto" >
-                                            <div class="progress progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                                <div class="progress-bar bg-success" style="width:0%;" data-dz-uploadprogress="30"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                 </div> --}}
-
-                                 <div class="card">
-                                    <img class="card-img rectangle-img" data-dz-thumbnail />
-                                    <video class="rectangle-video" data-dz-video></video>
-                                    <div class="card-img-overlay">
-                                        <div class="progress progress-bar-striped active center-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                            <div class="progress-bar bg-success" style="width:0%;" data-dz-uploadprogress></div>
-                                        </div>
-                                    </div>
-                                  </div>
-
-                                <div>
-                                    {{-- <p class="name" data-dz-name></p> --}}
-                                    <small class="error text-danger" data-dz-errormessage></small>
-                                </div>
-                                <div>
-                                    {{-- <p class="size" data-dz-size></p> --}}
-                                    {{-- <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
-                                    </div> --}}
-                                </div>
-                                 <div>
-                                {{--<button class="btn btn-primary start">
-                                        <i class="glyphicon glyphicon-upload"></i>
-                                        <span>Start</span>
-                                    </button>
-                                    <button data-dz-remove class="btn btn-warning cancel">
-                                        <i class="glyphicon glyphicon-ban-circle"></i>
-                                        <span>Cancel</span>
-                                    </button>--}}
-                                    <button data-dz-remove class="btn text-orange delete">
-                                        <span>Delete</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <p>Drag and drop files here</p>
-                            <h4>OR</h4>
-                            <button type="button" id="multi_file_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
-                        </div>
-                    </form>
-                </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal" id="cancel_multiple_file_upload">Cancel</button>
-                <button type="button" class="btn btn-light" id="upload_multiple_file">Upload</button>
-            </div>
-        </div>
-    </div>
-</div>
+@include('includes.multipleFileUploadModal')
 {{-- Multiple File Upload Image Modal Ends--}}
 
 {{-- Company Logo Upload Modal Starts --}}
@@ -151,6 +48,9 @@
                             Supported file type list:
                             <div class="ext_">.gif .heic .jpeg, .jpg .png .svg .webp</div>
                         </h5>
+                        <h5>
+                            Maximum file size: <div class="max_file_size_"> {{ config('const.dropzone_max_file_size') }} MB</div>
+                        </h5>
                         <form method="post" enctype="multipart/form-data" id="single_file_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
                             @csrf
                             <div class="dz-default dz-message" id="single-file-upload-logo">
@@ -174,11 +74,11 @@
                                         <p class="name" data-dz-name></p>
                                         <small class="error text-danger" data-dz-errormessage></small>
                                     </div>
-                                    {{-- <div>
+                                    <div>
                                         <button data-dz-remove class="btn text-orange delete">
                                             <span>Delete</span>
                                         </button>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
 
@@ -190,6 +90,48 @@
                         </form>
                         <div class='invalid-file'></div>
                         <div class="dropzone-messages"></div>
+                        <!--<form method="post" enctype="multipart/form-data" id="single_file_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
+                            @csrf
+
+                            <div class="dz-default dz-message" id="file-upload-logo">
+                                <img src="{{ asset('frontend/img/upload.svg') }}" alt="" />
+                            </div>
+
+                            <div class="files d-none" id="singleFilePreview">
+                                <div id="singleFileTemplate" class="dz-image-preview">
+                                    <div class="card">
+                                        <img class="card-img rectangle-img" data-dz-thumbnail />
+                                        <video class="rectangle-video" data-dz-video></video>
+                                        <div class="card-img-overlay">
+                                            <div class="progress progress-bar-striped active center-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                                <div class="progress-bar bg-success" style="width:0%;" data-dz-uploadprogress></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <small class="error text-danger" data-dz-errormessage></small>
+                                    </div>
+                                    <div>
+                                        {{-- <p class="size" data-dz-size></p> --}}
+                                        {{-- <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                        </div> --}}
+                                    </div>
+                                    <div>
+                                        <button data-dz-remove class="btn text-orange delete">
+                                            <span>Delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p>Drag and drop files here</p>
+                                <h4>OR</h4>
+                                <button type="button" id="single_file_upload_btn" class="btn btn-light mt-3" style="width: 180px;">Browse files</button>
+                            </div>
+                        </form>-->
                     </div>
                 </div>
             </div>
@@ -378,13 +320,14 @@
                      <h3>Description</h3>
                   </div>
                   <div class="mt-2 company-desp" style="display:block;" id="compdesc">
-                    <div id="txtCompDesc">
-                        {!! $trader_details->comp_description !!}
+                    <div id="txtCompDesc" class="wrap-word">
+                        {{  $trader_details->comp_description  }}
                     </div>
                      <a href="javascript:void(0)" class="change_" id="descChange">Change</a>
                   </div>
                   <div class="mt-2 company-desp" style="display:none;" id="compdescEdit">
-                     <textarea id="summernote" name="comp_description">{{$trader_details->comp_description}}</textarea>
+                     {{-- <textarea id="summernote" name="comp_description">{{$trader_details->comp_description}}</textarea> --}}
+                     <textarea rows="3" class="form-control" name="comp_description">{{ $trader_details->comp_description }}</textarea>
                      <p id="editTraderDescResp"></p>
                      <a href="javascript:void(0)" class="save_" onclick="updateTraderDesc()">Save</a>
                      <a href="javascript:void(0)" class="cancel_" id="descCancel">Cancel</a>
@@ -495,21 +438,24 @@
                            </svg>
                         </a>
                      </div> --}}
-                     @foreach ($public_liability_insurances as $public_liability_insurance)
-                     <div class="mb-3" id="publicLiabilityInsurance-{{ $public_liability_insurance->id }}">
-                        <a href="{{ $public_liability_insurance->url }}" class="btn-pli" target="_blank">
-                            {{ Str::limit($public_liability_insurance->file_name, 15, '...') }}
-                            <svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
-                           </svg>
-                        </a>
-                        <a href="javascript:void(0)" onclick="confirmDeletePopup({{ $public_liability_insurance->id }}, 'publicLiabilityInsurance-{{ $public_liability_insurance->id }}')">
-                           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
-                           </svg>
-                        </a>
-                     </div>
-                     @endforeach
+                        <div id="public_liability_files">
+                            @foreach ($public_liability_insurances as $public_liability_insurance)
+                            <div class="mb-3" id="publicLiabilityInsurance-{{ $public_liability_insurance->id }}">
+                                {{-- <a href="{{ $public_liability_insurance->url }}" class="btn-pli" target="_blank"> --}}
+                                <a href="{{ route('download.file', [ 'id' => Hashids_encode($public_liability_insurance->id) ]) }}" class="btn-pli">
+                                    {{ Str::limit($public_liability_insurance->file_name, 15, '...') }}
+                                    <svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
+                                </svg>
+                                </a>
+                                <a href="javascript:void(0)" onclick="confirmDeletePopup({{ $public_liability_insurance->id }}, 'publicLiabilityInsurance-{{ $public_liability_insurance->id }}')">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
                      {{-- <div class="mb-3">
                         <a href="{{ $public_liability_insurance->url }}" class="btn-pli" target="_blank">
                             {{ Str::limit($public_liability_insurance->file_name, 15, '...') }}
@@ -579,26 +525,26 @@
                            <h6>Contact name</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
                               <input type="text" class="form-control" value="{{$trader_details->name}}" id="editContactName" onkeydown="onEnter(event, updateTraderContactInfo)">
-                              <em>
+                              {{-- <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                        <path d="M22.5 13L17.5 18L14 14.5L15.5 13L17.5 15L21 11.5L22.5 13ZM11 5C11.7956 5 12.5587 5.31607 13.1213 5.87868C13.6839 6.44129 14 7.20435 14 8C14 8.79565 13.6839 9.55871 13.1213 10.1213C12.5587 10.6839 11.7956 11 11 11C10.2044 11 9.44129 10.6839 8.87868 10.1213C8.31607 9.55871 8 8.79565 8 8C8 7.20435 8.31607 6.44129 8.87868 5.87868C9.44129 5.31607 10.2044 5 11 5ZM11 0.5C16 0.5 20.27 3.61 22 8C21.75 8.65 21.44 9.26 21.08 9.85C20.4949 9.496 19.8516 9.24882 19.18 9.12L19.82 8C19.0117 6.34969 17.7567 4.95925 16.1975 3.98675C14.6383 3.01424 12.8376 2.49868 11 2.49868C9.1624 2.49868 7.36165 3.01424 5.80248 3.98675C4.24331 4.95925 2.98825 6.34969 2.18 8C2.98844 9.65006 4.24357 11.0402 5.80273 12.0125C7.36189 12.9848 9.16254 13.5001 11 13.5L12.21 13.43C12.07 13.93 12 14.46 12 15V15.46L11 15.5C6 15.5 1.73 12.39 0 8C1.73 3.61 6 0.5 11 0.5Z" fill="#EE5719" />
                                     </svg>
                                  </a>
-                              </em>
+                              </em> --}}
                            </div>
                         </div>
                         <div>
                            <h6>Mobile number</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
                               <input type="text" class="form-control" value="{{$trader_details->phone_number}}" id="editContactMobile" onkeydown="onEnter(event, updateTraderContactInfo)">
-                              <em>
+                              {{-- <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                        <path d="M22.5 13L17.5 18L14 14.5L15.5 13L17.5 15L21 11.5L22.5 13ZM11 5C11.7956 5 12.5587 5.31607 13.1213 5.87868C13.6839 6.44129 14 7.20435 14 8C14 8.79565 13.6839 9.55871 13.1213 10.1213C12.5587 10.6839 11.7956 11 11 11C10.2044 11 9.44129 10.6839 8.87868 10.1213C8.31607 9.55871 8 8.79565 8 8C8 7.20435 8.31607 6.44129 8.87868 5.87868C9.44129 5.31607 10.2044 5 11 5ZM11 0.5C16 0.5 20.27 3.61 22 8C21.75 8.65 21.44 9.26 21.08 9.85C20.4949 9.496 19.8516 9.24882 19.18 9.12L19.82 8C19.0117 6.34969 17.7567 4.95925 16.1975 3.98675C14.6383 3.01424 12.8376 2.49868 11 2.49868C9.1624 2.49868 7.36165 3.01424 5.80248 3.98675C4.24331 4.95925 2.98825 6.34969 2.18 8C2.98844 9.65006 4.24357 11.0402 5.80273 12.0125C7.36189 12.9848 9.16254 13.5001 11 13.5L12.21 13.43C12.07 13.93 12 14.46 12 15V15.46L11 15.5C6 15.5 1.73 12.39 0 8C1.73 3.61 6 0.5 11 0.5Z" fill="#EE5719" />
                                     </svg>
                                  </a>
-                              </em>
+                              </em> --}}
                            </div>
                         </div>
                      </div>
@@ -607,26 +553,26 @@
                            <h6>Email</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
                               <input type="text" class="form-control" value="{{$trader_details->email}}" id="editContactEmail" onkeydown="onEnter(event, updateTraderContactInfo)">
-                              <em>
+                              {{-- <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                        <path d="M22.5 13L17.5 18L14 14.5L15.5 13L17.5 15L21 11.5L22.5 13ZM11 5C11.7956 5 12.5587 5.31607 13.1213 5.87868C13.6839 6.44129 14 7.20435 14 8C14 8.79565 13.6839 9.55871 13.1213 10.1213C12.5587 10.6839 11.7956 11 11 11C10.2044 11 9.44129 10.6839 8.87868 10.1213C8.31607 9.55871 8 8.79565 8 8C8 7.20435 8.31607 6.44129 8.87868 5.87868C9.44129 5.31607 10.2044 5 11 5ZM11 0.5C16 0.5 20.27 3.61 22 8C21.75 8.65 21.44 9.26 21.08 9.85C20.4949 9.496 19.8516 9.24882 19.18 9.12L19.82 8C19.0117 6.34969 17.7567 4.95925 16.1975 3.98675C14.6383 3.01424 12.8376 2.49868 11 2.49868C9.1624 2.49868 7.36165 3.01424 5.80248 3.98675C4.24331 4.95925 2.98825 6.34969 2.18 8C2.98844 9.65006 4.24357 11.0402 5.80273 12.0125C7.36189 12.9848 9.16254 13.5001 11 13.5L12.21 13.43C12.07 13.93 12 14.46 12 15V15.46L11 15.5C6 15.5 1.73 12.39 0 8C1.73 3.61 6 0.5 11 0.5Z" fill="#EE5719" />
                                     </svg>
                                  </a>
-                              </em>
+                              </em> --}}
                            </div>
                         </div>
                         <div>
                            <h6>Office number</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
                               <input type="text" class="form-control" value="{{$trader_details->phone_office}}" id="editContactOfficeMobile" onkeydown="onEnter(event, updateTraderContactInfo)">
-                              <em>
+                              {{-- <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                        <path d="M22.5 13L17.5 18L14 14.5L15.5 13L17.5 15L21 11.5L22.5 13ZM11 5C11.7956 5 12.5587 5.31607 13.1213 5.87868C13.6839 6.44129 14 7.20435 14 8C14 8.79565 13.6839 9.55871 13.1213 10.1213C12.5587 10.6839 11.7956 11 11 11C10.2044 11 9.44129 10.6839 8.87868 10.1213C8.31607 9.55871 8 8.79565 8 8C8 7.20435 8.31607 6.44129 8.87868 5.87868C9.44129 5.31607 10.2044 5 11 5ZM11 0.5C16 0.5 20.27 3.61 22 8C21.75 8.65 21.44 9.26 21.08 9.85C20.4949 9.496 19.8516 9.24882 19.18 9.12L19.82 8C19.0117 6.34969 17.7567 4.95925 16.1975 3.98675C14.6383 3.01424 12.8376 2.49868 11 2.49868C9.1624 2.49868 7.36165 3.01424 5.80248 3.98675C4.24331 4.95925 2.98825 6.34969 2.18 8C2.98844 9.65006 4.24357 11.0402 5.80273 12.0125C7.36189 12.9848 9.16254 13.5001 11 13.5L12.21 13.43C12.07 13.93 12 14.46 12 15V15.46L11 15.5C6 15.5 1.73 12.39 0 8C1.73 3.61 6 0.5 11 0.5Z" fill="#EE5719" />
                                     </svg>
                                  </a>
-                              </em>
+                              </em> --}}
                            </div>
                         </div>
                      </div>
@@ -643,7 +589,7 @@
                <div class="row">
                   <div class="col-md-12">
                     <h5 class="d-inline-block">UK VAT number</h5>
-                    <span class="d-inline-block">
+                    {{-- <span class="d-inline-block">
                         @if(!empty($trader_details->vat_comp_name) && !empty($trader_details->vat_comp_address))
                             <strong class="text-success ml-2 font-weight-bold">
                                 <svg class="mb-1" width="20" height="22" viewBox="0 0 35 43" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -658,7 +604,7 @@
                                  </svg> Unverified
                             </strong>
                         @endif
-                    </span>
+                    </span> --}}
 
                   </div>
                   <div class="col-md-12" id="vatno">
@@ -682,9 +628,9 @@
                            <input type="hidden" name="vat_comp_name" id="vat_comp_nameid" value="">
                            <input type="hidden" name="vat_comp_address" id="vat_comp_addressid" value="">
                         </h2>
-                        <div id="compavatdetails">
+                        {{-- <div id="compavatdetails">
 
-                        </div>
+                        </div> --}}
                         <p id="editTraderVatResp"></p>
                      </div>
                      <div class="col-md-2 col-4 vat-edit">
@@ -700,6 +646,12 @@
                            </svg>
                         </a>
                      </div>
+                  </div>
+                  <div id="compavatdetails" class="mt-2">
+                    @if($trader_details->vat_reg)
+                        <p><strong>Company name:</strong> {{ $trader_details->vat_comp_name }}</p>
+                        <p><strong>Company address:</strong> {{ $trader_details->vat_comp_address }}</p>
+                    @endif
                   </div>
                </div>
             </div>
@@ -916,7 +868,7 @@
                         <h6>Default</h6>
                      </div>
                      <div class="col-2 pr-0">
-                    <input type="text" class="form-control border-bottom-0" value="{{$trader_details->contingency}}" id="editContigencyval" onkeydown="onEnter(event, updateContingency)">
+                    <input type="text" class="form-control border-bottom-0" value="{{$trader_details->contingency}}" id="editContigencyval" onkeydown="onEnter(event, updateContingency)" maxlength="3" oninput="sanitizeInput($(this))"/>
                      </div>
                      <div class="col-6 pl-0">
                         <h6 class="font-44">% </h6>
@@ -933,6 +885,7 @@
                      </div>
                      <p id="contigencyResp"></p>
                   </div>
+                  <div id="contingency_errors"></div>
                </div>
             </div>
             <!--// END -->
@@ -979,14 +932,24 @@
                   <div class="col-md-6">
                      <h6>Account holder’s name</h6>
                      <input type="text" class="form-control text-dark" value="{{$trader_details->bnk_account_name}}" id="editAccountHolder" onkeydown="onEnter(event, updateAccountInfo)">
+                     <div id="bank_acc_holder_name_errors" class="mb-2"></div>
                   </div>
                   <div class="col-md-6">
                      <h6>Sort code </h6>
-                     <input type="text" class="form-control text-dark" value="{{$trader_details->bnk_sort_code}}" id="editAccountCode" onkeydown="onEnter(event, updateAccountInfo)">
+                     <input type="text" class="form-control text-dark" value="{{$trader_details->bnk_sort_code}}" id="editAccountCode" onkeydown="onEnter(event, updateAccountInfo)" maxlength="6" oninput="sanitizeInput($(this))" />
+                     <div id="bank_sort_code_errors" class="mb-2"></div>
+                     {{-- <div class="d-flex sort-code justify-content-between">
+                        <input type="text" name="bnk_sort_code[]" class="form-control m-0 text-dark" maxlength="2" value="{{ old('bnk_sort_code.0') ?? '' }}" oninput="handleInput(this, 2)" placeholder="00">
+                        <label>__</label>
+                        <input type="text" name="bnk_sort_code[]" class="form-control m-0 text-dark" maxlength="2" value="{{ old('bnk_sort_code.1') ?? '' }}" oninput="handleInput(this, 2)" placeholder="00">
+                        <label>__</label>
+                        <input type="text" name="bnk_sort_code[]" class="form-control m-0 text-dark" maxlength="2" value="{{ old('bnk_sort_code.2') ?? '' }}" placeholder="00">
+                     </div> --}}
                   </div>
                   <div class="col-md-6">
                      <h6>Account number </h6>
-                     <input type="text" class="form-control text-dark" value="{{$trader_details->bnk_account_number}}" id="editAccountNum" onkeydown="onEnter(event, updateAccountInfo)">
+                     <input type="text" class="form-control text-dark" value="{{$trader_details->bnk_account_number}}" id="editAccountNum" onkeydown="onEnter(event, updateAccountInfo)" maxlength="8" oninput="sanitizeInput($(this))" />
+                     <div id="bank_acc_num_errors" class="mb-2"></div>
                   </div>
                   <div class="col-md-12 mt-2">
                      <div class="form-group form-check">
@@ -1068,6 +1031,7 @@
     });
     edit_office_mobile_iti.setNumber(office_mobile_num);
 
+
    function showTradernameEdit(){
       $('#tradername').hide();
       $('#tradernameedit').show();
@@ -1107,13 +1071,16 @@
       $('#contingency').hide();$('#contingencyEdit').show();
    });
    $('#closecontingencyEdit').click(function(){
-      $('#contingencyEdit').hide();$('#contingency').show();
+      $('#contingencyEdit').hide();
+      $('#contingency').show();
+      $('#contingency_errors').html('');
    });
    $('#bankdetailsChange').click(function(){
       $('#bankdetails').hide();$('#bankdetailsEdit').show();
    });
    $('#cancelBankdetails').click(function(){
       $('#bankdetailsEdit').hide();$('#bankdetails').show();
+      $('#bank_acc_holder_name_errors, #bank_sort_code_errors, #bank_acc_num_errors').html('');
    });
 
    function refreshPage(){
@@ -1124,6 +1091,10 @@
        if (event.keyCode === 13)
            func();
    }
+
+    function sanitizeInput(element) {
+        $(element).val($(element).val().replace(/\D/g, ''));
+    }
 
    $('.workchkboxsec').click(function(){
       $(".workchkboxsec").removeClass("active");
@@ -1161,6 +1132,7 @@
             }
          });
    }
+
    function updateTraderDesc(){
       var desc = $('textarea[name="comp_description"]').val();
       $.ajax
@@ -1184,6 +1156,7 @@
             }
          });
    }
+
    function updateTraderContactInfo(){
       var countryData = edit_iti.getSelectedCountryData();
       var countryCode = countryData.iso2;
@@ -1218,13 +1191,16 @@
             }
          });
    }
+
    function updateVat(){
       var vatno = $('#editVatno').val();
+      var vat_comp_name = $('#vat_comp_nameid').val();
+      var vat_comp_address = $('#vat_comp_addressid').val();
       $.ajax
          ({
             type: "POST",
             url: "updateVatInfo",
-            data: {vatno: vatno},
+            data: {vatno: vatno, vat_comp_name:vat_comp_name, vat_comp_address:vat_comp_address },
             success: function (data){
                if(data.status == 1){
                 $('#editTraderVatResp').removeClass('error');
@@ -1276,75 +1252,147 @@
             $.ajax
             ({
                 type: "GET",
-                url: "get-company-vat-details",
+                url: "{{ route('tradesperson.get_company_vat_details') }}",
                 data: {vat_number: vat_number},
                 success: function (data){
                     data = JSON.parse(data);
-                    if(data.target){
+                    if (data.target) {
+                        var comp_name = data.target.name;
+                        var comp_addr = data.target.address.line1+', '+data.target.address.line2+', '+data.target.address.postcode;
+                        $('#compavatdetails').html('<p><b>Company name:</b> '+comp_name+'</p><p><b>Company address:</b> '+comp_addr+'</p>');
+                        $('#vat_comp_nameid').val(comp_name);
+                        $('#vat_comp_addressid').val(comp_addr);
                         updateVat();
-                    }else{
-                        $('#editTraderVatResp').html('<p class="text-danger">Provided UK VAT does not match a registered company</p>');
+                    } else {
+                        $('#editTraderVatResp').html('<p class="text-danger">We are unable to validate your UK VAT registration number. If you believe it’s correct please contact us.</p>');
                     }
                 }
             });
         }
+        else {
+            $('#editTraderVatResp').html('<p class="text-danger">We are unable to validate your UK VAT registration number. If you believe it’s correct please contact us.</p>');
+        }
     }
 
-   function updateContingency(){
-      var contigencyval = $('#editContigencyval').val();
-      $.ajax
-         ({
+    function findcomp(){
+        var company_id = $('#comp_reg_no').val();
+        $.ajax
+        ({
+            type: "GET",
+            url: "get-company-details",
+            data: {company_id: company_id},
+            success: function (data){
+                data = JSON.parse(data);
+                // console.log(data);
+                if(data.errors){
+                    // $('#serchcompres').css('display', 'none');
+                    $('#serchcompres').hide();
+                    $('#findcomperror').html('<p class="text-danger">Please enter your company registration number as registered with Companies House.</p>');
+                }
+                if(data.accounts){
+                    // $('#serchcompres').css('display', 'block');
+                    $('#serchcompres').show();
+                    $('#txt_comp_name').html(data.company_name);
+                    $('#comp_name').val(data.company_name);
+                    $('#txt_comp_address').html(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
+                    $('#comp_address').val(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
+                }
+            }
+        });
+    }
+
+    function updateContingency(){
+        var contingencyval = $('#editContigencyval').val();
+        $.ajax
+        ({
             type: "POST",
             url: "updateContingency",
-            data: {contigencyval: contigencyval},
+            data: {contingencyval: contingencyval},
             success: function (data){
-               if(data.status == 1){
-                //   console.log(contigencyval);
-                  $('#contigencyResp').empty();
-                  $('#contingency input').val(contigencyval);
-                  $('#contingencyEdit').hide();
-                  $('#contingency').show();
-               }else{
-                  $('#contigencyResp').addClass('error');
-                  $('#contigencyResp').html(data.message);
-               }
+                if(data.status == 1) {
+                    //   console.log(contigencyval);
+                    $('#contigencyResp').empty();
+                    $('#contingency input').val(contingencyval);
+                    $('#contingencyEdit').hide();
+                    $('#contingency').show();
+                    $('#contingency_errors').html('');
+                } else {
+                    $('#contigencyResp').addClass('error');
+                    $('#contigencyResp').html(data.message);
+                }
+            },
+            error: function(data) {
+                if (data.responseJSON.errors.hasOwnProperty('contingencyval')) {
+                    contingency_errors = ``;
+                    for (let err of data.responseJSON.errors.contingencyval) {
+                        contingency_errors += `<p class="text-danger">${err}</p>`;
+                    }
+                    $('#contingency_errors').html(contingency_errors);
+                }
             }
-         });
-   }
-   function updateAccountInfo() {
-    if ($('#accountInfoCheck').is(':checked')) {
-        var accountType = $('#editAccountType').val();
-        var accountHolder = $('#editAccountHolder').val();
-        var accountCode = $('#editAccountCode').val();
-        var accountNum = $('#editAccountNum').val();
-        $.ajax
-            ({
+        });
+    }
+
+    function updateAccountInfo() {
+        if ($('#accountInfoCheck').is(':checked')) {
+            var accountType = $('#editAccountType').val();
+            var accountHolder = $('#editAccountHolder').val();
+            var accountCode = $('#editAccountCode').val();
+            var accountNum = $('#editAccountNum').val();
+            $.ajax({
                 type: "POST",
                 url: "{{ route('tradesperson.updateAccount') }}",
                 data: {accountType: accountType, accountHolder: accountHolder, accountCode: accountCode, accountNum: accountNum},
                 success: function (data){
-                if(data.status == 1){
-                    //   $('#accountResp').addClass('success');
-                    //   $('#accountResp').html(data.message);
-                    //   setTimeout(function() {location.reload();}, 2000);
-                    $('#accNum').text(accountNum);
-                    $('#sortCode').text(accountCode);
-                    $('#accHolderName').text(accountHolder);
-                    $('#bnkAccType').text(accountType);
-                    $('#bankdetailsEdit').hide();
-                    $('#bankdetails').show();
-                }else{
-                    $('#accountResp').addClass('error');
-                    $('#accountResp').html(data.message);
-                }
+                    if(data.status == 1){
+                        //   $('#accountResp').addClass('success');
+                        //   $('#accountResp').html(data.message);
+                        //   setTimeout(function() {location.reload();}, 2000);
+                        $('#accNum').text(accountNum);
+                        $('#sortCode').text(accountCode);
+                        $('#accHolderName').text(accountHolder);
+                        $('#bnkAccType').text(accountType);
+                        $('#bankdetailsEdit').hide();
+                        $('#bankdetails').show();
+                        $('#bank_acc_holder_name_errors, #bank_sort_code_errors, #bank_acc_num_errors').html('');
+                    } else {
+                        $('#accountResp').addClass('text-danger');
+                        $('#accountResp').html(data.message);
+                    }
+                },
+                error: function(data) {
+
+                    if (data.responseJSON.errors.hasOwnProperty('accountCode')) {
+                        bank_sort_code_errors = ``;
+                        for (let err of data.responseJSON.errors.accountCode) {
+                            bank_sort_code_errors += `<p class="text-danger">${err}</p>`;
+                        }
+                        $('#bank_sort_code_errors').html(bank_sort_code_errors);
+                    }
+
+                    if (data.responseJSON.errors.hasOwnProperty('accountNum')) {
+                        bank_acc_num_errors = ``;
+                        for (let err of data.responseJSON.errors.accountNum) {
+                            bank_acc_num_errors += `<p class="text-danger">${err}</p>`;
+                        }
+                        $('#bank_acc_num_errors').html(bank_acc_num_errors);
+                    }
+
+                    if (data.responseJSON.errors.hasOwnProperty('accountHolder')) {
+                        bank_acc_holder_name_errors = ``;
+                        for (let err of data.responseJSON.errors.accountHolder) {
+                            bank_acc_holder_name_errors += `<p class="text-danger">${err}</p>`;
+                        }
+                        $('#bank_acc_holder_name_errors').html(bank_acc_holder_name_errors);
+                    }
                 }
             });
-    }else{
-        $('#accountResp').addClass('error');
-        $('#accountResp').html("Please confirm that the account belongs to myself/my company and the about details are correct.");
-    }
+        } else {
+            $('#accountResp').addClass('text-danger');
+            $('#accountResp').html("Please confirm that the account belongs to myself/my company and the about details are correct.");
+        }
 
-   }
+    }
 
 //    function resizeInput(element) {
 //         // $(element).css('width', $(element).val().length + 'ch');
@@ -1413,7 +1461,7 @@
                   $('#vat_comp_addressid').val(comp_addr);
                   updateVat();
                }else{
-                  $('#compavatdetails').html('<p style="color:red">Provided UK VAT does not match a registered company</p>');
+                  $('#compavatdetails').html('<p class="text-danger">We are unable to validate your UK VAT registration number. If you believe it’s correct please contact us.</p>');
                   $('#vat_comp_nameid').val('');
                   $('#vat_comp_addressid').val('');
                }
@@ -1425,10 +1473,10 @@
 
     Dropzone.autoDiscover = false;
 
-    var previewNode = document.querySelector("#template");
-    previewNode.id = "";
-    var previewTemplate = previewNode.parentNode.innerHTML;
-    previewNode.parentNode.removeChild(previewNode);
+    // var previewNode = document.querySelector("#template");
+    // previewNode.id = "";
+    // var previewTemplate = previewNode.parentNode.innerHTML;
+    // previewNode.parentNode.removeChild(previewNode);
 
     // PreviewTemplate For Single File dropzone Starts
     var singleFilePreviewNode = document.querySelector("#singleFileTemplate");
@@ -1442,9 +1490,9 @@
         var singleFileDropzoneElement = document.querySelector("#single_file_dropzone");
         var singleFileDropzone = singleFileDropzoneElement.dropzone;
         var thumbnailMapping = {
-            'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
-            'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.png') }}",
+            'application/pdf': "{{ asset('frontend/img/pdf_logo.svg') }}",
+            'application/msword': "{{ asset('frontend/img/doc_logo.svg') }}",
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.svg') }}",
         };
 
         // If a Dropzone instance doesn't exist, create a new one
@@ -1514,6 +1562,8 @@
             if (progress == 100) {
                 $(file.previewElement).find('.progress').hide();
             }
+            $("#upload_single_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+            $("#upload_single_file").prop('disabled', true);
         });
 
         singleFileDropzone.on("sending", function(file) {
@@ -1528,7 +1578,9 @@
             // document.querySelector("#total-progress").style.opacity = "0";
             // $('#previews.files').find('.progress').hide();
             // $('#multiModal').modal('hide');
-
+            $("#upload_single_file").html('Upload');
+            $("#upload_single_file").prop('disabled', false);
+            $('#cancel_single_file_upload').trigger('click');
         });
 
         singleFileDropzone.on("removedfile", function(file) {
@@ -1540,7 +1592,8 @@
         });
 
         singleFileDropzone.on("success", function(file) {
-            $(modalId).modal('hide');
+            $('#cancel_single_file_upload').trigger('click');
+            // $(modalId).modal('hide');
         });
 
         // Setup the buttons for all transfers
@@ -1596,146 +1649,146 @@
     }
     // Dropzone Js For Company Logo Ends
 
-    function callDropzone(
-        {
-            url,
-            params,
-            acceptedFiles="{{ config('const.dropzone_accepted_file') }}",
-            maxFileSize={{ config('const.dropzone_max_file_size') }},
-            parallelUploads={{ config('const.dropzone_parallel_file_upload') }},
-            maxFiles={{ config('const.dropzone_max_file_upload') }},
-            successMultipleCallback
-        }
-    ) {
-        var multiFileDropzoneElement = document.querySelector("#multi_file_dropzone");
-        var multiFileDropzone = multiFileDropzoneElement.dropzone;
-        var thumbnailMapping = {
-            'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
-            'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.png') }}",
-        };
+    // function callDropzone(
+    //     {
+    //         url,
+    //         params,
+    //         acceptedFiles="{{ config('const.dropzone_accepted_file') }}",
+    //         maxFileSize={{ config('const.dropzone_max_file_size') }},
+    //         parallelUploads={{ config('const.dropzone_parallel_file_upload') }},
+    //         maxFiles={{ config('const.dropzone_max_file_upload') }},
+    //         successMultipleCallback
+    //     }
+    // ) {
+    //     var multiFileDropzoneElement = document.querySelector("#multi_file_dropzone");
+    //     var multiFileDropzone = multiFileDropzoneElement.dropzone;
+    //     var thumbnailMapping = {
+    //         'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
+    //         'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
+    //         'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.png') }}",
+    //     };
 
-        // If a Dropzone instance doesn't exist, create a new one
-        if (typeof multiFileDropzone === "undefined") {
-            multiFileDropzone = new Dropzone(multiFileDropzoneElement, {
-                url: url,
-                params: params,
-                maxFilesize: maxFileSize,
-                acceptedFiles: acceptedFiles,
-                thumbnailWidth: 100,
-                thumbnailHeight: 69,
-                previewTemplate: previewTemplate,
-                uploadMultiple: true,
-                parallelUploads: parallelUploads,
-                maxFiles: maxFiles,
-                autoQueue: false,
-                previewsContainer: "#previews",
-                clickable: "#multi_file_upload_btn",
-            });
-        }
+    //     // If a Dropzone instance doesn't exist, create a new one
+    //     if (typeof multiFileDropzone === "undefined") {
+    //         multiFileDropzone = new Dropzone(multiFileDropzoneElement, {
+    //             url: url,
+    //             params: params,
+    //             maxFilesize: maxFileSize,
+    //             acceptedFiles: acceptedFiles,
+    //             thumbnailWidth: 100,
+    //             thumbnailHeight: 69,
+    //             previewTemplate: previewTemplate,
+    //             uploadMultiple: true,
+    //             parallelUploads: parallelUploads,
+    //             maxFiles: maxFiles,
+    //             autoQueue: false,
+    //             previewsContainer: "#previews",
+    //             clickable: "#multi_file_upload_btn",
+    //         });
+    //     }
 
-        // If a Dropzone instance exists, update the old instance
-        multiFileDropzone.options.url             = url;
-        multiFileDropzone.options.params          = params;
-        multiFileDropzone.options.acceptedFiles   = acceptedFiles;
-        multiFileDropzone.options.maxFileSize     = maxFileSize;
-        multiFileDropzone.options.parallelUploads = parallelUploads;
-        multiFileDropzone.options.maxFiles        = maxFiles;
+    //     // If a Dropzone instance exists, update the old instance
+    //     multiFileDropzone.options.url             = url;
+    //     multiFileDropzone.options.params          = params;
+    //     multiFileDropzone.options.acceptedFiles   = acceptedFiles;
+    //     multiFileDropzone.options.maxFileSize     = maxFileSize;
+    //     multiFileDropzone.options.parallelUploads = parallelUploads;
+    //     multiFileDropzone.options.maxFiles        = maxFiles;
 
-        multiFileDropzone.on("addedfile", function(file) {
-            var videoElement   = $(file.previewElement).find('video[data-dz-video]');
-            var imageElement   = $(file.previewElement).find('img[data-dz-thumbnail]');
-            var uploadProgress = $(file.previewElement).find('.progress');
+    //     multiFileDropzone.on("addedfile", function(file) {
+    //         var videoElement   = $(file.previewElement).find('video[data-dz-video]');
+    //         var imageElement   = $(file.previewElement).find('img[data-dz-thumbnail]');
+    //         var uploadProgress = $(file.previewElement).find('.progress');
 
-            uploadProgress.hide();
+    //         uploadProgress.hide();
 
-            if (file.type.startsWith('image/')) {
-                videoElement.hide();
-                imageElement.show();
-                multiFileDropzone.emit("thumbnail", file, file.thumbnail);
-            } else if (file.type.startsWith('video/')) {
-                imageElement.hide();
-                videoElement.show();
-                var videoUrl = URL.createObjectURL(file);
-                videoElement.attr('src', videoUrl);
-            } else {
-                videoElement.hide();
-                imageElement.show();
-                var thumbnailUrl = thumbnailMapping[file.type] || "{{ asset('frontend/img/file_logo.png') }}";
-                multiFileDropzone.emit("thumbnail", file, thumbnailUrl);
-            }
-            $('#file-upload-logo').hide();
-            $('#previews').removeClass('d-none');
-            $('#multi_file_dropzone.cpp_wrap').addClass('uploading');
-        });
+    //         if (file.type.startsWith('image/')) {
+    //             videoElement.hide();
+    //             imageElement.show();
+    //             multiFileDropzone.emit("thumbnail", file, file.thumbnail);
+    //         } else if (file.type.startsWith('video/')) {
+    //             imageElement.hide();
+    //             videoElement.show();
+    //             var videoUrl = URL.createObjectURL(file);
+    //             videoElement.attr('src', videoUrl);
+    //         } else {
+    //             videoElement.hide();
+    //             imageElement.show();
+    //             var thumbnailUrl = thumbnailMapping[file.type] || "{{ asset('frontend/img/file_logo.png') }}";
+    //             multiFileDropzone.emit("thumbnail", file, thumbnailUrl);
+    //         }
+    //         $('#file-upload-logo').hide();
+    //         $('#previews').removeClass('d-none');
+    //         $('#multi_file_dropzone.cpp_wrap').addClass('uploading');
+    //     });
 
-        // Update the total progress bar
-        multiFileDropzone.on("totaluploadprogress", function(progress) {
-            // document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
-        });
+    //     // Update the total progress bar
+    //     multiFileDropzone.on("totaluploadprogress", function(progress) {
+    //         // document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+    //     });
 
-        multiFileDropzone.on("uploadprogress", function(file, progress) {
-            if (progress == 100) {
-                $(file.previewElement).find('.progress').hide(1000);
-            }
-            $("#upload_multiple_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
-            $("#upload_multiple_file").prop('disabled', true);
-        });
+    //     multiFileDropzone.on("uploadprogress", function(file, progress) {
+    //         if (progress == 100) {
+    //             $(file.previewElement).find('.progress').hide(1000);
+    //         }
+    //         $("#upload_multiple_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+    //         $("#upload_multiple_file").prop('disabled', true);
+    //     });
 
-        multiFileDropzone.on("sending", function(file) {
-            // Show the total progress bar when upload starts
-            // document.querySelector("#total-progress").style.opacity = "1";
-            // And disable the start button
-            // file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
-            $(file.previewElement).find('.progress').show();
-        });
+    //     multiFileDropzone.on("sending", function(file) {
+    //         // Show the total progress bar when upload starts
+    //         // document.querySelector("#total-progress").style.opacity = "1";
+    //         // And disable the start button
+    //         // file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+    //         $(file.previewElement).find('.progress').show();
+    //     });
 
-        multiFileDropzone.on("queuecomplete", function(progress) {
-            // document.querySelector("#total-progress").style.opacity = "0";
-            // $('#previews.files').find('.progress').hide();
-            // $('#multiModal').modal('hide');
-            $("#upload_multiple_file").html('Upload');
-            $("#upload_multiple_file").prop('disabled', false);
-        });
+    //     multiFileDropzone.on("queuecomplete", function(progress) {
+    //         // document.querySelector("#total-progress").style.opacity = "0";
+    //         // $('#previews.files').find('.progress').hide();
+    //         // $('#multiModal').modal('hide');
+    //         $("#upload_multiple_file").html('Upload');
+    //         $("#upload_multiple_file").prop('disabled', false);
+    //     });
 
-        multiFileDropzone.on("removedfile", function(file) {
-            if(multiFileDropzone.files.length == 0) {
-                $('#file-upload-logo').show();
-                $('#previews').addClass('d-none');
-                $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
-            }
-        });
+    //     multiFileDropzone.on("removedfile", function(file) {
+    //         if(multiFileDropzone.files.length == 0) {
+    //             $('#file-upload-logo').show();
+    //             $('#previews').addClass('d-none');
+    //             $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
+    //         }
+    //     });
 
-        multiFileDropzone.on("successmultiple", function(file, responses) {
-            $('#multiModal').modal('hide');
-            multiFileDropzone.removeAllFiles(true);
-            if (successMultipleCallback && typeof successMultipleCallback === 'function') {
-               successMultipleCallback(file, responses);
-            }
-        });
+    //     multiFileDropzone.on("successmultiple", function(file, responses) {
+    //         $('#multiModal').modal('hide');
+    //         multiFileDropzone.removeAllFiles(true);
+    //         if (successMultipleCallback && typeof successMultipleCallback === 'function') {
+    //            successMultipleCallback(file, responses);
+    //         }
+    //     });
 
-        multiFileDropzone.on("error", function(file, errorMessage, xhr) {
-            setTimeout(() => multiFileDropzone.removeFile(file), 5000);
-        });
+    //     multiFileDropzone.on("error", function(file, errorMessage, xhr) {
+    //         setTimeout(() => multiFileDropzone.removeFile(file), 5000);
+    //     });
 
-        // Setup the buttons for all transfers
-        // The "add files" button doesn't need to be setup because the config
-        // `clickable` has already been specified.
-        document.querySelector("#upload_multiple_file").onclick = function() {
-            multiFileDropzone.enqueueFiles(multiFileDropzone.getFilesWithStatus(Dropzone.ADDED));
-        };
+    //     // Setup the buttons for all transfers
+    //     // The "add files" button doesn't need to be setup because the config
+    //     // `clickable` has already been specified.
+    //     document.querySelector("#upload_multiple_file").onclick = function() {
+    //         multiFileDropzone.enqueueFiles(multiFileDropzone.getFilesWithStatus(Dropzone.ADDED));
+    //     };
 
-        document.querySelector("#cancel_multiple_file_upload").onclick = function() {
-            multiFileDropzone.removeAllFiles(true);
-        };
+    //     document.querySelector("#cancel_multiple_file_upload").onclick = function() {
+    //         multiFileDropzone.removeAllFiles(true);
+    //     };
 
 
-        // $('#multiModal').on('hidden.bs.modal', function(e){
-            // multiFileDropzone.removeAllFiles(true);
-        // });
+    //     // $('#multiModal').on('hidden.bs.modal', function(e){
+    //         // multiFileDropzone.removeAllFiles(true);
+    //     // });
 
-        return multiFileDropzone;
-    }
+    //     return multiFileDropzone;
+    // }
 
     function pli_upload() {
         var url = "{{ route('tradesperson.storeTraderFile') }}";
@@ -1753,24 +1806,25 @@
          url:url,
          params:params,
          acceptedFiles:acceptedFiles,
-         successMultipleCallback: function(file, responses) {
-            let html = '';
-            for(let response of responses) {
-                html += `<div class="mb-3" id="publicLiabilityInsurance-${response.id}">
-                                <a href="${response.url}" class="btn-pli" target="_blank">
-                                    ${truncateString(response.file_name, 15)}
-                                    <svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
-                                    </svg>
-                                </a>
-                                <a href="javascript:void(0)" onclick="confirmDeletePopup(${response.id}, 'publicLiabilityInsurance-${response.id}')">
-                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
-                                    </svg>
-                                </a>
-                            </div>`;
-            }
-            $(html).insertBefore('#addPLIdocs');
+         successMultipleCallback: function(file, response) {
+            // let html = '';
+            // for(let response of responses) {
+            //     html += `<div class="mb-3" id="publicLiabilityInsurance-${response.id}">
+            //                     <a href="#" class="btn-pli" target="_blank">
+            //                         ${truncateString(response.file_name, 15)}
+            //                         <svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            //                             <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
+            //                         </svg>
+            //                     </a>
+            //                     <a href="javascript:void(0)" onclick="confirmDeletePopup(${response.id}, 'publicLiabilityInsurance-${response.id}')">
+            //                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            //                             <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
+            //                         </svg>
+            //                     </a>
+            //                 </div>`;
+            // }
+            // $(html).insertBefore('#addPLIdocs');
+            $('#public_liability_files').html(response);
          }
       });
 
@@ -1861,134 +1915,6 @@
         //     console.log(xhr);
         // });
     }
-
-    //
-    // Dropzone Js For Company Logo Upload Starts
-    // let dropzone = new Dropzone("#avatar_dropzone", {
-    //     url: "{{-- route('tradesperson.updateCompLogo') --}}",
-    //     uploadMultiple: false,
-    //     maxFiles: 1,
-    //     maxFilesize: {{ config('const.dropzone_max_file_size') }},
-    //     acceptedFiles: "{{ config('const.dropzone_accepted_image') }}",
-    //     // maxFilesize: {{ env('CUSTOMER_PROFILE_IMAGE_SIZE') }},
-    //     // acceptedFiles: "{{ env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES') }}",
-    //     thumbnailWidth: 240,
-    //     thumbnailHeight: 240,
-    //     autoProcessQueue: false,
-    //     // previewsContainer: ".dropzone",
-    //     clickable: "#file_upload_btn",
-    //     dictDefaultMessage: "Drag and drop a file here",
-    //     init: function() {
-    //         let dz = this;
-    //         let uploadButton = $("#upload_avatar");
-
-    //         this.on("addedfile", function(file) {
-    //             if (this.files.length > 1) {
-    //                 dz.removeFile(this.files[0]);
-    //             }
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("removedfile", function(file) {
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("thumbnail", function(file, dataUrl) {
-    //             $("#avatar_dropzone").find(".dz-message").hide();
-    //             $(file.previewElement).find(".dz-error-mark, .dz-success-mark, .dz-error-message, .dz-progress").hide();
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("sending", function(file, xhr, formData) {
-    //             // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //             uploadButton.prop("disabled", true);
-    //         });
-
-    //         this.on("uploadprogress", function(file, progress) {
-    //             if (file.upload) {
-    //                 // $(file.previewElement).find(".dz-progress").css({"display": "block","position": "relative"});
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         });
-
-    //         this.on("success", function(file, response) {
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-success-mark").show();
-    //             $('.profile_pics > img').attr('src', response.image_link);
-    //             $('.reg_ img').attr('src', response.image_link);
-    //             $('#profile_pics').modal('hide');
-
-    //             updateUploadButton();
-    //         });
-
-    //         this.on("error", function(file, errorMessage) {
-    //             $(file.previewElement).find(".dz-progress").hide();
-    //             $(file.previewElement).find(".dz-error-message").text(errorMessage).show();
-    //             $(file.previewElement).find(".dz-error-mark").show();
-    //             updateUploadButton();
-    //         });
-
-    //         function updateUploadButton() {
-    //             let maxFileSize = dz.options.maxFilesize ? dz.options.maxFilesize * 1024 * 1024 : (2 * 1024 * 1024);
-    //             // let acceptedFileTypes = dz.options.acceptedFiles ? dz.options.acceptedFiles.split(',').map(type => type.trim()) : ['.gif', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.heic'];
-    //             let acceptedFileTypes = dz.options.acceptedFiles;
-    //             $('.supported_ .invalid-file').empty();
-
-    //             let file = dz.files[0];
-    //             if(file)
-    //                 // console.log(file.type);
-
-    //             if (dz.files.length > 0) {
-    //                 let file = dz.files[0];
-    //                 if (file.size <= maxFileSize && acceptedFileTypes.includes(file.type)) {
-    //                     uploadButton.prop("disabled", false);
-    //                 } else {
-    //                     let errorMessage = [];
-    //                     let errorMessages = '<ul>';
-    //                     if (file.size > maxFileSize) {
-    //                         errorMessage.push("File size exceeds the maximum limit.");
-    //                     }
-    //                     if(!(acceptedFileTypes.includes(file.type))) {
-    //                         $('.supported_ .invalid-file').empty();
-    //                         $('.dz-error-message').empty();
-    //                         $('.dz-success-mark').empty();
-    //                         $('.dz-error-mark').empty();
-    //                         $('.dz-details').empty();
-    //                         $('.dz-message').show();
-    //                         errorMessage.push("Invalid file type. Please select a valid file.");
-    //                     } else{
-
-    //                     }
-    //                     $.each(errorMessage, function(key, errorMessage) {
-    //                         errorMessages += `<li> ${errorMessage} </li>`;
-    //                     });
-
-    //                     errorMessages += '</ul>';
-    //                     $('.supported_ .invalid-file').html(errorMessages);
-    //                     uploadButton.prop("disabled", true);
-    //                 }
-    //             } else {
-    //                 uploadButton.prop("disabled", true);
-    //             }
-    //         }
-
-
-
-    //         uploadButton.click(function() {
-    //             if (dz.files.length > 0) {
-    //                 dz.processQueue();
-    //             }
-    //         });
-
-    //         $("#profile_pics").on("hidden.bs.modal", function() {
-    //             $("#avatar_dropzone").find(".dz-message").show();
-    //             $("#profile_pics .supported_ .invalid-file").empty();
-    //             dz.removeAllFiles();
-    //         });
-    //     }
-
-    // });
-    // Dropzone Js For Company Logo Upload Ends
 
     function changeWorkActiveStatus(event) {
         $(".workchkboxsec").removeClass("active");
@@ -2103,6 +2029,25 @@
                 $(`a[href='#tab${i}']`).addClass('secondary-font-color');
             else
                 $(`a[href='#tab${i}']`).removeClass('secondary-font-color');
+        }
+    }
+
+    function getNextInput(currentInput) {
+        const allInputs = document.querySelectorAll('input[type="text"]');
+        const currentIndex = Array.from(allInputs).indexOf(currentInput);
+        const nextInput = allInputs[currentIndex + 1];
+
+        return nextInput;
+    }
+
+    function handleInput(inputElement, maxLength) {
+        const input = inputElement.value;
+        const currentLength = input.length;
+        if (currentLength === maxLength) {
+            const nextInput = getNextInput(inputElement);
+            if (nextInput) {
+                nextInput.focus();
+            }
         }
     }
 

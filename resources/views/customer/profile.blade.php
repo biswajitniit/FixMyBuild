@@ -26,6 +26,9 @@
                             Supported file type list:
                             <div class="ext_">.gif .heic .jpeg, .jpg .png .svg .webp</div>
                         </h5>
+                        <h5>
+                            Maximum file size: <div class="max_file_size_"> {{ config('const.dropzone_max_file_size') }} MB</div>
+                        </h5>
                         <form method="post" enctype="multipart/form-data" id="single_file_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
                             @csrf
                             <div class="dz-default dz-message" id="single-file-upload-logo">
@@ -49,11 +52,11 @@
                                         <p class="name" data-dz-name></p>
                                         <small class="error text-danger" data-dz-errormessage></small>
                                     </div>
-                                    {{-- <div>
+                                    <div>
                                         <button data-dz-remove class="btn text-orange delete">
                                             <span>Delete</span>
                                         </button>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
 
@@ -69,7 +72,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-link" data-bs-dismiss="modal" id="cancel_single_file_upload">Cancel</button>
                 <button type="button" class="btn btn-light" id="upload_single_file">Upload</button>
             </div>
         </div>
@@ -842,9 +845,9 @@
         var singleFileDropzoneElement = document.querySelector("#single_file_dropzone");
         var singleFileDropzone = singleFileDropzoneElement.dropzone;
         var thumbnailMapping = {
-            'application/pdf': "{{ asset('frontend/img/pdf_logo.png') }}",
-            'application/msword': "{{ asset('frontend/img/doc_logo.png') }}",
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.png') }}",
+            'application/pdf': "{{ asset('frontend/img/pdf_logo.svg') }}",
+            'application/msword': "{{ asset('frontend/img/doc_logo.svg') }}",
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': "{{ asset('frontend/img/doc_logo.svg') }}",
         };
 
         // If a Dropzone instance doesn't exist, create a new one
@@ -914,6 +917,8 @@
             if (progress == 100) {
                 $(file.previewElement).find('.progress').hide();
             }
+            $("#upload_single_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+            $("#upload_single_file").prop('disabled', true);
         });
 
         singleFileDropzone.on("sending", function(file) {
@@ -928,6 +933,9 @@
             // document.querySelector("#total-progress").style.opacity = "0";
             // $('#previews.files').find('.progress').hide();
             // $('#multiModal').modal('hide');
+            $("#upload_single_file").html('Upload');
+            $("#upload_single_file").prop('disabled', false);
+            $('#cancel_single_file_upload').trigger('click');
 
         });
 
@@ -937,6 +945,11 @@
                 $('#singleFilePreview').addClass('d-none');
                 // $('#multi_file_dropzone.cpp_wrap').removeClass('uploading');
             }
+        });
+
+        singleFileDropzone.on("success", function(file) {
+            $('#cancel_single_file_upload').trigger('click');
+            // $(modalId).modal('hide');
         });
 
         // Setup the buttons for all transfers

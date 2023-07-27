@@ -174,7 +174,7 @@
 
                             </div>
                             <div class="col-md-6">
-                               <input type="text" class="form-control pb-3" name="bnk_account_number"  placeholder="Account number" value="{{ old('bnk_account_number') ?? '' }}">
+                               <input type="text" class="form-control pb-3" name="bnk_account_number" maxlength="8"  placeholder="Account number" value="{{ old('bnk_account_number') ?? '' }}">
                             </div>
                          </div>
                          <!--//-->

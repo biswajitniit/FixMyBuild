@@ -159,6 +159,7 @@
                         <div class="col-md-6 supported_">
                             <h4>Supported file type list:</h4>
                             <div class="accepted-file-list"></div>
+                            <h6><strong>Maximum file size:</strong> {{ config('const.dropzone_max_file_size') }} MB</h6>
                         </div>
                         <div class="col-md-6">
                             <form method="post" enctype="multipart/form-data" id="multi_file_dropzone" class="dropzone text-center upload_wrap cpp_wrap">

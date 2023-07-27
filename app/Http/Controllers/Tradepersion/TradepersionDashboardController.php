@@ -142,8 +142,8 @@ class TradepersionDashboardController extends Controller
             'designation.required'      => 'Please enter your designation.',
             'designation.max'           => 'Designation shouldn\'t be longer than 255 characters.',
             'vat_reg.required'          => 'Please enter your vat number and validate.',
-            'subworktype.required'      => 'Please select work you do.',
-            'subareacovers.required'    => 'Please select area do you cover.',
+            'subworktype.required'      => 'Please select the type of work you do.',
+            'subareacovers.required'    => 'Please select the areas you cover.',
             'vat_no.required'           => 'If your company is VAT registered please provide the VAT number. If not, please click “No” on that option below.'
         ];
 
@@ -675,6 +675,9 @@ class TradepersionDashboardController extends Controller
     {
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
         $traderdetails->vat_no = $request->vatno;
+        $traderdetails->vat_reg = true;
+        $traderdetails->vat_comp_name = $request->vat_comp_name;
+        $traderdetails->vat_comp_address = $request->vat_comp_address;
         if($traderdetails->save()){
             $data = array(
                 'status' => 1,
@@ -690,8 +693,15 @@ class TradepersionDashboardController extends Controller
     }
     public function updateContingency(Request $request)
     {
+        $request->validate([
+            'contingencyval'               => 'required|numeric|between:0,100',
+        ],[
+            'contingencyval.required'      => 'Please enter contingency.',
+            'contingencyval.between'       => 'The amount of contingency can be between 0% and 100%.',
+        ]);
+
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
-        $traderdetails->contingency = $request->contigencyval;
+        $traderdetails->contingency = $request->contingencyval;
         if($traderdetails->save()){
             $data = array(
                 'status' => 1,
@@ -707,6 +717,23 @@ class TradepersionDashboardController extends Controller
     }
     public function updateAccount(Request $request)
     {
+
+        $request->validate([
+            'accountType'   => 'required',
+            'accountHolder' => 'required|string',
+            'accountCode'   => 'required|numeric|digits:6',
+            'accountNum'    => 'required|numeric|digits:8',
+        ], [
+            'accountType.required'      => 'Please select your bank account type.',
+            'accountHolder.required'    => 'Please enter your account holder name.',
+            'accountCode.digits'        => 'The bank sort code should be 6 digits in length.',
+            'accountCode.numeric'       => 'The bank sort code only allows numeric value.',
+            'accountCode.required'      => 'Please enter your bank sort code.',
+            'accountNum.required'       => 'Please enter your bank account number.',
+            'accountNum.digits'         => 'We support UK bank account numbers that are 8 digits in length. If you have a shorter account number, please check with your bank if the number can be padded with 0s in front and be 8 digits in length.',
+            'accountNum.numeric'        => 'Bank account numbers only allows numeric value.',
+        ]);
+
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
         $traderdetails->bnk_account_type = $request->accountType;
         $traderdetails->bnk_account_name = $request->accountHolder;
@@ -827,6 +854,26 @@ class TradepersionDashboardController extends Controller
         ]);
     }
 
+    public function fetchTraderDashboardPli() {
+        $public_liability_insurances = TradespersonFile::where(['tradesperson_id' => Auth::id(), 'file_related_to' => 'public_liability_insurance'])->get();
+        $html = '';
+        foreach ($public_liability_insurances as $public_liability_insurance){
+            $html .= '<div class="mb-3" id="publicLiabilityInsurance-'.$public_liability_insurance->id.'">
+            <a href="'.route('download.file', [ 'id' => Hashids_encode($public_liability_insurance->id) ]).'" class="btn-pli">'.\Str::limit($public_liability_insurance->file_name, 15, "...").'<svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
+                </svg>
+            </a>
+            <a href="javascript:void(0)" onclick="confirmDeletePopup('. $public_liability_insurance->id .', \'publicLiabilityInsurance-'.$public_liability_insurance->id .'\')">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </a>
+            </div>';
+        }
+
+        return $html;
+    }
+
     public function storeTraderFile(Request $request)
     {
         try{
@@ -889,6 +936,10 @@ class TradepersionDashboardController extends Controller
                         $media->delete();
                     });
                 }
+            }
+
+            if ($request->file_related_to == "public_liability_insurance") {
+                return $this->fetchTraderDashboardPli();
             }
 
             return $response;
