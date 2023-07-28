@@ -94,7 +94,7 @@ class UserController extends Controller
         $html = view('email.email-verification-mail')->with('token', $token)->render();
 
         $emaildata = array(
-          'From'          => 'support@fixmybuild.com',
+          'From'          => env('COMPANY_MAIL'),
           'To'            => $request['email'],
           'Subject'       => 'Verify Email',
           'HtmlBody'      => $html,
@@ -125,8 +125,8 @@ class UserController extends Controller
           $html = view('email.email-verify-account')->with('name', $user->name)->render();
 
           $emaildata = array(
-            'From'          => 'support@fixmybuild.com',
-            'To'            => $user->email,
+            'From'          =>  env('COMPANY_MAIL'),
+            'To'            =>  $user->email,
             'Subject'       => 'Fixmybuild',
             'HtmlBody'      =>  $html,
             'MessageStream' => 'outbound'
@@ -153,11 +153,11 @@ class UserController extends Controller
         $html = view('email.email-account-delete')->with('user', $user)->render();
 
         $emaildata = array(
-          'From'          => 'support@fixmybuild.com',
-          'To'            =>  $user->email,
-          'Subject'       => 'Fixmybuild Account Deletion',
-          'HtmlBody'      =>  $html,
-          'MessageStream' => 'outbound'
+          'From'          =>   env('COMPANY_MAIL'),
+          'To'            =>   $user->email,
+          'Subject'       =>  'Fixmybuild Account Deletion',
+          'HtmlBody'      =>   $html,
+          'MessageStream' =>  'outbound'
         );
 
         $email_sent = send_email($emaildata);
@@ -175,7 +175,7 @@ class UserController extends Controller
         $data = UserVerify::where('user_id', '=', Auth::user()->id)->update(array('token' => $token,'updated_at'=>now()));
         $html = view('email.email-verification-mail')->with('token', $token)->render();
         $emaildata = array(
-          'From'          => 'support@fixmybuild.com',
+          'From'          => env('COMPANY_MAIL'),
           'To'            => Auth::user()->email,
           'Subject'       => 'Verify Email',
           'HtmlBody'      => $html,
@@ -202,7 +202,7 @@ class UserController extends Controller
             $html = view('email.email-account-delete')->with('user', $user)->render();
 
             $emaildata = array(
-                'From'          => 'support@fixmybuild.com',
+                'From'          => env('COMPANY_MAIL'),
                 'To'            =>  $user->email,
                 'Subject'       => 'Fixmybuild Account Deletion',
                 'HtmlBody'      =>  $html,

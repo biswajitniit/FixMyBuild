@@ -29,7 +29,7 @@
                           <div class="col-md-9">
                               <h5>Our telephone number is <a href="tel:02081455102">0208 145 5102</a> and our normal business hours are 9 am to 5 pm UK time excluding Bank Holidays.</h5>
                               <h6>Outside of these times you can leave a voice message with us and we will contact you when we're next online.</h6>
-                              <h5>Our email is: <a href="mailto:support@fixmybuild.com">support@fixmybuild.com</a></h5>
+                              <h5>Our email is: <a href="mailto:{{ env('COMPANY_MAIL') }}">{{ env('COMPANY_MAIL') }}</a></h5>
                           </div>
                       </div>
                    </div>

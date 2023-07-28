@@ -20,8 +20,8 @@
   <!--Code area start-->
   <section class="pb-5">
     <div class="container">
-          
-         
+
+
           <div class="row">
            <div class="col-md-3 dashboard_sidebar">
             <ul>
@@ -197,8 +197,7 @@
                                 <option>I want to create a new account</option>
                                 <option>Account security concerns/Unauthorized activity</option>
                                 <option>Privacy concerns</option>
-                                <option>I have open issues with Fix my build</option>
-                                <option>I have open issues with Fix my build</option>
+                                <option>Other reasons</option>
                                 </select>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="delete_permanently" value="1" name="delete_permanently" onclick="clickCheckBox()" required="">

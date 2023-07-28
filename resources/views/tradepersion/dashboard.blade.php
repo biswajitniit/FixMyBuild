@@ -182,6 +182,23 @@
             </ul>
          </div>
          <div class="col-md-9  dashboard_wrapper">
+            @if( $trader_details->approval_status == 'Pending' || $trader_details->approval_status == null )
+            <div class="blue-font-color bg-white mb-5 white_box">
+                <div class="row justify-content-center">
+                    <div class="col-md-1">
+                        <span>
+                            <img src="{{ asset('frontend/img/material-symbols.svg') }}" class="material_icon">
+                        </span>
+                    </div>
+                    <div class="col-md-11">
+                        <p class="before_approved_trader mb-0"><b>Thank you for submitting your registration.</b></p>
+                        <p class="before_approved_trader">We are reviewing the information you have provided us and once approved we will let you know.</p>
+                    </div>
+                    {{-- <div >
+                    </div> --}}
+                </div>
+            </div>
+            @endif
             <div class="blue-font-color mt-4 mb-5">
                <div class="row">
                   <div class="col-md-3 profile_pics">

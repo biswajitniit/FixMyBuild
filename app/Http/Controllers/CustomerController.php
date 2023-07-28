@@ -413,7 +413,7 @@ class CustomerController extends Controller
         try{
             $id=Hashids_decode($project_id);
             $projects = Project::where('id',$id)->first();
-            $proj_logs = ProjectStatusChangeLog::where('project_id', $projects->id)->first();
+            $proj_logs = ProjectStatusChangeLog::where('project_id', $projects->id)->get();
 
             if(Auth::id() != $projects->user_id)
                 abort(403);
@@ -773,7 +773,7 @@ class CustomerController extends Controller
                                 ])
                                 ->render();
                 $emaildata = array(
-                    'From'          => 'support@fixmybuild.com',
+                    'From'          =>  env('COMPANY_MAIL'),
                     'To'            =>  $tradeperson->email,
                     'Subject'       => 'Your Given Estimate Has Been Accepted',
                     'HtmlBody'      =>  $html,

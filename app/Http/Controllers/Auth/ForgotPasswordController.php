@@ -39,29 +39,6 @@ class ForgotPasswordController extends Controller
        *
        * @return response()
        */
-      public function testTwilio()
-      {
-        $receiverNumber = "+447729905832";
-        //$receiverNumber = "+919832307855";
-        $message = "Hi Jehan, This is testing from Chandra. FixMyBuild. Please confirm in skype";
-
-        try {
-
-            $account_sid = env("TWILIO_SID");
-            $auth_token = env("TWILIO_TOKEN");
-            $twilio_number = env("TWILIO_FROM");
-
-            $client = new Client($account_sid, $auth_token);
-            $client->messages->create($receiverNumber, [
-                'from' => $twilio_number,
-                'body' => $message]);
-
-            dd('SMS Sent Successfully.');
-
-        } catch (Exception $e) {
-            dd("Error: ". $e->getMessage());
-        }
-      }
       public function showForgetPasswordForm()
       {
          return view('auth.forgetPassword');
@@ -102,7 +79,7 @@ class ForgotPasswordController extends Controller
 
 
         $postdata = array(
-                        'From'          => 'support@fixmybuild.com',
+                        'From'          => env('COMPANY_MAIL'),
                         'To'            => $request['email'],
                         'Subject'       => 'Password Reset',
                         'HtmlBody'      => $html,
@@ -163,23 +140,32 @@ class ForgotPasswordController extends Controller
 
     public function generateOtp(Request $request)
     {
-        $user = User::where('phone', $request->phone)->first();
-        if($user){
-            $otp = mt_rand(100000, 999999);
-            $data = new OtpPasswordResets();
-            $data->user_id = $user->id;
-            $data->otp = $otp;
-            $data->used = 0;
-            $data->created_at = now()->addMinutes(5);
-            if(strtotime($data->created_at) < strtotime(now()))
-            {
-                return back();
+        try{
+            $user = User::where('phone', $request->phone)->first();
+            // dd($request->phone);
+            if($user){
+                $otp = mt_rand(100000, 999999);
+                $data = new OtpPasswordResets();
+                $data->user_id = $user->id;
+                $data->otp = $otp;
+                $data->used = 0;
+                $data->created_at = now()->addMinutes(5);
+
+                sendSMS($user,$otp);
+
+                if(strtotime($data->created_at) < strtotime(now()))
+                {
+                    return back();
+                }
+                $data->save();
+                $table_id = $data->id;
+                return redirect()->route('otpVerify.get', ['table_id' => Hashids_encode($table_id)])
+                                ->with('success',  "OTP has been sent on Your Mobile Number.");
+            } else {
+                return back()->with('message', ' We cannot locate your account.');
             }
-            $data->save();
-            return redirect()->route('otpVerify.get', ['user_id' => $user->id])
-                            ->with('success',  "OTP has been sent on Your Mobile Number.");
-        } else {
-            return back()->with('message', ' We cannot locate your account.');
+        } catch(\Exception $e) {
+            echo $e;die;
         }
 
     }
@@ -194,6 +180,9 @@ class ForgotPasswordController extends Controller
             $data->otp = $otp;
             $data->used = 0;
             $data->created_at = now()->addMinutes(5);
+
+            sendSMS($user,$otp);
+
             if(strtotime($data->created_at) < strtotime(now()))
             {
                 return false;
@@ -208,10 +197,12 @@ class ForgotPasswordController extends Controller
 
     public function otpVerifyPage(Request $request)
     {
-        $user_id = $request->user_id;
-        $user = User::where("id", $user_id)
+        $table_id = Hashids_decode($request->table_id);
+        $tblotp = OtpPasswordResets::where('id', $table_id)->first();
+        $user = User::where("id", $tblotp->user_id)
                                 ->first();
         $phone = $user["phone"];
+        $user_id = $tblotp->user_id;
         return view('auth.smsVerification',compact('user_id','phone'));
     }
 
@@ -237,7 +228,7 @@ class ForgotPasswordController extends Controller
 
     public function resetPasswordusingOTP(Request $request){
         $updatePassword = DB::table('users')
-                            ->where('id', $request->id)
+                            ->where('id',$request->id)
                             ->first();
           if(!$updatePassword){
           return redirect('/login')->with('error', 'Your password has not  been changed!');

@@ -13,6 +13,8 @@ use App\Models\TraderDetail;
 use Illuminate\Support\Facades\Auth;
 use Hashids\Hashids;
 use Carbon\Carbon;
+use Twilio\Rest\Client;
+
 
 if (! function_exists('Hashids_encode')) {
     function Hashids_encode($id) {
@@ -192,7 +194,7 @@ function milestone_completion_notification($task_id){
             ])
             ->render();
         $emaildata = array(
-            'From'          => 'support@fixmybuild.com',
+            'From'          => env('COMPANY_MAIL'),
             'To'            => $user->email,
             'Subject'       => 'Milestone Completed',
             'HtmlBody'      => $html,
@@ -232,7 +234,7 @@ function project_paused_notification($project_id){
             ])
             ->render();
         $emaildata = array(
-            'From'          => 'support@fixmybuild.com',
+            'From'          =>  env('COMPANY_MAIL'),
             'To'            =>  $customer->email,
             'Subject'       => 'Project Paused',
             'HtmlBody'      =>  $html,
@@ -267,7 +269,7 @@ function project_paused_notification($project_id){
             ])
             ->render();
         $emaildata = array(
-            'From'          => 'support@fixmybuild.com',
+            'From'          =>  env('COMPANY_MAIL'),
             'To'            =>  $tradeperson->email,
             'Subject'       => 'Paused Project',
             'HtmlBody'      =>  $html,
@@ -306,7 +308,7 @@ function estimate_rejected_notification($tradeperson, $project){
                         ])
                         ->render();
         $emaildata = array(
-            'From'          => 'support@fixmybuild.com',
+            'From'          =>  env('COMPANY_MAIL'),
             'To'            =>  $tradeperson->email,
             'Subject'       => 'Your Given Estimate Has Been Rejected',
             'HtmlBody'      =>  $html,
@@ -349,7 +351,7 @@ function cancel_project_notification($projectId){
                         ])
                         ->render();
         $emaildata = array(
-            'From'          => 'support@fixmybuild.com',
+            'From'          =>  env('COMPANY_MAIL'),
             'To'            =>  $user->email,
             'Subject'       => 'Your project has been Cancelled',
             'HtmlBody'      =>  $html,
@@ -392,7 +394,7 @@ function project_completed_notification($estimateId){
                         ])
                         ->render();
         $emaildata = array(
-            'From'          => 'support@fixmybuild.com',
+            'From'          =>  env('COMPANY_MAIL'),
             'To'            =>  $user->email,
             'Subject'       => 'Your project has been Completed',
             'HtmlBody'      =>  $html,
@@ -467,5 +469,24 @@ if(!function_exists('lock_trader_dashboard_access')) {
       $notifications = NotificationDetail::where('user_id', Auth::id())->get();
 
       return ['unread_notifications'=>$unread_notifications, 'notifications'=>$notifications];
+    }
+
+    function sendSMS($user,$otp)
+    {
+        // $receiverNumber = "+447729905832";
+        // $receiverNumber = "+919832307855";
+        $receiverNumber = $user->phone;
+        $message = "This is your Fix my build forget password OTP ".$otp;
+
+        $account_sid = env("TWILIO_SID");
+        $auth_token = env("TWILIO_TOKEN");
+        $twilio_number = env("TWILIO_FROM");
+
+        $client = new Client($account_sid, $auth_token);
+        $client->messages->create($receiverNumber, [
+            'from' => $twilio_number,
+            'body' => $message]);
+
+        // dd('SMS Sent Successfully.');
     }
 }

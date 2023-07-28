@@ -61,7 +61,7 @@
                         <h2 class="heading1 mb-2 text-center color-blue">Sign in</h2>
                         <p  class="heading2">
                            Not a member?
-                           <span><a class="link-color" href="{{ route('user.registration') }}">Register Now</a></span>
+                           <span><a class="link-color" href="{{ route('user.registration') }}">Register now</a></span>
                          </p>
                      </div>
                   </div>

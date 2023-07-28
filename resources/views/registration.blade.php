@@ -162,7 +162,7 @@
                 {{-- <div id="password-strength-status-confirm"></div> --}}
 
                 <div class="form-group col-md-12 mt-4">
-                    <input type="text" name="phone" class="form-control col-md-10" id="phone" placeholder="Phone"  value="{{old('phone')}}" required/>
+                    <input type="text" name="phone" class="form-control col-md-10" id="phone" placeholder="Mobile phone"  value="{{old('phone')}}" required/>
                     <label for="phone" generated="true" class="error"></label>
                     <input type="hidden" name="full_phone" id="full_phone"  value="{{old('full_phone')}}"/>
                 </div>
@@ -180,7 +180,7 @@
                     </div>
                     </div>
                 @endproduction
-                @env(['staging', 'development'])
+                @env(['staging', 'development','local'])
                 <div>
                     <label class="form-check-label">Are you a customer or tradesperson?</label>
                 </div>
@@ -198,7 +198,7 @@
                     <label class="form-check-label">
                         <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif required/> I have read and agree to our
 
-                        <a href="{{ url('/terms-of-service') }}">Terms of Service</a> and <a href="{{ url('/privacy-policy') }}">Privacy Policy</a>.
+                        <a href="{{ route('termspage') }}">Terms of Service</a> and <a href="{{ route('privacy-policy') }}">Privacy Policy</a>.
                     </label>
                     <div class="form-group">
                         <label for="terms_of_service" generated="true" class="error"></label>
@@ -214,7 +214,7 @@
             </form>
 
 
-          @env(['staging', 'development'])
+          @env(['staging', 'development','local'])
             <div class="row">
               <div class="form-group col-md-12 mt-5 text-center sign_with">
                 <p>Or register with</p>

@@ -126,7 +126,7 @@ class ReviewerController extends Controller
                                 ])
                                 ->render();
                 $emaildata = array(
-                    'From'          => 'support@fixmybuild.com',
+                    'From'          => env('COMPANY_MAIL'),
                     'To'            => $user->email,
                     'Subject'       => 'Your Project Approved',
                     'HtmlBody'      => $html,
@@ -163,7 +163,7 @@ class ReviewerController extends Controller
                                     ])
                                 ->render();
                     $emaildata = array(
-                        'From'          => 'support@fixmybuild.com',
+                        'From'          => env('COMPANY_MAIL'),
                         'To'            => $user->email,
                         'Subject'       => 'Your Project Reviewed',
                         'HtmlBody'      => $html,

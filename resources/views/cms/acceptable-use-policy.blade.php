@@ -91,7 +91,7 @@ a site operated by Fix My Build Limited. (&quot;We&quot;). We are registered in
 England and Wales under company number 14494824. Our VAT number is 434733202. </span></p>
 
 <p class=NoNumTitle-Clause><span style='font-weight:normal'>To contact us,
-please email </span><i><u><span style='color:#0070C0;font-weight:normal'>support@fixmybuild.com</span></u></i></p>
+please email </span><i><u><span style='color:#0070C0;font-weight:normal'>{{ env('COMPANY_MAIL') }}</span></u></i></p>
 
 <p class=NoNumTitle-Clause><span style='font-weight:normal'>Or telephone us on:
 0208 145 5102.</span></p>
