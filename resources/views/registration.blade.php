@@ -116,7 +116,7 @@
                 @csrf
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <input type="text" name="name" id="name" class="form-control" placeholder="Full Name"  required value="{{old('name')}}"/>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Full name"  required value="{{old('name')}}"/>
                     </div>
                 </div>
 
@@ -149,7 +149,7 @@
 
                 <div class="row">
                     <div class="form-group col-md-12 mt-4 pw_">
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password*"  onkeyup="checkPasswordStrength_confirm();" onChange="Chkpassword_and_conpassword()" required/>
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm password*"  onkeyup="checkPasswordStrength_confirm();" onChange="Chkpassword_and_conpassword()" required/>
                         <em onclick="tooglepasswordconfirm($(this))">
                             <a href="#">
                                 <img class="eye-slash-icon" src="{{ asset('frontend/img/hide_password.svg') }}" alt="" >
@@ -167,12 +167,23 @@
                     <input type="hidden" name="full_phone" id="full_phone"  value="{{old('full_phone')}}"/>
                 </div>
                 @production
-                <input type="hidden" name="customer_or_tradesperson" value="Tradesperson">
+                    <div>
+                        <label class="form-check-label">Are you a customer or tradesperson?</label>
+                    </div>
+                    <div class="form-group col-md-12 mt-4">
+                    <div class="form-check-inline">
+                        <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2" name="optradio" disabled required/>Customer </label>
+                    </div>
+
+                    <div class="form-check-inline">
+                        <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Tradesperson" class="form-check-input mr-2" checked name="optradio"  required/>Tradesperson </label>
+                    </div>
+                    </div>
                 @endproduction
                 @env(['staging', 'development'])
                 <div>
                     <label class="form-check-label">Are you a customer or tradesperson?</label>
-                </div> 
+                </div>
                 <div class="form-group col-md-12 mt-4">
                 <div class="form-check-inline">
                     <label class="form-check-label"> <input type="radio" name="customer_or_tradesperson" value="Customer" class="form-check-input mr-2"   @if(old('customer_or_tradesperson') == 'Customer') checked @endif name="optradio"  required/>Customer </label>

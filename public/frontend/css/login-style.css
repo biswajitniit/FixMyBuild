@@ -650,7 +650,7 @@ form.fwrap .card {
 
 .header_wishlist a.alert svg path,
 .header_wishlist a svg circle {
-  stroke: none;
+  /* stroke: none; */
   margin-right: 5px;
 }
 

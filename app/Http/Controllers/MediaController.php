@@ -52,7 +52,7 @@ class MediaController extends Controller
           $tempmedia->filename          = $filename;
           $tempmedia->sessionid         = Session::getId();
           $tempmedia->file_extension    = 'mkv';
-          $tempmedia->file_type         = "Video";
+          $tempmedia->file_type         = "video";
           $tempmedia->media_type        = $request->media_type;
           $tempmedia->url               = $spath;
           $tempmedia->file_created_date = date('Y-m-d');
@@ -89,7 +89,7 @@ class MediaController extends Controller
       $videomedia->filename          = $filename_with_extention;
       $videomedia->sessionid         = Session::getId();
       $videomedia->file_extension    = 'mkv';
-      $videomedia->file_type         = "Video";
+      $videomedia->file_type         = "video";
       $videomedia->url               = $spath;
       $videomedia->save();
 
@@ -128,7 +128,7 @@ class MediaController extends Controller
         $tempmedia->user_id         = Auth::user()->id;
         $tempmedia->filename        = $fileName;
         $tempmedia->sessionid       = Session::getId();
-        $tempmedia->file_type       = "Image";
+        $tempmedia->file_type       = "image";
         $tempmedia->media_type      = $request->media_type ?? 'customer';
         $tempmedia->file_related_to = $request->file_related_to;
         $tempmedia->file_extension  = 'png';

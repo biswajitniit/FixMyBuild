@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DownloadController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminloginController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationDetailsController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\MaskUrlController;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -74,6 +76,13 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::get('/', function () {
       return view('welcome');
     })->name('home');
+
+    // Hide AWS Url
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('download/{id}', [DownloadController::class, 'downloadTraderFile'])->name('download.file');
+        Route::get('media/tradesperson-file/{id}', [MaskUrlController::class, 'trader_file'])->name('hide.url');
+    });
+
 
     //user section
     Route::get('/login', [LoginController::class, 'login'])->name('login');
@@ -223,7 +232,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::get('bank-registration', [TradepersionDashboardController::class, 'registrationstepthree'])->name('tradepersion.bankregistration');
         Route::post('save-bank-registration', [TradepersionDashboardController::class, 'saveregistrationstepthree'])->name('tradepersion.savebankregistration');
         Route::get('get-company-details', [TradepersionDashboardController::class, 'get_companydetails']);
-        Route::get('get-company-vat-details', [TradepersionDashboardController::class, 'get_company_vat_details']);
+        Route::get('get-company-vat-details', [TradepersionDashboardController::class, 'get_company_vat_details'])->name('tradesperson.get_company_vat_details');
         Route::get('dashboard', [TradepersionDashboardController::class, 'dashboard'])->name('tradepersion.dashboard');
         Route::post('updateVatInfo', [TradepersionDashboardController::class, 'updateVatInfo']);
         Route::post('updateContingency', [TradepersionDashboardController::class, 'updateContingency']);

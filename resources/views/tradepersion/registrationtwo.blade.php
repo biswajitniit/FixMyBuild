@@ -24,6 +24,9 @@
                             Supported file type list:
                             <div class="ext_">.gif .heic .jpeg, .jpg .png .svg .webp</div>
                         </h5>
+                        <h5>
+                            Maximum file size: <div class="max_file_size_"> {{ config('const.dropzone_max_file_size') }} MB</div>
+                        </h5>
                         {{-- <form action="{{ route('customer.updateavatar') }}" method="post" enctype="multipart/form-data" id="company_logo_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
                             @csrf
                             <div class="dz-message">
@@ -56,11 +59,11 @@
                                         <p class="name" data-dz-name></p>
                                         <small class="error text-danger" data-dz-errormessage></small>
                                     </div>
-                                    {{-- <div>
+                                    <div>
                                         <button data-dz-remove class="btn text-orange delete">
                                             <span>Delete</span>
                                         </button>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
 
@@ -101,6 +104,7 @@
                 <div class="col-md-6 supported_">
                     <h4>Supported file type list:</h4>
                     <div class="accepted-file-list"></div>
+                    <h6><strong>Maximum file size:</strong> {{ config('const.dropzone_max_file_size') }} MB</h6>
                 </div>
                 <div class="col-md-6">
                     <form method="post" enctype="multipart/form-data" id="multi_file_dropzone" class="dropzone text-center upload_wrap cpp_wrap">
@@ -225,7 +229,7 @@
                 <div class="tell_about gen-info">
                    <div class="row">
                       <div class="col-md-10">
-                         <input type="text" name="comp_reg_no" class="form-control pb-2" value="{{ old('comp_reg_no') }}" id="comp_reg_no" placeholder="Enter company registration number">
+                         <input type="text" name="comp_reg_no" class="form-control pb-2" value="{{ old('comp_reg_no') }}" id="comp_reg_no" placeholder="Enter your company registration number and click the “Find” button.">
                       </div>
                       <div class="col-md-2">
                          <button type="button" onclick="findcomp()" class="btn btn-danger btn-block pull-right">Find</button>
@@ -393,7 +397,7 @@
                    <div class="row">
                       <div class="col-md-12">
                          <h3>Contact information</h3>
-                         <p>Who can customers contact if they have questions about your quotes?</p>
+                         <p>Who can customers contact if they have questions about your estimates?</p>
                       </div>
                       <div class="col-md-12">
                          <div class="row form_wrap mt-3">
@@ -527,12 +531,12 @@
                       <h3>Is your company VAT registered?</h3>
                       <div class="form-check-inline mt-2 mb-3">
                          <label class="form-check-label">
-                         <input type="radio" name="vat_reg" value="1" class="form-check-input mr-2" {{ (old('vat_reg') && old('vat_reg')==1) ? 'checked' : ''}}>Yes
+                         <input type="radio" name="vat_reg" value="1" class="form-check-input mr-2" {{ old('vat_reg') === '1' ? 'checked' : ''}}>Yes
                          </label>
                       </div>
                       <div class="form-check-inline mt-2 mb-2">
                          <label class="form-check-label">
-                         <input type="radio" name="vat_reg" value="0" class="form-check-input mr-2" {{ (old('vat_reg') && old('vat_reg')==0) ? 'checked' : ''}}>No
+                         <input type="radio" name="vat_reg" value="0" class="form-check-input mr-2" {{ old('vat_reg') === '0' ? 'checked' : ''}}>No
                          </label>
                       </div>
                       <div id="comp_vat_details" style="display: none">
@@ -1319,17 +1323,17 @@
                 data = JSON.parse(data);
                 // console.log(data);
                 if(data.errors){
-                // $('#serchcompres').css('display', 'none');
-                $('#serchcompres').hide();
-                $('#findcomperror').html('<p style="color:red">Please enter correct Company Registation number</p>');
+                    // $('#serchcompres').css('display', 'none');
+                    $('#serchcompres').hide();
+                    $('#findcomperror').html('<p class="text-danger">Please enter your company registration number as registered with Companies House.</p>');
                 }
                 if(data.accounts){
-                // $('#serchcompres').css('display', 'block');
-                $('#serchcompres').show();
-                $('#txt_comp_name').html(data.company_name);
-                $('#comp_name').val(data.company_name);
-                $('#txt_comp_address').html(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
-                $('#comp_address').val(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
+                    // $('#serchcompres').css('display', 'block');
+                    $('#serchcompres').show();
+                    $('#txt_comp_name').html(data.company_name);
+                    $('#comp_name').val(data.company_name);
+                    $('#txt_comp_address').html(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
+                    $('#comp_address').val(data.registered_office_address.address_line_1+', '+data.registered_office_address.locality+', '+data.registered_office_address.country+', '+data.registered_office_address.postal_code);
                 }
             }
         });
@@ -1666,6 +1670,7 @@
             maxFiles={{ config('const.dropzone_max_file_upload') }}
         }
     ) {
+        // console.log(acceptedFiles);
         var multiFileDropzoneElement = document.querySelector("#multi_file_dropzone");
         // var multiFileDropzone = multiFileDropzoneElement.dropzone;
         var thumbnailMapping = {
@@ -1803,7 +1808,7 @@
         };
         let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
                     <h6><strong>Documents:</strong> .doc, .docx .odt .pdf .ppt, .pptx </h6>`;
-        var acceptedFiles = "{{ config('const.company_address_proof') }}";
+        var acceptedFiles = "{{ config('const.trader_public_liability') }}";
 
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
@@ -1915,6 +1920,7 @@
         $('#multiModal .accepted-file-list').html(html);
         $('#multiModal').modal('show');
 
+        // console.log(acceptedFiles);
         var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
 
         dropzone.on("successmultiple", function(file, responses) {
