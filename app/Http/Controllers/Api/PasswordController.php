@@ -49,7 +49,7 @@ class PasswordController extends Controller
 
 
         $postdata = array(
-                        'From'          => 'support@fixmybuild.com',
+                        'From'          => env('COMPANY_MAIL'),
                         'To'            => $request['email'],
                         'Subject'       => 'Fixmybuild',
                         'HtmlBody'      => $html,
@@ -94,7 +94,7 @@ class PasswordController extends Controller
         if(!$user){
             return response()->json(['message'=>'Otp doesnot match'],400);
         }
-        
+
         return response()->json(['message'=>'Otp verified'],200);
     }
     public function create_password(Request $request){

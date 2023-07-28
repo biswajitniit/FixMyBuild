@@ -28,7 +28,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="all-notificaion">
-                                        @if($unread_notifications === 0)
+                                        @if($unread_notifications == 0)
                                             <p><b>No Notification Available For You Right Now.</b></p>
                                         @else
                                             <div class="row mb-3">

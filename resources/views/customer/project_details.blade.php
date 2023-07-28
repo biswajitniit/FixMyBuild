@@ -112,11 +112,11 @@
                                         <div class="progress-bar"></div>
                                     </div>
                                     <a href="#" class="bs-wizard-dot"></a>
-                                    {{-- @foreach($proj_logs as $proj_log) --}}
-                                        @if ($proj_logs->action_by_type == 'reviewer' && $proj_logs->status == 'approved')
-                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_logs->status_changed_at)) }}</div>
+                                    @foreach($proj_logs as $proj_log)
+                                        @if ($proj_log->action_by_type == 'reviewer' && $proj_log->status == 'approved')
+                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}</div>
                                         @endif
-                                    {{-- @endforeach --}}
+                                    @endforeach
                                 </div>
                                 @if($status == 'awaiting_your_review')
                                     <div class="col bs-wizard-step complete">
@@ -129,11 +129,11 @@
                                         <div class="progress-bar"></div>
                                     </div>
                                     <a href="#" class="bs-wizard-dot"></a>
-                                    {{-- @foreach($proj_logs as $proj_log) --}}
-                                        @if($proj_logs->status == 'project_started')
-                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_logs->status_changed_at)) }}
+                                    @foreach($proj_logs as $proj_log)
+                                        @if($proj_log->status == 'project_started')
+                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}
                                         @endif
-                                    {{-- @endforeach --}}
+                                    @endforeach
                                     </div>
                                 </div>
                             @if($status == 'awaiting_your_review')
@@ -156,9 +156,11 @@
                                     <div class="progress-bar"></div>
                                 </div>
                                 <a href="#" class="bs-wizard-dot"></a>
-                                @if($proj_logs->status == 'project_completed')
-                                    <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_logs->status_changed_at)) }}</div>
-                                @endif
+                                @foreach($proj_logs as $proj_log)
+                                    @if($proj_log->status == 'project_completed')
+                                        <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}</div>
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
                         </div>
@@ -561,8 +563,6 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'success',
                     title: 'success: You have successfully cancelled your project'
-                    showConfirmButton: false,
-                    timer: 3000
                 });
                 window.location.href = response.redirect_url;
             },
@@ -571,7 +571,7 @@ $(document).ready(function() {
                     icon: 'warning',
                     title: 'Bad Request: Oops!! something went wrong',
                     showConfirmButton: false,
-                    timer: 3000
+                    timer: 2000
                 });
             }
         });
@@ -606,16 +606,12 @@ $(document).ready(function() {
                 if(response == 'error') {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Bad Request: Oops!! something went wrong',
-                        showConfirmButton: false,
-                        timer: 3000
+                        title: 'Bad Request: Oops!! something went wrong'
                     });
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'success: You have successfully paused your project'
-                        showConfirmButton: false,
-                        timer: 3000
                     });
                     window.location.href = response.redirect_url;
                 }
@@ -625,7 +621,7 @@ $(document).ready(function() {
                     icon: 'warning',
                     title: 'Bad Request: Oops!! something went wrong',
                     showConfirmButton: false,
-                    timer: 3000
+                    timer: 2000
                 });
             }
         });

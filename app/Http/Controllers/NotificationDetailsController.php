@@ -10,8 +10,9 @@ class NotificationDetailsController extends Controller
 {
     public function detailed_notification(Request $request)
     {
+        $unread_notifications = NotificationDetail::where('read_status', 0)->where('user_id', Auth::id())->count();
         $notifications = NotificationDetail::where('user_id', Auth::user()->id)->get();
-        return view("all_notifications.notification_detail", ['notifications' => $notifications]);
+        return view("all_notifications.notification_detail", ['unread_notifications'=>$unread_notifications,'notifications' => $notifications]);
     }
 
 

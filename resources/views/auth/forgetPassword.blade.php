@@ -110,7 +110,7 @@
                          <div class="input-group">
                            <div class="col-md-10 col-10 p-4">
                                <label>Send a message to</label>
-                               <input type="tel" required class="form-control" placeholder="Phone number" name="phone">
+                               <input type="text" required class="form-control" placeholder="Phone number" name="phone" value="{{old('phone')}}">
 
                            </div>
                            <div class="input-group-append col-md-2 p-0 fget_">

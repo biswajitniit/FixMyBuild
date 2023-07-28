@@ -40,7 +40,7 @@
          <section  class="auth-sidebar">
             <div class="auth-sidebar-content p-4">
                <div id="particles-js">
-                  <header class="logo"><a href="{{ url('/') }}"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
+                  <header class="logo"><a href="{{route('home')}}"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
                   <div class="artwork">
                      <h2>Welcome Back</h2>
                      <h4>Good quality work at sensible prices</h4>
@@ -89,7 +89,7 @@
                         <input type="text"  id='input5' class="col-md-1 p-2 text-center" maxlength="1">
                         <input type="text"  id='input6' class="col-md-1 p-2 text-center" maxlength="1">
                         <input type='hidden' value="" id='otp' name="otp">
-                        <input type='hidden' value="{{ $user_id }}" id='id' name="id">
+                        <input type='hidden' value="{{ $user_id }}" id="id" name="id">
                     </div>
                     <h5><a href="#" onclick="resendOtp()">Send another code</a></h5>
                      <div class="row">
@@ -154,7 +154,7 @@
                         icon: 'warning',
                         title: 'Bad Request: Oops!! something went wrong',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 2000
                         });
                     }
                 },
@@ -163,7 +163,7 @@
                         icon: 'warning',
                         title: 'Bad Request: Oops!! something went wrong',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 2000
                     });
                 }
                 });

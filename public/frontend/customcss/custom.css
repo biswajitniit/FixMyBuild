@@ -147,7 +147,7 @@ video.customer-video{
     text-align: justify;
     font-size: 11.0pt;
     font-family: "Arial",sans-serif;
-
+}
 .header_wishlist a, .header_wishlist a:hover{
     transition: all 0s !important;
 }
@@ -194,4 +194,7 @@ video.customer-video{
     color:var(--btn-primary);
     border: 1px solid var(--btn-primary);
     font-weight: 600;
+}
+.before_approved_trader{
+    color:rgb(9, 137, 241);
 }

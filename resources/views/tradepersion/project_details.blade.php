@@ -446,8 +446,6 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'success: You have successfully rejected the project'
-                        showConfirmButton: false,
-                        timer: 3000
                     });
                     window.location.href = response.redirect_url;
                 },
@@ -456,7 +454,7 @@
                         icon: 'warning',
                         title: 'Bad Request: Oops!! something went wrong',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 2000
                     });
                 }
             });

@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <h3>
                 New project(s)
-                @env(['staging', 'development'])
+                @env(['staging', 'development','local'])
                     <span>
                         <a href="{{ route('customer.newproject') }}"> <i class="fa fa-plus"></i> Add new</a>
                     </span>

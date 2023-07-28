@@ -127,7 +127,7 @@
             password_validation();
         });
       // for password validation
-      function password_validation(){
+    function password_validation(){
             let password = 'input[id=pswd]';
             let conf_password = 'input[id=pswd2]';
             let pswd = $(password).val().trim();

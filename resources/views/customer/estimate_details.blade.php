@@ -83,7 +83,7 @@
                     <a href="{{route('customer.project')}}" class="btn btn-light mr-3">Back</a>
                     <a href="#" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#reject">Reject</a>
                     @if(Auth::user()->is_email_verified == 0)
-                        <a href="#" class="btn btn-primary" disabled>Accept</a>
+                        <a href="javascript:void(0);" class="btn btn-primary" disabled>Accept</a>
                     @else
                         <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" data-bs-toggle="modal" data-bs-target="#accept" class="btn btn-primary">Accept</a>
                     @endif
@@ -163,8 +163,7 @@
                              <div class="form-check">
                                 <label class="form-check-label">
                                 <input class="form-check-input" type="checkbox" id="terms_of_service" name="terms_of_service" value="1" @if(old('terms_of_service') == 1) checked @endif onclick="disable()" required/> I have read and agree to FixMyBuild's
-
-                                    <a href="{{ url('/terms-of-service') }}">Terms of Service</a> and <a href="{{ url('/privacy-policy') }}">Privacy Policy</a>.
+                                    <a href="{{ route('termspage') }}">Terms of Service</a> and <a href="{{ route('privacy-policy') }}">Privacy Policy</a>
                                 </label>
                              </div>
                           </div>
@@ -350,8 +349,6 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'success: You have successfully accepted the estimate'
-                        showConfirmButton: false,
-                        timer: 3000
                     });
                     window.location.href = response.redirect_url;
                 },
@@ -361,7 +358,7 @@
                         icon: 'warning',
                         title: 'Bad Request: Oops!! something went wrong',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 2000
                     });
                 }
             });
@@ -384,8 +381,6 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'success: Your project has been rejected successfully'
-                        showConfirmButton: false,
-                        timer: 3000
                     });
                     window.location.href = response.redirect_url;
                 },
@@ -394,7 +389,7 @@
                         icon: 'warning',
                         title: 'Bad Request: Oops!! something went wrong',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 2000
                     });
                 }
             });

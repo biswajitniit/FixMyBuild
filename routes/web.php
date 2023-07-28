@@ -93,7 +93,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::get('/acceptable-use-policy.html', [HomeController::class, 'acceptable_use_policy'])->name('acceptable-use-policy');
     Route::get('/complaints', [HomeController::class, 'complaints'])->name('complaints');
 
-    Route::get('testTwilio', [ForgotPasswordController::class, 'testTwilio'])->name('forget.password.get');
+    // Route::get('testTwilio', [ForgotPasswordController::class, 'testTwilio'])->name('forget.password.get');
 
     Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
     Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');

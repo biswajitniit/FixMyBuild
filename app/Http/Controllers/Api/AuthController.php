@@ -69,7 +69,7 @@ class AuthController extends Controller
         if (!$user) {
             throw ValidationException::withMessages(['message' => 'Something went wrong, please try again!'], 400);
         }
-        
+
         $html = "<!doctype html>
         <html class='no-js' lang='en'>
            <head>
@@ -94,7 +94,7 @@ class AuthController extends Controller
 
 
         $postdata = array(
-                        'From'          => 'support@fixmybuild.com',
+                        'From'          => env('COMPANY_MAIL'),
                         'To'            => $request['email'],
                         'Subject'       => 'Fixmybuild',
                         'HtmlBody'      => $html,
@@ -139,7 +139,7 @@ class AuthController extends Controller
         if(!$user){
             return response()->json(['message'=>'otp does not match'],400);
         }
-        
+
         return response()->json(['message'=>'User registered successfully'],200);
     }
 }

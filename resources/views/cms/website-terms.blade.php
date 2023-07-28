@@ -222,7 +222,7 @@ Our VAT number is 434733202.</p>
 <p class=ParaClause>We are a limited company.</p>
 
 <p class=ParaClause>To contact us, please email <a
-href="mailto:support@fixmybuild.com"><i><span style='color:#0070C0'>support@fixmybuild.com</span></i></a><i><u><span
+href="mailto:{{ env('COMPANY_MAIL') }}"><i><span style='color:#0070C0'>{{ env('COMPANY_MAIL') }}</span></i></a><i><u><span
 style='color:#0070C0'> <o:p></o:p></span></u></i></p>
 
 <p class=NoNumTitle-Clause><a name=a891809>By using our site, you accept these
@@ -326,7 +326,7 @@ these terms of use.</p>
 
 <p class=ParaClause>If you know or suspect that anyone other than you knows
 your user identification code or password, you must promptly notify us at <i><u><span
-style='color:#0070C0'>support@fixmybuild.com</span></u></i></p>
+style='color:#0070C0'>{{ env('COMPANY_MAIL') }}</span></u></i></p>
 
 <p class=NoNumTitle-Clause><a name=a818811>How you may use material on our site</a></p>
 
@@ -432,7 +432,7 @@ content</a></p>
 <p class=ParaClause>If you become aware of any material that could comprise or
 be connected to child sexual abuse or exploitation or that could comprise
 terrorist content or be connected to terrorism, please contact us immediately
-on 0208 145 5102 or email us at <i><u><span style='color:#0070C0'>support@fixmybuild.com</span></u></i></p>
+on 0208 145 5102 or email us at <i><u><span style='color:#0070C0'>{{ env('COMPANY_MAIL') }}</span></u></i></p>
 
 <p class=ParaClause>If you wish to complain about any other content, please
 contact us here.</p>
@@ -654,7 +654,7 @@ respects with the content standards set out in our Acceptable Use Policy.</p>
 
 <p class=ParaClause>If you wish to link to or make any use of content on our
 site other than that set out above, please contact us at <i><u><span
-style='color:#0070C0'>support@fixmybuild.com</span></u></i></p>
+style='color:#0070C0'>{{ env('COMPANY_MAIL') }}</span></u></i></p>
 
 <p class=NoNumTitle-Clause><a name=a840113>Which country's laws apply to any
 disputes?</a></p>
