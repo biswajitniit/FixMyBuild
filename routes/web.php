@@ -25,6 +25,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationDetailsController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\MaskUrlController;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -76,8 +77,12 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
       return view('welcome');
     })->name('home');
 
-    //
-    Route::get('/download/{id}', [DownloadController::class, 'downloadFile'])->name('download.file');
+    // Hide AWS Url
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('download/{id}', [DownloadController::class, 'downloadTraderFile'])->name('download.file');
+        Route::get('media/tradesperson-file/{id}', [MaskUrlController::class, 'trader_file'])->name('hide.url');
+    });
+
 
     //user section
     Route::get('/login', [LoginController::class, 'login'])->name('login');

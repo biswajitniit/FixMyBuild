@@ -185,7 +185,8 @@
             <div class="blue-font-color mt-4 mb-5">
                <div class="row">
                   <div class="col-md-3 profile_pics">
-                     <img src="@if($company_logo) {{ $company_logo->url }} @else {{ asset('images/user.png') }} @endif" alt="">
+                     {{-- <img src="@if($company_logo_url) {{ $company_logo_url }} @else {{ asset('images/user.png') }} @endif" alt=""> --}}
+                     <img src="@if($company_logo) {{ $company_logo_url }} @else {{ asset('images/user.png') }} @endif" alt="">
                      {{-- <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#profile_pics"> --}}
                      <a href="javascript:void(0)" onclick="comp_logo_upload()">
                         <img src="{{asset('frontend/img/edit-pics.svg')}}" alt="" class="edit-pics">

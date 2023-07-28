@@ -497,13 +497,14 @@ class TradepersionDashboardController extends Controller
                     ->toArray();
         $trader_details = TraderDetail::where('user_id', Auth::user()->id)->first();
         $company_logo = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'company_logo'])->first();
+        $company_logo_url = $company_logo ? route('hide.url', [ 'id' => Hashids_encode($company_logo->id) ]) : null;
         $public_liability_insurances = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'public_liability_insurance'])->get();
         $team_images = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'team_img'])->get();
         $prev_project_images = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'prev_project_img'])->get();
         $trader_work = Traderworks::with('buildersubcategory')->where('user_id', Auth::user()->id)->get();
         $trader_areas = Traderareas::where('user_id', Auth::user()->id)->get();
         // dd($trader_area->toArray());
-        return view('tradepersion.dashboard', compact('works', 'areas', 'trader_details', 'trader_work', 'trader_areas', 'company_logo', 'public_liability_insurances', 'team_images', 'prev_project_images'));
+        return view('tradepersion.dashboard', compact('company_logo_url', 'works', 'areas', 'trader_details', 'trader_work', 'trader_areas', 'company_logo', 'public_liability_insurances', 'team_images', 'prev_project_images'));
     }
     function storeTempTraderFile(Request $request)
     {
