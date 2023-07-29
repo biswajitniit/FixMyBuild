@@ -543,6 +543,7 @@
                            <h6>Contact name</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
                               <input type="text" class="form-control" value="{{$trader_details->name}}" id="editContactName" onkeydown="onEnter(event, updateTraderContactInfo)">
+                              <div id="name_errors" class="text-danger"></div>
                               {{-- <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -556,6 +557,7 @@
                            <h6>Mobile number</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
                               <input type="text" class="form-control" value="{{$trader_details->phone_number}}" id="editContactMobile" onkeydown="onEnter(event, updateTraderContactInfo)">
+                              <div id="mobile_phone_errors" class="text-danger"></div>
                               {{-- <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -571,6 +573,7 @@
                            <h6>Email</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
                               <input type="text" class="form-control" value="{{$trader_details->email}}" id="editContactEmail" onkeydown="onEnter(event, updateTraderContactInfo)">
+                              <div id="email_errors" class="text-danger"></div>
                               {{-- <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -584,6 +587,7 @@
                            <h6>Office number</h6>
                            <div class="form-group  col-md-12 pw_ pw2_">
                               <input type="text" class="form-control" value="{{$trader_details->phone_office}}" id="editContactOfficeMobile" onkeydown="onEnter(event, updateTraderContactInfo)">
+                              <div id="office_phone_errors" class="text-danger"></div>
                               {{-- <em>
                                  <a href="javascript:void(0)">
                                     <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1137,6 +1141,7 @@
             url: "{{ route('tradesperson.updateTraderName') }}",
             data: {tradername: tradername},
             success: function (data){
+               $('#editTraderNameResp').empty();
                if(data.status == 1){
                   $('#editTraderNameResp').removeClass('error');
                   $('#editTraderNameResp').empty();
@@ -1147,6 +1152,14 @@
                   $('#editTraderNameResp').addClass('error');
                   $('#editTraderNameResp').html(data.message);
                }
+            }, error: function(data, error, status) {
+                if (data.responseJSON.errors.hasOwnProperty('tradername')) {
+                    errors = ``;
+                    for (let err of data.responseJSON.errors.tradername) {
+                        errors += `<p class="text-danger">${err}</p>`;
+                    }
+                    $('#editTraderNameResp').html(errors);
+                }
             }
          });
    }
@@ -1180,34 +1193,73 @@
       var countryCode = countryData.iso2;
       var contactName = $('#editContactName').val();
       var contactMobile = $('#editContactMobile').val();
-      //   console.log(contactMobile);
       var contactEmail = $('#editContactEmail').val();
-    //   var contactOfficeMobile = $('#editContactOfficeMobile').val();
       var contactOfficeMobile = edit_office_mobile_iti.getNumber();
-      $.ajax
-         ({
+      $.ajax({
             type: "POST",
             url: "{{ route('tradesperson.updateTraderContactInfo') }}",
             data: {contactName: contactName, contactMobile: contactMobile, countryCode: countryCode, contactEmail: contactEmail, contactOfficeMobile: contactOfficeMobile},
             success: function (data){
-               if(data.status == 1){
-                //   $('#editTraderContactResp').addClass('success');
-                  $('#editTraderContactResp').empty();
-                  $('#contactDetailsEdit').hide();
-                  $('#trader-contact-name').text(data.contact_name);
-                  $('#trader-email').text(data.email);
-                  disp_iti.setNumber(`${data.phone}`);
-                  disp_iti.setCountry(`${data.phone_code}`);
-                  //   $('#phone').val(data.office_phone);
-                  disp_office_iti.setNumber(`${data.office_phone}`);
-                  $('#contactDetails').show();
-                //   setTimeout(function() {location.reload();}, 2000);
-               }else{
-                  $('#editTraderContactResp').addClass('error');
-                  $('#editTraderContactResp').html(data.message);
-               }
+                $('#office_phone_errors, #name_errors, #mobile_phone_errors, #email_errors').empty();
+                if (data.status == 1) {
+                    $('#editTraderContactResp').empty();
+                    $('#contactDetailsEdit').hide();
+                    $('#trader-contact-name').text(data.contact_name);
+                    $('#trader-email').text(data.email);
+                    disp_iti.setNumber(`${data.phone}`);
+                    disp_iti.setCountry(`${data.phone_code}`);
+                    disp_office_iti.setNumber(`${data.office_phone}`);
+                    $('#contactDetails').show();
+                } else {
+                    $('#editTraderContactResp').addClass('error');
+                    $('#editTraderContactResp').html(data.message);
+                }
+            },
+            error: function(data, status, error) {
+                $('#office_phone_errors, #name_errors, #mobile_phone_errors, #email_errors').empty();
+
+                if (data.responseJSON.errors.hasOwnProperty('contactName')) {
+                    name_errors = ``;
+                    for (let err of data.responseJSON.errors.contactName) {
+                        name_errors += `<p class="text-danger">${err}</p>`;
+                    }
+                    $('#name_errors').html(name_errors);
+                }
+
+                if (data.responseJSON.errors.hasOwnProperty('contactMobile') || data.responseJSON.errors.hasOwnProperty('countryCode')) {
+                    mobile_phone_errors = ``;
+                    if(data.responseJSON.errors.hasOwnProperty('contactMobile')) {
+                        for (let err of data.responseJSON.errors.contactMobile) {
+                            mobile_phone_errors += `<p class="text-danger">${err}</p>`;
+                        }
+                    }
+
+                    if(data.responseJSON.errors.hasOwnProperty('countryCode')) {
+                        for (let err of data.responseJSON.errors.countryCode) {
+                            mobile_phone_errors += `<p class="text-danger">${err}</p>`;
+                        }
+                    }
+
+                    $('#mobile_phone_errors').html(mobile_phone_errors);
+                }
+
+                if (data.responseJSON.errors.hasOwnProperty('contactEmail')) {
+                    email_errors = ``;
+                    for (let err of data.responseJSON.errors.contactEmail) {
+                        email_errors += `<p class="text-danger">${err}</p>`;
+                    }
+                    $('#email_errors').html(email_errors);
+                }
+
+                if (data.responseJSON.errors.hasOwnProperty('contactOfficeMobile')) {
+                    office_phone_errors = ``;
+                    for (let err of data.responseJSON.errors.contactOfficeMobile) {
+                        office_phone_errors += `<p class="text-danger">${err}</p>`;
+                    }
+                    $('#office_phone_errors').html(office_phone_errors);
+                }
             }
-         });
+      });
    }
 
    function updateVat(){
@@ -1872,6 +1924,9 @@
             let html = '';
 
             for(let response of responses) {
+                if($(`#teamImage-${response.id}`).length) {
+                    continue;
+                }
                 html += `<div class="d-inline mr-2" id="teamImage-${response.id}">
                             <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.id}, 'teamImage-${response.id}')">
                                 <img src="${response.url}" alt="" class="rectangle-img">
@@ -1912,6 +1967,9 @@
             let html = '';
 
             for(let response of responses) {
+                if($(`#prevProjectImage-${response.id}`).length) {
+                    continue;
+                }
                 html += `<div class="d-inline mr-2" id="prevProjectImage-${response.id}">
                             <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(${response.id}, 'prevProjectImage-${response.id}')">
                             <img src="${response.url}" alt="" class="rectangle-img">
@@ -2074,6 +2132,17 @@
         showWorkCount();
         $('.work-checkbox').change(() => showWorkCount());
         $('.town-checkbox').change(() => showAreaCount());
+        $('#accountInfoCheck').on('click', function(){
+            if($(this).prop('checked') && $('#accountResp').text() == 'Please confirm that the account belongs to myself/my company and the about details are correct.') {
+                $('#accountResp').empty();
+            }
+        });
+        $('#cancelContactDetails').on('click', function() {
+            $('#office_phone_errors, #name_errors, #mobile_phone_errors, #email_errors').empty();
+        });
+        $('#closeTradename').on('click', function() {
+            $('#editTraderNameResp').empty();
+        });
     });
 
 </script>

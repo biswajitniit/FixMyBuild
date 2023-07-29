@@ -614,6 +614,8 @@ class TradepersionDashboardController extends Controller
     }
     function updateTraderName(Request $request)
     {
+        $request->validate(['tradername'=>'required|string'],['tradername.required' => 'Please provide your trading name.']);
+        
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
         $traderdetails->trader_name = $request->tradername;
         if($traderdetails->save()){
@@ -649,6 +651,40 @@ class TradepersionDashboardController extends Controller
     }
     public function updateTraderContactInfo(Request $request)
     {
+        $rules = [
+            'contactName'       => 'required|string',
+            'countryCode'       => 'required|string',
+            'contactMobile'     => 'required',
+            'contactEmail'      => 'required|email',
+        ];
+
+        $messages = [
+            'contactName.required'      => 'Please enter your name.',
+            'countryCode.required'      => 'Please select your phone code.',
+            'contactMobile.required'    => 'Please enter your phone number.',
+            'contactEmail.required'     => 'Please provide the email address to which customers can contact you.',
+            'contactEmail.email'        => 'Please provide a valid email address.'
+        ];
+
+        $errors = new MessageBag();
+        if ( $request->contactOfficeMobile ) {
+            $phone_office_with_dial_code = str_replace('-', '', str_replace(' ', '', substr($request->contactOfficeMobile,1,-1)));
+            if ( !is_numeric($phone_office_with_dial_code) )
+                $errors->add('contactOfficeMobile', 'Invalid office phone number provided.');
+        }
+
+        if ( $request->contactMobile ) {
+            $mobile_num = str_replace('-', '', str_replace(' ', '', substr($request->contactMobile,1,-1)));
+            if ( !is_numeric($mobile_num) )
+                $errors->add('contactMobile', 'Invalid phone number provided.');
+        }
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails() || count($errors) != 0) {
+            $errors->merge($validator->errors());
+            return response()->json(['errors' => $errors], 422);
+        }
+
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
         $traderdetails->name = $request->contactName;
         $traderdetails->phone_number = $request->contactMobile;
@@ -757,11 +793,13 @@ class TradepersionDashboardController extends Controller
     {
         $list = $request->worktype;
         $deletetrader = Traderworks::where('user_id', Auth::user()->id)->delete();
-        foreach($list as $w){
-            $traderwork = new Traderworks();
-            $traderwork->user_id = Auth::user()->id;
-            $traderwork->buildersubcategory_id = $w;
-            $traderwork->save();
+        if(isset($request->worktype)) {
+            foreach($list as $work){
+                $traderwork = new Traderworks();
+                $traderwork->user_id = Auth::user()->id;
+                $traderwork->buildersubcategory_id = $work;
+                $traderwork->save();
+            }
         }
 
         $updated_data = Traderworks::where('user_id', Auth::user()->id)
