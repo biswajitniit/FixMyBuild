@@ -497,14 +497,14 @@ class TradepersionDashboardController extends Controller
                     ->toArray();
         $trader_details = TraderDetail::where('user_id', Auth::user()->id)->first();
         $company_logo = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'company_logo'])->first();
-        $company_logo_url = $company_logo ? route('hide.url', [ 'id' => Hashids_encode($company_logo->id) ]) : null;
+        // $company_logo_url = $company_logo ? route('hide.url', [ 'id' => Hashids_encode($company_logo->id), 'modelName' => 'TradespersonFile' ]) : null;
         $public_liability_insurances = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'public_liability_insurance'])->get();
         $team_images = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'team_img'])->get();
         $prev_project_images = TradespersonFile::where(['tradesperson_id' => Auth::user()->id, 'file_related_to' => 'prev_project_img'])->get();
         $trader_work = Traderworks::with('buildersubcategory')->where('user_id', Auth::user()->id)->get();
         $trader_areas = Traderareas::where('user_id', Auth::user()->id)->get();
         // dd($trader_area->toArray());
-        return view('tradepersion.dashboard', compact('company_logo_url', 'works', 'areas', 'trader_details', 'trader_work', 'trader_areas', 'company_logo', 'public_liability_insurances', 'team_images', 'prev_project_images'));
+        return view('tradepersion.dashboard', compact('works', 'areas', 'trader_details', 'trader_work', 'trader_areas', 'company_logo', 'public_liability_insurances', 'team_images', 'prev_project_images'));
     }
     function storeTempTraderFile(Request $request)
     {
@@ -845,35 +845,78 @@ class TradepersionDashboardController extends Controller
 
     public function deleteTraderFile(Request $request)
     {
-        if(TradespersonFile::where('id', $request->file)->delete()){
-            return response()->json([
-                'response' => 'success',
-            ]);
+        try {
+            TradespersonFile::where('id', Hashids_decode($request->file))->delete();
+
+            return response()->json(['response' => 'success']);
+        } catch(\Exception $e) {
+            return response()->json(['response' => 'fail']);
         }
-        return response()->json([
-            'response' => 'fail',
-        ]);
     }
 
-    public function fetchTraderDashboardPli() {
-        $public_liability_insurances = TradespersonFile::where(['tradesperson_id' => Auth::id(), 'file_related_to' => 'public_liability_insurance'])->get();
-        $html = '';
-        foreach ($public_liability_insurances as $public_liability_insurance){
-            $html .= '<div class="mb-3" id="publicLiabilityInsurance-'.$public_liability_insurance->id.'">
-            <a href="'.route('download.file', [ 'id' => Hashids_encode($public_liability_insurance->id) ]).'" class="btn-pli">'.\Str::limit($public_liability_insurance->file_name, 15, "...").'<svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
-                </svg>
-            </a>
-            <a href="javascript:void(0)" onclick="confirmDeletePopup('. $public_liability_insurance->id .', \'publicLiabilityInsurance-'.$public_liability_insurance->id .'\')">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
-                </svg>
-            </a>
-            </div>';
-        }
 
-        return $html;
-    }
+    // public function fetchTraderDashboardPli() {
+    //     $public_liability_insurances = TradespersonFile::where(['tradesperson_id' => Auth::id(), 'file_related_to' => 'public_liability_insurance'])->get();
+    //     $html = '';
+    //     foreach ($public_liability_insurances as $public_liability_insurance){
+    //         $html .= '<div class="mb-3" id="publicLiabilityInsurance-'.$public_liability_insurance->id.'">
+    //         <a href="'.route('download.file', [ 'id' => Hashids_encode($public_liability_insurance->id) ]).'" class="btn-pli">'.\Str::limit($public_liability_insurance->file_name, 15, "...").'<svg width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    //                 <path d="M17.3125 19.0003V22.3337H1.6875V19.0003H0.125V22.3337C0.125 22.7757 0.28962 23.1996 0.582646 23.5122C0.875671 23.8247 1.2731 24.0003 1.6875 24.0003H17.3125C17.7269 24.0003 18.1243 23.8247 18.4174 23.5122C18.7104 23.1996 18.875 22.7757 18.875 22.3337V19.0003H17.3125ZM17.3125 10.667L16.2109 9.49199L10.2812 15.8087V0.666992H8.71875V15.8087L2.78906 9.49199L1.6875 10.667L9.5 19.0003L17.3125 10.667Z" fill="#6D717A" />
+    //             </svg>
+    //         </a>
+    //         <a href="javascript:void(0)" onclick="confirmDeletePopup('. $public_liability_insurance->id .', \'publicLiabilityInsurance-'.$public_liability_insurance->id .'\')">
+    //             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    //                 <path d="M17 17L1 1M17 1L1 17" stroke="#6D717A" stroke-width="2" stroke-linecap="round" />
+    //             </svg>
+    //         </a>
+    //         </div>';
+    //     }
+
+    //     return $html;
+    // }
+
+
+    // public function fetchTeamPhotos() {
+    //     $team_images = TradespersonFile::where(['tradesperson_id' => Auth::id(), 'file_related_to' => 'team_img'])->get();
+    //     $html = '';
+    //     foreach($team_images as $team_img) {
+    //         $html .= '<div class="d-inline mr-2" id="teamImage-' . Hashids_encode($team_img->id) . '">
+    //             <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(\'' . Hashids_encode($team_img->id) . '\', \'teamImage-' . Hashids_encode($team_img->id) . '\')">
+    //                 <img src="' . route('hide.url', ['id' => Hashids_encode($team_img->id), 'modelName' => \Crypt::encryptString('TradespersonFile')]) . '" alt="" class="rectangle-img">
+    //                 <div class="remove_img">
+    //                     <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+    //                         <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+    //                     </svg>
+    //                 </div>
+    //             </a>
+    //         </div>';
+
+    //     }
+
+    //     return $html;
+    // }
+
+
+    // public function fetchPrevProjPhotos() {
+    //     $prev_project_images = TradespersonFile::where(['tradesperson_id' => Auth::id(), 'file_related_to' => 'prev_project_img'])->get();
+    //     $html = '';
+    //     foreach ($prev_project_images as $prev_project_img) {
+    //         $html .= '<div class="d-inline mr-2" id="prevProjectImage-' . Hashids_encode($prev_project_img->id) . '">
+    //             <a href="javascript:void(0)" class="mb-1" onclick="confirmDeletePopup(\'' . Hashids_encode($prev_project_img->id) . '\', \'prevProjectImage-' . Hashids_encode($prev_project_img->id) . '\')">
+    //                 <img src="' . route('hide.url', ['id' => Hashids_encode($prev_project_img->id), 'modelName' => \Crypt::encryptString('TradespersonFile')]) . '" alt="" class="rectangle-img">
+    //                 <div class="remove_img">
+    //                     <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+    //                         <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+    //                     </svg>
+    //                 </div>
+    //             </a>
+    //         </div>';
+
+    //     }
+
+    //     return $html;
+    // }
+
 
     public function storeTraderFile(Request $request)
     {
@@ -930,7 +973,13 @@ class TradepersionDashboardController extends Controller
 
                 // $uploaded_file = ['file' => $tradesperson_file];
                 // array_push($response, $uploaded_file);
-                array_push($response, $tradesperson_file);
+                $response_data = [
+                    'id'    => Hashids_encode($tradesperson_file->id),
+                    'path'  => route('hide.url', ['id' => Hashids_encode($tradesperson_file->id), 'modelName' => \Crypt::encryptString('TradespersonFile')]),
+                    'file_name' => $tradesperson_file->file_name,
+                ];
+
+                array_push($response, $response_data);
 
                 if (isset($delete_medias_after_save) && !empty($delete_medias_after_save)) {
                     $delete_medias_after_save->each(function ($media) {
@@ -939,9 +988,21 @@ class TradepersionDashboardController extends Controller
                 }
             }
 
-            if ($request->file_related_to == "public_liability_insurance") {
-                return $this->fetchTraderDashboardPli();
-            }
+            // if ($request->file_related_to == "public_liability_insurance") {
+            //     return $this->fetchTraderDashboardPli();
+            // }
+
+            // switch ($request->file_related_to) {
+            //     case 'public_liability_insurance':
+            //         return $this->fetchTraderDashboardPli();
+            //     case 'team_img':
+            //         return $this->fetchTeamPhotos();
+            //     // case 'prev_project_img':
+            //     //     return $this->fetchPrevProjPhotos();
+
+            //     // default:
+            //         // break;
+            // }
 
             return $response;
             // return response()->json(['file' => $tradesperson_file]);

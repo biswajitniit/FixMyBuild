@@ -80,7 +80,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     // Hide AWS Url
     Route::group(['middleware' => 'auth'], function () {
         Route::get('download/{id}', [DownloadController::class, 'downloadTraderFile'])->name('download.file');
-        Route::get('media/tradesperson-file/{id}', [MaskUrlController::class, 'trader_file'])->name('hide.url');
+        // Route::get('media/tradesperson-file/{id}', [MaskUrlController::class, 'trader_file'])->name('hide.url');
+        Route::get('media/{modelName}/{id}', [MaskUrlController::class, 'getFile'])->name('hide.url');
     });
 
 
