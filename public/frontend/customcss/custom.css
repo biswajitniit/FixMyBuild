@@ -198,3 +198,6 @@ video.customer-video{
 .before_approved_trader{
     color:rgb(9, 137, 241);
 }
+.mail_confirmation{
+    font-size: 18px;
+}

@@ -245,15 +245,13 @@
                 <div class="row justify-content-center">
                     <div class="col-md-1">
                         <span>
-                            <img src="{{ asset('frontend/img/material-symbols.svg') }}" class="material_icon">
+                           <img src="{{ asset('frontend/img/material-symbols.svg') }}" class="material_icon">
                         </span>
                     </div>
                     <div class="col-md-11">
                         <p class="before_approved_trader mb-0"><b>Thank you for submitting your registration.</b></p>
                         <p class="before_approved_trader">We are reviewing the information you have provided us and once approved we will let you know.</p>
                     </div>
-                    {{-- <div >
-                    </div> --}}
                 </div>
             </div>
             @endif

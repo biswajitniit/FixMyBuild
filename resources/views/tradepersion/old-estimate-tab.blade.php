@@ -1,4 +1,4 @@
-<div class="tab-pane fade @if ($projectStatus=='estimate_submitted'||$projectStatus=='estimate_recalled')active show @endif" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+<div class="tab-pane fade @if ($projectStatus=='estimate_rejected')active show @endif" id="nav-home" role="tabpanel" aria-labelledby="nav-old-estimate-tab">
     <div class="row mb-5">
        <div class="col-md-8">
           <img src="{{ $company_logo->url }}" alt="" class="mr-2 c_logo"> <span>{{ $trader_detail->comp_name }}</span>

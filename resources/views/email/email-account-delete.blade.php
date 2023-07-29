@@ -69,7 +69,7 @@
                                         <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">You have successfully deleted your account with the reason "{{ $user->account_deletion_reason }}".</h5>
                                         <p style="font-size: 20px; margin-top: 20px;">
                                             If you have any questions, reach out to us at <br />
-                                            <a href="#" style="font-size: 20px; text-decoration: none; color: #ee5719;">{{ env('COMPANY_MAIL') }}</a>
+                                            <a href="#" style="font-size: 20px; text-decoration: none; color: #ee5719;">{{ env('MAIL_FROM_ADDRESS') }}</a>
                                         </p>
                                         <h5 style="color: #061a48; font-size: 16px; line-height: 23px; text-align: center; margin-bottom: 10px;">Team Fix My Build</h5>
                                         {{-- <a href="#" style="margin-right: 10px; text-decoration: none;">
@@ -86,7 +86,7 @@
                                     <td style='text-align:center'>
                                        <p>Copyright &copy; {{ date('Y') }} FixMyBuild. All Rights Reserved.</p>
                                        <a href="tel:{{ env('COMPANY_CONTACT_NO') }}" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/phone.svg') }}" alt=''> {{ env('COMPANY_CONTACT_NO') }}</a>
-                                       <a href="mailto:{{ env('COMPANY_MAIL') }}" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/mail.svg') }}" alt=''> {{ env('COMPANY_MAIL') }}</a>
+                                       <a href="mailto:{{ env('MAIL_FROM_ADDRESS') }}" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/mail.svg') }}" alt=''> {{ env('MAIL_FROM_ADDRESS') }}</a>
                                     </td>
                                 </tr>
                             </tbody>

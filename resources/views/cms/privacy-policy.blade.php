@@ -131,7 +131,7 @@ contact our data privacy manager in the following ways:</a></p>
 of legal entity: </a>Fix My Build Ltd.</p>
 
 <p class=NoNumUntitledClause style='margin-left:0cm'><a name=a770336>Email
-address: </a><i><u><span style='color:#0070C0'>{{ env('COMPANY_MAIL') }}</span></u></i></p>
+address: </a><i><u><span style='color:#0070C0'>{{ env('MAIL_FROM_ADDRESS') }}</span></u></i></p>
 
 <p class=NoNumUntitledClause style='margin-left:0cm'><a name=a432477>Postal
 address: </a>Fix my build, PO Box 3335, Mitcham CR4 9FQ.</p>

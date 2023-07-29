@@ -1169,6 +1169,7 @@ class TradepersionDashboardController extends Controller
 
     public function project_estimate(Request $request,$key)
     {
+        dd($key);
         try{
             $default_contingency = TraderDetail::where(['user_id' => Auth::user()->id])->first()->contingency;
             return view("tradepersion.estimate", ['project_id' => $key, 'default_contingency' => $default_contingency]);
@@ -1273,7 +1274,7 @@ class TradepersionDashboardController extends Controller
 
         try{
             $old_estimate = Estimate::where([
-                                'project_id'      => $request->project_id,
+                                'project_id'      => Hashids_decode($request->project_id),
                                 'tradesperson_id' => Auth::user()->id,
                             ])->first();
 
@@ -1291,7 +1292,7 @@ class TradepersionDashboardController extends Controller
 
                 Estimate::create([
                     'describe_mode'           => $request->describe_mode,
-                    'project_id'              => $request->project_id,
+                    'project_id'              => Hashids_decode($request->project_id),
                     'tradesperson_id'         => Auth::user()->id,
                     'unable_to_describe_type' => $request->unable_to_describe_type,
                     'more_info'               => \Str::lower($request->unable_to_describe_type) == 'need_more_info' ? $request->typeHere : null,
@@ -1349,7 +1350,7 @@ class TradepersionDashboardController extends Controller
 
             $estimate = Estimate::create([
                 'describe_mode'              => $request->describe_mode,
-                'project_id'                 => $request->project_id,
+                'project_id'                 => Hashids_decode($request->project_id),
                 'tradesperson_id'            => Auth::user()->id,
                 'covers_customers_all_needs' => $request->covers_customers_all_needs ?? 0,
                 'payment_required_upfront'   => $request->payment_required_upfront ?? 0,
@@ -1461,7 +1462,9 @@ class TradepersionDashboardController extends Controller
         //                                 ->select('projects.*')
         //                                 ->get();
 
-        if(tradesperson_project_status($project->id) == 'estimate_submitted' || tradesperson_project_status($project->id) == 'project_started' || tradesperson_project_status($project->id) == 'estimate_accepted') {
+        $status_proj = tradesperson_project_status($project->id);
+
+        if($status_proj == 'estimate_submitted' || $status_proj == 'project_started' || $status_proj == 'estimate_accepted' || $status_proj == 'estimate_rejected' || $status_proj == 'estimate_recalled' || $status_proj == 'project_paused') {
             $estimate = Estimate::where('project_id', $id)
                             ->where('tradesperson_id', Auth::user()->id)
                             ->first();
@@ -1497,7 +1500,7 @@ class TradepersionDashboardController extends Controller
             $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
             $initial_payment_percentage = number_format($initial_payment_percentage, 2);
             $contingency_per_task = number_format($contingency_per_task, 2);
-            return view('tradepersion.project_details',compact('projectid','project','trader_detail','other_open_projects','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task', 'recommended_projects','prev_project_imgs','teams_photos','company_logo'));
+            return view('tradepersion.project_details',compact('projectid','project','trader_detail','other_open_projects','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','prev_project_imgs','teams_photos','company_logo'));
         }
 
         return view('tradepersion.project_details',compact('projectid','project','trader_detail','other_open_projects'));

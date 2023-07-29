@@ -77,7 +77,7 @@
                                     <td style='text-align:center'>
                                        <p>Copyright &copy; {{ date('Y') }} FixMyBuild. All Rights Reserved.</p>
                                        <a href="tel:{{ env('COMPANY_CONTACT_NO') }}" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/phone.svg') }}" alt=''> {{ env('COMPANY_CONTACT_NO') }}</a>
-                                       <a href="mailto:{{ env('COMPANY_MAIL') }}" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/mail.svg') }}" alt=''> {{ env('COMPANY_MAIL') }}</a>
+                                       <a href="mailto:{{ env('MAIL_FROM_ADDRESS') }}" style='font-size: 14px;margin-right: 5px; text-decoration: none;color:#EE5719;'><img src="{{ asset('frontend/emailtemplateimage/mail.svg') }}" alt=''> {{ env('MAIL_FROM_ADDRESS') }}</a>
                                     </td>
                                 </tr>
                             </tbody>

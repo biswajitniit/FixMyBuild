@@ -4,7 +4,7 @@
             <h3>Project</h3>
             <h6>Status:
                 @switch($status)
-                    @case('submitted_for_review')
+                    @case('estimate_submitted')
                         <span class="text-info">Submitted for review</span>
                         @break
                     @case('returned_for_review')
