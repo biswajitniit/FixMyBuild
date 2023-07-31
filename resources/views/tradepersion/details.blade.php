@@ -22,7 +22,7 @@
         <div class="row gallery-area1">
            <div class="pv_top gallery-wrapper">
              <div class="row">
-                @foreach($projectid as $project_file)
+                @forelse($projectid as $project_file)
                     <div class="col-4 col-md-2 text-center">
                         @if(strtolower($project_file->file_type) === 'image')
                             <a href="{{ $project_file->url }}" class="btn-gallery" target="_blank">
@@ -33,7 +33,9 @@
                             <video src="{{ $project_file->url }}" controls="controls" class="rectangle-img mt-0"></video>
                         @endif
                     </div>
-                @endforeach
+                @empty
+                    <div>No photo/video is uploaded.</div>
+                @endforelse
                 <div id="gallery-1" class="hidden">
                      <a href="assets/img/Rectangle 63b.jpg">Image 1</a>
                  </div>
@@ -46,12 +48,14 @@
         <h3>Files(s)</h3>
         <div class="row">
             <div class="mt-3">
-                @foreach($projectid as $data)
+                @forelse($projectid as $data)
                     <div class="d-inline mr-4 img-text">{{ $data->filename }}</div>
-                @endforeach
-                @if($data->filename == null)
+                @empty
+                    No file is uploaded.
+                @endforelse
+                {{-- @if($data->filename == null)
                     No file is uploaded
-                @endif
+                @endif --}}
             </div>
         </div>
      </div>

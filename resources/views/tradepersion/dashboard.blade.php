@@ -671,7 +671,7 @@
                   </div>
                   <div id="compavatdetails" class="mt-2">
                     @if($trader_details->vat_reg)
-                        <p><strong>Company name:</strong> {{ $trader_details->vat_comp_name }}</p>
+                        <p class="mb-0"><strong>Company name:</strong> {{ $trader_details->vat_comp_name }}</p>
                         <p><strong>Company address:</strong> {{ $trader_details->vat_comp_address }}</p>
                     @endif
                   </div>

@@ -84,7 +84,7 @@
                 @endforeach
 
                 @if(!$is_media_present)
-                    No photo/video is uploaded
+                    No photo/video is uploaded.
                 @endif
             </div>
         </div>

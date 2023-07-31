@@ -184,7 +184,8 @@
                             <h3>Other open projects</h3>
                             @foreach ($other_open_projects as $key=>$project)
                                 <div>
-                                    <h5><span>{{ $key+1 }}.</span> {{ $project->project_name }} </h5>
+                                    {{-- <h5><span>{{ $key+1 }}.</span> {{ $project->project_name }} </h5> --}}
+                                    <a href="{{ route('tradeperson.project_details', ['project_id' => Hashids_encode($project->id)]) }}"><h5><span>{{ $key+1 }}.</span> {{ $project->project_name }} </h5></a>
                                     <p>Posted on: {{ time_diff($project->created_at) }}</p>
                                 </div>
                             @endforeach

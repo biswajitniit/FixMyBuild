@@ -1266,7 +1266,8 @@ class TradepersionDashboardController extends Controller
     {
         try{
             $default_contingency = TraderDetail::where(['user_id' => Auth::user()->id])->first()->contingency;
-            return view("tradepersion.estimate", ['project_id' => $key, 'default_contingency' => $default_contingency]);
+            $project = Project::where('id', $key)->first();
+            return view("tradepersion.estimate", ['project' => $project, 'project_id' => $key, 'default_contingency' => $default_contingency]);
         } catch(\Exception $e) {
             return 'error';
         }
@@ -1517,7 +1518,7 @@ class TradepersionDashboardController extends Controller
         $trader_areas = Traderareas::where(['user_id' => Auth::id()])->get();
         $trader_works = Traderworks::where('user_id', Auth::user()->id)->get();
 
-        $other_open_projects = recommended_projects($trader_areas, $trader_works)->limit(5)->get();
+        $other_open_projects = recommended_projects($trader_areas, $trader_works)->where('id', '<>', $id)->limit(5)->get();
 
         // $recommended_projects = Project::where('reviewer_status', 'approved')
         //                         ->distinct('projects.id')

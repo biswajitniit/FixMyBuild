@@ -282,17 +282,28 @@ $(document).ready(function(){
 });
 
 function fetchTableData(keyword) {
-    $.ajax({
-        url: "{{ route('tradesperson.searchprojects') }}",
-        data: {'keyword': keyword},
-        success: function(response) {
-            // $('#table_body').html(response);
-            $('#new_projects').html(response);
-        },
-        error: function(xhr, status, error) {
-            console.log(error);
-        }
+    // $.ajax({
+    //     url: "{{ route('tradesperson.searchprojects') }}",
+    //     data: {'keyword': keyword},
+    //     success: function(response) {
+    //         // $('#table_body').html(response);
+    //         $('#new_projects').html(response);
+    //     },
+    //     error: function(xhr, status, error) {
+    //         console.log(error);
+    //     }
+    // });
+
+    $('#new_projects tr td:nth-child(2)').each(function () {
+        $(this).closest('tr').toggle($(this).text().trim().toLowerCase().includes(keyword.trim().toLowerCase()));
     });
+
+
+    if ($('#new_projects tbody tr[style="display: none;"]').length == $('#new_projects tbody tr').length) {
+        $("#new_projects tbody").prepend('<tr id="empty_new_projects"><td colspan="6" class="text-center">There are currently no running projects.</td></tr>');
+    } else {
+        $('#empty_new_projects').remove();
+    }
 }
 
 function fetchHistoryTableData(keyword) {
@@ -306,6 +317,17 @@ function fetchHistoryTableData(keyword) {
             console.log(error);
         }
     });
+
+    // $('#project_history tr td:nth-child(2)').each(function () {
+    //     $(this).closest('tr').toggle($(this).text().trim().toLowerCase().includes(keyword.trim().toLowerCase()));
+    // });
+
+
+    // if ($('#project_history tbody tr[style="display: none;"]').length == $('#project_history tbody tr').length) {
+    //     $("#project_history tbody").prepend('<tr id="empty_project_history"><td colspan="5" class="text-center">No project history available.</td></tr>');
+    // } else {
+    //     $('#empty_project_history').remove();
+    // }
 }
 
 function debounce(func, timeout = 300){

@@ -205,7 +205,7 @@
                                     <h5>Customer’s project name</h5>
                                 </div>
                                 <div class="col-md-6">
-                                    <h2>Renovate my house</h2>
+                                    <h2>{{ ucwords($project->project_name) }}</h2>
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -213,7 +213,9 @@
                                     <h5>Location</h5>
                                 </div>
                                 <div class="col-md-6">
-                                    <h2>London</h2>
+                                    <h2>
+                                        {{ $project->postcode ? \Str::upper($project->postcode) . ', ' : '' }}{{ $project->town ? ucwords($project->town) . ', ' : '' }}{{ $project->county ? ucwords($project->county) : '' }}
+                                    </h2>
                                 </div>
                             </div>
                         </div>

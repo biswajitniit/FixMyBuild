@@ -39,7 +39,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="text-center">There are currently no running projects.</td>
+                    <td colspan="5" class="text-center">No project history available.</td>
                 </tr>
             @endforelse
         </tbody>
