@@ -318,7 +318,7 @@
                      <div style="display:none;" id="tradernameedit">
                         <h2 class="company-name">
                            <input type="text" value="{{$trader_details->trader_name}}" id="editTraderName" onkeydown="onEnter(event, updateTraderName)">
-                           <p id="editTraderNameResp"></p>
+                           <p id="editTraderNameResp" class="fs-16"></p>
                         </h2>
                         <span class="acme_right">
                            <a href="javascript:void(0)" onclick="updateTraderName()">
