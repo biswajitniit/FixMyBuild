@@ -615,7 +615,7 @@ class TradepersionDashboardController extends Controller
     function updateTraderName(Request $request)
     {
         $request->validate(['tradername'=>'required|string'],['tradername.required' => 'Please provide your trading name.']);
-        
+
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
         $traderdetails->trader_name = $request->tradername;
         if($traderdetails->save()){
@@ -633,6 +633,11 @@ class TradepersionDashboardController extends Controller
     }
     public function updateTraderDesc(Request $request)
     {
+        $request->validate(
+            ['traderdesc' => 'required|string'],
+            ['traderdesc.required' => 'Please provide a description about your company.']
+        );
+
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();
         $traderdetails->comp_description = $request->traderdesc;
         if($traderdetails->save()){

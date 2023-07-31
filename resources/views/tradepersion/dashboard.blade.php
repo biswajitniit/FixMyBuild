@@ -346,7 +346,7 @@
                   <div class="mt-2 company-desp" style="display:none;" id="compdescEdit">
                      {{-- <textarea id="summernote" name="comp_description">{{$trader_details->comp_description}}</textarea> --}}
                      <textarea rows="3" class="form-control" name="comp_description">{{ $trader_details->comp_description }}</textarea>
-                     <p id="editTraderDescResp"></p>
+                     <div id="editTraderDescResp" class="text-danger"></div>
                      <a href="javascript:void(0)" class="save_" onclick="updateTraderDesc()">Save</a>
                      <a href="javascript:void(0)" class="cancel_" id="descCancel">Cancel</a>
                   </div>
@@ -1181,9 +1181,18 @@
                   $('#txtCompDesc').html(data.description);
                   $('#compdesc').show();
                }else{
-                  $('#editTraderDescResp').addClass('error');
+                //   $('#editTraderDescResp').addClass('error');
                   $('#editTraderDescResp').html(data.message);
                }
+            },
+            error: function(data, status, error) {
+                if (data.responseJSON.errors.hasOwnProperty('traderdesc')) {
+                    name_errors = ``;
+                    for (let err of data.responseJSON.errors.traderdesc) {
+                        name_errors += `<p class="text-danger">${err}</p>`;
+                    }
+                    $('#editTraderDescResp').html(name_errors);
+                }
             }
          });
    }
