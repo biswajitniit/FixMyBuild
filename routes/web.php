@@ -272,7 +272,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::post('temp-store-media', [TradepersionDashboardController::class, 'storeTempTraderFile'])->name('tempTraderMedia');
         });
         Route::get('project-estimate/{project_id}', [TradepersionDashboardController::class, 'project_estimate'])->name('tradepersion.project_estimate');
-        Route::post('project-estimate', [TradepersionDashboardController::class, 'projectestimate'])->name('tradepersion.p_estimate');
+        Route::post('project-estimate/{id}', [TradepersionDashboardController::class, 'projectestimate'])->name('tradepersion.p_estimate');
         Route::get('project-details/{project_id}', [TradepersionDashboardController::class, 'details'])->name('tradeperson.project_details');
         Route::post('update-milestone-price', [TradepersionDashboardController::class, 'update_milestone_price'])->name('tradeperson.update-milestone-price');
         Route::post('update-task-status', [TradepersionDashboardController::class, 'update_task_status'])->name('tradeperson.update-task-status');

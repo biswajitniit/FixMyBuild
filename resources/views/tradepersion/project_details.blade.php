@@ -121,15 +121,15 @@
                     <a href="{{ route('tradepersion.projects') }}" class="btn btn-light mr-3">Back</a>
                     @if ($projectStatus == 'write_estimate')
                         <a href="#" data-bs-toggle="modal" data-bs-target="#reject-project"  class="btn btn-light mr-3">Reject project</a>
-                        <a href="{{ route('tradepersion.project_estimate',[Hashids_encode('project_id', $project->id)]) }}" class="btn btn-primary">Estimate now</a>
+                        <a href="{{ route('tradepersion.project_estimate',['project_id'=> Hashids_encode($project->id)]) }}" class="btn btn-primary">Estimate now</a>
                     @endif
 
                     @if ($projectStatus == 'estimate_submitted')
-                        <a href="{{ route('tradepersion.project_estimate',[Hashids_encode('project_id' , $project->id)]) }}" class="btn btn-primary">Recall estimate</a>
+                        <a href="{{ route('tradepersion.project_estimate',['project_id' => Hashids_encode($project->id)]) }}" class="btn btn-primary">Recall estimate</a>
                     @endif
 
                     @if ($projectStatus == 'estimate_recalled' || $projectStatus == 'estimate_rejected')
-                        <a href="{{ route('tradepersion.project_estimate',[Hashids_encode('project_id', $project->id)]) }}" class="btn btn-primary">Edit estimate</a>
+                        <a href="{{ route('tradepersion.project_estimate',['project_id'=> Hashids_encode($project->id)]) }}" class="btn btn-primary">Edit estimate</a>
                     @endif
                 </div>
                 <!-- Reject Project password-->

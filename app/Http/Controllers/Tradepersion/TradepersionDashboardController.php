@@ -1264,18 +1264,18 @@ class TradepersionDashboardController extends Controller
 
     public function project_estimate(Request $request,$key)
     {
-        dd($key);
         try{
+            $key = Hashids_decode($key);
             $default_contingency = TraderDetail::where(['user_id' => Auth::user()->id])->first()->contingency;
             $project = Project::where('id', $key)->first();
-            return view("tradepersion.estimate", ['project' => $project, 'project_id' => $key, 'default_contingency' => $default_contingency]);
+            return view("tradepersion.estimate", ['project' => $project, 'default_contingency' => $default_contingency]);
         } catch(\Exception $e) {
             return 'error';
         }
     }
 
 
-    public function projectestimate(Request $request)
+    public function projectestimate(Request $request, $id)
     {
         // try {
             // $insert_estimate = new Estimate();
@@ -1370,7 +1370,7 @@ class TradepersionDashboardController extends Controller
 
         try{
             $old_estimate = Estimate::where([
-                                'project_id'      => Hashids_decode($request->project_id),
+                                'project_id'      => Hashids_decode($id),
                                 'tradesperson_id' => Auth::user()->id,
                             ])->first();
 
@@ -1388,7 +1388,7 @@ class TradepersionDashboardController extends Controller
 
                 Estimate::create([
                     'describe_mode'           => $request->describe_mode,
-                    'project_id'              => Hashids_decode($request->project_id),
+                    'project_id'              => Hashids_decode($id)[0],
                     'tradesperson_id'         => Auth::user()->id,
                     'unable_to_describe_type' => $request->unable_to_describe_type,
                     'more_info'               => \Str::lower($request->unable_to_describe_type) == 'need_more_info' ? $request->typeHere : null,
@@ -1446,7 +1446,7 @@ class TradepersionDashboardController extends Controller
 
             $estimate = Estimate::create([
                 'describe_mode'              => $request->describe_mode,
-                'project_id'                 => Hashids_decode($request->project_id),
+                'project_id'                 => Hashids_decode($id)[0],
                 'tradesperson_id'            => Auth::user()->id,
                 'covers_customers_all_needs' => $request->covers_customers_all_needs ?? 0,
                 'payment_required_upfront'   => $request->payment_required_upfront ?? 0,
