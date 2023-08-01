@@ -49,7 +49,7 @@ class PasswordController extends Controller
 
 
         $postdata = array(
-                        'From'          => env('COMPANY_MAIL'),
+                        'From'          => env('MAIL_FROM_ADDRESS'),
                         'To'            => $request['email'],
                         'Subject'       => 'Fixmybuild',
                         'HtmlBody'      => $html,

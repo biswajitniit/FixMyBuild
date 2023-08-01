@@ -94,7 +94,7 @@ class UserController extends Controller
         $html = view('email.email-verification-mail')->with('token', $token)->render();
 
         $emaildata = array(
-          'From'          => env('COMPANY_MAIL'),
+          'From'          => env('MAIL_FROM_ADDRESS'),
           'To'            => $request['email'],
           'Subject'       => 'Verify Email',
           'HtmlBody'      => $html,
@@ -104,8 +104,12 @@ class UserController extends Controller
         $email_sent = send_email($emaildata);
 
         // return redirect()->back()->with('message', 'Thanks for your registration, please check your inbox! for email verification .');
-        if (\Str::lower($user->customer_or_tradesperson) == "customer")
-            return redirect()->route('user.registration')->with('message', 'Please check your inbox for our email verification link.');
+        if (\Str::lower($user->customer_or_tradesperson) == "customer") {
+            // return redirect()->route('user.registration')->with('message', 'Please check your inbox for our email verification link.');
+            $request->session()->put('user', Hashids_encode($user->id));
+            $request->session()->put('email', $user->email);
+            return redirect()->route('verify-your-mail');
+        }
 
         // Log in the tradesperson
         Auth::login($user);
@@ -125,7 +129,7 @@ class UserController extends Controller
           $html = view('email.email-verify-account')->with('name', $user->name)->render();
 
           $emaildata = array(
-            'From'          =>  env('COMPANY_MAIL'),
+            'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $user->email,
             'Subject'       => 'Fixmybuild',
             'HtmlBody'      =>  $html,
@@ -153,7 +157,7 @@ class UserController extends Controller
         $html = view('email.email-account-delete')->with('user', $user)->render();
 
         $emaildata = array(
-          'From'          =>   env('COMPANY_MAIL'),
+          'From'          =>   env('MAIL_FROM_ADDRESS'),
           'To'            =>   $user->email,
           'Subject'       =>  'Fixmybuild Account Deletion',
           'HtmlBody'      =>   $html,
@@ -172,10 +176,10 @@ class UserController extends Controller
     public function resend_verification_email(Request $request, User $user) {
       try{
         $token = Str::random(64);
-        $data = UserVerify::where('user_id', '=', Auth::user()->id)->update(array('token' => $token,'updated_at'=>now()));
+        $data = UserVerify::where('user_id', Auth::id())->update(array('token' => $token,'updated_at'=>now()));
         $html = view('email.email-verification-mail')->with('token', $token)->render();
         $emaildata = array(
-          'From'          => env('COMPANY_MAIL'),
+          'From'          => env('MAIL_FROM_ADDRESS'),
           'To'            => Auth::user()->email,
           'Subject'       => 'Verify Email',
           'HtmlBody'      => $html,
@@ -185,7 +189,7 @@ class UserController extends Controller
         $email_sent = send_email($emaildata);
 
         return 'Please check your inbox for email verification.';
-      } catch (Exception $e) {
+      } catch (\Exception $e) {
         return "error";
       }
     }
@@ -202,7 +206,7 @@ class UserController extends Controller
             $html = view('email.email-account-delete')->with('user', $user)->render();
 
             $emaildata = array(
-                'From'          => env('COMPANY_MAIL'),
+                'From'          => env('MAIL_FROM_ADDRESS'),
                 'To'            =>  $user->email,
                 'Subject'       => 'Fixmybuild Account Deletion',
                 'HtmlBody'      =>  $html,
@@ -216,5 +220,30 @@ class UserController extends Controller
             $request->session()->flash('alert-danger', $e->getMessage());
             echo $e->getMessage();
         }
+    }
+
+    public function verify_your_mail(Request $request){
+        return view('for-mail-verify');
+    }
+
+    public function verify_your_mail_send(Request $request){
+        try{
+            $token = Str::random(64);
+            $data = UserVerify::where('user_id', Hashids_decode($request->session()->get('user')))->update(array('token' => $token,'updated_at'=>now()));
+            $html = view('email.email-verification-mail')->with('token', $token)->render();
+            $emaildata = array(
+              'From'          =>  env('MAIL_FROM_ADDRESS'),
+              'To'            => $request->session()->get('email'),
+              'Subject'       => 'Verify Email',
+              'HtmlBody'      =>  $html,
+              'MessageStream' => 'outbound'
+            );
+
+            $email_sent = send_email($emaildata);
+
+            return '';
+          } catch (\Exception $e) {
+            return "error";
+          }
     }
 }

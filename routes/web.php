@@ -90,6 +90,8 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     Route::get('/user/registration', [UserController::class, 'registration'])->name('user.registration');
     Route::post('/user/save-user', [UserController::class, 'save_user'])->name('user.save-user');
     Route::get('account/verify/{token}', [UserController::class, 'verifyAccount'])->name('user.verify');
+    Route::get('/verify-your-mail', [UserController::class, 'verify_your_mail'])->name('verify-your-mail');
+    Route::post('/verify-your-mail-send', [UserController::class, 'verify_your_mail_send'])->name('verify-your-mail-send');
 
 
 

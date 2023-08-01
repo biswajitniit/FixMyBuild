@@ -41,7 +41,7 @@
         <section  class="auth-sidebar">
             <div class="auth-sidebar-content p-4">
                <div id="particles-js">
-                  <header class="logo"><a href="{{ url('/') }}"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
+                  <header class="logo"><a href="{{ route('home') }}"><img src="{{ asset('frontend/img/logo/logo.png') }}"  alt="Logo"></a></header>
                   <div class="artwork">
                      <h2>Welcome Back</h2>
                      <h4>Good quality work at sensible prices</h4>
@@ -52,25 +52,18 @@
 
         <section class="content">
             <header>
-               <a href="{{ url('/') }}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
+               <a href="{{ route('home') }}" class="float-right  link-color"><span class="bold m-1 ">Close</span> <i class="fa fa-times"></i></a>
             </header>
+
             <div class="auth-content">
+                <div id="success-message-container" class="mt-5"></div>
+
                 <div>
                     <div class='row mb-3'>
                         <div class='input-field col-md-12'>
                             <h2 class="heading1 mb-2 text-center color-blue">Thank you for registering a user account</h2>
                         </div>
                     </div>
-                    {{-- @if (count($errors) > 0)
-                        <div class="alert alert-danger">
-                            <strong>Whoops! Something went wrong!</strong>
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif --}}
 
                     {{-- @if(session()->has('message'))
                         <div class="alert alert-success mt-15">
@@ -78,20 +71,20 @@
                         </div>
                     @endif --}}
 
-                    <div class="row">
-                        <p>
+                    <div class="row mb-2">
+                        <p class="mail_confirmation">
                             We have sent an email to verify your email address.
                         </p>
-                        <p>
+                        <p class="mail_confirmation">
                             Please click on the link within the email to be able to accept estimates on our website.
                         </p>
-                        <p>
+                        <p class="mail_confirmation">
                             If you haven't received the email, we advise checking your Spam/Junk email folders before requesting to re-send the email below.
                         </p>
                     </div>
 
                     <div class="row">
-                        <button type="button" class="btn btn-primary">Resend email</button>
+                        <button type="button" id="verify_mail" class="btn btn-primary mt-5">Resend email</button>
                     </div>
                 </div>
             </div>
@@ -105,6 +98,30 @@
       <script src="{{ asset('frontend/js/particles.js') }}"></script>
       <script src="{{ asset('frontend/js/app.js') }}"></script> --}}
       <script>
+        $("#verify_mail").click(function(){
+            $.ajax({
+                url: "{{ route('verify-your-mail-send')}}",
+                data: {'_token': "{{ csrf_token() }}"},
+                method: 'POST',
+                success: function(data){
+                    // $("#success-message-container").appendTo("body").show();
+                    let html = `
+                    <div class="blue-font-color bg-white white_box px-0">
+                        <div class="row justify-content-center">
+                            <div class="col-md-1">
+                                <span>
+                                <img src="{{ asset('frontend/img/material-symbols.svg') }}" class="material_icon">
+                                </span>
+                            </div>
+                            <div class="col-md-11">
+                                <p class="before_approved_trader mb-0"><b>We have resent the email to your email address.</b></p>
+                            </div>
+                        </div>
+                    </div>`;
+                    $('#success-message-container').html(html);
+                }
+            });
+        });
       </script>
    </body>
 </html>

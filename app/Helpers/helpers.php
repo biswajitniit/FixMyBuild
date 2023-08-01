@@ -137,7 +137,7 @@ if (!function_exists('tradesperson_project_status')) {
             if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == null) {
                 return 'estimate_submitted';
             }
-            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'estimate_rejected') {
+            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'rejected') {
                 return 'estimate_rejected';
             }
         }
@@ -194,7 +194,7 @@ function milestone_completion_notification($task_id){
             ])
             ->render();
         $emaildata = array(
-            'From'          => env('COMPANY_MAIL'),
+            'From'          => env('MAIL_FROM_ADDRESS'),
             'To'            => $user->email,
             'Subject'       => 'Milestone Completed',
             'HtmlBody'      => $html,
@@ -234,7 +234,7 @@ function project_paused_notification($project_id){
             ])
             ->render();
         $emaildata = array(
-            'From'          =>  env('COMPANY_MAIL'),
+            'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $customer->email,
             'Subject'       => 'Project Paused',
             'HtmlBody'      =>  $html,
@@ -269,7 +269,7 @@ function project_paused_notification($project_id){
             ])
             ->render();
         $emaildata = array(
-            'From'          =>  env('COMPANY_MAIL'),
+            'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $tradeperson->email,
             'Subject'       => 'Paused Project',
             'HtmlBody'      =>  $html,
@@ -308,7 +308,7 @@ function estimate_rejected_notification($tradeperson, $project){
                         ])
                         ->render();
         $emaildata = array(
-            'From'          =>  env('COMPANY_MAIL'),
+            'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $tradeperson->email,
             'Subject'       => 'Your Given Estimate Has Been Rejected',
             'HtmlBody'      =>  $html,
@@ -351,7 +351,7 @@ function cancel_project_notification($projectId){
                         ])
                         ->render();
         $emaildata = array(
-            'From'          =>  env('COMPANY_MAIL'),
+            'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $user->email,
             'Subject'       => 'Your project has been Cancelled',
             'HtmlBody'      =>  $html,
@@ -394,7 +394,7 @@ function project_completed_notification($estimateId){
                         ])
                         ->render();
         $emaildata = array(
-            'From'          =>  env('COMPANY_MAIL'),
+            'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $user->email,
             'Subject'       => 'Your project has been Completed',
             'HtmlBody'      =>  $html,

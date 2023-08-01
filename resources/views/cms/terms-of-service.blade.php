@@ -308,7 +308,7 @@ the Website and other channels.</p>
 
 <p class=Style2 align=left style='margin-left:35.45pt;text-align:left;
 text-indent:0cm'>To contact us with general questions, please email us at <i><span
-style='color:#0070C0'><a href="mailto:{{ env('COMPANY_MAIL') }}">{{ env('COMPANY_MAIL') }}</a></span></i></p>
+style='color:#0070C0'><a href="mailto:{{ env('MAIL_FROM_ADDRESS') }}">{{ env('MAIL_FROM_ADDRESS') }}</a></span></i></p>
 
 <p class=Style2 style='margin-left:35.45pt;text-indent:0cm'>or to contact us by
 telephone, please call us on 0208 145 5102.</p>
@@ -650,7 +650,7 @@ the date of your acceptance of an estimate.</p>
 text-indent:-36.0pt'>13.3.2<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
 </span>To exercise your right to cancel you can either “Cancel” or “Pause” the
 project via the Website or contact us by email: <a
-href="mailto:{{ env('COMPANY_MAIL') }}">{{ env('COMPANY_MAIL') }}</a>  or phone: 0208
+href="mailto:{{ env('MAIL_FROM_ADDRESS') }}">{{ env('MAIL_FROM_ADDRESS') }}</a>  or phone: 0208
 145 5102.</p>
 
 <p class=Style2 style='margin-left:53.45pt;text-indent:-18.0pt'>13.4<span
@@ -764,7 +764,7 @@ and feedback</p>
 <p class=Style2 style='margin-left:56.45pt;text-indent:-21.0pt'>15.1<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>We always welcome feedback from our customers. Please send your feedback
-to: <a href="mailto:{{ env('COMPANY_MAIL') }}">{{ env('COMPANY_MAIL') }}</a></p>
+to: <a href="mailto:{{ env('MAIL_FROM_ADDRESS') }}">{{ env('MAIL_FROM_ADDRESS') }}</a></p>
 
 <p class=Style2 style='margin-left:56.45pt;text-indent:-21.0pt'>15.2<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

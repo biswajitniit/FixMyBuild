@@ -87,7 +87,7 @@
                 </div>
             @endif --}}
 
-            <div class="modal fade select_address" id="successRegister" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            {{-- <div class="modal fade select_address" id="successRegister" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-body text-center p-5">
@@ -110,7 +110,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <form action="{{ route('user.save-user') }}" name="userregistration" id="userregistration" class="contact-form" method="POST">
                 @csrf
@@ -383,9 +383,9 @@
             $("#passwordCriteria").hide('slow');
         });
 
-        @if(session()->has('message'))
-            $('#successRegister').modal('show');
-        @endif
+        // @if(session()->has('message'))
+        //     $('#successRegister').modal('show');
+        // @endif
 
     });
 

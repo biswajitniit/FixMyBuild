@@ -2,7 +2,29 @@
     <div class="row mb-3">
         <div class="col-md-8">
         <h3>Project</h3>
-        <h6>Status: <span class="text-primary">Write Estimate</span></h6></div>
+        <h6>Status:
+            @switch($projectStatus)
+                @case('estimate_submitted')
+                    <span class="text-info">Estimate submitted</span>
+                    @break
+                @case('write_estimate')
+                    <span class="text-primary">Write estimate</span>
+                    @break
+                @case('project_started')
+                    <span class="text-success">Project started</span>
+                    @break
+                @case('estimate_accepted')
+                    <span class="text-awaiting">Estimate accepted</span>
+                    @break
+                @case('estimate_rejected')
+                    <span class="text-awaiting">Estimate rejected</span>
+                    @break
+                @case('estimate_recalled')
+                    <span class="text-awaiting">Estimate recalled</span>
+                    @break
+            @endswitch
+        </h6>
+    </div>
         <div class="col-md-4 text-right"><h6>Posted on: <span class="date_time">{{ $project->created_at->format('d M Y,  H:i A') }}</span> </h6></div>
      </div>
 

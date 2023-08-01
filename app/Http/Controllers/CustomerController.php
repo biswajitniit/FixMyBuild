@@ -773,7 +773,7 @@ class CustomerController extends Controller
                                 ])
                                 ->render();
                 $emaildata = array(
-                    'From'          =>  env('COMPANY_MAIL'),
+                    'From'          =>  env('MAIL_FROM_ADDRESS'),
                     'To'            =>  $tradeperson->email,
                     'Subject'       => 'Your Given Estimate Has Been Accepted',
                     'HtmlBody'      =>  $html,
