@@ -34,42 +34,54 @@
             <p>{{htmlspecialchars(trim(strip_tags($project->description)))}}<p>
          </div>
      </div>
+
+     @php $is_media_present = false; @endphp
      <div class="col-md-12">
-        <h3>Photo(s)/Video(s)</h3>
+         <h3>Photo(s)/Video(s)</h3>
+         <div class="row">
+             <div class="pv_top">
+                 @foreach($projectfiles as $doc)
+                     @if (strtolower($doc->file_type) == 'image')
+                         @php $is_media_present = true; @endphp
+                         <a href="javascript:void(0);">
+                             <img src="{{ $doc->url }}" class="rectangle-img"/>
+                         </a>
+                     @endif
+                     @if (strtolower($doc->file_type) == 'video')
+                         @php $is_media_present = true; @endphp
+                         <div class="video-mask">
+                             <a href="javascript:void(0);">
+                                 <video width="100" height="69" src="{{ $doc->url }}" class="rectangle-video" >  </video>
+                             </a>
+                         </div>
+                     @endif
+                 @endforeach
 
-        <div class="row gallery-area1">
-           <div class="pv_top gallery-wrapper">
-                <div class="row">
-                    @foreach($projectfiles as $projectfile)
-                        <div class="col-4 col-md-2 text-center">
-                            @if(strtolower($projectfile->file_type) === 'image')
-                                <a href="{{ $projectfile->url }}" class="btn-gallery" target="_blank">
-                                    <img src="{{ $projectfile->url }}" alt="">
-                                </a>
-                            @endif
-                            @if(strtolower($projectfile->file_type) === 'video')
-                                <video src="{{ $projectfile->url }}" controls="controls" class="rectangle-img mt-0"></video>
-                            @endif
-                        </div>
-                    @endforeach
-
-                    <div id="gallery-1" class="hidden">
-                        <a href="assets/img/Rectangle 63b.jpg">Image 1</a>
-                        <a href="assets/img/Rectangle 62b.jpg">Image 1</a>
-                        <a href="assets/img/Group 296b.jpg">Image 1</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+                 @if(!$is_media_present)
+                     No photo/video is uploaded.
+                 @endif
+             </div>
+         </div>
      </div>
+
+     @php $is_document_present = false; @endphp
      <div class="col-md-12 mt-4">
-        <h3>Files(s)</h3>
-        <div class="row">
-            <div class="mt-3">
-                @foreach($projectid as $data)
-                    <div class="d-inline mr-4 img-text">{{ $data->filename }}</div>
-                @endforeach
-            </div>
-        </div>
+         <h3>File(s)</h3>
+         <div class="row">
+             <div class="mt-2">
+                 @foreach($projectid as $doc)
+                     @if(strtolower($doc->file_type) == 'document')
+                         @php $is_document_present=true; @endphp
+                         <div class="d-inline mr-4 img-text">
+                             <a href="{{$doc->url}}" target="_blank"><img src="{{ asset("frontend/img/pdf-icon.svg") }}" alt=""> {{$doc->filename}}</a>
+                         </div>
+                     @endif
+                 @endforeach
+
+                 @if(!$is_document_present)
+                     No file is uploaded
+                 @endif
+             </div>
+         </div>
      </div>
  </div>

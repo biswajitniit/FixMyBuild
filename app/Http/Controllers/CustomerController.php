@@ -14,9 +14,12 @@ use App\Models\{
     UserPersonalDataShare,
     Projectaddresses,
     Project,
+    ProjectCategory,
     ProjectEstimateFile,
     User,
-    Projectfile
+    Projectfile,
+    Traderareas,
+    Traderworks
 };
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
@@ -30,7 +33,8 @@ use Illuminate\Support\Facades\DB;
 
 
 use Illuminate\Support\Facades\Storage;
-use Session;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Aws\S3\Exception\S3Exception;
 use App\Models\Tempmedia;
 use League\Flysystem\File;
@@ -67,7 +71,7 @@ class CustomerController extends Controller
             'surname'                         => 'required',
             'project_name'                    => 'required',
             'contact_mobile_no'               => 'required',
-            'contact_email'                   => 'required',
+            'contact_email'                   => 'required|email',
         ],[
             'forename.required'          => 'Please enter forename',
             'surname.required'           => 'Please enter surname',
@@ -403,7 +407,7 @@ class CustomerController extends Controller
             'status'            => 'project_started',
             'status_changed_at' => now(),
         ]);
-        if(\Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
+        if(Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
             return response()->json(['status'=>'success', 'redirect_url' => route('tradepersion.projects')]);
         return response()->json(['status'=>'success', 'redirect_url' => route('customer.project')]);
     }
@@ -465,7 +469,18 @@ class CustomerController extends Controller
             }
 
             if($projects->status == 'estimation') {
-                $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
+                $estimates = Estimate::where(['project_id' => $projects->id, 'describe_mode' => 'Fully_describe'])
+                                    //  ->where(function ($query) {
+                                    //      $query->where('status', '<>', 'trader_rejected')
+                                    //          ->orWhereNull('status');
+                                    //  })
+                                     ->with(['tasks', 'tradesperson'])->get();
+
+                // Trader Counts
+                $trader_who_submitted_estimate = Estimate::where('project_id', $projects->id)->pluck('tradesperson_id');
+                $trader_id_matched_areas = Traderareas::where(['county' => $projects->county, 'town' => $projects->town])->whereNotIn('user_id',$trader_who_submitted_estimate)->pluck('user_id');
+                $project_categories = ProjectCategory::where('project_id', $projects->id)->pluck('sub_category_id');
+                $trader_count = Traderworks::whereIn('buildersubcategory_id', $project_categories)->whereIn('user_id', $trader_id_matched_areas)->count();
 
                 foreach($estimates as $estimate) {
                     $amount = $estimate->tasks->sum('price');
@@ -482,12 +497,12 @@ class CustomerController extends Controller
                     }
                 };
 
-                return view('customer.project_details',compact('projects','projectaddress','proj_logs','doc','project_id','estimates'));
+                return view('customer.project_details',compact('projects','projectaddress','proj_logs','doc','project_id','estimates', 'trader_count'));
             }
 
             return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
         } catch (\Exception $e){
-            if(\Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
+            if(Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
                 return redirect()->route('tradepersion.projects');
             return redirect()->route('customer.project');
         }
@@ -591,7 +606,7 @@ class CustomerController extends Controller
             // $imageName = \Str::of($imageName)->basename('.'.$extension).'_'.Auth::user()->id.'.'.$image->getClientOriginalExtension();
             // $path = Storage::disk('s3')->put('Testfolder/'.$imageName,file_get_contents($image->getRealPath(),'public'));
             // $path = Storage::disk('s3')->url('Testfolder/'.$imageName);
-            $s3FileName = \Str::uuid().'.'.$extension;
+            $s3FileName = Str::uuid().'.'.$extension;
             Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($image->getRealPath()));
             $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
             $user = Auth::user();

@@ -194,9 +194,9 @@
     <!--Code area start-->
     <section class="pb-5">
         <div class="container">
-            <form action="{{ route('tradepersion.p_estimate') }}" method="post">
+            <form action="{{ route('tradepersion.p_estimate', ['id' => Hashids_encode($project->id) ]) }}" method="post">
                 @csrf
-                <input type="hidden" name="project_id" value="{{ $project_id }}" />
+                {{-- <input type="hidden" name="project_id" value="{{ $project_id }}" /> --}}
                 <div class="row mb-5">
                     <div class="col-md-10 offset-md-1">
                         <div class="tell_about pl-details">

@@ -213,6 +213,12 @@ video.customer-video{
 .fs-16 {
     font-size: 16px !important;
 }
+
+.sized-hidden{
+    overflow-y: scroll;
+    max-height: 450px;
+}
+
 .mail_confirmation{
     font-size: 18px;
 }
