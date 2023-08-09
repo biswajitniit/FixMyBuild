@@ -669,7 +669,13 @@ class CustomerController extends Controller
                 $review->detailed_review = $request->optradio5;
                 $review->description = $request->detailed_review;
                 $review->save();
-                return 'Saved';
+
+                $project = Project::where('id', Hashids_decode($request->project_id))
+                                    ->update([
+                                        'status' => 'project_completed'
+                                    ]);
+                project_completed_notification($project_id[0]);
+                return response()->json(['redirect_url' => route('customer.project')]);
             // } else {
             //     $review = DB::table('project_reviews')
             //     ->where('user_id', '=', Auth::user()->id,)
@@ -687,7 +693,7 @@ class CustomerController extends Controller
             // }
 
         } catch(\Exception $e) {
-            echo $e;
+            echo "Error";
         }
     }
 
@@ -799,7 +805,7 @@ class CustomerController extends Controller
                 $emaildata = array(
                     'From'          =>  env('MAIL_FROM_ADDRESS'),
                     'To'            =>  $tradeperson->email,
-                    'Subject'       => 'Your Given Estimate Has Been Accepted',
+                    'Subject'       => 'Your given estimate has been accepted',
                     'HtmlBody'      =>  $html,
                     'MessageStream' => 'outbound'
                 );
@@ -813,7 +819,7 @@ class CustomerController extends Controller
                 $notificationDetail->related_to = 'project';
                 $notificationDetail->related_to_id = $project->id;
                 $notificationDetail->read_status = 0;
-                $notificationDetail->notification_text = 'Your Given Estimate Has Been Accepted';
+                $notificationDetail->notification_text = 'Your given estimate has been accepted';
                 $notificationDetail->reviewer_note = null;
                 $notificationDetail->save();
             }

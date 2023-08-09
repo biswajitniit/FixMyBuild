@@ -1516,7 +1516,6 @@ class TradepersionDashboardController extends Controller
                         ->where('status', null)
                         ->get();
             if($tasks->count() == null || $tasks->count() == 0){
-                project_completed_notification($task->estimate_id);
                 Project::where('id',$task->estimate->project_id)->update(['status' => 'awaiting_your_review']);
             }
             return response()->json(['success' => true]);

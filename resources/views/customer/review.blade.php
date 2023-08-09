@@ -41,7 +41,7 @@
                                                 <input type="radio" class="form-check-input" name="optradio1" onclick="hide('errorMsg1');" value="0"> No
                                             </label>
                                         </div>
-                                        <p id="errorMsg1" style="display: none;color: red">This Fill Is Required</p>
+                                        <p id="errorMsg1" style="display: none;color: red">This fill is required</p>
                                     </div>
                                 </div>
                                 <!--//-->
@@ -63,7 +63,7 @@
                                                 <input type="radio" class="form-check-input" name="optradio2" onclick="hide('errorMsg2');" value="0"> Awful</label>
                                         </div>
                                     </div>
-                                    <p id="errorMsg2" style="display: none;color: red">This Fill Is Required</p>
+                                    <p id="errorMsg2" style="display: none;color: red">This fill is required</p>
                                 </div>
                                 <!--//-->
                                 <div class="col-md-12 mb-40 ">
@@ -80,7 +80,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <p id="errorMsg3" style="display: none;color: red">This Fill Is Required</p>
+                                    <p id="errorMsg3" style="display: none;color: red">This fill is required</p>
                                 </div>
                                 <!--//-->
                                 <div class="col-md-12 mb-40 ">
@@ -98,7 +98,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <p id="errorMsg4" style="display: none;color: red">This Fill Is Required</p>
+                                    <p id="errorMsg4" style="display: none;color: red">This fill is required</p>
                                 </div>
                                 <!--//-->
                                 <div class="col-md-12 mb-40 ">
@@ -114,7 +114,7 @@
                                                 <input type="radio" class="form-check-input" id="ifNo" name="optradio5" onchange="clickNo()", onclick="hide('errorMsg5');" value="0"> No</label>
                                         </div>
                                     </div>
-                                    <p id="errorMsg5" style="display: none;color: red">This Fill Is Required</p>
+                                    <p id="errorMsg5" style="display: none;color: red">This fill is required</p>
                                 </div>
                                 <!--//-->
                                 <div class="col-md-12">
@@ -216,7 +216,7 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
     <script src="{{ asset('frontend/validatejs/jquery.validate.js') }}"></script>
     <script src="{{ asset('frontend/dropzone/dropzone.js') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         function validate() {
@@ -256,7 +256,12 @@
                 const ifNo = $('#ifNo').is(':checked')
                 if(ifYes==true){
                     if(detailed_review==''){
-                        alert('Details review is blank');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Please write something in details review box.',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
                         validateflag = 1;
                     }
                 }
@@ -280,14 +285,20 @@
                         '_token': "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                        if (response == 'Done') {
-                            alert('Review Saved Successfully');
-                        } else {
-                            alert(response);
-                        }
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Review Saved Successfully',
+                            timer: 2000
+                        });
+                        window.location.href = response.redirect_url;
                     },
                     error: function(xhr) {
-                        console.error(xhr.responseText);
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Oops!! something went wrong',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
                     }
                 });
             }
