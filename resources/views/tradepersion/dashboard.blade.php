@@ -1014,6 +1014,7 @@
     let disp_iti = window.intlTelInput(mobile, {
         separateDialCode: true,
         allowDropdown: false,
+        autoPlaceholder: false,
         preferredCountries: ["gb"]
     });
     let mobile_num = "{{ $trader_details->phone_number }}";
@@ -1026,6 +1027,7 @@
     let edit_iti = window.intlTelInput(edit_mobile, {
         separateDialCode: true,
         allowDropdown: true,
+        autoPlaceholder: false,
         preferredCountries: ["gb"]
     });
     // edit_iti.setNumber(`+${mobile_code} ${mobile_num}`);
@@ -1038,18 +1040,24 @@
     let disp_office_iti = window.intlTelInput(office_mobile, {
         separateDialCode: true,
         allowDropdown: false,
+        autoPlaceholder: false,
         preferredCountries: ["gb"]
     });
-    disp_office_iti.setNumber(office_mobile_num);
+    if(office_mobile_num)
+        disp_office_iti.setNumber(office_mobile_num);
+    else
+        $('#phone').closest('.iti').hide();
 
     // Office Phone Number With Flag For Edit
     let edit_office_mobile = document.querySelector("#editContactOfficeMobile");
     let edit_office_mobile_iti = window.intlTelInput(edit_office_mobile, {
         separateDialCode: true,
         allowDropdown: true,
+        autoPlaceholder: false,
         preferredCountries: ["gb"]
     });
-    edit_office_mobile_iti.setNumber(office_mobile_num);
+    if(office_mobile_num)
+        edit_office_mobile_iti.setNumber(office_mobile_num);
 
 
    function showTradernameEdit(){
@@ -1215,7 +1223,13 @@
                     $('#trader-email').text(data.email);
                     disp_iti.setNumber(`${data.phone}`);
                     disp_iti.setCountry(`${data.phone_code}`);
-                    disp_office_iti.setNumber(`${data.office_phone}`);
+                    if(data.office_phone) {
+                        $('#phone').closest('.iti').show();
+                        disp_office_iti.setNumber(`${data.office_phone}`);
+                    } else {
+                        $('#editContactOfficeMobile').val('');
+                        $('#phone').closest('.iti').hide();
+                    }
                     $('#contactDetails').show();
                 } else {
                     $('#editTraderContactResp').addClass('error');

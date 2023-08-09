@@ -128,6 +128,7 @@
                                         Upload Files
                                     </button>
                                 </div>
+                                <div class="pv_top mt-4 d-flex align-items-start flex-wrap" id="getfilesformdb">
                             </div>
                         </div>
                         <input type="hidden" name="project_id" id="project_id" value="{{ $project_id }}">
@@ -208,6 +209,27 @@
             </div>
         </div>
         {{-- Multiple File Upload Image Modal Ends--}}
+
+        <!-- Delete Image Modal -->
+        <div class="modal fade select_address" id="Delete_wp" tabindex="-1" aria-labelledby="deleteImageModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body text-center p-5">
+                    <svg width="73" height="73" viewBox="0 0 73 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M36.5 0C29.281 0 22.2241 2.14069 16.2217 6.15136C10.2193 10.162 5.54101 15.8625 2.77841 22.532C0.0158149 29.2015 -0.707007 36.5405 0.701354 43.6208C2.10971 50.7011 5.586 57.2048 10.6906 62.3094C15.7952 67.414 22.2989 70.8903 29.3792 72.2986C36.4595 73.707 43.7984 72.9842 50.4679 70.2216C57.1374 67.459 62.838 62.7807 66.8486 56.7783C70.8593 50.7759 73 43.719 73 36.5C72.9907 26.8224 69.1422 17.5439 62.2991 10.7009C55.4561 3.8578 46.1776 0.00929194 36.5 0ZM36.5 67.3846C30.3916 67.3846 24.4204 65.5732 19.3414 62.1796C14.2625 58.786 10.3039 53.9624 7.96635 48.319C5.62877 42.6756 5.01715 36.4657 6.20884 30.4747C7.40053 24.4837 10.342 18.9806 14.6613 14.6613C18.9806 10.342 24.4837 7.40051 30.4747 6.20882C36.4657 5.01713 42.6756 5.62875 48.319 7.96633C53.9625 10.3039 58.786 14.2625 62.1796 19.3414C65.5733 24.4204 67.3846 30.3916 67.3846 36.5C67.3753 44.6882 64.1184 52.5385 58.3285 58.3284C52.5385 64.1184 44.6883 67.3753 36.5 67.3846ZM40.7115 54.75C40.7115 55.583 40.4645 56.3972 40.0018 57.0898C39.539 57.7824 38.8812 58.3222 38.1117 58.6409C37.3421 58.9597 36.4953 59.0431 35.6784 58.8806C34.8614 58.7181 34.111 58.317 33.522 57.728C32.933 57.139 32.5319 56.3886 32.3694 55.5716C32.2069 54.7547 32.2903 53.9079 32.6091 53.1383C32.9278 52.3687 33.4676 51.711 34.1602 51.2482C34.8528 50.7855 35.667 50.5384 36.5 50.5384C37.617 50.5384 38.6882 50.9822 39.478 51.772C40.2678 52.5618 40.7115 53.633 40.7115 54.75ZM49.1346 29.4808C49.1346 32.3437 48.1623 35.1218 46.3769 37.3599C44.5916 39.5979 42.0991 41.1633 39.3077 41.7995V42.1154C39.3077 42.86 39.0119 43.5742 38.4853 44.1007C37.9588 44.6273 37.2447 44.9231 36.5 44.9231C35.7554 44.9231 35.0412 44.6273 34.5147 44.1007C33.9881 43.5742 33.6923 42.86 33.6923 42.1154V39.3077C33.6923 38.563 33.9881 37.8489 34.5147 37.3223C35.0412 36.7958 35.7554 36.5 36.5 36.5C37.8883 36.5 39.2454 36.0883 40.3997 35.317C41.554 34.5458 42.4537 33.4495 42.9849 32.1669C43.5162 30.8843 43.6552 29.473 43.3844 28.1114C43.1135 26.7498 42.445 25.4991 41.4634 24.5174C40.4817 23.5358 39.231 22.8672 37.8694 22.5964C36.5078 22.3256 35.0965 22.4646 33.8139 22.9958C32.5313 23.5271 31.435 24.4268 30.6637 25.5811C29.8924 26.7354 29.4808 28.0925 29.4808 29.4808C29.4808 30.2254 29.185 30.9396 28.6584 31.4661C28.1319 31.9926 27.4177 32.2885 26.6731 32.2885C25.9284 32.2885 25.2143 31.9926 24.6877 31.4661C24.1612 30.9396 23.8654 30.2254 23.8654 29.4808C23.8654 26.1299 25.1965 22.9162 27.566 20.5467C29.9354 18.1773 33.1491 16.8461 36.5 16.8461C39.8509 16.8461 43.0646 18.1773 45.434 20.5467C47.8035 22.9162 49.1346 26.1299 49.1346 29.4808Z" fill="#061A48"/>
+                        </svg>
+                        <h5>Delete</h5>
+                        <p>Are you sure you want to permanently delete this item?</p>
+                        <h4 class="text-danger"></h4>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-light" id="confirmedDelete">Yes</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Delete Image Modal END -->
     </section>
     <!--Code area end-->
 @endsection
@@ -410,6 +432,8 @@
                 if (progress == 100) {
                     $(file.previewElement).find('.progress').hide(1000);
                 }
+                $("#upload_multiple_file").html('<i class="fa fa-circle-o-notch fa-spin"></i> Upload');
+                $("#upload_multiple_file").prop('disabled', true);
             });
 
             multiFileDropzone.on("sending", function(file) {
@@ -424,7 +448,8 @@
                 // document.querySelector("#total-progress").style.opacity = "0";
                 // $('#previews.files').find('.progress').hide();
                 // $('#multiModal').modal('hide');
-
+                $("#upload_multiple_file").html('Upload');
+                $("#upload_multiple_file").prop('disabled', false);
             });
 
             multiFileDropzone.on("removedfile", function(file) {
@@ -484,9 +509,116 @@
             var dropzone = callDropzone({url: url, params: params, acceptedFiles: acceptedFiles});
 
             dropzone.on("successmultiple", function(file, responses) {
-                FetchfilesData();
+                fetch_feedback_file();
             });
         }
 
+        function fetch_feedback_file(){
+            $.ajax({
+                type:'get',
+                url:`{{ route("get-feedback-img", ['id' => $project_id]) }}`,
+                success:function(response){
+                    $('#getfilesformdb').empty();
+                    let video_html = '', image_html = '', doc_html = '', html ='';
+
+                    for (let data of response) {
+                        if (data.file_type.toLowerCase() == 'video') {
+                            video_html += `<div class="d-inline mr-5" id="${data.encoded_id}">
+                                                <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('${data.encoded_id}','#${data.encoded_id}')">
+                                                    <video src="${data.url}" class="rectangle-video-lg"></video>
+                                                    <div class="remove_img h-95" title="${data.file_name}">
+                                                        <svg class="center-svg" width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                                                        </svg>
+                                                    </div>
+                                                </a>
+                                            </div>`;
+                        } else if (data.file_type.toLowerCase() == 'image') {
+                            image_html += `<div class="d-inline mr-5" id="${data.encoded_id}">
+                                            <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('${data.encoded_id}', '#${data.encoded_id}')">
+                                                <img src="${data.url}" alt="" class="rectangle-img-lg center-svg">
+                                                <div class="remove_img h-100" title="${data.file_name}">
+                                                    <svg class="center-svg" width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                                                    </svg>
+                                                </div>
+                                            </a>
+                                        </div>`;
+                        } else {
+                            doc_html += `<div class="d-inline mr-5" id="${data.encoded_id}">
+                                            <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('${data.encoded_id}', '#${data.encoded_id}')">
+                                            <img src="{{ asset('frontend/img/file_logo.png') }}" alt="${data.file_name}" title="${data.file_name}" class="rectangle-img-lg center-svg" >
+                                            <div class="remove_img h-100" title="'.$row->file_name.'">
+                                                <svg class="center-svg" width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M3.28033 0.54L11.0003 8.26L18.6803 0.58C18.85 0.399435 19.0543 0.254989 19.2812 0.155324C19.508 0.0556597 19.7526 0.00282869 20.0003 0C20.5308 0 21.0395 0.210714 21.4145 0.585786C21.7896 0.960859 22.0003 1.46957 22.0003 2C22.005 2.2452 21.9595 2.48877 21.8666 2.71576C21.7738 2.94275 21.6355 3.14837 21.4603 3.32L13.6803 11L21.4603 18.78C21.79 19.1025 21.9832 19.5392 22.0003 20C22.0003 20.5304 21.7896 21.0391 21.4145 21.4142C21.0395 21.7893 20.5308 22 20.0003 22C19.7454 22.0106 19.4911 21.968 19.2536 21.8751C19.016 21.7821 18.8003 21.6408 18.6203 21.46L11.0003 13.74L3.30033 21.44C3.13134 21.6145 2.92945 21.7539 2.70633 21.85C2.4832 21.9461 2.24325 21.9971 2.00033 22C1.46989 22 0.961185 21.7893 0.586112 21.4142C0.211039 21.0391 0.000325413 20.5304 0.000325413 20C-0.00433758 19.7548 0.0411562 19.5112 0.134015 19.2842C0.226874 19.0572 0.36514 18.8516 0.540325 18.68L8.32032 11L0.540325 3.22C0.210695 2.89752 0.0174046 2.46082 0.000325413 2C0.000325413 1.46957 0.211039 0.960859 0.586112 0.585786C0.961185 0.210714 1.46989 0 2.00033 0C2.48033 0.006 2.94033 0.2 3.28033 0.54Z" fill="white" />
+                                                </svg>
+                                            </div>
+                                        </a>
+                                    </div>`;
+                        }
+                    }
+
+                    if (image_html != '') {
+                        if ($('#getfilesformdb .image_section').length)
+                            $('#getfilesformdb .image_section').append(image_html);
+                        else
+                            $('#getfilesformdb').prepend('<div class="image_section"><h4>Image(s)</h4>'+image_html+'</div>');
+                    } else {
+                        $('#getfilesformdb').remove('.image_section');
+                    }
+
+                    if (video_html != '') {
+                        if ($('#getfilesformdb .video_section').length)
+                            $('#getfilesformdb .video_section').append(video_html);
+                        else
+                            $('#getfilesformdb').append('<div class="video_section"><h4>Video(s)</h4>'+video_html+'</div>');
+                    } else {
+                        $('#getfilesformdb').remove('.video_section');
+                    }
+
+                    if (doc_html != '') {
+                        if ($('#getfilesformdb .file_section').length)
+                            $('#getfilesformdb .file_section').append(doc_html);
+                        else
+                            $('#getfilesformdb').append('<div class="file_section"><h4>File(s)</h4>'+doc_html+'</div>');
+                    } else {
+                        $('#getfilesformdb').remove('.file_section');
+                    }
+
+                }
+            });
+        }
+
+
+        function confirmDeletePopup(fileId, divId){
+            $('#Delete_wp').modal('show');
+            $('#confirmedDelete').on('click', function() {
+                delete_feedback_file(fileId);
+                $('#Delete_wp').modal('hide');
+            });
+        }
+
+        function delete_feedback_file(deleteid){
+            $.ajax({
+                type:'POST',
+                url:'{{ route("delete-feedback-img") }}',
+                data:{
+                    id: deleteid,
+                    project_id: '{{ $project_id }}',
+                    _method: 'delete',
+                    _token: '{{csrf_token()}}'
+                },
+                success: function (data) {
+                    $('#'+deleteid).remove();
+                    $('#getfilesformdb .image_section div').length == 0 && $('#getfilesformdb .image_section').remove();
+                    $('#getfilesformdb .video_section div').length == 0 && $('#getfilesformdb .video_section').remove();
+                    $('#getfilesformdb .file_section div').length == 0 && $('#getfilesformdb .file_section').remove();
+                },
+            });
+        }
+
+        $(document).ready(function(){
+            fetch_feedback_file();
+	    });
     </script>
 @endpush
