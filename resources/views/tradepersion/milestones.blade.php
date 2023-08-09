@@ -6,7 +6,7 @@
                       <tr>
                          <th style="width:80px;">#</th>
                          <th style="width:190px;">Payment for</th>
-                         <th style="width:210px;">Amount</th>
+                         <th style="width:250px;">Amount</th>
                          <th style="width:290px;">Contingency</th>
                          <th style="width:100px;">Payment </th>
                          <th style="width:auto;">Mark as <br>
@@ -44,7 +44,15 @@
                                 @endif
                             </td>
                             <td>NA</td>
-                            <td class="text-warning">Pending</td>
+                            @foreach($tasks as $key => $task)
+                                @if($task->is_initial == 1)
+                                    @if($task->payment_status == 'paid')
+                                        <td class="text-success">Paid</td>
+                                    @elseif($task->payment_status == null)
+                                        <td class="text-warning">Pending</td>
+                                    @endif
+                                @endif
+                            @endforeach
                             <td>
                                 <label class="form-check-label" data-bs-toggle="modal" data-bs-target="#Confirm_wp">
                                     @foreach($tasks as $key=>$task)
@@ -125,7 +133,11 @@
                                 </td>
 
                                 {{-- <td>£{{ $contingency_per_task }} <span class="max_">(Max. £{{ $contingency_per_task }})</span> <a href="#"><i class="fa fa-pencil ml-2"></i></a></td> --}}
-                                <td class="text-warning" id="status">Pending</td>
+                                @if($task->payment_status == 'paid')
+                                    <td class="text-success">Paid</td>
+                                @else
+                                    <td class="text-warning">Pending</td>
+                                @endif
                                 <td>
                                     <label class="form-check-label">
                                     @if($task->status == 'completed')

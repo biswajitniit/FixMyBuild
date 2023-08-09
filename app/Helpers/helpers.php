@@ -372,9 +372,8 @@ function cancel_project_notification($projectId){
         $notificationDetail->save();
     }
 }
-function project_completed_notification($estimateId){
-    $estimate = Estimate::where('id', $estimateId)->first();
-    $project = Project::where('id', $estimate->project_id)->first();
+function project_completed_notification($projectId){
+    $project = Project::where('id', $projectId)->first();
     $user = User::where('id', $project->user_id)->first();
 
     // Check Notification settings
@@ -396,7 +395,7 @@ function project_completed_notification($estimateId){
         $emaildata = array(
             'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $user->email,
-            'Subject'       => 'Your project has been completed',
+            'Subject'       => 'Your '.$project->project_name.' project has been completed',
             'HtmlBody'      =>  $html,
             'MessageStream' => 'outbound'
         );
