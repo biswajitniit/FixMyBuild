@@ -1016,6 +1016,7 @@ class TradepersionDashboardController extends Controller
                                      })
                                      ->orWhere(function ($q) {
                                          $q->where('reviewer_status', 'approved')
+                                           ->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
                                            ->whereIn('projects.id', Estimate::where(['tradesperson_id'=> Auth::user()->id, 'project_awarded'=> 1, 'status'=>'awarded'])->pluck('project_id'));
                                      });
                              })
@@ -1102,6 +1103,7 @@ class TradepersionDashboardController extends Controller
                                                         ->pluck('project_id')
                                                         ->toArray()
                                                     )
+                                                    ->whereNotIn('projects.status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
                                                     ->where('reviewer_status', 'approved');
                                               });
                                         }) // Estimates already submitted by the user | Estimates Other Than Write Estimate
