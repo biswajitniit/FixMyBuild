@@ -134,6 +134,9 @@ if (!function_exists('tradesperson_project_status')) {
             if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'estimate_recalled') {
                 return 'estimate_recalled';
             }
+            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == null && strtolower($estimate_recalled->unable_to_describe_type) == 'need_more_info') {
+                return 'need_more_info';
+            }
             if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == null) {
                 return 'estimate_submitted';
             }
@@ -418,25 +421,28 @@ function project_completed_notification($projectId){
 if(!function_exists('recommended_projects')) {
     function recommended_projects($trader_areas, $trader_works) {
         $recommended_proj = Project::where( function($query) use($trader_areas, $trader_works) {
-        $query->where('reviewer_status', 'approved')
-                ->distinct('projects.id')
-                ->whereHas('subCategories', function($query) use($trader_works) {
-                    $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
-                })
-                ->whereDoesntHave('estimates', function ($query) {
-                    $query->where('project_awarded', 1);
-                })
-                ->where('projects.user_id', '<>', Auth::user()->id)
-                ->select('projects.*');
-                // ->join('traderareas', function($query) { $query->on(DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)'));});
-        $query->where(function ($q) use ($trader_areas) {
-                    foreach ($trader_areas as $trader_area) {
-                        $q->orWhere(function ($subQuery) use ($trader_area) {
-                            $subQuery->where('town', $trader_area->town)
-                            ->where('county', $trader_area->county);
-                        });
-                    }
-                });
+            $query->where('reviewer_status', 'approved')
+                    ->distinct('projects.id')
+                    ->whereHas('subCategories', function($query) use($trader_works) {
+                        $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
+                    })
+                    ->whereDoesntHave('estimates', function ($query) {
+                        $query->where('project_awarded', 1)
+                              ->orWhere('estimates.status', 'trader_rejected');
+                    })
+                    ->where('projects.user_id', '<>', Auth::user()->id)
+                    ->select('projects.*');
+                    // ->join('traderareas', function($query) { $query->on(DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)'));});
+            $query->where(function ($q) use ($trader_areas) {
+                        foreach ($trader_areas as $trader_area) {
+                            $q->orWhere(function ($subQuery) use ($trader_area) {
+                                $subQuery->where('town', $trader_area->town)
+                                ->where('county', $trader_area->county);
+                            });
+                        }
+                    });
+
+            $query->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review']);
         });
         return $recommended_proj;
     }

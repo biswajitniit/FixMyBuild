@@ -740,7 +740,7 @@
                                      <input type="text" class="searchTerm" placeholder="Search Category..." id="workSearch" onkeyup="SearchWork()">
                                   </div>
                                </div>
-                               <div class="row">
+                               <div class="row sized-hidden">
                                  @foreach($w->buildersubcategories as $sw)
                                   <li class="col-6">
                                      <div class="form-check subworktypechk">
@@ -832,7 +832,7 @@
                                      <?php $j=1;?>
                                      @foreach($areas as $county=>$towns)
                                          <div class="tab-pane @if($j == 1) active @endif text-style" id="tab0{{$j}}">
-                                             <div class="row tab_cont">
+                                             <div class="row tab_cont sized-hidden">
                                                  @foreach($towns as $town)
                                                      <li class="col-6">
                                                          <div class="form-check areachkbx">

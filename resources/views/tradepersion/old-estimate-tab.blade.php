@@ -1,7 +1,7 @@
-<div class="tab-pane fade @if ($projectStatus=='estimate_rejected')active show @endif" id="nav-home" role="tabpanel" aria-labelledby="nav-old-estimate-tab">
+<div class="tab-pane fade @if ($projectStatus == 'estimate_rejected' || $projectStatus == 'estimate_not_accepted')active show @endif" id="nav-old-estimate" role="tabpanel" aria-labelledby="nav-old-estimate-tab">
     <div class="row mb-5">
        <div class="col-md-8">
-          <img src="{{ $company_logo->url }}" alt="" class="mr-2 c_logo"> <span>{{ $trader_detail->comp_name }}</span>
+          <img src="{{ $company_logo->url ?? asset('frontend/img/company_logo.svg') }}" alt="" class="mr-2 c_logo"> <span>{{ $trader_detail->comp_name }}</span>
        </div>
        <div class="col-md-4 text-right mt-4">
           <h6>Posted on: <span class="date_time">{{ $estimate->created_at->format('d M Y,  H:i A') }}</span> </h6>
@@ -23,17 +23,29 @@
             @endforeach
           <div class="col-md-12 mb-5">
              <h3>Photo(s)/Video(s)</h3>
+
              <div class="row">
                 <div class="pv_top">
-                    @foreach($teams_photos as $teams_photo)
-                        <div class="d-inline mr-3">
-                            <a href="{{ $teams_photo->url }}" target="_blank">
-                                <img src="{{ $teams_photo->url }}" alt="" class="rectangle-img">
+                    @forelse($teams_photos as $doc)
+                        @if (strtolower($doc->file_type) == 'image')
+                            <a href="javascript:void(0);">
+                                <img src="{{ $doc->url }}" class="rectangle-img" />
                             </a>
-                        </div>
-                    @endforeach
+                        @endif
+                        @if (strtolower($doc->file_type) == 'video')
+                            <div class="video-mask">
+                                <a href="javascript:void(0);">
+                                    <video width="100" height="69" src="{{ $doc->url }}" class="rectangle-video" >  </video>
+                                </a>
+                            </div>
+                        @endif
+                    @empty
+                        No photo/video is uploaded.
+                    @endforelse
+
                 </div>
              </div>
+
           </div>
           <h3>
              <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">

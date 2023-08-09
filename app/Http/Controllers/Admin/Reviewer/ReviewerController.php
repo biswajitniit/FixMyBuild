@@ -36,12 +36,10 @@ class ReviewerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function awaiting_your_review_show(Request $request, $projectid){
-      //echo Hashids_decode($projectid); die;
         $project = Project::where('id',Hashids_decode($projectid))->first();
-        //dd($project);
         $projectmedia = Projectfile::where('project_id',Hashids_decode($projectid))->get();
         $buildercategory = Buildercategory::where('status','Active')->get();
 
@@ -87,11 +85,13 @@ class ReviewerController extends Controller
 
         $old_categories = ProjectCategory::where('project_id', $request->projectid)->get();
 
-        foreach ($request->post('builder_subcategory') as $sub_category) {
-            ProjectCategory::create([
-                'project_id'      => $request->projectid,
-                'sub_category_id' => $sub_category,
-            ]);
+        if($request->post('builder_subcategory')){
+            foreach ($request->post('builder_subcategory') as $sub_category) {
+                ProjectCategory::create([
+                    'project_id'      => $request->projectid,
+                    'sub_category_id' => $sub_category,
+                ]);
+            }
         }
 
         // Delete old categories

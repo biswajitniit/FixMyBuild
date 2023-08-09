@@ -5,7 +5,7 @@
 @endif
     <div class="row mb-5">
        <div class="col-md-8">
-        <img src="{{ $company_logo->url }}" alt="" class="mr-2 c_logo"> <span>{{ $trader_detail->comp_name }}</span>
+        <img src="{{ $company_logo->url ?? asset('frontend/img/company_logo.svg')  }}" alt="" class="mr-2 c_logo"> <span>{{ $trader_detail->comp_name }}</span>
        </div>
        <div class="col-md-4 text-right mt-4">
           <h6>Posted on: <span class="date_time">{{ $estimate->created_at->format('d M Y,  H:i A') }}</span> </h6>

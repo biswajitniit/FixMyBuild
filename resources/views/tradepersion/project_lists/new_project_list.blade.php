@@ -34,6 +34,8 @@
                         <span class="text-danger">Estimate not accepted</span>
                     @elseif ($projectStatus == 'estimate_accepted')
                         <span class="text-success">Estimate accepted</span>
+                    @elseif ($projectStatus == 'need_more_info')
+                        <span class="text-primary">Need more info</span>
                     @else
                         <span>&nbsp;</span>
                     @endif

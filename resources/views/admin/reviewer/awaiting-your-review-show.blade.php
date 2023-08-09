@@ -1,5 +1,8 @@
 @extends('layouts.admin')
 @section('title', 'Projects')
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('adminpanel/assets/css/custom.css') }}">
+@endpush
 @section('content')
 
 <div class="main-panel">
@@ -74,9 +77,9 @@
                         <div class="mb-3 row">
                             <label class="col-lg-3 col-form-label" for="simpleinput">Attachments</label>
                             <div class="col-lg-9 mt-2">
-                                <div class="row bg-light p-3">
+                                <div class="row {{ count($projectmedia) ? 'bg-light p-3' : 'pt-1' }}">
 
-                                    @if($projectmedia)
+                                    {{-- @if($projectmedia)
                                         @foreach ($projectmedia as $rowprojectmedia)
                                             @php
                                                 $file_ext = pathinfo($rowprojectmedia->url, PATHINFO_EXTENSION);
@@ -131,7 +134,33 @@
                                             @endif
 
                                         @endforeach
-                                    @endif
+                                    @endif --}}
+
+                                    <div class="pv_top">
+                                        @forelse ($projectmedia as $row_project_media)
+                                            @if (strtolower($row_project_media->file_type) == 'image')
+                                                <a href="{{ $row_project_media->url }}" target="_blank" title="View image">
+                                                    <img src="{{ $row_project_media->url }}" class="rectangle-img" alt="Image" />
+                                                </a>
+                                            @elseif (strtolower($row_project_media->file_type) == 'video')
+                                                <div class="video-mask">
+                                                    <a href="{{ $row_project_media->url }}" target="_blank" title="View Video">
+                                                        <div id="video-overlay">
+                                                            <img src="{{ asset('adminpanel/assets/images/play_btn.svg') }}" alt="Video" class="image-wrapper" />
+                                                            <video width="100" height="69" src="{{ $row_project_media->url }}" class="rectangle-video" >  </video>
+                                                            <div class="semi-transparent"></div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @else
+                                                <a href="{{ $row_project_media->url }}" target="_blank" title="View File">
+                                                    <img src="{{ asset('frontend/img/file_logo.svg') }}" class="rectangle-img" alt="File"/>
+                                                </a>
+                                            @endif
+                                        @empty
+                                            <div class="col-12">No file is uploaded by the customer.</div>
+                                        @endforelse
+                                    </div>
                                 </div>
                             </div>
                         </div>

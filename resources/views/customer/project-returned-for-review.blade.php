@@ -1316,7 +1316,8 @@
                 },
                 contact_email: {
                     required: true,
-                    email: true
+                    email: true,
+                    emailDNS: true
                 },
                 postcode : {
                     required: {
@@ -1411,6 +1412,9 @@
             return $("#selected_post_code_html").text().trim() !== "";
         }, "Please select an address");
 
+        $.validator.addMethod("emailDNS", function(value, element) {
+            return /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/i.test(value);
+        }, "Please enter a valid email address.");
 
         $.validator.addMethod('phoneNumber', function(value, element) {
             if (element.id == 'contact_mobile_no')
