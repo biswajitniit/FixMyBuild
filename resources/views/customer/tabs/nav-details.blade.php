@@ -76,9 +76,7 @@
                     @if (strtolower($docs->file_type) == 'video')
                         @php $is_media_present = true; @endphp
                         <div class="video-mask">
-                            <a href="javascript:void(0);">
-                                <video width="100" height="69" src="{{ $docs->url }}" class="rectangle-video" >  </video>
-                            </a>
+                            <video width="100" height="69" src="{{ $docs->url }}" class="rectangle-video" >  </video>
                         </div>
                     @endif
                 @endforeach

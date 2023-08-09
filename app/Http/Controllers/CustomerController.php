@@ -412,8 +412,17 @@ class CustomerController extends Controller
 
         try{
             $id=Hashids_decode($project_id);
+            $estimate = Estimate::where('project_id', $id)->first();
+            $tasks = Task::where('estimate_id', $estimate->id)->where('status', null)->get();
             $projects = Project::where('id',$id)->first();
-            $proj_logs = ProjectStatusChangeLog::where('project_id', $projects->id)->get();
+
+            $proj_log_for_estimate = ProjectStatusChangeLog::where(['project_id'=> $projects->id, 'action_by_type' => 'reviewer', 'status' => 'approved'])->latest()->first();
+            $proj_log_proj_started = ProjectStatusChangeLog::where(['project_id'=> $projects->id, 'status' => 'project_started'])->latest()->first();
+            $proj_log_proj_completed = ProjectStatusChangeLog::where(['project_id'=> $projects->id, 'status' => 'project_completed'])->latest()->first();
+            $task_miles_completed = null;
+            if($tasks->count() == null || $tasks->count() == 0){
+                $task_miles_completed = Task::where(['estimate_id'=> $estimate->id, 'status' => 'completed'])->orderBy('updated_at', 'DESC')->first();
+            }
 
             if(Auth::id() != $projects->user_id)
                 abort(403);
@@ -427,7 +436,7 @@ class CustomerController extends Controller
                 return view('customer.project_details',compact('projects','doc'));
             }
 
-            if($projects->status == 'project_started' || $projects->status == 'project_paused'){
+            if($projects->status == 'project_started' || $projects->status == 'project_paused' ){
                 $estimate = Estimate::where('project_id', $id)->first();
                 $tasks = Task::where('estimate_id', $estimate->id)->get();
                 $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
@@ -461,7 +470,7 @@ class CustomerController extends Controller
                 $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
                 $initial_payment_percentage = number_format($initial_payment_percentage, 2);
                 $contingency_per_task = number_format($contingency_per_task, 2);
-                return view('customer.project_details',compact('projects','project_estimate_files','estimate','tasks','proj_logs','doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
+                return view('customer.project_details',compact('projects','project_estimate_files','estimate','tasks','proj_log_for_estimate','proj_log_proj_started','task_miles_completed','proj_log_proj_completed','doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
             }
 
             if($projects->status == 'estimation') {
@@ -482,7 +491,7 @@ class CustomerController extends Controller
                     }
                 };
 
-                return view('customer.project_details',compact('projects','projectaddress','proj_logs','doc','project_id','estimates'));
+                return view('customer.project_details',compact('projects','projectaddress','proj_log_for_estimate','proj_log_proj_started','task_miles_completed','proj_log_proj_completed','doc','project_id','estimates'));
             }
 
             return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));

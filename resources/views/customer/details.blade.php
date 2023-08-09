@@ -11,7 +11,7 @@
                         <span class="text-dark">Returned for review</span>
                         @break
                     @case('estimation')
-                        <span class="text-primary">Write estimate</span>
+                        <span class="text-primary">View estimate</span>
                         @break
                     @case('project_started')
                         <span class="text-success">Project started</span>
@@ -40,7 +40,7 @@
         <div class="row gallery-area1">
            <div class="pv_top gallery-wrapper">
                 <div class="row">
-                    @foreach($projectfiles as $projectfile)
+                    @forelse($projectfiles as $projectfile)
                         <div class="col-4 col-md-2 text-center">
                             @if(strtolower($projectfile->file_type) === 'image')
                                 <a href="{{ $projectfile->url }}" class="btn-gallery" target="_blank">
@@ -51,7 +51,9 @@
                                 <video src="{{ $projectfile->url }}" controls="controls" class="rectangle-img mt-0"></video>
                             @endif
                         </div>
-                    @endforeach
+                    @empty
+                        <div>No photo/video is uploaded.</div>
+                    @endforelse
 
                     <div id="gallery-1" class="hidden">
                         <a href="assets/img/Rectangle 63b.jpg">Image 1</a>

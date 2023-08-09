@@ -26,6 +26,9 @@
  <!--Code area start-->
  <section class="pb-5">
     <div class="container">
+        @if($estimate->status == 'rejected')
+            <div class="alert alert-warning offset-1 col-md-10">You have rejected the estimate. Please wait some days to get new estimate.</div>
+        @endif
        <form action="#" method="post">
 
           <div class="row mb-5">
@@ -81,11 +84,13 @@
                 </div>
                 <div class="form-group col-md-12 mt-5 text-center pre_">
                     <a href="{{route('customer.project')}}" class="btn btn-light mr-3">Back</a>
-                    <a href="#" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#reject">Reject</a>
-                    @if(Auth::user()->is_email_verified == 0)
-                        <a href="javascript:void(0);" class="btn btn-primary" disabled>Accept</a>
-                    @else
-                        <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" data-bs-toggle="modal" data-bs-target="#accept" class="btn btn-primary">Accept</a>
+                    @if($estimate->status == null)
+                        <a href="#" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#reject">Reject</a>
+                        @if(Auth::user()->is_email_verified == 0)
+                            <a href="javascript:void(0);" class="btn btn-primary" disabled>Accept</a>
+                        @else
+                            <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" data-bs-toggle="modal" data-bs-target="#accept" class="btn btn-primary">Accept</a>
+                        @endif
                     @endif
                 </div>
                 <!-- The Modal Accept received-->
@@ -348,7 +353,7 @@
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'success: You have successfully accepted the estimate'
+                        title: 'You have successfully accepted the estimate'
                     });
                     window.location.href = response.redirect_url;
                 },
@@ -356,7 +361,7 @@
                     // console.error('Error cancelling project:', error);
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Bad Request: Oops!! something went wrong',
+                        title: 'Oops!! something went wrong',
                         showConfirmButton: false,
                         timer: 2000
                     });
@@ -378,16 +383,12 @@
                     tradesperson_id : tradeperson_id
                 },
                 success: function(data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'success: Your project has been rejected successfully'
-                    });
-                    window.location.href = response.redirect_url;
+                    window.location.href = data.redirect_url;
                 },
                 error: function(xhr, error) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Bad Request: Oops!! something went wrong',
+                        title: 'Oops!! something went wrong',
                         showConfirmButton: false,
                         timer: 2000
                     });

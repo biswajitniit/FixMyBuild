@@ -1369,15 +1369,10 @@ class TradepersionDashboardController extends Controller
             // }
 
         try{
-            $old_estimate = Estimate::where([
-                                'project_id'      => Hashids_decode($id),
-                                'tradesperson_id' => Auth::user()->id,
-                            ])->first();
-
-            if ($old_estimate) {
-                $errors = new MessageBag(['duplicate_entry' => 'You have already written an estimate for this project.']);
-                return redirect()->back()->withErrors($errors);
-            }
+            $decoded_project_id = Hashids_decode($id)[0];
+            $estimate = Estimate::where('project_id', $decoded_project_id)
+                                        ->where('tradesperson_id', Auth::user()->id)
+                                        ->forceDelete();
 
             if (\Str::lower($request->describe_mode) == 'unable_to_describe') {
 
@@ -1447,7 +1442,7 @@ class TradepersionDashboardController extends Controller
             $estimate = Estimate::create([
                 'describe_mode'              => $request->describe_mode,
                 'project_id'                 => Hashids_decode($id)[0],
-                'tradesperson_id'            => Auth::user()->id,
+                'tradesperson_id'            => Auth::id(),
                 'covers_customers_all_needs' => $request->covers_customers_all_needs ?? 0,
                 'payment_required_upfront'   => $request->payment_required_upfront ?? 0,
                 'apply_vat'                  => $request->apply_vat ?? 0,
@@ -1462,6 +1457,8 @@ class TradepersionDashboardController extends Controller
             ]);
 
             if ($estimate) {
+
+                Task::where('estimate_id', $estimate->id)->forceDelete();
 
                 if ($request->payment_required_upfront) {
                     Task::create([
@@ -1484,6 +1481,7 @@ class TradepersionDashboardController extends Controller
 
                 // Move the estimate files from temp_media to project_estimate_files
                 $temp_medias = tempmedia::where(['user_id' => Auth::user()->id, 'sessionid' => session()->getId(), 'media_type' => 'estimate'])->get();
+                ProjectEstimateFile::where('estimate_id', $estimate->id)->delete();
                 foreach ($temp_medias as $temp_media) {
                     $estimate_file = ProjectEstimateFile::create([
                         'estimate_id'        => $estimate->id,
@@ -1503,7 +1501,7 @@ class TradepersionDashboardController extends Controller
             return redirect()->route('tradepersion.projects');
 
         } catch (\Exception $e) {
-            echo $e;die;
+            return back()->withInput();
         }
     }
 
@@ -1560,7 +1558,7 @@ class TradepersionDashboardController extends Controller
 
         $status_proj = tradesperson_project_status($project->id);
 
-        if($status_proj == 'estimate_submitted' || $status_proj == 'project_started' || $status_proj == 'estimate_accepted' || $status_proj == 'estimate_rejected' || $status_proj == 'estimate_recalled' || $status_proj == 'project_paused') {
+        if($status_proj == 'estimate_submitted' || $status_proj == 'project_started' || $status_proj == 'estimate_accepted' || $status_proj == 'estimate_rejected' || $status_proj == 'estimate_recalled' || $status_proj == 'project_paused' || $status_proj == 'project_completed') {
             $estimate = Estimate::where('project_id', $id)
                             ->where('tradesperson_id', Auth::user()->id)
                             ->first();
@@ -1568,6 +1566,7 @@ class TradepersionDashboardController extends Controller
             $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
             $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
             $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
+            $proj_estimate_files = ProjectEstimateFile::where('estimate_id', $estimate->id)->get();
 
             // $task_initial = Task::where('estimate_id', $estimate->id)->where('is_initial', 1)->first();
             $tasks = Task::where('estimate_id', $estimate->id)->get();
@@ -1596,7 +1595,7 @@ class TradepersionDashboardController extends Controller
             $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
             $initial_payment_percentage = number_format($initial_payment_percentage, 2);
             $contingency_per_task = number_format($contingency_per_task, 2);
-            return view('tradepersion.project_details',compact('projectid','project','trader_detail','other_open_projects','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','prev_project_imgs','teams_photos','company_logo'));
+            return view('tradepersion.project_details',compact('projectid','proj_estimate_files','project','trader_detail','other_open_projects','estimate','tasks','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','prev_project_imgs','teams_photos','company_logo'));
         }
 
         return view('tradepersion.project_details',compact('projectid','project','trader_detail','other_open_projects'));
@@ -1626,17 +1625,19 @@ class TradepersionDashboardController extends Controller
             $task_id = Hashids_decode($request->task_id);
             Task::where('id', $task_id)->update(['status' => 'completed']);
             milestone_completion_notification($task_id);
-
             $task = Task::where('id', $task_id)
                         ->first();
+
             $tasks = Task::where('estimate_id', $task->estimate_id)
                         ->where('status', null)
                         ->get();
             if($tasks->count() == null || $tasks->count() == 0){
                 project_completed_notification($task->estimate_id);
+                Project::where('id',$task->estimate->project_id)->update(['status' => 'awaiting_your_review']);
             }
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
+            echo "Error";
         }
     }
 

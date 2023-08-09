@@ -96,15 +96,15 @@
                 @if ($status == 'project_started' || $status == 'project_completed' || $status == 'project_paused' )
                     <div class="row mb-5">
                         <div class="col-md-10 offset-md-1">
-                        <div class="bs-wizard row">
-                            <div class="col bs-wizard-step complete">
-                                <div class="text-center bs-wizard-stepnum">Submitted <br> for review</div>
-                                <div class="progress">
-                                    <div class="progress-bar"></div>
+                            <div class="bs-wizard row">
+                                <div class="col bs-wizard-step complete">
+                                    <div class="text-center bs-wizard-stepnum">Submitted <br> for review</div>
+                                    <div class="progress">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                    <a href="#" class="bs-wizard-dot"></a>
+                                    <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($projects->created_at)) }}</div>
                                 </div>
-                                <a href="#" class="bs-wizard-dot"></a>
-                                <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($projects->created_at)) }}</div>
-                            </div>
                                 <div class="col bs-wizard-step complete">
                                     <!-- complete -->
                                     <div class="text-center bs-wizard-stepnum">View <br>estimates</div>
@@ -112,57 +112,44 @@
                                         <div class="progress-bar"></div>
                                     </div>
                                     <a href="#" class="bs-wizard-dot"></a>
-                                    @foreach($proj_logs as $proj_log)
-                                        @if ($proj_log->action_by_type == 'reviewer' && $proj_log->status == 'approved')
-                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}</div>
-                                        @endif
-                                    @endforeach
+                                    @if($proj_log_for_estimate)
+                                        <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log_for_estimate->status_changed_at)) }}</div>
+                                    @endif
                                 </div>
-                                @if($status == 'awaiting_your_review')
-                                    <div class="col bs-wizard-step complete">
-                                @else
-                                    <div class="col bs-wizard-step closed">
-                                @endif
-                                    <!-- complete -->
+
+                                <div class="col bs-wizard-step {{ $status == 'awaiting_your_review' ? 'complete' : 'closed' }}">
                                     <div class="text-center bs-wizard-stepnum">Project started</div>
                                     <div class="progress">
                                         <div class="progress-bar"></div>
                                     </div>
                                     <a href="#" class="bs-wizard-dot"></a>
-                                    @foreach($proj_logs as $proj_log)
-                                        @if($proj_log->status == 'project_started')
-                                            <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}
-                                        @endif
-                                    @endforeach
-                                    </div>
-                                </div>
-                            @if($status == 'awaiting_your_review')
-                                <div class="col bs-wizard-step closed">
-                            @else
-                                <div class="col bs-wizard-step disabled">
-                            @endif
-                                <!-- active -->
-                                <div class="text-center bs-wizard-stepnum">Milestones <br>completed</div>
-                                <div class="progress">
-                                    <div class="progress-bar"></div>
-                                </div>
-                                <a href="#" class="bs-wizard-dot"></a>
-                                <div class="bs-wizard-info text-center"></div>
-                            </div>
-                            <div class="col bs-wizard-step disabled">
-                                <!-- active -->
-                                <div class="text-center bs-wizard-stepnum">Project <br>completed</div>
-                                <div class="progress">
-                                    <div class="progress-bar"></div>
-                                </div>
-                                <a href="#" class="bs-wizard-dot"></a>
-                                @foreach($proj_logs as $proj_log)
-                                    @if($proj_log->status == 'project_completed')
-                                        <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log->status_changed_at)) }}</div>
+                                    @if($proj_log_proj_started)
+                                        <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log_proj_started->status_changed_at)) }}</div>
                                     @endif
-                                @endforeach
+                                </div>
+                                {{-- <div class="col bs-wizard-step {{ $status == 'awaiting_your_review' ? 'complete' : 'disabled' }}">
+                                    <!-- active -->
+                                    <div class="text-center bs-wizard-stepnum">Milestones <br>completed</div>
+                                    <div class="progress">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                    <a href="#" class="bs-wizard-dot"></a>
+                                    @if($task_miles_completed)
+                                        <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($task_miles_completed)) }}</div>
+                                    @endif
+                                </div> --}}
+                                <div class="col bs-wizard-step disabled">
+                                    <!-- active -->
+                                    <div class="text-center bs-wizard-stepnum">Project <br>completed</div>
+                                    <div class="progress">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                    <a href="#" class="bs-wizard-dot"></a>
+                                    @if($proj_log_proj_completed)
+                                        <div class="bs-wizard-info text-center">{{ date('d-m-y', strtotime($proj_log_proj_completed->status_changed_at)) }}</div>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                 @endif
@@ -562,14 +549,14 @@ $(document).ready(function() {
             success: function(response) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'success: You have successfully cancelled your project'
+                    title: 'You have successfully cancelled your project'
                 });
                 window.location.href = response.redirect_url;
             },
             error: function(xhr, status, error) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Bad Request: Oops!! something went wrong',
+                    title: 'Oops!! something went wrong',
                     showConfirmButton: false,
                     timer: 2000
                 });
@@ -606,12 +593,12 @@ $(document).ready(function() {
                 if(response == 'error') {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Bad Request: Oops!! something went wrong'
+                        title: 'Oops!! something went wrong'
                     });
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'success: You have successfully paused your project'
+                        title: 'You have successfully paused your project'
                     });
                     window.location.href = response.redirect_url;
                 }
@@ -619,7 +606,7 @@ $(document).ready(function() {
             error: function(xhr, status, error) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Bad Request: Oops!! something went wrong',
+                    title: 'Oops!! something went wrong',
                     showConfirmButton: false,
                     timer: 2000
                 });

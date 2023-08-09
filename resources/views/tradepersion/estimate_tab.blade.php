@@ -25,13 +25,15 @@
              <h3>Photo(s)/Video(s)</h3>
              <div class="row">
                 <div class="pv_top">
-                    @foreach($teams_photos as $teams_photo)
+                    @forelse($proj_estimate_files as $proj_estimate_file)
                         <div class="d-inline mr-3">
-                            <a href="{{ $teams_photo->url }}" target="_blank">
-                                <img src="{{ $teams_photo->url }}" alt="" class="rectangle-img">
+                            <a href="{{ $proj_estimate_file->url }}" target="_blank">
+                                <img src="{{ $proj_estimate_file->url }}" alt="" class="rectangle-img">
                             </a>
                         </div>
-                    @endforeach
+                    @empty
+                        <div>No photo/video is uploaded.</div>
+                    @endforelse
                 </div>
              </div>
           </div>

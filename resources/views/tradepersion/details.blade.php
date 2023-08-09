@@ -22,6 +22,9 @@
                 @case('estimate_recalled')
                     <span class="text-awaiting">Estimate recalled</span>
                     @break
+                @case('project_paused')
+                    <span class="text-awaiting">Project paused</span>
+                    @break
             @endswitch
         </h6>
     </div>
@@ -58,9 +61,9 @@
                 @empty
                     <div>No photo/video is uploaded.</div>
                 @endforelse
-                <div id="gallery-1" class="hidden">
+                {{-- <div id="gallery-1" class="hidden">
                      <a href="assets/img/Rectangle 63b.jpg">Image 1</a>
-                 </div>
+                 </div> --}}
              </div>
            </div>
         </div>

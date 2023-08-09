@@ -142,7 +142,7 @@ class ReviewerController extends Controller
                 $notificationDetail->related_to = 'project';
                 $notificationDetail->related_to_id = $project->id;
                 $notificationDetail->read_status = 0;
-                $notificationDetail->notification_text = 'Your project has been reviewed';
+                $notificationDetail->notification_text = 'Your '.$project->project_name.' has been reviewed';
                 $notificationDetail->reviewer_note = $notes_for_customer;
                 $notificationDetail->save();
                  //Insert data in project_status_change_log table
@@ -179,7 +179,7 @@ class ReviewerController extends Controller
                     $notificationDetail->related_to = 'project';
                     $notificationDetail->related_to_id = $project->id;
                     $notificationDetail->read_status = 0;
-                    $notificationDetail->notification_text = 'Your project has been reviewed';
+                    $notificationDetail->notification_text = 'Your '.$project->project_name.' has been reviewed';
                     $notificationDetail->reviewer_note = $notes_for_customer;
                     $notificationDetail->save();
                     //Insert data in project_status_change_log table

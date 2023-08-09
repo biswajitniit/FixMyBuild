@@ -59,18 +59,18 @@
                                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                                 @if ($projectStatus == 'estimate_accepted' || $projectStatus == 'project_started')
                                     <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
-                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
-                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
+                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                 @endif
                                 @if ($projectStatus == 'estimate_submitted' || $projectStatus == 'estimate_recalled')
                                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
-                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                 @endif
                                 @if ($projectStatus == 'estimate_rejected')
                                     <a class="nav-item nav-link active" id="nav-old-estimate-tab" data-toggle="tab" href="#nav-old-estimate" role="tab" aria-controls="nav-old-estimate" aria-selected="true">Old estimate</a>
-                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                 @endif
                                 @if ($projectStatus == 'write_estimate')
@@ -79,8 +79,8 @@
                                 @endif
                                 @if ($projectStatus == 'project_completed' || $projectStatus == 'project_paused' || $projectStatus == 'project_cancelled')
                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
-                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
-                                    <a class="nav-item nav-link" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
+                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
+                                    <a class="nav-item nav-link" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="false">Milestones</a>
                                 @endif
                                </div>
                             </nav>
@@ -456,14 +456,14 @@
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'success: You have successfully rejected the project'
+                        title: 'You have successfully rejected the project'
                     });
                     window.location.href = response.redirect_url;
                 },
                 error: function(xhr, error) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Bad Request: Oops!! something went wrong',
+                        title: 'Oops!! something went wrong',
                         showConfirmButton: false,
                         timer: 2000
                     });

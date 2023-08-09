@@ -5,9 +5,9 @@
                    <thead>
                       <tr>
                          <th style="width:80px;">#</th>
-                         <th style="width:200px;">Payment for</th>
-                         <th style="width:120px;">Amount</th>
-                         <th style="width:180px;">Contingency</th>
+                         <th style="width:190px;">Payment for</th>
+                         <th style="width:210px;">Amount</th>
+                         <th style="width:290px;">Contingency</th>
                          <th style="width:100px;">Payment </th>
                          <th style="width:auto;">Mark as <br>
                            complete</th>
@@ -22,13 +22,26 @@
                                 </a>
                             </td>
                             <td>
-                                @foreach($tasks as $key=>$task)
+                                @php
+                                    $initialTaskFound = false;
+                                @endphp
+
+                                @foreach($tasks as $key => $task)
                                     @if($task->is_initial == 1)
                                         <div class="col-6">
                                             <span>£{{ number_format($task->price, 2) }}</span>
                                         </div>
+                                        @php
+                                            $initialTaskFound = true;
+                                        @endphp
                                     @endif
                                 @endforeach
+
+                                @if(!$initialTaskFound)
+                                    <div class="col-6">
+                                        <span>NA</span>
+                                    </div>
+                                @endif
                             </td>
                             <td>NA</td>
                             <td class="text-warning">Pending</td>
@@ -74,7 +87,7 @@
                     @foreach($tasks as $key=>$task)
                         @if($task->is_initial == 0)
                             <tr data-id="{{ $task->id }}">
-                                <td>{{ $key+2 }}</td>
+                                <td>{{ $initialTaskFound ? $key+1 : $key+2 }}</td>
                                 <td>
                                     <a href="javascript:void(0)" onclick="signChange(this,{{ $key }})" id="plus">
                                         <span class="plus-icon">
@@ -87,7 +100,7 @@
                                             <path d="M0 0.75C0 0.551088 0.0790175 0.360322 0.21967 0.21967C0.360322 0.0790175 0.551088 0 0.75 0H10.75C10.9489 0 11.1397 0.0790175 11.2803 0.21967C11.421 0.360322 11.5 0.551088 11.5 0.75C11.5 0.948912 11.421 1.13968 11.2803 1.28033C11.1397 1.42098 10.9489 1.5 10.75 1.5H0.75C0.551088 1.5 0.360322 1.42098 0.21967 1.28033C0.0790175 1.13968 0 0.948912 0 0.75Z" fill="#EE5719"/>
                                             </svg>
                                         </span>
-                                        <span>Milestone {{ $key }}</span>
+                                        <span>Milestone {{  $initialTaskFound ?  $key : $key+1 }}</span>
                                     </a>
                                 </td>
                                 <td>£{{ sprintf("%.2f",$task->price) }}</td>
@@ -103,10 +116,10 @@
 
                                     @if($task->status == null || $task->status == 'Inactive')
                                         <a href="javascript:void(0);">
-                                            <i class="fa fa-pencil ml-2 clickPencil" id='pencil{{ Hashids_encode($task->id) }}' onclick="edit(this)"></i>
+                                            <i class="fa fa-pencil clickPencil" id='pencil{{ Hashids_encode($task->id) }}' onclick="edit(this)"></i>
                                         </a>
                                         <a href="javascript:void(0);">
-                                            <i class="fa fa-check ml-2 d-none clickSave" onclick="save(this)"></i>
+                                            <i class="fa fa-check d-none clickSave" onclick="save(this)"></i>
                                         </a>
                                     @endif
                                 </td>

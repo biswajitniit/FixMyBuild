@@ -196,7 +196,7 @@ function milestone_completion_notification($task_id){
         $emaildata = array(
             'From'          => env('MAIL_FROM_ADDRESS'),
             'To'            => $user->email,
-            'Subject'       => 'Milestone Completed',
+            'Subject'       => 'Milestone completed',
             'HtmlBody'      => $html,
             'MessageStream' => 'outbound'
         );
@@ -208,7 +208,7 @@ function milestone_completion_notification($task_id){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your project milestone has been completed';
+        $notificationDetail->notification_text = 'Your '.$project->project_name.' milestone has been completed';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -249,7 +249,7 @@ function project_paused_notification($project_id){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your project has been paused';
+        $notificationDetail->notification_text = 'Your '.$project->project_name.' has been paused';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -284,7 +284,7 @@ function project_paused_notification($project_id){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Customer has paused the project';
+        $notificationDetail->notification_text = 'Customer has paused the project '.$project->project_name;
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -310,7 +310,7 @@ function estimate_rejected_notification($tradeperson, $project){
         $emaildata = array(
             'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $tradeperson->email,
-            'Subject'       => 'Your Given Estimate Has Been Rejected',
+            'Subject'       => 'Your given estimate has been rejected',
             'HtmlBody'      =>  $html,
             'MessageStream' => 'outbound'
         );
@@ -324,7 +324,7 @@ function estimate_rejected_notification($tradeperson, $project){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your Given Estimate Has Been Rejected';
+        $notificationDetail->notification_text = 'Your given estimate for '.$project->project_name.' has been rejected';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -353,7 +353,7 @@ function cancel_project_notification($projectId){
         $emaildata = array(
             'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $user->email,
-            'Subject'       => 'Your project has been Cancelled',
+            'Subject'       => 'Your project has been cancelled',
             'HtmlBody'      =>  $html,
             'MessageStream' => 'outbound'
         );
@@ -367,7 +367,7 @@ function cancel_project_notification($projectId){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your project has been Cancelled';
+        $notificationDetail->notification_text = 'Your project '.$project->project_name.' has been cancelled';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -396,7 +396,7 @@ function project_completed_notification($estimateId){
         $emaildata = array(
             'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $user->email,
-            'Subject'       => 'Your project has been Completed',
+            'Subject'       => 'Your project has been completed',
             'HtmlBody'      =>  $html,
             'MessageStream' => 'outbound'
         );
@@ -410,7 +410,7 @@ function project_completed_notification($estimateId){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your project has been Ccompleted';
+        $notificationDetail->notification_text = 'Your project '.$project->project_name.' has been completed';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
