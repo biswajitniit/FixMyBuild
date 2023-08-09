@@ -69,8 +69,8 @@
                 @foreach($doc as $docs)
                     @if (strtolower($docs->file_type) == 'image')
                         @php $is_media_present = true; @endphp
-                        <a href="{{ $docs->url }}">
-                            <img src="{{ $docs->url }}" class="rectangle-img"  target="_blank"/>
+                        <a href="javascript:void(0);">
+                            <img src="{{ $docs->url }}" class="rectangle-img"/>
                         </a>
                     @endif
                     @if (strtolower($docs->file_type) == 'video')

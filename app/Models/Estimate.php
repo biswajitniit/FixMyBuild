@@ -30,6 +30,7 @@ class Estimate extends Model
         'terms_and_conditions',
         'project_id',
         'tradesperson_id',
+        'status',
     ];
 
     public function tradesperson()

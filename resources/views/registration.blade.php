@@ -164,11 +164,12 @@
                 <div class="form-group col-md-12 mt-4">
                     <input type="text" name="phone" class="form-control col-md-10" id="phone" placeholder="Mobile phone"  value="{{old('phone')}}" required/>
                     <label for="phone" generated="true" class="error"></label>
+                    <label></label>
                     <input type="hidden" name="full_phone" id="full_phone"  value="{{old('full_phone')}}"/>
                 </div>
                 @production
                     <div>
-                        <label class="form-check-label">Are you a customer or tradesperson?</label>
+                        <label class="form-check-label color-blue">Are you a customer or tradesperson?</label>
                     </div>
                     <div class="form-group col-md-12 mt-4">
                     <div class="form-check-inline">
@@ -182,7 +183,7 @@
                 @endproduction
                 @env(['staging', 'development','local'])
                 <div>
-                    <label class="form-check-label">Are you a customer or tradesperson?</label>
+                    <label class="form-check-label color-blue">Are you a customer or tradesperson?</label>
                 </div>
                 <div class="form-group col-md-12 mt-4">
                 <div class="form-check-inline">
@@ -259,6 +260,8 @@
                 },
                 email: {
                     required: true,
+                    email: true,
+                    emailDNS: true
                 },
                 password: {
                     required: true,
@@ -329,6 +332,9 @@
             return value.match(/([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/);
         }, 'Please include a special characters.');
 
+        $.validator.addMethod("emailDNS", function(value, element) {
+            return /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/i.test(value);
+        }, "Please enter a valid email address.");
 
         // phone number setup
         let input = document.querySelector("#phone");

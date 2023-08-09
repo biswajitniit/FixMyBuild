@@ -1,4 +1,4 @@
-<div class="tab-pane fade @if ($projectStatus == 'write_estimate'||$projectStatus == 'project_completed' || $projectStatus == 'project_paused' || tradesperson_project_status($project->id) == 'project_cancelled')active show @endif" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+<div class="tab-pane fade @if ($projectStatus == 'write_estimate'||$projectStatus == 'project_completed' || $projectStatus == 'project_paused' || tradesperson_project_status($project->id) == 'project_cancelled' || $projectStatus == 'need_more_info')active show @endif" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
     <div class="row mb-3">
         <div class="col-md-8">
         <h3>Project</h3>
@@ -9,6 +9,9 @@
                     @break
                 @case('write_estimate')
                     <span class="text-primary">Write estimate</span>
+                    @break
+                @case('need_more_info')
+                    <span class="text-primary">Need more info</span>
                     @break
                 @case('project_started')
                     <span class="text-success">Project started</span>
@@ -24,6 +27,9 @@
                     @break
                 @case('project_paused')
                     <span class="text-awaiting">Project paused</span>
+                    @break
+                @case('estimate_not_accepted')
+                    <span class="text-danger">Estimate not accepted</span>
                     @break
             @endswitch
         </h6>
@@ -44,43 +50,40 @@
      <div class="col-md-12">
         <h3>Photo(s)/Video(s)</h3>
 
-        <div class="row gallery-area1">
-           <div class="pv_top gallery-wrapper">
-             <div class="row">
-                @forelse($projectid as $project_file)
-                    <div class="col-4 col-md-2 text-center">
-                        @if(strtolower($project_file->file_type) === 'image')
-                            <a href="{{ $project_file->url }}" class="btn-gallery" target="_blank">
-                                <img src="{{ $project_file->url }}" alt="">
+        <div class="row">
+            <div class="pv_top">
+                @forelse($projectid as $doc)
+                    @if (strtolower($doc->file_type) == 'image')
+                        <a href="javascript:void(0);">
+                            <img src="{{ $doc->url }}" class="rectangle-img" />
+                        </a>
+                    @endif
+                    @if (strtolower($doc->file_type) == 'video')
+                        <div class="video-mask">
+                            <a href="javascript:void(0);">
+                                <video width="100" height="69" src="{{ $doc->url }}" class="rectangle-video" >  </video>
                             </a>
-                        @endif
-                        @if(strtolower($project_file->file_type) === 'video')
-                            <video src="{{ $project_file->url }}" controls="controls" class="rectangle-img mt-0"></video>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                 @empty
-                    <div>No photo/video is uploaded.</div>
+                    No photo/video is uploaded.
                 @endforelse
-                {{-- <div id="gallery-1" class="hidden">
-                     <a href="assets/img/Rectangle 63b.jpg">Image 1</a>
-                 </div> --}}
-             </div>
-           </div>
+            </div>
         </div>
-
      </div>
      <div class="col-md-12 mt-4">
         <h3>Files(s)</h3>
         <div class="row">
             <div class="mt-3">
                 @forelse($projectid as $data)
-                    <div class="d-inline mr-4 img-text">{{ $data->filename }}</div>
+                    <div class="d-inline mr-4 img-text">
+                        <a href="{{ $data->url }}" target="_blank">
+                            {{ $data->filename }}
+                        </a>
+                    </div>
                 @empty
                     No file is uploaded.
                 @endforelse
-                {{-- @if($data->filename == null)
-                    No file is uploaded
-                @endif --}}
             </div>
         </div>
      </div>

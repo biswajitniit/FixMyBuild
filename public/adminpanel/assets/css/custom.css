@@ -4,3 +4,53 @@
     object-fit: cover;
     border-radius: 10px;
 }
+
+.pv_top{
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.pv_top img{
+    width: 100px;
+    height: 69px;
+    border-radius: 10px;
+}
+
+.pv_top .video-mask{
+    width: 100px;
+    height: 69px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: inline-block;
+    position: relative;
+}
+
+.pv_top .video-mask video{
+    object-fit: cover;
+}
+
+.video-overlay{
+    position: relative;
+    width: 100px;
+    height: 69px;
+}
+
+.image-wrapper{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25px !important;
+    aspect-ratio: 1/1;
+    z-index: 1;
+}
+
+.semi-transparent{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
