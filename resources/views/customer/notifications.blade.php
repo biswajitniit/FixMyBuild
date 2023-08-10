@@ -9,7 +9,7 @@
              <h1>My profile</h1>
              <ol class="breadcrumb mb-5">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('customer.notifications.index') }}">Settings</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Notifications</li>
              </ol>
           </div>
        </div>
