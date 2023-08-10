@@ -22,7 +22,6 @@ class BuilderController extends Controller
 
     public function save_traders_details(Request $request){
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
             'comp_reg_no' => 'required',
             'comp_name' => 'required',
             'comp_address' => 'required',
@@ -58,7 +57,6 @@ class BuilderController extends Controller
 
     public function save_company_general_information(Request $request){
         $validator = Validator::make($request->all(), [
-            'user_id'                                   => 'required|integer',
             'comp_reg_no'                               => 'required',
             'comp_name'                                 => 'required|string',
             'comp_address'                              => 'required|string',
@@ -98,18 +96,6 @@ class BuilderController extends Controller
             'vat_no.required'                           => 'If your company is VAT registered please provide the VAT number. If not, please click “No” on that option below.'
         ]);
 
-        // $errors = new MessageBag();
-        // if ($request->phone_office) {
-        //     $phone_office = str_replace('-', '', str_replace(' ', '', substr($request->phone_office,1,-1)));
-        //     if (!is_numeric($phone_office) || $request->phone_office[0] != '+')
-        //         $errors->add('phone_office', 'Invalid office phone number provided.');
-        // }
-
-        // if ($validator->fails() || count($errors) != 0) {
-            // $errors->merge($validator->errors());
-            // return response()->json(['errors' => $errors], 422);
-        // }
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
@@ -117,7 +103,7 @@ class BuilderController extends Controller
         try{
             $trader = TraderDetail::updateOrCreate(
                 [
-                    'user_id' => $request['user_id']
+                    'user_id' => $request->user()->id,
                 ],
                 [
                     'comp_reg_no'       => $request['comp_reg_no'],

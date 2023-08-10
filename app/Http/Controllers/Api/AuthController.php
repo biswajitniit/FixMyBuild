@@ -70,6 +70,17 @@ class AuthController extends Controller
             throw ValidationException::withMessages(['message' => 'Something went wrong, please try again!'], 400);
         }
 
+        if($user->customer_or_tradesperson == 'tradesperson')
+        {
+            $token = $user->createToken("asdshjfhsdkjgda.lk,hjmgnhbgfd")->plainTextToken;
+            return response()->json([
+                'access_token' => $token,
+                'user_type'=> $user->customer_or_tradesperson,
+                'user'=>$user,
+                'token_type' => 'Bearer',
+            ], 200);
+        }
+
         $html = "<!doctype html>
         <html class='no-js' lang='en'>
            <head>
