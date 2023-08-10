@@ -26,10 +26,16 @@
                     <span class="text-awaiting">Estimate recalled</span>
                     @break
                 @case('project_paused')
-                    <span class="text-awaiting">Project paused</span>
+                    <span class="text-warning">Project paused</span>
                     @break
                 @case('estimate_not_accepted')
                     <span class="text-danger">Estimate not accepted</span>
+                    @break
+                @case('project_completed')
+                    <span class="text-success">Project Completed</span>
+                    @break
+                @case('project_cancelled')
+                    <span class="text-danger">Project Cancelled</span>
                     @break
             @endswitch
         </h6>

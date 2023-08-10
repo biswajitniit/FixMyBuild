@@ -440,7 +440,7 @@ class CustomerController extends Controller
                 return view('customer.project_details',compact('projects','doc'));
             }
 
-            if($projects->status == 'project_started' || $projects->status == 'project_paused' ){
+            if($projects->status == 'project_started' || $projects->status == 'project_paused' || $projects->status == 'project_cancelled'){
                 $estimate = Estimate::where('project_id', $id)->first();
                 $tasks = Task::where('estimate_id', $estimate->id)->get();
                 $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
@@ -506,7 +506,7 @@ class CustomerController extends Controller
                     }
                 };
 
-                return view('customer.project_details',compact('projects','projectaddress','proj_logs','proj_log_for_estimate','proj_log_proj_started','task_miles_completed','proj_log_proj_completed','doc','project_id','estimates', 'trader_count'));
+                return view('customer.project_details',compact('projects','projectaddress','proj_log_for_estimate','proj_log_proj_started','task_miles_completed','proj_log_proj_completed','doc','project_id','estimates', 'trader_count'));
             }
 
             return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
