@@ -1942,7 +1942,7 @@
         var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
 
         dropzone.on("successmultiple", function(file, responses) {
-            let html = '';
+            let html = '', file_related_to = responses[0].file_related_to;
 
             for(let response of responses) {
                 if($(`#teamImage-${response.id}`).length) {
@@ -1960,14 +1960,9 @@
                         </div>`;
             }
 
-            $(html).insertBefore('#addTeamPhotos');
+            file_related_to == "team_img" && $(html).insertBefore('#addTeamPhotos');
         });
 
-        // dropzone.on("error", function(file, errorMessage, xhr) {
-        //     console.log(file);
-        //     console.log(errorMessage);
-        //     console.log(xhr);
-        // });
     }
 
     function prev_proj_upload() {
@@ -1985,7 +1980,7 @@
         var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
 
         dropzone.on("successmultiple", function(file, responses) {
-            let html = '';
+            let html = '', file_related_to = responses[0].file_related_to;
 
             for(let response of responses) {
                 if($(`#prevProjectImage-${response.id}`).length) {
@@ -2003,7 +1998,7 @@
                         </div>`;
             }
 
-            $(html).insertBefore('#addPrevProj');
+            file_related_to == "prev_project_img" && $(html).insertBefore('#addPrevProj');
         });
 
         // dropzone.on("error", function(file, errorMessage, xhr) {
