@@ -497,10 +497,7 @@
                 media_type: 'project',
                 project_id: projectId
             };
-            let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>
-                        <h6><strong>Documents:</strong> .doc, .docx .odt .pdf .ppt, .pptx .xls, .xlsx</h6>
-                        <h6><strong>Audio:</strong> .mp3 .ogg .wav</h6>
-                        <h6><strong>Video:</strong> .avi .mp4, .m4v .ogv .3gp .3g2</h6>`;
+            let html = `<h6><strong>Images:</strong> .gif .heic .jpeg, .jpg .png .svg .webp</h6>`;
             var acceptedFiles = "{{ config('const.customer_feedback_accepted_files') }}";
 
             $('#multiModal .accepted-file-list').html(html);
@@ -522,7 +519,7 @@
                     let video_html = '', image_html = '', doc_html = '', html ='';
 
                     for (let data of response) {
-                        if (data.file_type.toLowerCase() == 'video') {
+                        if (data.file_type.toLowerCase() == 'video' && $(`#${data.encoded_id}`).length == 0) {
                             video_html += `<div class="d-inline mr-5" id="${data.encoded_id}">
                                                 <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('${data.encoded_id}','#${data.encoded_id}')">
                                                     <video src="${data.url}" class="rectangle-video-lg"></video>
@@ -533,7 +530,7 @@
                                                     </div>
                                                 </a>
                                             </div>`;
-                        } else if (data.file_type.toLowerCase() == 'image') {
+                        } else if (data.file_type.toLowerCase() == 'image' && $(`#${data.encoded_id}`).length == 0) {
                             image_html += `<div class="d-inline mr-5" id="${data.encoded_id}">
                                             <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('${data.encoded_id}', '#${data.encoded_id}')">
                                                 <img src="${data.url}" alt="" class="rectangle-img-lg center-svg">
@@ -544,7 +541,7 @@
                                                 </div>
                                             </a>
                                         </div>`;
-                        } else {
+                        } else if ($(`#${data.encoded_id}`).length == 0) {
                             doc_html += `<div class="d-inline mr-5" id="${data.encoded_id}">
                                             <a href="javascript:void(0)" class="mb-3" onclick="confirmDeletePopup('${data.encoded_id}', '#${data.encoded_id}')">
                                             <img src="{{ asset('frontend/img/file_logo.png') }}" alt="${data.file_name}" title="${data.file_name}" class="rectangle-img-lg center-svg" >
