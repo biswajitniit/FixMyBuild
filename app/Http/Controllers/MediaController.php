@@ -448,4 +448,26 @@ class MediaController extends Controller
             return response()->json(['error' => 'Failed to store data'],500);
         }
     }
+
+    public function get_feedback_img(Request $request, $id){
+        try {
+            if (Project::where(['id' => Hashids_decode($id), 'user_id' => Auth::id()])->count() == 0)
+                return response()->json(['error' => 'Forbidden'],  403);
+
+            $feedbackFiles = FeedbackFile::select('id', 'file_name', 'file_type', 'url')->where('project_id', Hashids_decode($id))->get();
+            foreach ($feedbackFiles as $file) {
+                $file->encoded_id = Hashids_encode($file->id);
+                unset($file->id);
+            }
+            return $feedbackFiles;
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch data'], 500);
+        }
+    }
+
+    public function delete_feedback_img(Request $request) {
+        if (Project::where(['id' => Hashids_decode($request->project_id), 'user_id' => Auth::id()])->count() == 0)
+            return response()->json(['error' => 'Forbidden'], 403);
+        FeedbackFile::where(['id' => Hashids_decode($request->id)])->delete();
+    }
 }

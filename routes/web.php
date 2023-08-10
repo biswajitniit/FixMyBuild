@@ -61,6 +61,8 @@ Route::delete('/delete-temp-file', [MediaController::class, 'deleteTempFile'])->
 Route::delete('/delete-proj-file', [MediaController::class, 'deleteProjectFile'])->name('deleteProjectFile');
 Route::get('/get-temp-file', [MediaController::class, 'getTempFile'])->name('getTempFile');
 Route::post('feedback-img', [MediaController::class, 'feedback_img'])->name('feedback-img');
+Route::get('feedback-img/{id}', [MediaController::class, 'get_feedback_img'])->name('get-feedback-img');
+Route::delete('delete-feedback-img', [MediaController::class, 'delete_feedback_img'])->name('delete-feedback-img');
 
 
 Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login');

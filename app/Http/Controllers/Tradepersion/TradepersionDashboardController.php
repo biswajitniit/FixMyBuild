@@ -154,7 +154,7 @@ class TradepersionDashboardController extends Controller
         $errors = new MessageBag();
         if ( $request->phone_office_with_dial_code ) {
             $phone_office_with_dial_code = str_replace('-', '', str_replace(' ', '', substr($request->phone_office_with_dial_code,1,-1)));
-            if ( !is_numeric($phone_office_with_dial_code) )
+            if (!is_numeric($phone_office_with_dial_code) || !$request->phone_office_with_dial_code[0] == '+')
                 $errors->add('phone_office', 'Invalid office phone number provided.');
         }
 
@@ -678,13 +678,13 @@ class TradepersionDashboardController extends Controller
         $errors = new MessageBag();
         if ( $request->contactOfficeMobile ) {
             $phone_office_with_dial_code = str_replace('-', '', str_replace(' ', '', substr($request->contactOfficeMobile,1,-1)));
-            if ( !is_numeric($phone_office_with_dial_code) )
+            if ( !is_numeric($phone_office_with_dial_code) || !$request->contactOfficeMobile[0] == '+' )
                 $errors->add('contactOfficeMobile', 'Invalid office phone number provided.');
         }
 
         if ( $request->contactMobile ) {
             $mobile_num = str_replace('-', '', str_replace(' ', '', substr($request->contactMobile,1,-1)));
-            if ( !is_numeric($mobile_num) )
+            if ( !is_numeric($mobile_num) || !$request->contactMobile[0] == '+' )
                 $errors->add('contactMobile', 'Invalid phone number provided.');
         }
 
@@ -1016,6 +1016,7 @@ class TradepersionDashboardController extends Controller
                                      })
                                      ->orWhere(function ($q) {
                                          $q->where('reviewer_status', 'approved')
+                                           ->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
                                            ->whereIn('projects.id', Estimate::where(['tradesperson_id'=> Auth::user()->id, 'project_awarded'=> 1, 'status'=>'awarded'])->pluck('project_id'));
                                      });
                              })
@@ -1102,6 +1103,7 @@ class TradepersionDashboardController extends Controller
                                                         ->pluck('project_id')
                                                         ->toArray()
                                                     )
+                                                    ->whereNotIn('projects.status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
                                                     ->where('reviewer_status', 'approved');
                                               });
                                         }) // Estimates already submitted by the user | Estimates Other Than Write Estimate
