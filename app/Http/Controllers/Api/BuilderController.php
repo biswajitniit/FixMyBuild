@@ -10,15 +10,49 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Models\Buildercategory;
 use App\Rules\PhoneWithDialCode;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class BuilderController extends Controller
 {
+    private function uploadFileAndCreateRecord($user_id, $file, $relatedTo, $updateOrCreate = false){
+        $fileName = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+        $s3FileName = Str::uuid().'.'.$extension;
+        $file_type = explode('/', mime_content_type($file->getRealPath()))[0];
+        Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
+        $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+
+        $data = [
+            'tradesperson_id' => $user_id,
+            'file_related_to' => $relatedTo,
+            'file_type' => $file_type == 'image' ? 'image' : 'document',
+            'file_name' => $fileName,
+            'file_extension' => $extension,
+            'url' => $path,
+        ];
+
+        if ($updateOrCreate) {
+            TradespersonFile::updateOrCreate(
+                [
+                    'tradesperson_id' => $user_id,
+                    'file_related_to' => $relatedTo,
+                ],
+                $data
+            );
+        } else {
+            TradespersonFile::create($data);
+        }
+    }
+
+
     public function get_builders(Request $request){
         $data = Buildercategory::with('buildersubcategories')->where('status', 'Active')->get();
         return response()->json($data,200);
     }
+
 
     public function save_traders_details(Request $request){
         $validator = Validator::make($request->all(), [
@@ -54,6 +88,7 @@ class BuilderController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
     }
+
 
     public function save_company_general_information(Request $request){
         $validator = Validator::make($request->all(), [
@@ -128,100 +163,93 @@ class BuilderController extends Controller
             // Company Logo Upload
             if ($request['company_logo']) {
                 $file = $request['company_logo'];
-                $fileName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $s3FileName = Str::uuid().'.'.$extension;
-                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
-                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
-
-                TradespersonFile::updateOrCreate(
-                    [
-                        'tradesperson_id' => $request['user_id'],
-                        'file_related_to' => 'company_logo',
-                    ],
-                    [
-                        'tradesperson_id' => $request['user_id'],
-                        'file_related_to' => 'company_logo',
-                        'file_type'       => 'image',
-                        'file_name'       => $fileName,
-                        'file_extension'  => $extension,
-                        'url'             => $path,
-                    ]
-                );
+                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'company_logo', true);
             }
 
             // Public Liability Insurance Upload
-            $old_public_liability_insurances = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'public_liability_insurance'])->get();
-            foreach($request['public_liability_insurance_files'] as $file) {
-                $fileName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $s3FileName = Str::uuid().'.'.$extension;
-                $file_type = explode('/',mime_content_type($file->getRealPath()))[0];
-                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
-                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
-
-                TradespersonFile::create([
-                    'tradesperson_id' => $request['user_id'],
-                    'file_related_to' => 'public_liability_insurance',
-                    'file_type'       => $file_type == 'image' ? 'image' : 'document',
-                    'file_name'       => $fileName,
-                    'file_extension'  => $extension,
-                    'url'             => $path,
-                ]);
+            $old_public_liability_insurances = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'public_liability_insurance'])->pluck('id');
+            foreach ($request['public_liability_insurance_files'] as $file) {
+                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'public_liability_insurance');
             }
-            foreach($old_public_liability_insurances as $file) {
-                TradespersonFile::where('id', $file->id)->delete();
-            }
+            TradespersonFile::whereIn('id', $old_public_liability_insurances)->delete();
 
             // Photo ID Proof Upload
-            $old_photo_id_proof = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'trader_img'])->get();
-            foreach($request['photo_id_proof_files'] as $file) {
-                $fileName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $s3FileName = Str::uuid().'.'.$extension;
-                $file_type = explode('/',mime_content_type($file->getRealPath()))[0];
-                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
-                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
-
-                TradespersonFile::create([
-                    'tradesperson_id' => $request['user_id'],
-                    'file_related_to' => 'trader_img',
-                    'file_type'       => $file_type == 'image' ? 'image' : 'document',
-                    'file_name'       => $fileName,
-                    'file_extension'  => $extension,
-                    'url'             => $path,
-                ]);
+            $old_photo_id_proofs = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'trader_img'])->pluck('id');
+            foreach ($request['photo_id_proof_files'] as $file) {
+                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'trader_img');
             }
-            foreach($old_photo_id_proof as $file) {
-                TradespersonFile::where('id', $file->id)->delete();
-            }
+            TradespersonFile::whereIn('id', $old_photo_id_proofs)->delete();
 
             // Company Address Proof Upload
-            $old_photo_id_proof = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'company_address'])->get();
+            $old_company_addr_proofs = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'company_address'])->pluck('id');
             foreach($request['company_addr_id_proof_files'] as $file) {
-                $fileName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $s3FileName = Str::uuid().'.'.$extension;
-                $file_type = explode('/',mime_content_type($file->getRealPath()))[0];
-                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
-                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
-
-                TradespersonFile::create([
-                    'tradesperson_id' => $request['user_id'],
-                    'file_related_to' => 'company_address',
-                    'file_type'       => $file_type == 'image' ? 'image' : 'document',
-                    'file_name'       => $fileName,
-                    'file_extension'  => $extension,
-                    'url'             => $path,
-                ]);
+                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'company_address');
             }
-            foreach($old_photo_id_proof as $file) {
-                TradespersonFile::where('id', $file->id)->delete();
-            }
+            TradespersonFile::whereIn('id', $old_company_addr_proofs)->delete();
 
             return response()->json($trader, 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([$e->getMessage()],500);
+        }
+    }
+
+
+    public function save_company_additional_information(Request $request){
+        $validator = Validator::make($request->all(), [
+            'team_photos'                               => 'required|array',
+            'team_photos.*'                             => 'required|file|mimetypes:'.str_replace(' ', '', config('const.dropzone_accepted_image')),
+            'prev_project_photos'                       => 'required|array',
+            'prev_project_photos.*'                     => 'required|file|mimetypes:'.str_replace(' ', '', config('const.dropzone_accepted_image')),
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $old_team_photos = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'team_img'])->pluck('id');
+        foreach($request['team_photos'] as $file) {
+            $this->uploadFileAndCreateRecord($request->user()->id, $file, 'team_img');
+        }
+        TradespersonFile::whereIn('id', $old_team_photos)->delete();
+
+        $old_prev_project_photos = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'team_img'])->pluck('id');
+        foreach($request['prev_project_photos'] as $file) {
+            $this->uploadFileAndCreateRecord($request->user()->id, $file, 'prev_project_img');
+        }
+        TradespersonFile::whereIn('id', $old_prev_project_photos)->delete();
+    }
+
+    public function get_areas(){
+        try {
+            $areas = DB::table('county_towns')
+                       ->select('*')
+                       ->orderBy('county')
+                       ->get()
+                       ->groupBy('county')
+                       ->map(function ($group) {
+                           return $group->pluck('town')->toArray();
+                        })
+                       ->toArray();
+
+          return response()->json($areas, 200);
+        } catch(Exception $e) {
+            return response()->json([$e->getMessage()], 500);
+        }
+    }
+
+    public function get_categories_and_sub_categories(){
+        try {
+            Buildercategory::select('id', 'builder_category_name')->where(['status' => 1])->with('buildersubcategories')->get();
+            $builderCategories = Buildercategory::select('id', 'builder_category_name')
+                                                ->where('status', 1)
+                                                ->with(['buildersubcategories' => function ($query) {
+                                                    $query->select('id', 'builder_subcategory_name', 'builder_category_id')->where('status', 'Active');
+                                                }])
+                                                ->get()
+                                                ->toArray();
+            return response()->json($builderCategories, 200);
+        } catch(Exception $e) {
+            return response()->json([$e->getMessage()], 500);
         }
     }
 }

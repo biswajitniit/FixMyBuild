@@ -22,7 +22,8 @@ Route::namespace('Api')->group(function() {
     Route::post('/verify-otp', 'PasswordController@verify_otp');
     Route::post('/create-password', 'PasswordController@create_password');
     Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
-
+    Route::get('get-categories-and-sub-categories', 'BuilderController@get_categories_and_sub_categories');
+    Route::get('get-areas', 'BuilderController@get_areas');
 
 
     Route::middleware('auth:sanctum')->group(function() {
