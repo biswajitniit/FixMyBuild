@@ -222,3 +222,11 @@ video.customer-video{
 .mail_confirmation{
     font-size: 18px;
 }
+
+.hover-transition-off {
+    transition: none !important;
+}
+
+.file-logo:hover svg path {
+    fill: var(--primary_color);
+}

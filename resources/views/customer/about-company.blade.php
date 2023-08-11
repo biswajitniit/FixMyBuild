@@ -41,7 +41,7 @@
                         @forelse($prev_project_imgs as $prev_project_img)
                             <div class="d-inline mr-3">
                                 <a href="{{ $prev_project_img->url }}" target="_blank">
-                                    <img src="{{ $prev_project_img->url }}" alt="" class="rectangle-img">
+                                    <img src="{{ $prev_project_img->url }}" alt="" class="rectangle-img mb-2">
                                 </a>
                             </div>
                         @empty
