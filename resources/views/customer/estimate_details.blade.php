@@ -87,7 +87,7 @@
                     @if($estimate->status == null)
                         <a href="#" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#reject">Reject</a>
                         @if(Auth::user()->is_email_verified == 0)
-                            <a href="javascript:void(0);" class="btn btn-primary" disabled>Accept</a>
+                            <span title="please verify your email to accept estimates" class="d-inline-block"><button type="button" class="btn btn-primary disable-btn" disabled>Accept</button></span>
                         @else
                             <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" data-bs-toggle="modal" data-bs-target="#accept" class="btn btn-primary">Accept</a>
                         @endif

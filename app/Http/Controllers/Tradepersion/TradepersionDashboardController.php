@@ -1247,7 +1247,7 @@ class TradepersionDashboardController extends Controller
                 'noti_quote_rejected'       => $request->noti_quote_rejected ?? "0",
                 'noti_project_cancelled'    => $request->noti_project_cancelled ?? "0",
                 'noti_share_contact_info'   => $request->noti_share_contact_info ?? "0",
-                'noti_new_message'          => "1",
+                'noti_new_message'          => $request->noti_new_message ?? "0",
 
                 // Receive these notifications as a Customer
                 'reviewed'                  => $request->reviewed ?? "0",
