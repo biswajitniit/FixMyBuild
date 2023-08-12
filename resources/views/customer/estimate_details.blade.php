@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-md-6">
                             <h2>
-                                @if ($project->postcode){{ $project->postcode.', ' }} @endif @if ($project->town){{ $project->town.', ' }}@endif @if ($project->county){{ $project->county }}@endif
+                                @if ($project->postcode){{ \Str::upper($project->postcode).', ' }} @endif @if ($project->town){{ ucwords($project->town).', ' }}@endif @if ($project->county){{ ucwords($project->county) }}@endif
                             </h2>
                         </div>
                     </div>
