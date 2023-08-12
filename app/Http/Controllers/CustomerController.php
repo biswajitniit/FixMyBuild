@@ -440,7 +440,7 @@ class CustomerController extends Controller
                 return view('customer.project_details',compact('projects','doc'));
             }
 
-            if($projects->status == 'project_started' || $projects->status == 'project_paused' || $projects->status == 'project_cancelled'){
+            if($projects->status == 'project_started' || $projects->status == 'project_paused' || $projects->status == 'project_cancelled' || $projects->status == 'project_completed'){
                 $estimate = Estimate::where('project_id', $id)->first();
                 $tasks = Task::where('estimate_id', $estimate->id)->get();
                 $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
@@ -707,7 +707,7 @@ class CustomerController extends Controller
         $projectid = Projectfile::where('project_id', $estimate->project_id)->get();
         $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
         $user = User::where('id', $trader_detail->user_id)->first();
-        $project_reviews = ProjectReview::where('project_id', $estimate->project_id)->get();
+        $project_reviews = ProjectReview::where('tradesperson_id', $estimate->tradesperson_id)->get();
         $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
         $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
         $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();

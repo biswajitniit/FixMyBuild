@@ -39,8 +39,8 @@
                             <td></td>
                             <td>
                                 @if ($row->status === 'project_completed')
-                                    <a href="{{route('customer.project_review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
-                                @else
+                                    {{-- <a href="{{route('customer.project_review',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
+                                @else --}}
                                     <a href="{{route('customer.project_details',[Hashids_encode($row->id)])}}" class="btn btn-view">View</a>
                                 @endif
                             </td>

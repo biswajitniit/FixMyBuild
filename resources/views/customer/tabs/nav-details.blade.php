@@ -1,7 +1,7 @@
 <div class="tab-pane fade @if ($status == 'submitted_for_review' || $status == 'project_completed' || $status == 'project_paused' || $status == 'project_cancelled')active show @endif" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
     <div class="row mb-3">
         <div class="col-md-8">
-            @if ($status == 'project_started' || $status == 'awaiting_your_review')
+            @if ($status == 'project_started' || $status == 'awaiting_your_review' || $status == 'project_completed')
                 <div class="mb-3">
                     <h2>Tradesperson</h2>
                     <h3 class="titel">{{ $trader_detail->trader_name }}</h3>

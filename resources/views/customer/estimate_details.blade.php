@@ -248,11 +248,14 @@
         height: 200
         });
         // When the user clicks on div, open the popup
-        function myFunction() {
-        var popup = document.getElementById("myPopup");
-        popup.classList.toggle("show");
-        }
+        // function myFunction() {
+        // var popup = document.getElementById("myPopup");
+        // popup.classList.toggle("show");
+        // }
 
+        function myFunction(element) {
+            $(element).find('.myPopup').toggleClass("show");
+        }
 
         function signChange(e, key) {
             var plusIcon = $(e).find(".plus-icon");
