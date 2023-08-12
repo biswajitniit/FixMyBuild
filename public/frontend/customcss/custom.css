@@ -222,3 +222,7 @@ video.customer-video{
 .mail_confirmation{
     font-size: 18px;
 }
+
+a.custom-bell-style:hover svg path {
+    fill: var(--color_orange);
+}
