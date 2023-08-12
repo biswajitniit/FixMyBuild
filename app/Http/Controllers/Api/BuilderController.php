@@ -9,6 +9,7 @@ use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Models\Buildercategory;
+use App\Models\Traderareas;
 use App\Rules\PhoneWithDialCode;
 use Exception;
 use Illuminate\Http\Request;
@@ -167,21 +168,21 @@ class BuilderController extends Controller
             }
 
             // Public Liability Insurance Upload
-            $old_public_liability_insurances = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'public_liability_insurance'])->pluck('id');
+            $old_public_liability_insurances = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'public_liability_insurance'])->pluck('id');
             foreach ($request['public_liability_insurance_files'] as $file) {
                 $this->uploadFileAndCreateRecord($request->user()->id, $file, 'public_liability_insurance');
             }
             TradespersonFile::whereIn('id', $old_public_liability_insurances)->delete();
 
             // Photo ID Proof Upload
-            $old_photo_id_proofs = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'trader_img'])->pluck('id');
+            $old_photo_id_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'trader_img'])->pluck('id');
             foreach ($request['photo_id_proof_files'] as $file) {
                 $this->uploadFileAndCreateRecord($request->user()->id, $file, 'trader_img');
             }
             TradespersonFile::whereIn('id', $old_photo_id_proofs)->delete();
 
             // Company Address Proof Upload
-            $old_company_addr_proofs = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'company_address'])->pluck('id');
+            $old_company_addr_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_address'])->pluck('id');
             foreach($request['company_addr_id_proof_files'] as $file) {
                 $this->uploadFileAndCreateRecord($request->user()->id, $file, 'company_address');
             }
@@ -206,36 +207,45 @@ class BuilderController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $old_team_photos = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'team_img'])->pluck('id');
+        $old_team_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'team_img'])->pluck('id');
         foreach($request['team_photos'] as $file) {
             $this->uploadFileAndCreateRecord($request->user()->id, $file, 'team_img');
         }
         TradespersonFile::whereIn('id', $old_team_photos)->delete();
 
-        $old_prev_project_photos = TradespersonFile::where(['tradesperson_id' => $request['user_id'], 'file_related_to' => 'team_img'])->pluck('id');
+        $old_prev_project_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'team_img'])->pluck('id');
         foreach($request['prev_project_photos'] as $file) {
             $this->uploadFileAndCreateRecord($request->user()->id, $file, 'prev_project_img');
         }
         TradespersonFile::whereIn('id', $old_prev_project_photos)->delete();
     }
 
+
     public function get_areas(){
         try {
             $areas = DB::table('county_towns')
-                       ->select('*')
-                       ->orderBy('county')
-                       ->get()
-                       ->groupBy('county')
-                       ->map(function ($group) {
-                           return $group->pluck('town')->toArray();
+                        ->orderBy('county')
+                        ->get()
+                        ->groupBy('county')
+                        ->map(function ($items, $county) {
+                            $subAreas = $items->pluck('town')->sortBy(function ($town) {
+                                return ($town === '' || $town === null) ? PHP_INT_MAX : $town;
+                            })->values()->toArray();
+
+                            return [
+                                'county' => $county,
+                                'town' => $subAreas
+                            ];
                         })
-                       ->toArray();
+                        ->values()
+                        ->toArray();
 
           return response()->json($areas, 200);
         } catch(Exception $e) {
             return response()->json([$e->getMessage()], 500);
         }
     }
+
 
     public function get_categories_and_sub_categories(){
         try {
@@ -251,5 +261,43 @@ class BuilderController extends Controller
         } catch(Exception $e) {
             return response()->json([$e->getMessage()], 500);
         }
+    }
+
+
+    public function save_trader_areas(Request $request){
+        $validator = Validator::make($request->all(), [
+            'locationData'                 => 'required|array',
+            'locationData.*'               => 'required',
+            'locationData.*.county'        => 'required|string',
+            'locationData.*.town'         => 'required|array',
+            'locationData.*.town.*'       => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $old_trader_areas = Traderareas::where('user_id', $request->user()->id)->pluck('id');
+            $user_id = $request->user()->id;
+            foreach ($request['locationData'] as $entry) {
+                $county = $entry['county'];
+                foreach ($entry['town'] as $town) {
+                    Traderareas::create([
+                        'user_id' => $user_id,
+                        'county' => $county,
+                        'town' => $town,
+                    ]);
+                }
+            }
+            Traderareas::whereIn('id', $old_trader_areas)->delete();
+        } catch (Exception $e) {
+            return response()->json([$e->getMessage()],500);
+        }
+    }
+
+
+    public function save_trader_works(){
+
     }
 }

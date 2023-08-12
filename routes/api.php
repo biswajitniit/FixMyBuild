@@ -21,7 +21,6 @@ Route::namespace('Api')->group(function() {
     Route::post('/forgot-password', 'PasswordController@forgot_password');
     Route::post('/verify-otp', 'PasswordController@verify_otp');
     Route::post('/create-password', 'PasswordController@create_password');
-    Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
     Route::get('get-categories-and-sub-categories', 'BuilderController@get_categories_and_sub_categories');
     Route::get('get-areas', 'BuilderController@get_areas');
 
@@ -34,6 +33,8 @@ Route::namespace('Api')->group(function() {
       Route::put('projects','ProjectController@update_project');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
+      Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
+      Route::post('save-trader-areas', 'BuilderController@save_trader_areas');
     });
   });
 
