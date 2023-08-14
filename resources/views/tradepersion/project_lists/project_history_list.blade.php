@@ -16,7 +16,7 @@
                 @endphp
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td>{{ $estimate_proj->project_name }}</td>
+                    <td>{{ ucwords($estimate_proj->project_name) }}</td>
                     <td>
                         {{ $estimate_proj->created_at->format('d/m/Y') }} <br>
                         <em>{{ $estimate_proj->created_at->format('g:i A') }}</em>

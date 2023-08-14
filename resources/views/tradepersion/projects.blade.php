@@ -10,7 +10,7 @@
             <li class="breadcrumb-item">
               <a href="{{route('home')}}">Home</a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Profile</li>
+            <li class="breadcrumb-item active" aria-current="page">Projects</li>
           </ol>
         </div>
       </div>
@@ -294,17 +294,24 @@ function fetchTableData(keyword) {
     //     }
     // });
 
-    $('#new_projects tr td:nth-child(2)').each(function () {
-        $(this).closest('tr').toggle($(this).text().trim().toLowerCase().includes(keyword.trim().toLowerCase()));
+    const lowercaseKeyword = keyword.trim().toLowerCase();
+    let anyRowsVisible = false;
+
+    $('#new_projects tbody tr').each(function () {
+        const rowVisible = $(this).find('td:nth-child(2)').text().trim().toLowerCase().includes(lowercaseKeyword);
+        $(this).toggle(rowVisible);
+        if (rowVisible) {
+            anyRowsVisible = true;
+        }
     });
 
-
-    if ($('#new_projects tbody tr[style="display: none;"]').length == $('#new_projects tbody tr').length) {
-        $("#new_projects tbody").prepend('<tr id="empty_new_projects"><td colspan="6" class="text-center">There are currently no running projects.</td></tr>');
+    if (!anyRowsVisible) {
+        $("#new_projects tbody").prepend('<tr class="empty_new_projects"><td colspan="6" class="text-center">There are currently no running projects.</td></tr>');
     } else {
-        $('#empty_new_projects').remove();
+        $('.empty_new_projects').remove();
     }
 }
+
 
 function fetchHistoryTableData(keyword) {
     $.ajax({

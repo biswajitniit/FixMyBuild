@@ -1,7 +1,7 @@
 <div class="tab-pane fade @if ($projectStatus=='estimate_submitted'||$projectStatus=='estimate_recalled')active show @endif" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
     <div class="row mb-5">
        <div class="col-md-8">
-          <img src="{{ $company_logo->url }}" alt="" class="mr-2 c_logo"> <span>{{ $trader_detail->comp_name }}</span>
+          <img src="{{ $company_logo->url ?? asset('frontend/img/company_logo.svg')  }}" alt="" class="mr-2 c_logo"> <span>{{ $trader_detail->comp_name }}</span>
        </div>
        <div class="col-md-4 text-right mt-4">
           <h6>Posted on: <span class="date_time">{{ $estimate->created_at->format('d M Y,  H:i A') }}</span> </h6>
@@ -25,13 +25,15 @@
              <h3>Photo(s)/Video(s)</h3>
              <div class="row">
                 <div class="pv_top">
-                    @foreach($teams_photos as $teams_photo)
+                    @forelse($proj_estimate_files as $proj_estimate_file)
                         <div class="d-inline mr-3">
-                            <a href="{{ $teams_photo->url }}" target="_blank">
-                                <img src="{{ $teams_photo->url }}" alt="" class="rectangle-img">
+                            <a href="{{ $proj_estimate_file->url }}" target="_blank">
+                                <img src="{{ $proj_estimate_file->url }}" alt="" class="rectangle-img">
                             </a>
                         </div>
-                    @endforeach
+                    @empty
+                        <div>No photo/video is uploaded.</div>
+                    @endforelse
                 </div>
              </div>
           </div>

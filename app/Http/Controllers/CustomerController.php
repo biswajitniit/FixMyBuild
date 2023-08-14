@@ -14,9 +14,12 @@ use App\Models\{
     UserPersonalDataShare,
     Projectaddresses,
     Project,
+    ProjectCategory,
     ProjectEstimateFile,
     User,
-    Projectfile
+    Projectfile,
+    Traderareas,
+    Traderworks
 };
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
@@ -30,7 +33,8 @@ use Illuminate\Support\Facades\DB;
 
 
 use Illuminate\Support\Facades\Storage;
-use Session;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Aws\S3\Exception\S3Exception;
 use App\Models\Tempmedia;
 use League\Flysystem\File;
@@ -67,7 +71,7 @@ class CustomerController extends Controller
             'surname'                         => 'required',
             'project_name'                    => 'required',
             'contact_mobile_no'               => 'required',
-            'contact_email'                   => 'required',
+            'contact_email'                   => 'required|email',
         ],[
             'forename.required'          => 'Please enter forename',
             'surname.required'           => 'Please enter surname',
@@ -403,7 +407,7 @@ class CustomerController extends Controller
             'status'            => 'project_started',
             'status_changed_at' => now(),
         ]);
-        if(\Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
+        if(Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
             return response()->json(['status'=>'success', 'redirect_url' => route('tradepersion.projects')]);
         return response()->json(['status'=>'success', 'redirect_url' => route('customer.project')]);
     }
@@ -412,8 +416,17 @@ class CustomerController extends Controller
 
         try{
             $id=Hashids_decode($project_id);
+            $estimate = Estimate::where('project_id', $id)->first();
+            $tasks = Task::where('estimate_id', $estimate->id)->where('status', null)->get();
             $projects = Project::where('id',$id)->first();
-            $proj_logs = ProjectStatusChangeLog::where('project_id', $projects->id)->get();
+
+            $proj_log_for_estimate = ProjectStatusChangeLog::where(['project_id'=> $projects->id, 'action_by_type' => 'reviewer', 'status' => 'approved'])->latest()->first();
+            $proj_log_proj_started = ProjectStatusChangeLog::where(['project_id'=> $projects->id, 'status' => 'project_started'])->latest()->first();
+            $proj_log_proj_completed = ProjectStatusChangeLog::where(['project_id'=> $projects->id, 'status' => 'project_completed'])->latest()->first();
+            $task_miles_completed = null;
+            if($tasks->count() == null || $tasks->count() == 0){
+                $task_miles_completed = Task::where(['estimate_id'=> $estimate->id, 'status' => 'completed'])->orderBy('updated_at', 'DESC')->first();
+            }
 
             if(Auth::id() != $projects->user_id)
                 abort(403);
@@ -427,7 +440,7 @@ class CustomerController extends Controller
                 return view('customer.project_details',compact('projects','doc'));
             }
 
-            if($projects->status == 'project_started' || $projects->status == 'project_paused'){
+            if($projects->status == 'project_started' || $projects->status == 'project_paused' || $projects->status == 'project_cancelled' || $projects->status == 'project_completed'){
                 $estimate = Estimate::where('project_id', $id)->first();
                 $tasks = Task::where('estimate_id', $estimate->id)->get();
                 $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
@@ -461,11 +474,22 @@ class CustomerController extends Controller
                 $taskAmountWithContingencyAndVat = round($taskAmountWithContingencyAndVat, 2);
                 $initial_payment_percentage = number_format($initial_payment_percentage, 2);
                 $contingency_per_task = number_format($contingency_per_task, 2);
-                return view('customer.project_details',compact('projects','project_estimate_files','estimate','tasks','proj_logs','doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
+                return view('customer.project_details',compact('projects','project_estimate_files','estimate','tasks','proj_log_for_estimate','proj_log_proj_started','task_miles_completed','proj_log_proj_completed','doc','trader_detail','prev_project_imgs','teams_photos','company_logo','taskTotalAmount','taskAmountWithContingency','taskAmountWithContingencyAndVat','initial_payment_percentage','contingency_per_task','project_reviews'));
             }
 
             if($projects->status == 'estimation') {
-                $estimates = Estimate::where('project_id', $projects->id)->with(['tasks', 'tradesperson'])->get();
+                $estimates = Estimate::where(['project_id' => $projects->id, 'describe_mode' => 'Fully_describe'])
+                                    //  ->where(function ($query) {
+                                    //      $query->where('status', '<>', 'trader_rejected')
+                                    //          ->orWhereNull('status');
+                                    //  })
+                                     ->with(['tasks', 'tradesperson'])->get();
+
+                // Trader Counts
+                $trader_who_submitted_estimate = Estimate::where('project_id', $projects->id)->pluck('tradesperson_id');
+                $trader_id_matched_areas = Traderareas::where(['county' => $projects->county, 'town' => $projects->town])->whereNotIn('user_id',$trader_who_submitted_estimate)->pluck('user_id');
+                $project_categories = ProjectCategory::where('project_id', $projects->id)->pluck('sub_category_id');
+                $trader_count = Traderworks::whereIn('buildersubcategory_id', $project_categories)->whereIn('user_id', $trader_id_matched_areas)->count();
 
                 foreach($estimates as $estimate) {
                     $amount = $estimate->tasks->sum('price');
@@ -482,12 +506,12 @@ class CustomerController extends Controller
                     }
                 };
 
-                return view('customer.project_details',compact('projects','projectaddress','proj_logs','doc','project_id','estimates'));
+                return view('customer.project_details',compact('projects','projectaddress','proj_log_for_estimate','proj_log_proj_started','task_miles_completed','proj_log_proj_completed','doc','project_id','estimates', 'trader_count'));
             }
 
             return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));
         } catch (\Exception $e){
-            if(\Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
+            if(Str::lower(Auth::user()->customer_or_tradesperson) == 'tradesperson' )
                 return redirect()->route('tradepersion.projects');
             return redirect()->route('customer.project');
         }
@@ -591,7 +615,7 @@ class CustomerController extends Controller
             // $imageName = \Str::of($imageName)->basename('.'.$extension).'_'.Auth::user()->id.'.'.$image->getClientOriginalExtension();
             // $path = Storage::disk('s3')->put('Testfolder/'.$imageName,file_get_contents($image->getRealPath(),'public'));
             // $path = Storage::disk('s3')->url('Testfolder/'.$imageName);
-            $s3FileName = \Str::uuid().'.'.$extension;
+            $s3FileName = Str::uuid().'.'.$extension;
             Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($image->getRealPath()));
             $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
             $user = Auth::user();
@@ -645,7 +669,13 @@ class CustomerController extends Controller
                 $review->detailed_review = $request->optradio5;
                 $review->description = $request->detailed_review;
                 $review->save();
-                return 'Saved';
+
+                $project = Project::where('id', Hashids_decode($request->project_id))
+                                    ->update([
+                                        'status' => 'project_completed'
+                                    ]);
+                project_completed_notification($project_id[0]);
+                return response()->json(['redirect_url' => route('customer.project')]);
             // } else {
             //     $review = DB::table('project_reviews')
             //     ->where('user_id', '=', Auth::user()->id,)
@@ -663,7 +693,7 @@ class CustomerController extends Controller
             // }
 
         } catch(\Exception $e) {
-            echo $e;
+            echo "Error";
         }
     }
 
@@ -677,7 +707,7 @@ class CustomerController extends Controller
         $projectid = Projectfile::where('project_id', $estimate->project_id)->get();
         $trader_detail = TraderDetail::where('user_id', $estimate->tradesperson_id)->first();
         $user = User::where('id', $trader_detail->user_id)->first();
-        $project_reviews = ProjectReview::where('project_id', $estimate->project_id)->get();
+        $project_reviews = ProjectReview::where('tradesperson_id', $estimate->tradesperson_id)->get();
         $company_logo = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'company_logo'])->first();
         $teams_photos = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'team_img'])->get();
         $prev_project_imgs = TradespersonFile::where(['tradesperson_id'=> $estimate->tradesperson_id , 'file_related_to' => 'prev_project_img'])->get();
@@ -775,7 +805,7 @@ class CustomerController extends Controller
                 $emaildata = array(
                     'From'          =>  env('MAIL_FROM_ADDRESS'),
                     'To'            =>  $tradeperson->email,
-                    'Subject'       => 'Your Given Estimate Has Been Accepted',
+                    'Subject'       => 'Your given estimate has been accepted',
                     'HtmlBody'      =>  $html,
                     'MessageStream' => 'outbound'
                 );
@@ -789,7 +819,7 @@ class CustomerController extends Controller
                 $notificationDetail->related_to = 'project';
                 $notificationDetail->related_to_id = $project->id;
                 $notificationDetail->read_status = 0;
-                $notificationDetail->notification_text = 'Your Given Estimate Has Been Accepted';
+                $notificationDetail->notification_text = 'Your given estimate has been accepted';
                 $notificationDetail->reviewer_note = null;
                 $notificationDetail->save();
             }

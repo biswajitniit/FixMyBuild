@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DownloadController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Auth\AdminloginController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\GoogleController;
@@ -60,6 +61,8 @@ Route::delete('/delete-temp-file', [MediaController::class, 'deleteTempFile'])->
 Route::delete('/delete-proj-file', [MediaController::class, 'deleteProjectFile'])->name('deleteProjectFile');
 Route::get('/get-temp-file', [MediaController::class, 'getTempFile'])->name('getTempFile');
 Route::post('feedback-img', [MediaController::class, 'feedback_img'])->name('feedback-img');
+Route::get('feedback-img/{id}', [MediaController::class, 'get_feedback_img'])->name('get-feedback-img');
+Route::delete('delete-feedback-img', [MediaController::class, 'delete_feedback_img'])->name('delete-feedback-img');
 
 
 Route::get('/admin', [AdminLoginController::class, 'index'])->name('admin.login');
@@ -272,7 +275,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
             Route::post('temp-store-media', [TradepersionDashboardController::class, 'storeTempTraderFile'])->name('tempTraderMedia');
         });
         Route::get('project-estimate/{project_id}', [TradepersionDashboardController::class, 'project_estimate'])->name('tradepersion.project_estimate');
-        Route::post('project-estimate', [TradepersionDashboardController::class, 'projectestimate'])->name('tradepersion.p_estimate');
+        Route::post('project-estimate/{id}', [TradepersionDashboardController::class, 'save_project_estimate'])->name('tradepersion.p_estimate');
         Route::get('project-details/{project_id}', [TradepersionDashboardController::class, 'details'])->name('tradeperson.project_details');
         Route::post('update-milestone-price', [TradepersionDashboardController::class, 'update_milestone_price'])->name('tradeperson.update-milestone-price');
         Route::post('update-task-status', [TradepersionDashboardController::class, 'update_task_status'])->name('tradeperson.update-task-status');

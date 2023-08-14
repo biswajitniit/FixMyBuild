@@ -1,7 +1,7 @@
 <div class="tab-pane fade @if ($status == 'submitted_for_review' || $status == 'project_completed' || $status == 'project_paused' || $status == 'project_cancelled')active show @endif" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
     <div class="row mb-3">
         <div class="col-md-8">
-            @if ($status == 'project_started' || $status == 'awaiting_your_review')
+            @if ($status == 'project_started' || $status == 'awaiting_your_review' || $status == 'project_completed')
                 <div class="mb-3">
                     <h2>Tradesperson</h2>
                     <h3 class="titel">{{ $trader_detail->trader_name }}</h3>
@@ -69,16 +69,14 @@
                 @foreach($doc as $docs)
                     @if (strtolower($docs->file_type) == 'image')
                         @php $is_media_present = true; @endphp
-                        <a href="{{ $docs->url }}">
-                            <img src="{{ $docs->url }}" class="rectangle-img"  target="_blank"/>
+                        <a href="javascript:void(0);">
+                            <img src="{{ $docs->url }}" class="rectangle-img"/>
                         </a>
                     @endif
                     @if (strtolower($docs->file_type) == 'video')
                         @php $is_media_present = true; @endphp
                         <div class="video-mask">
-                            <a href="javascript:void(0);">
-                                <video width="100" height="69" src="{{ $docs->url }}" class="rectangle-video" >  </video>
-                            </a>
+                            <video width="100" height="69" src="{{ $docs->url }}" class="rectangle-video" >  </video>
                         </div>
                     @endif
                 @endforeach
@@ -99,7 +97,10 @@
                     @if(strtolower($docs->file_type) == 'document')
                         @php $is_document_present=true; @endphp
                         <div class="d-inline mr-4 img-text">
-                            <a href="{{$docs->url}}" target="_blank"><img src="{{ asset("frontend/img/pdf-icon.svg") }}" alt=""> {{$docs->filename}}</a>
+                            <a href="{{$docs->url}}" target="_blank" class="hover-transition-off file-logo"><svg width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.3125 0H5.6875C4.72106 0 3.9375 0.727594 3.9375 1.625V24.375C3.9375 25.2724 4.72106 26 5.6875 26H22.3125C23.2789 26 24.0625 25.2724 24.0625 24.375V8.12541L15.3125 0ZM22.3125 8.79856V8.9375H14.4375V1.625H14.588L22.3125 8.79856ZM5.6875 24.375V1.625H12.6875V10.5625H22.3125V24.375H5.6875Z" fill="#EE5719"/>
+                                </svg> {{$docs->filename}}
+                            </a>
                         </div>
                     @endif
                 @endforeach

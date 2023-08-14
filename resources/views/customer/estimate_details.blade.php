@@ -26,6 +26,9 @@
  <!--Code area start-->
  <section class="pb-5">
     <div class="container">
+        @if($estimate->status == 'rejected')
+            <div class="alert alert-warning offset-1 col-md-10">You have rejected the estimate. Please wait some days to get new estimate.</div>
+        @endif
        <form action="#" method="post">
 
           <div class="row mb-5">
@@ -45,7 +48,7 @@
                         </div>
                         <div class="col-md-6">
                             <h2>
-                                @if ($project->postcode){{ $project->postcode.', ' }} @endif @if ($project->town){{ $project->town.', ' }}@endif @if ($project->county){{ $project->county }}@endif
+                                @if ($project->postcode){{ \Str::upper($project->postcode).', ' }} @endif @if ($project->town){{ ucwords($project->town).', ' }}@endif @if ($project->county){{ ucwords($project->county) }}@endif
                             </h2>
                         </div>
                     </div>
@@ -81,11 +84,13 @@
                 </div>
                 <div class="form-group col-md-12 mt-5 text-center pre_">
                     <a href="{{route('customer.project')}}" class="btn btn-light mr-3">Back</a>
-                    <a href="#" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#reject">Reject</a>
-                    @if(Auth::user()->is_email_verified == 0)
-                        <a href="javascript:void(0);" class="btn btn-primary" disabled>Accept</a>
-                    @else
-                        <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" data-bs-toggle="modal" data-bs-target="#accept" class="btn btn-primary">Accept</a>
+                    @if($estimate->status == null)
+                        <a href="#" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#reject">Reject</a>
+                        @if(Auth::user()->is_email_verified == 0)
+                            <span title="please verify your email to accept estimates" class="d-inline-block"><button type="button" class="btn btn-primary disable-btn" disabled>Accept</button></span>
+                        @else
+                            <a href="{{ route('tradepersion.project_estimate',['project_id' => $project->id]) }}" data-bs-toggle="modal" data-bs-target="#accept" class="btn btn-primary">Accept</a>
+                        @endif
                     @endif
                 </div>
                 <!-- The Modal Accept received-->
@@ -199,6 +204,36 @@
           <!--// END-->
         </form>
     </div>
+
+    {{-- Modal to view Image and Video --}}
+    <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header pb-0">
+
+                    <h5 class="modal-title" id="project_media_modal_label">Photo/Video</h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
+                                fill="black"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body px-2 pb-3 pt-0">
+                    <div class="row">
+                        <div class="col-md-12 supported_">
+                            <img src="" alt="" />
+                            <video controls="controls" src="" class="w-100 mt-0"> </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal to view Image and Video --}}
 </section>
 <!--Code area end-->
 
@@ -213,11 +248,14 @@
         height: 200
         });
         // When the user clicks on div, open the popup
-        function myFunction() {
-        var popup = document.getElementById("myPopup");
-        popup.classList.toggle("show");
-        }
+        // function myFunction() {
+        // var popup = document.getElementById("myPopup");
+        // popup.classList.toggle("show");
+        // }
 
+        function myFunction(element) {
+            $(element).find('.myPopup').toggleClass("show");
+        }
 
         function signChange(e, key) {
             var plusIcon = $(e).find(".plus-icon");
@@ -348,7 +386,7 @@
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'success: You have successfully accepted the estimate'
+                        title: 'You have successfully accepted the estimate'
                     });
                     window.location.href = response.redirect_url;
                 },
@@ -356,7 +394,7 @@
                     // console.error('Error cancelling project:', error);
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Bad Request: Oops!! something went wrong',
+                        title: 'Oops!! something went wrong',
                         showConfirmButton: false,
                         timer: 2000
                     });
@@ -378,16 +416,12 @@
                     tradesperson_id : tradeperson_id
                 },
                 success: function(data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'success: Your project has been rejected successfully'
-                    });
-                    window.location.href = response.redirect_url;
+                    window.location.href = data.redirect_url;
                 },
                 error: function(xhr, error) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Bad Request: Oops!! something went wrong',
+                        title: 'Oops!! something went wrong',
                         showConfirmButton: false,
                         timer: 2000
                     });
@@ -405,6 +439,36 @@
 
         $(document).ready(function() {
             disable();
+            let modal_video = $('#project_media_modal .modal-body video');
+            let modal_image = $('#project_media_modal .modal-body img');
+
+            $('#nav-details .pv_top img').on('click', function(){
+                let photo_url = $(this).attr('src');
+
+                $('#project_media_modal').on('show.bs.modal', function(event){
+                    modal_video.addClass('hidden');
+                    modal_image.attr('src', photo_url);
+                });
+
+                $('#project_media_modal').on('hidden.bs.modal',function(event){
+                    modal_image.attr('src', '');
+                    photo_url='';
+                });
+
+                $('#project_media_modal').modal('show');
+            });
+
+            $('#nav-details .pv_top .video-mask video').on('click', function(){
+                console.log('Clicking on Video');
+                let video_url = $(this).attr('src');
+
+                $('#project_media_modal').on('show.bs.modal', function(event){
+                    modal_video.removeClass('hidden');
+                    modal_video.attr('src', video_url);
+                });
+
+                $('#project_media_modal').modal('show');
+            });
         });
 
     </script>

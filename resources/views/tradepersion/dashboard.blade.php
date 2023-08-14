@@ -740,7 +740,7 @@
                                      <input type="text" class="searchTerm" placeholder="Search Category..." id="workSearch" onkeyup="SearchWork()">
                                   </div>
                                </div>
-                               <div class="row">
+                               <div class="row sized-hidden">
                                  @foreach($w->buildersubcategories as $sw)
                                   <li class="col-6">
                                      <div class="form-check subworktypechk">
@@ -832,7 +832,7 @@
                                      <?php $j=1;?>
                                      @foreach($areas as $county=>$towns)
                                          <div class="tab-pane @if($j == 1) active @endif text-style" id="tab0{{$j}}">
-                                             <div class="row tab_cont">
+                                             <div class="row tab_cont sized-hidden">
                                                  @foreach($towns as $town)
                                                      <li class="col-6">
                                                          <div class="form-check areachkbx">
@@ -1014,6 +1014,7 @@
     let disp_iti = window.intlTelInput(mobile, {
         separateDialCode: true,
         allowDropdown: false,
+        autoPlaceholder: false,
         preferredCountries: ["gb"]
     });
     let mobile_num = "{{ $trader_details->phone_number }}";
@@ -1026,6 +1027,7 @@
     let edit_iti = window.intlTelInput(edit_mobile, {
         separateDialCode: true,
         allowDropdown: true,
+        autoPlaceholder: false,
         preferredCountries: ["gb"]
     });
     // edit_iti.setNumber(`+${mobile_code} ${mobile_num}`);
@@ -1038,18 +1040,24 @@
     let disp_office_iti = window.intlTelInput(office_mobile, {
         separateDialCode: true,
         allowDropdown: false,
+        autoPlaceholder: false,
         preferredCountries: ["gb"]
     });
-    disp_office_iti.setNumber(office_mobile_num);
+    if(office_mobile_num)
+        disp_office_iti.setNumber(office_mobile_num);
+    else
+        $('#phone').closest('.iti').hide();
 
     // Office Phone Number With Flag For Edit
     let edit_office_mobile = document.querySelector("#editContactOfficeMobile");
     let edit_office_mobile_iti = window.intlTelInput(edit_office_mobile, {
         separateDialCode: true,
         allowDropdown: true,
+        autoPlaceholder: false,
         preferredCountries: ["gb"]
     });
-    edit_office_mobile_iti.setNumber(office_mobile_num);
+    if(office_mobile_num)
+        edit_office_mobile_iti.setNumber(office_mobile_num);
 
 
    function showTradernameEdit(){
@@ -1215,7 +1223,13 @@
                     $('#trader-email').text(data.email);
                     disp_iti.setNumber(`${data.phone}`);
                     disp_iti.setCountry(`${data.phone_code}`);
-                    disp_office_iti.setNumber(`${data.office_phone}`);
+                    if(data.office_phone) {
+                        $('#phone').closest('.iti').show();
+                        disp_office_iti.setNumber(`${data.office_phone}`);
+                    } else {
+                        $('#editContactOfficeMobile').val('');
+                        $('#phone').closest('.iti').hide();
+                    }
                     $('#contactDetails').show();
                 } else {
                     $('#editTraderContactResp').addClass('error');
@@ -1928,7 +1942,7 @@
         var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
 
         dropzone.on("successmultiple", function(file, responses) {
-            let html = '';
+            let html = '', file_related_to = responses[0].file_related_to;
 
             for(let response of responses) {
                 if($(`#teamImage-${response.id}`).length) {
@@ -1946,14 +1960,9 @@
                         </div>`;
             }
 
-            $(html).insertBefore('#addTeamPhotos');
+            file_related_to == "team_img" && $(html).insertBefore('#addTeamPhotos');
         });
 
-        // dropzone.on("error", function(file, errorMessage, xhr) {
-        //     console.log(file);
-        //     console.log(errorMessage);
-        //     console.log(xhr);
-        // });
     }
 
     function prev_proj_upload() {
@@ -1971,7 +1980,7 @@
         var dropzone = callDropzone({url:url, params:params, acceptedFiles:acceptedFiles});
 
         dropzone.on("successmultiple", function(file, responses) {
-            let html = '';
+            let html = '', file_related_to = responses[0].file_related_to;
 
             for(let response of responses) {
                 if($(`#prevProjectImage-${response.id}`).length) {
@@ -1989,7 +1998,7 @@
                         </div>`;
             }
 
-            $(html).insertBefore('#addPrevProj');
+            file_related_to == "prev_project_img" && $(html).insertBefore('#addPrevProj');
         });
 
         // dropzone.on("error", function(file, errorMessage, xhr) {

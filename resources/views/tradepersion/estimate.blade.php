@@ -194,9 +194,9 @@
     <!--Code area start-->
     <section class="pb-5">
         <div class="container">
-            <form action="{{ route('tradepersion.p_estimate') }}" method="post">
+            <form action="{{ route('tradepersion.p_estimate', ['id' => Hashids_encode($project->id) ]) }}" method="post">
                 @csrf
-                <input type="hidden" name="project_id" value="{{ $project_id }}" />
+                {{-- <input type="hidden" name="project_id" value="{{ $project_id }}" /> --}}
                 <div class="row mb-5">
                     <div class="col-md-10 offset-md-1">
                         <div class="tell_about pl-details">
@@ -245,12 +245,12 @@
                     </div>
                 </section>
                 <div class="row">
+                    <div id="warning" style="color: red; display: none;">Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. </div>
                     <div class="col-md-10 offset-md-1">
                         <div class="white_bg mb-5 create-task-wp">
                                 <div class="col-12">
                                     <div class="form-check mb-2">
-                                        <input type="radio" class="form-check-input mb" id="Fully_describe"
-                                            name="describe_mode" value="Fully_describe" checked>
+                                        <input type="radio" class="form-check-input mb" id="Fully_describe" name="describe_mode" value="Fully_describe" checked>
                                         <h5>Please describe fully each task that needs to be undertaken.</h5>
                                     </div>
                                 </div>
@@ -283,10 +283,9 @@
                                                     </svg>
                                                 </span>
                                             </div>
-                                            <input type="text" name="amount1" id="amount1" class="form-control"
-                                                onchange="calculate_amount()" onkeyup="calculate_amount()"
-                                                placeholder="Type price for task 1">
+                                            <input type="text" name="amount1" id="amount1" class="form-control task-price" onchange="calculate_amount()" onkeyup="calculate_amount()" placeholder="Type price for task 1">
                                         </div>
+                                        <div id="warning-amount1" style="color: red; display: none;">Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. </div>
                                     </div>
                                     <div class="col-md-1">
                                         <!-- <a href="#">
@@ -324,10 +323,9 @@
                                                     </svg>
                                                 </span>
                                             </div>
-                                            <input type="text" class="form-control" id="amount2" name="amount2"
-                                                onchange="calculate_amount()" onkeyup="calculate_amount()"
-                                                placeholder="Type price for task 2">
+                                            <input type="text" class="form-control task-price" id="amount2" name="amount2" onchange="calculate_amount()" onkeyup="calculate_amount()" placeholder="Type price for task 2">
                                         </div>
+                                        <div id="warning-amount2" style="color: red; display: none;">Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. </div>
                                     </div>
                                     {{-- <div class="col-md-1">
                                         <span class="remove-row">
@@ -516,8 +514,7 @@
                                 <div class="col-md-12">
                                     <div class="form-check form-switch">
                                         <div class="switchToggle">
-                                            <input type="checkbox" id="toogle2" name="payment_required_upfront"
-                                                value="1" {{ old('payment_required_upfront') ? 'checked' : '' }}>
+                                            <input type="checkbox" id="toogle2" name="payment_required_upfront" value="1" {{ old('payment_required_upfront') ? 'checked' : '' }}>
                                             <label for="toogle2">Toggle</label>
                                         </div>
                                         <label class="form-check-label" for="mySwitch">Would you like to charge the customer an additional payment upfront?</label>
@@ -532,7 +529,7 @@
                                         <div class="row">
                                             <div class="col-2 pr-0">
                                                 <div class="form-check mt-2">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="percentage" checked>
+                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="percentage" @if(old('initial_payment_type') == 'percentage') checked @endif>
                                                 </div>
                                             </div>
                                             <div class="col-8">
@@ -552,13 +549,13 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <h4>Or</h4>
+                                        <h4 class="mt-3">Or</h4>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="row task-wrap p-0">
                                             <div class="col-1">
                                                 <div class="form-check mt-2">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="fixed_amount">
+                                                    <input type="radio" class="form-check-input" id="radio1" name="initial_payment_type" value="fixed_amount" @if(old('initial_payment_type') == 'fixed_amount') checked @endif>
                                                 </div>
                                             </div>
                                             <div class="col-9">
@@ -584,8 +581,7 @@
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
                                             <div class="switchToggle">
-                                                <input type="checkbox" id="toogle1" name="covers_customers_all_needs"
-                                                    value="1" {{ old('covers_customers_all_needs') ? 'checked' : '' }}>
+                                                <input type="checkbox" id="toogle1" name="covers_customers_all_needs" value="1" {{ old('covers_customers_all_needs') ? 'checked' : '' }}>
                                                 <label for="toogle1">Toggle</label>
                                             </div>
                                             <label class="form-check-label" for="mySwitch">Does the above list of tasks
@@ -610,9 +606,7 @@
                                             <h5>Contingency:</h5>
                                         </div>
                                         <div class="col-3 pr-0">
-                                            <input type="text" class="form-control pull-left"
-                                                id="percentage_contingency" name='contingency'
-                                                onchange="calculate_amount()" onkeyup="calculate_amount()" value="{{ old('contingency') ?? $default_contingency }}">
+                                            <input type="text" class="form-control pull-left" id="percentage_contingency" name='contingency' onchange="calculate_amount()" onkeyup="calculate_amount()" value="{{ old('contingency') ?? $default_contingency }}">
                                         </div>
                                         <div class="col-3 pl-0">
                                             <h5>%</h5>
@@ -654,12 +648,10 @@
                                                 <input type="date" class="form-control" id="project_start_date" name="project_start_date" placeholder="DD MM YYYY" style="display: none;" value="{{ old('project_start_date') }}">
                                             </div>
                                         </div>
-                                        <h3 class="mt-4">Total time required to complete the project (including
-                                            contingency)</h3>
+                                        <h3 class="mt-4">Total time required to complete the project (including contingency)</h3>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <input type="text" class="form-control" id=""
-                                                    placeholder="Type time" name="total_time" value="{{ old('total_time') }}">
+                                                <input type="text" class="form-control" placeholder="Type time" name="total_time" value="{{ old('total_time') }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -815,8 +807,9 @@
                             </svg>
                           </span>
                         </div>
-                        <input type="text" name="amount${new_field}" id="amount${new_field}" class="form-control" onchange="calculate_amount()" onkeyup="calculate_amount()" placeholder="Type price for task ${new_field}">
+                        <input type="text" name="amount${new_field}" id="amount${new_field}" class="form-control task-price" onchange="calculate_amount()" onkeyup="calculate_amount()" placeholder="Type price for task ${new_field}">
                       </div>
+                      <div id="warning-amount${new_field}" style="color: red; display: none;">Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. </div>
                     </div>
                     <div class="col-md-1">
                       <span class="remove-row">
@@ -867,30 +860,41 @@
             var initial_payment_fixed = parseFloat(document.getElementById("initial_payment_amount").value);
             const amount_from_addmore = document.getElementById("new_".$new_field);
             for (let i = 1; i <= $('#total_field').val(); i++) {
-                sum += Number($('#amount' + i).val());
+                const amountValue = Number($('#amount' + i).val());
+                if (!isNaN(amountValue)) {
+                    sum += amountValue;
+                }
                 // $("#price_exclude_contigency").text("£" + sum.toFixed(2));
             }
             if (document.getElementById('toogle2').checked) {
-                if (isNaN(initial_payment) != true){
-                    initial_payment_percentage = (parseFloat(sum))*(parseInt(initial_payment)/100);
-                    sum+=(parseFloat(sum))*(parseInt(initial_payment)/100)
+                if (!isNaN(initial_payment)) {
+                    initial_payment_percentage = parseFloat(sum) * (parseInt(initial_payment) / 100);
+                    sum += parseFloat(sum) * (parseInt(initial_payment) / 100);
+                } else {
+                    initial_payment_percentage = 0;
                 }
-                if(isNaN(initial_payment_fixed) != true){
-                    sum+=parseInt(initial_payment_fixed);
+
+                if (!isNaN(initial_payment_fixed)) {
+                    sum += parseInt(initial_payment_fixed);
+                } else {
+                    initial_payment_fixed = 0;
                 }
             }
-            $("#price_exclude_contigency").text("£" + sum.toFixed(2));
+
+            const formattedSum = isNaN(sum) ? 0 : sum.toFixed(2);
+            $("#price_exclude_contigency").text("£" + formattedSum);
+
             var percentage_contingency = $("#percentage_contingency").val() ?? 0;
             var total_price_including_contingency = (sum * percentage_contingency / 100) + sum;
             var total_price_including_vat = ((total_price_including_contingency * {{ config('const.vat_charge') }}) / 100) +
                 total_price_including_contingency;
 
-            $("#price_include_contigency").text("£" + total_price_including_contingency.toFixed(2));
+            const formattedTotalPrice = isNaN(total_price_including_contingency) ? 0 : total_price_including_contingency.toFixed(2);
+            $("#price_include_contigency").text("£" + formattedTotalPrice);
             $("#price_include_vat").text("£" + total_price_including_vat.toFixed(2));
 
-
-
-            $("#initial_payment1").text("(£" + initial_payment_percentage.toFixed(2) + ")");
+            const formattedInitialPaymentPercentage = isNaN(initial_payment_percentage) ? 0 : initial_payment_percentage.toFixed(2);
+            $("#initial_payment1").text("(£" + formattedInitialPaymentPercentage + ")");
             $("input[name='initial_payment_calculated_percentage']").val(initial_payment_percentage.toFixed(2));
         }
 
@@ -1082,6 +1086,11 @@
                     $(`input[name="amount${i+1}"]`).val((tasks[i].price == '') ? '' : parseFloat(tasks[i].price));
                 }
             @endif
+
+            $(document).on("input", ".task-price", function () {
+                $(this).val($(this).val().trim().replace(',',''));
+                validateInput($(this).attr('id'));
+            });
 
             showInitialPayment();
             showAndUpdateVatPrice();
@@ -1340,6 +1349,40 @@
             initial_payment_percentage.value=""
         }
         // Dropzone Js For Product Photo Upload Ends
+
+        // $(document).ready(function () {
+        //     const textarea = $("#amount1");
+        //     const warning = $("#warning");
+        //     textarea.on("input", function () {
+        //         const inputText = textarea.val();
+        //         const nonNumericRegex = /[^0-9]/g;
+        //         if (nonNumericRegex.test(inputText)) {
+        //             warning.show();
+        //         } else {
+        //             warning.hide();
+        //         }
+        //     });
+        // });
+
+        function validateInput(textareaId) {
+            const textarea = $("#" + textareaId);
+            const warning = $("#warning-" + textareaId);
+            const inputText = textarea.val();
+            const nonNumericRegex = /[^0-9]/g;
+            const priceRegex = /(?:^[1-9]([0-9]+)?(?:\.[0-9]{1,2})?$)|(?:^(?:0)$)|(?:^[0-9]\.[0-9](?:[0-9])?$)/;
+
+            // if (nonNumericRegex.test(inputText)) {
+            //     warning.show();
+            // } else {
+            //     warning.hide();
+            // }
+
+            if (priceRegex.test(inputText) || inputText.trim() == '') {
+                warning.hide();
+            } else {
+                warning.show();
+            }
+        }
 
     </script>
 @endpush

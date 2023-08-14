@@ -66,7 +66,9 @@
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
                                         @if($data['reviewer_status'] == 'approved')
                                             <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">Thank you for submitting your project {{ ucwords($data['project_name']) }}. Our team have sent your project to tradespeople in order to obtain estimates.</h5>
-                                            <p><strong>Message from Reviewer :</strong> {{ $data['notes_for_customer'] }}</p>
+                                            @if($data['notes_for_customer'] != null)
+                                                <p><strong>Message from Reviewer :</strong> {{ $data['notes_for_customer'] }}</p>
+                                            @endif
                                         @else
                                             <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">Thank you for submitting your project. Our team have reviewed your project and require some more information:</h5>
                                             <p><strong>Once at least one estimate has been received we will let you know.</p>

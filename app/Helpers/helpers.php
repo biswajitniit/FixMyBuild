@@ -134,6 +134,9 @@ if (!function_exists('tradesperson_project_status')) {
             if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == 'estimate_recalled') {
                 return 'estimate_recalled';
             }
+            if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == null && strtolower($estimate_recalled->unable_to_describe_type) == 'need_more_info') {
+                return 'need_more_info';
+            }
             if ($estimate_recalled->project_awarded == 0 && $estimate_recalled->status == null) {
                 return 'estimate_submitted';
             }
@@ -196,7 +199,7 @@ function milestone_completion_notification($task_id){
         $emaildata = array(
             'From'          => env('MAIL_FROM_ADDRESS'),
             'To'            => $user->email,
-            'Subject'       => 'Milestone Completed',
+            'Subject'       => 'Milestone completed',
             'HtmlBody'      => $html,
             'MessageStream' => 'outbound'
         );
@@ -208,7 +211,7 @@ function milestone_completion_notification($task_id){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your project milestone has been completed';
+        $notificationDetail->notification_text = 'Your '.$project->project_name.' milestone has been completed';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -249,7 +252,7 @@ function project_paused_notification($project_id){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your project has been paused';
+        $notificationDetail->notification_text = 'Your '.$project->project_name.' has been paused';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -284,7 +287,7 @@ function project_paused_notification($project_id){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Customer has paused the project';
+        $notificationDetail->notification_text = 'Customer has paused the project '.$project->project_name;
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -310,7 +313,7 @@ function estimate_rejected_notification($tradeperson, $project){
         $emaildata = array(
             'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $tradeperson->email,
-            'Subject'       => 'Your Given Estimate Has Been Rejected',
+            'Subject'       => 'Your given estimate has been rejected',
             'HtmlBody'      =>  $html,
             'MessageStream' => 'outbound'
         );
@@ -324,7 +327,7 @@ function estimate_rejected_notification($tradeperson, $project){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your Given Estimate Has Been Rejected';
+        $notificationDetail->notification_text = 'Your given estimate for '.$project->project_name.' has been rejected';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -353,7 +356,7 @@ function cancel_project_notification($projectId){
         $emaildata = array(
             'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $user->email,
-            'Subject'       => 'Your project has been Cancelled',
+            'Subject'       => 'Your project has been cancelled',
             'HtmlBody'      =>  $html,
             'MessageStream' => 'outbound'
         );
@@ -367,14 +370,13 @@ function cancel_project_notification($projectId){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your project has been Cancelled';
+        $notificationDetail->notification_text = 'Your project '.$project->project_name.' has been cancelled';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
 }
-function project_completed_notification($estimateId){
-    $estimate = Estimate::where('id', $estimateId)->first();
-    $project = Project::where('id', $estimate->project_id)->first();
+function project_completed_notification($projectId){
+    $project = Project::where('id', $projectId)->first();
     $user = User::where('id', $project->user_id)->first();
 
     // Check Notification settings
@@ -396,7 +398,7 @@ function project_completed_notification($estimateId){
         $emaildata = array(
             'From'          =>  env('MAIL_FROM_ADDRESS'),
             'To'            =>  $user->email,
-            'Subject'       => 'Your project has been Completed',
+            'Subject'       => 'Your '.$project->project_name.' project has been completed',
             'HtmlBody'      =>  $html,
             'MessageStream' => 'outbound'
         );
@@ -410,7 +412,7 @@ function project_completed_notification($estimateId){
         $notificationDetail->related_to = 'project';
         $notificationDetail->related_to_id = $project->id;
         $notificationDetail->read_status = 0;
-        $notificationDetail->notification_text = 'Your project has been Ccompleted';
+        $notificationDetail->notification_text = 'Your project '.$project->project_name.' has been completed';
         $notificationDetail->reviewer_note = null;
         $notificationDetail->save();
     }
@@ -419,25 +421,28 @@ function project_completed_notification($estimateId){
 if(!function_exists('recommended_projects')) {
     function recommended_projects($trader_areas, $trader_works) {
         $recommended_proj = Project::where( function($query) use($trader_areas, $trader_works) {
-        $query->where('reviewer_status', 'approved')
-                ->distinct('projects.id')
-                ->whereHas('subCategories', function($query) use($trader_works) {
-                    $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
-                })
-                ->whereDoesntHave('estimates', function ($query) {
-                    $query->where('project_awarded', 1);
-                })
-                ->where('projects.user_id', '<>', Auth::user()->id)
-                ->select('projects.*');
-                // ->join('traderareas', function($query) { $query->on(DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)'));});
-        $query->where(function ($q) use ($trader_areas) {
-                    foreach ($trader_areas as $trader_area) {
-                        $q->orWhere(function ($subQuery) use ($trader_area) {
-                            $subQuery->where('town', $trader_area->town)
-                            ->where('county', $trader_area->county);
-                        });
-                    }
-                });
+            $query->where('reviewer_status', 'approved')
+                    ->distinct('projects.id')
+                    ->whereHas('subCategories', function($query) use($trader_works) {
+                        $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
+                    })
+                    ->whereDoesntHave('estimates', function ($query) {
+                        $query->where('project_awarded', 1)
+                              ->orWhere('estimates.status', 'trader_rejected');
+                    })
+                    ->where('projects.user_id', '<>', Auth::user()->id)
+                    ->select('projects.*');
+                    // ->join('traderareas', function($query) { $query->on(DB::raw('CONCAT(projects.county, projects.town)'), '=', DB::raw('CONCAT(traderareas.county, traderareas.town)'));});
+            $query->where(function ($q) use ($trader_areas) {
+                        foreach ($trader_areas as $trader_area) {
+                            $q->orWhere(function ($subQuery) use ($trader_area) {
+                                $subQuery->where('town', $trader_area->town)
+                                ->where('county', $trader_area->county);
+                            });
+                        }
+                    });
+
+            $query->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review']);
         });
         return $recommended_proj;
     }

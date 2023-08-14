@@ -34,10 +34,14 @@
                                             <div class="row mb-3">
                                                 @foreach($notifications as $notification)
                                                     <div class="col-md-1 col-3 pr-0 mt-3" >
-                                                        <img src="{{ asset("images/notification_user.png") }}" alt="" class="notification-user-img">
+                                                        @if (auth()->user()->profile_image)
+                                                            <img src="{{ auth()->user()->profile_image }}" alt="">
+                                                        @else
+                                                            <img src="{{ asset('images/notification_user.png') }}" alt="" class="notification-user-img">
+                                                        @endif
                                                     </div>
                                                     <div class="col-md-11 col-9 pl-0 mt-3">
-                                                        <h5>{{ ucwords($notification->notification_text) }}</h5>
+                                                        <h5>{{ $notification->notification_text }}</h5>
                                                         <h6>{{ time_diff($notification->created_at) }}</h6>
                                                         <p>{{ ucwords($notification->reviewer_note) }}</p>
                                                     </div>

@@ -408,8 +408,8 @@
                             </div>
                             {{-- <input type="hidden" name="phone_code" value="" id="phone_code"> --}}
                             <div class="col-md-4">
-															<input type="text" name="phone_number" class="form-control col-md-10" id="phone" placeholder="Phone" value="{{ old('phone_number') }}">
-															<small class="text-danger errors" id="phone_number_errors">Please provide a valid phone number</small>
+                                <input type="text" name="phone_number" class="form-control col-md-10" id="phone" placeholder="Phone*" value="{{ old('phone_number') }}">
+                                <small class="text-danger errors" id="phone_number_errors">Please provide a valid phone number</small>
                             </div>
                             <div class="col-md-4">
                                <div class="form-group">
@@ -718,7 +718,7 @@
                            <?php $i=1; ?>
                            @foreach($works as $w)
                             <div class="tab-pane text-style @if($i==1) active @endif" id="tab{{$i}}">
-                               <div class="row">
+                               <div class="row sized-hidden">
                                  @foreach($w->buildersubcategories as $sw)
                                   <li class="col-6">
                                      <div class="form-check subworktypechk">
@@ -782,7 +782,7 @@
                             <?php $j=1;?>
                             @foreach($areas as $county=>$towns)
                                 <div class="tab-pane @if($j == 1) active @endif text-style" id="tab0{{$j}}">
-                                    <div class="row tab_cont">
+                                    <div class="row tab_cont  sized-hidden">
                                         @foreach($towns as $town)
                                             <li class="col-6">
                                                 <div class="form-check areachkbx">
@@ -1329,6 +1329,7 @@
                 }
                 if(data.accounts){
                     // $('#serchcompres').css('display', 'block');
+                    $('#findcomperror').empty();
                     $('#serchcompres').show();
                     $('#txt_comp_name').html(data.company_name);
                     $('#comp_name').val(data.company_name);

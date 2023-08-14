@@ -14535,18 +14535,21 @@ h2.company-name a:hover svg path {
     opacity:0.7;
 }
 
+#nav-home .pv_top,
 #nav-details .pv_top{
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
 }
 
+#nav-home .pv_top img,
 #nav-details .pv_top img{
     width: 100px;
     height: 69px;
     border-radius: 10px;
 }
 
+#nav-home .pv_top .video-mask,
 #nav-details .pv_top .video-mask{
     width: 100px;
     height: 69px;
@@ -14555,6 +14558,7 @@ h2.company-name a:hover svg path {
     display: inline-block;
 }
 
+#nav-home .pv_top .video-mask video,
 #nav-details .pv_top .video-mask video{
     object-fit: cover;
 }

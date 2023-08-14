@@ -7,7 +7,7 @@
                     <th style="width:80px;">#</th>
                     <th style="width:200px;">Payment for</th>
                     <th style="width:120px;">Amount</th>
-                    <th style="width:180px;">Contingency</th>
+                    <th style="width:150px;">Contingency</th>
                     <th style="width:100px;">Status</th>
                     @if ($status == 'project_started')
                         <th style="width:auto;"></th>
@@ -16,11 +16,26 @@
             </thead>
             <tbody>
                     <tr>
+                        @php
+                            $initialTaskFound = false;
+                        @endphp
+
                         @foreach($tasks as $key=>$task)
                             @if($task->is_initial == 1)
                                 <td>1</td>
                                 <td>Initial payment</td>
-                                <td>£{{ $task->price }}</td>
+                                <td>
+                                    @if($task->is_initial == 1)
+                                        <span>£{{ number_format($task->price, 2) }}</span>
+                                        @php
+                                            $initialTaskFound = true;
+                                        @endphp
+                                    @endif
+
+                                    @if(!$initialTaskFound)
+                                        <span>NA</span>
+                                    @endif
+                                </td>
                                 <td>NA</td>
                                 @if($task->payment_status == 'paid')
                                     <td class="text-success">Paid</td>
@@ -43,7 +58,7 @@
                         @else
                             <td>{{ $key+1 }}</td>
                         @endif
-                        <td>Milestone {{ $key+1 }}</td>
+                        <td>Milestone {{ $initialTaskFound ?  $key : $key+1 }}</td>
                         <td>£{{ sprintf("%.2f",$task->price) }}</td>
                         <td>£{{ sprintf("%.2f",$task->contingency) }}</td>
                         @if($task->payment_status == 'paid')

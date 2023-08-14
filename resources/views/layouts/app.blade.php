@@ -160,7 +160,7 @@
                                 $notifications = $notification_details['notifications'];
                               @endphp
                               <div class="dropdown">
-                                <a href="#" @if($unread_notifications > 0) onclick="toggleDropdown($(this))" @endif class="alert notification-bell-icon" id="dropdown">
+                                <a href="javascript:void(0)" @if($unread_notifications > 0) onclick="toggleDropdown($(this))" @endif class="alert notification-bell-icon custom-bell-style" id="dropdown">
                                     <svg width="27" height="29" viewBox="0 0 27 29" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M17.8749 25.7083C17.8751 26.4442 17.5972 27.1529 17.0969 27.6925C16.5965 28.232 15.9108 28.5625 15.177 28.6177L14.9582 28.625H12.0416C11.3057 28.6252 10.597 28.3473 10.0574 27.847C9.51788 27.3466 9.18738 26.6608 9.13219 25.9271L9.1249 25.7083H17.8749ZM13.4999 0.916656C16.1467 0.916613 18.6901 1.94463 20.5936 3.78385C22.497 5.62307 23.6117 8.1297 23.7024 10.775L23.7082 11.125V16.6142L26.3653 21.9283C26.4813 22.1602 26.5393 22.4167 26.5345 22.6759C26.5296 22.9351 26.462 23.1893 26.3374 23.4167C26.2128 23.644 26.035 23.8378 25.8191 23.9814C25.6033 24.125 25.3559 24.2142 25.098 24.2412L24.9303 24.25H2.06948C1.81014 24.2501 1.55464 24.1873 1.32489 24.067C1.09514 23.9467 0.897974 23.7724 0.750301 23.5593C0.602628 23.3461 0.508845 23.1002 0.476991 22.8429C0.445136 22.5855 0.476159 22.3242 0.567401 22.0814L0.634485 21.9283L3.29157 16.6142V11.125C3.29157 8.41757 4.36709 5.82104 6.28152 3.90661C8.19595 1.99217 10.7925 0.916656 13.4999 0.916656ZM13.4999 3.83332C11.6209 3.83343 9.81446 4.5589 8.45731 5.85845C7.10016 7.158 6.29708 8.93129 6.21553 10.8085L6.20823 11.125V16.6142C6.20825 16.9758 6.141 17.3344 6.0099 17.6714L5.90053 17.9194L4.19428 21.3333H22.807L21.1007 17.9179C20.9389 17.5946 20.8385 17.244 20.8047 16.8839L20.7916 16.6142V11.125C20.7916 9.19112 20.0233 7.33646 18.6559 5.969C17.2884 4.60155 15.4338 3.83332 13.4999 3.83332Z" fill="#061A48"></path>
                                     </svg>
@@ -212,7 +212,7 @@
                                             @if(Auth::user()->customer_or_tradesperson == 'Customer' && Auth::user()->status == 'Active')
                                              <li><a class="dropdown-item" href="{{ route('customer.profile') }}">My profile</a></li>
                                             <li><a class="dropdown-item" href="{{ route('customer.project') }}">My projects</a></li>
-                                             <li><a class="dropdown-item" @if(Auth::user()->is_email_verified == 0) href="javascript:void(0)" @else href="{{ route('customer.newproject') }}" @endif>New project</a></li>
+                                             <li><a class="dropdown-item" href="{{ route('customer.newproject') }}">New project</a></li>
                                              @endif
                                              @if(Auth::user()->customer_or_tradesperson == 'Tradesperson' && Auth::user()->status == 'Active')
                                              <li><a class="dropdown-item" href="{{ route('tradepersion.dashboard') }}">My profile</a></li>
@@ -353,6 +353,15 @@
                     console.error('Error on updating notification statuses');
                 }
             });
+        });
+
+        $(document).on("click", function(e) {
+            var target = e.target;
+
+            console.log(target);
+            if (!$("#notification-block").is(target) && !$("#notification-block").has(target).length && !$("#dropdown").is(target) && !$("#dropdown").has(target).length) {
+                $("#notification-block").removeClass("display-block");
+            }
         });
     });
 

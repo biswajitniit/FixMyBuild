@@ -59,28 +59,32 @@
                                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                                 @if ($projectStatus == 'estimate_accepted' || $projectStatus == 'project_started')
                                     <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
-                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
-                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
+                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
+                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                 @endif
                                 @if ($projectStatus == 'estimate_submitted' || $projectStatus == 'estimate_recalled')
                                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
-                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                 @endif
                                 @if ($projectStatus == 'estimate_rejected')
                                     <a class="nav-item nav-link active" id="nav-old-estimate-tab" data-toggle="tab" href="#nav-old-estimate" role="tab" aria-controls="nav-old-estimate" aria-selected="true">Old estimate</a>
-                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                 @endif
-                                @if ($projectStatus == 'write_estimate')
+                                @if ($projectStatus == 'write_estimate' || $projectStatus == 'need_more_info')
                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
                                     <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
                                 @endif
                                 @if ($projectStatus == 'project_completed' || $projectStatus == 'project_paused' || $projectStatus == 'project_cancelled')
                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
-                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
-                                    <a class="nav-item nav-link" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
+                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
+                                    <a class="nav-item nav-link" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="false">Milestones</a>
+                                @endif
+                                @if ($projectStatus == 'estimate_not_accepted')
+                                    <a class="nav-item nav-link active" id="nav-old-estimate-tab" data-toggle="tab" href="#nav-old-estimate" role="tab" aria-controls="nav-old-estimate" aria-selected="true">Estimate</a>
+                                    <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
                                 @endif
                                </div>
                             </nav>
@@ -103,7 +107,12 @@
                                     @include('tradepersion.details')
                                     {{-- @include('tradepersion.chat') --}}
                                 @endif
-                                @if ($projectStatus == 'write_estimate')
+                                @if ($projectStatus == 'estimate_not_accepted')
+                                    @include('tradepersion.old-estimate-tab')
+                                    @include('tradepersion.details')
+                                    {{-- @include('tradepersion.chat') --}}
+                                @endif
+                                @if ($projectStatus == 'write_estimate' || $projectStatus == 'need_more_info' )
                                     @include('tradepersion.details')
                                     {{-- @include('tradepersion.chat') --}}
                                 @endif
@@ -121,15 +130,15 @@
                     <a href="{{ route('tradepersion.projects') }}" class="btn btn-light mr-3">Back</a>
                     @if ($projectStatus == 'write_estimate')
                         <a href="#" data-bs-toggle="modal" data-bs-target="#reject-project"  class="btn btn-light mr-3">Reject project</a>
-                        <a href="{{ route('tradepersion.project_estimate',[Hashids_encode('project_id', $project->id)]) }}" class="btn btn-primary">Estimate now</a>
+                        <a href="{{ route('tradepersion.project_estimate',['project_id'=> Hashids_encode($project->id)]) }}" class="btn btn-primary">Estimate now</a>
                     @endif
 
                     @if ($projectStatus == 'estimate_submitted')
-                        <a href="{{ route('tradepersion.project_estimate',[Hashids_encode('project_id' , $project->id)]) }}" class="btn btn-primary">Recall estimate</a>
+                        <a href="{{ route('tradepersion.project_estimate',['project_id' => Hashids_encode($project->id)]) }}" class="btn btn-primary">Recall estimate</a>
                     @endif
 
                     @if ($projectStatus == 'estimate_recalled' || $projectStatus == 'estimate_rejected')
-                        <a href="{{ route('tradepersion.project_estimate',[Hashids_encode('project_id', $project->id)]) }}" class="btn btn-primary">Edit estimate</a>
+                        <a href="{{ route('tradepersion.project_estimate',['project_id'=> Hashids_encode($project->id)]) }}" class="btn btn-primary">Edit estimate</a>
                     @endif
                 </div>
                 <!-- Reject Project password-->
@@ -164,13 +173,13 @@
                                     </div>
                                     <div class="row">
                                     <div class="form-group col-md-12 mt-3">
-                                        <textarea name="type_other_reason" id="type_other_reason" class="form-control" placeholder="Type your other reasons"></textarea>
+                                        <textarea name="type_other_reason" id="type_other_reason" class="form-control" placeholder="Type your other reasons" style="display: none;"></textarea>
                                     </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-light" onclick="rejectProject()">Submit</button>
+                                <button type="button" class="btn btn-light" onclick="rejectProject()" id="confirm-reject" disabled>Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -180,6 +189,35 @@
           </div>
           <!--// END-->
        </form>
+    </div>
+
+    {{-- Image/Video Modal --}}
+    <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header pb-0">
+
+                    <h5 class="modal-title" id="project_media_modal_label">Photo/Video</h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M2.26683 18.5416L0.458496 16.7333L7.69183 9.49992L0.458496 2.26659L2.26683 0.458252L9.50016 7.69159L16.7335 0.458252L18.5418 2.26659L11.3085 9.49992L18.5418 16.7333L16.7335 18.5416L9.50016 11.3083L2.26683 18.5416Z"
+                                fill="black"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body px-2 pb-3 pt-0">
+                    <div class="row">
+                        <div class="col-md-12 supported_">
+                            <img src="" alt="" />
+                            <video controls="controls" src="" class="w-100 mt-0"> </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
  </section>
 
@@ -192,11 +230,11 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h3>Other open projects</h3>
-                            @foreach ($other_open_projects as $key=>$project)
+                            @foreach ($other_open_projects as $key=>$row_project)
                                 <div>
-                                    {{-- <h5><span>{{ $key+1 }}.</span> {{ $project->project_name }} </h5> --}}
-                                    <a href="{{ route('tradeperson.project_details', ['project_id' => Hashids_encode($project->id)]) }}"><h5><span>{{ $key+1 }}.</span> {{ $project->project_name }} </h5></a>
-                                    <p>Posted on: {{ time_diff($project->created_at) }}</p>
+                                    {{-- <h5><span>{{ $key+1 }}.</span> {{ $row_project->project_name }} </h5> --}}
+                                    <a href="{{ route('tradeperson.project_details', ['project_id' => Hashids_encode($row_project->id)]) }}"><h5><span>{{ $key+1 }}.</span> {{ $row_project->project_name }} </h5></a>
+                                    <p>Posted on: {{ time_diff($row_project->created_at) }}</p>
                                 </div>
                             @endforeach
                             {{-- <div>
@@ -438,10 +476,15 @@
             } else {
                 document.getElementById('type_other_reason').style.display = 'none';
             }
+            disableRejectProject();
+        }
+
+        function disableRejectProject() {
+            $('#select_reason').val() == '' ? $('#confirm-reject').prop('disabled', true) : $('#confirm-reject').prop('disabled', false);
         }
 
         function rejectProject() {
-            var projectid = {{ $project->id }};
+            var projectid = '{{ Hashids_encode($project->id) }}';
             var reason = $('#select_reason').val();
             var more_details = $('#type_other_reason').val();
             $.ajax({
@@ -456,20 +499,57 @@
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'success: You have successfully rejected the project'
+                        title: 'You have successfully rejected the project'
                     });
                     window.location.href = response.redirect_url;
                 },
                 error: function(xhr, error) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Bad Request: Oops!! something went wrong',
+                        title: 'Oops!! something went wrong',
                         showConfirmButton: false,
                         timer: 2000
                     });
                 }
             });
         }
+
+        $(function(){
+            let modal_video = $('#project_media_modal .modal-body video');
+            let modal_image = $('#project_media_modal .modal-body img');
+
+            $('.pv_top img').on('click', function(){
+                let photo_url = $(this).attr('src');
+
+                $('#project_media_modal').on('show.bs.modal', function(event){
+                    modal_video.addClass('hidden');
+                    modal_image.attr('src', photo_url);
+                });
+
+                $('#project_media_modal').on('hidden.bs.modal',function(event){
+                    modal_image.attr('src', '');
+                    photo_url='';
+                });
+
+                $('#project_media_modal').modal('show');
+            });
+
+            $('.pv_top .video-mask video').on('click', function(){
+                console.log('Clicking on Video');
+                let video_url = $(this).attr('src');
+
+                $('#project_media_modal').on('show.bs.modal', function(event){
+                    modal_video.removeClass('hidden');
+                    modal_video.attr('src', video_url);
+                });
+
+                // $('#project_media_modal').on('show.bs.modal', function(event){
+                //     $('#project_media_modal .modal-body video').attr('src', video_url);
+                // });
+
+                $('#project_media_modal').modal('show');
+            });
+        });
 
     </script>
 @endpush

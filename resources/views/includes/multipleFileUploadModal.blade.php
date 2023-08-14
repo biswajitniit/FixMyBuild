@@ -195,7 +195,7 @@
             $('#multiModal').modal('hide');
             multiFileDropzone.removeAllFiles(true);
             if (successMultipleCallback && typeof successMultipleCallback === 'function') {
-            successMultipleCallback(file, responses);
+                successMultipleCallback(file, responses);
             }
         });
 

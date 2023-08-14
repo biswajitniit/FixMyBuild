@@ -48,7 +48,7 @@
                         <div class="row form_wrap mt-3">
                             <div class="col-md-6">
                                 <div class="form-group col-md-12">
-                                    <input type="text" class="form-control" id="forename" placeholder="Forename" name="forename" value=""/>
+                                    <input type="text" class="form-control" id="forename" placeholder="Forename" name="forename" value="{{ old('forename') }}"/>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -194,6 +194,7 @@
                             <div class="col-md-12 mb-4">
                                 {{-- <div id="summernote"></div> --}}
                                 <textarea name="description" class="description p-2"></textarea>
+                                <div class="form-group"><label id="description-error" generated="true"  for="description" class="error"></label></div>
                             </div>
                             <div class="col-md-12 mb-4">
                                 <h3>Please upload at least one photo, video or design of the work to be undertaken.</h3>
@@ -240,7 +241,7 @@
                                    </a>
                                 </div>
                              </div>
-                            <div class="pv_top mt-4 d-flex align-items-start flex-wrap" id="getfilesformdb">
+                            <div class="pv_top mt-4" id="getfilesformdb">
                             </div>
                         </div>
                     </div>
@@ -1151,7 +1152,8 @@
                 },
                 contact_email: {
                     required: true,
-                    email: true
+                    email: true,
+                    emailDNS: true
                 },
                 postcode : {
                     required: {
@@ -1246,6 +1248,10 @@
         $.validator.addMethod("checkAddress", function(value, element) {
             return $("#selected_post_code_html").text().trim() !== "";
         }, "Please select an address");
+
+        $.validator.addMethod("emailDNS", function(value, element) {
+            return /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/i.test(value);
+        }, "Please enter a valid email address.");
 
         $.validator.addMethod('phoneNumber', function(value, element) {
             if (element.id == 'contact_mobile_no')
