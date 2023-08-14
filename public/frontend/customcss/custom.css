@@ -230,3 +230,6 @@ video.customer-video{
 .file-logo:hover svg path {
     fill: var(--primary_color);
 }
+a.custom-bell-style:hover svg path {
+    fill: var(--color_orange);
+}

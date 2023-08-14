@@ -204,7 +204,7 @@
                                 <label class="form-check-label">Yes, I want to permanently close my Fix my build account and delete my data.</label>
                             </div>
                             <div class="form-group pre_ col-md-5 mt-3">
-                                <button type="submit" id="submitted" class="btn btn-light" disabled>Close your account</button>
+                                <button type="submit" id="submitted" class="btn btn-light ac_close" disabled>Close your account</button>
                             </div>
                           </form>
                         </div>
