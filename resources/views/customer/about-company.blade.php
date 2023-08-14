@@ -54,7 +54,7 @@
         @if($project_reviews && count($project_reviews) > 0)
             <div class="customer-feedback">
                 <h3>Customer feedback</h3>
-                    @foreach($project_reviews->take(2) as $project_review)
+                    @foreach($project_reviews->take(5) as $project_review)
                         <div class="col-md-12 c_feedback">
                             <div class="row">
                             <div class="col-md-6">
@@ -115,9 +115,9 @@
                                     </div> --}}
                                     <h3>
                                         Ratings
-                                        <div class="popup ml-3" onclick="myFunction()">
+                                        <div class="popup ml-3" onclick="myFunction($(this))">
                                         ?
-                                        <span class="popuptext" id="myPopup">
+                                        <span class="popuptext myPopup">
                                             <div class="col-12 mb-2"><span class="cf_rating bg-success">A</span> 75% - 100% <span class="ml-3">P - Punctuality</span></div>
                                             <div class="col-12 mb-2"><span class="cf_rating bg-primary">b</span> 50% - 74% <span class="ml-3">W - Workmanship</span></div>
                                             <div class="col-12 mb-2"><span class="cf_rating bg-warning">C</span> 25% - 49% <span class="ml-3">T - Tidiness</span></div>

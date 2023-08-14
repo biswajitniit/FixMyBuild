@@ -165,7 +165,7 @@
                             <div class="col-md-6"><h5>Location</h5></div>
                             <div class="col-md-6">
                                 <h2>
-                                    @if ($projects->postcode){{ $projects->postcode.', ' }} @endif @if ($projects->town){{ $projects->town.', ' }}@endif @if ($projects->county){{ $projects->county }}@endif
+                                    @if ($projects->postcode){{ \Str::upper($projects->postcode).', ' }} @endif @if ($projects->town){{ ucwords($projects->town).', ' }}@endif @if ($projects->county){{ ucwords($projects->county) }}@endif
                                 </h2>
                             </div>
                         </div>
