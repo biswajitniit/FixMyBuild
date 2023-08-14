@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
+use Exception;
 
 class GoogleController extends Controller
 {
@@ -184,8 +185,8 @@ class GoogleController extends Controller
 
             return redirect()->route('dashboard');
 
-        } catch (\Throwable $th) {
-            //throw $th;
+        } catch (Exception $e) {
+            dd($e->getMessage());
         }
     }
 
