@@ -73,7 +73,10 @@
                      @if(strtolower($doc->file_type) == 'document')
                          @php $is_document_present=true; @endphp
                          <div class="d-inline mr-4 img-text">
-                             <a href="{{$doc->url}}" target="_blank"><img src="{{ asset("frontend/img/pdf-icon.svg") }}" alt=""> {{$doc->filename}}</a>
+                            <a href="{{$doc->url}}" target="_blank" class="hover-transition-off file-logo"><svg width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.3125 0H5.6875C4.72106 0 3.9375 0.727594 3.9375 1.625V24.375C3.9375 25.2724 4.72106 26 5.6875 26H22.3125C23.2789 26 24.0625 25.2724 24.0625 24.375V8.12541L15.3125 0ZM22.3125 8.79856V8.9375H14.4375V1.625H14.588L22.3125 8.79856ZM5.6875 24.375V1.625H12.6875V10.5625H22.3125V24.375H5.6875Z" fill="#EE5719"/>
+                                </svg> {{$doc->filename}}
+                            </a>
                          </div>
                      @endif
                  @endforeach

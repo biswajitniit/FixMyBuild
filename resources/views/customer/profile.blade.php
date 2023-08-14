@@ -87,7 +87,7 @@
              <h1>My profile</h1>
              <ol class="breadcrumb mb-5">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Settings</li>
+                <li class="breadcrumb-item active" aria-current="page">Profile</li>
              </ol>
           </div>
        </div>

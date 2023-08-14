@@ -318,7 +318,7 @@ class TradepersionDashboardController extends Controller
 			'bnk_account_type'      => 'required',
 			'bnk_account_name'      => 'required',
 			'bnk_sort_code'         => ['required', new BankSortCode()],
-			'bnk_account_number'    => 'required|size:8',
+			'bnk_account_number'    => 'required|integer|size:8',
         ],[
             'contingency.required'      => 'Please enter contingency.',
             'bnk_account_type.required' => 'Please select your bank account type.',
@@ -326,6 +326,7 @@ class TradepersionDashboardController extends Controller
             'bnk_sort_code.required'    => 'Please enter your bank sort code.',
             'bnk_account_number.required'   => 'Please enter your bank account number.',
             'bnk_account_number.size'   => 'We support UK bank account numbers that are 8 digits in length. If you have a shorter account number, please check with your bank if the number can be padded with 0s in front and be 8 digits in length.',
+            'bnk_account_number.integer'=> 'We support UK bank account numbers that are 8 digits in length. If you have a shorter account number, please check with your bank if the number can be padded with 0s in front and be 8 digits in length.',
             'contingency.between'       => 'The amount of contingency can be between 0% and 100%.',
         ]);
         $traderdetails = TraderDetail::where('user_id', Auth::user()->id)->first();

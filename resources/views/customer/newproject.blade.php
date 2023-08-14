@@ -194,6 +194,7 @@
                             <div class="col-md-12 mb-4">
                                 {{-- <div id="summernote"></div> --}}
                                 <textarea name="description" class="description p-2"></textarea>
+                                <div class="form-group"><label id="description-error" generated="true"  for="description" class="error"></label></div>
                             </div>
                             <div class="col-md-12 mb-4">
                                 <h3>Please upload at least one photo, video or design of the work to be undertaken.</h3>
@@ -240,7 +241,7 @@
                                    </a>
                                 </div>
                              </div>
-                            <div class="pv_top mt-4 d-flex align-items-start flex-wrap" id="getfilesformdb">
+                            <div class="pv_top mt-4" id="getfilesformdb">
                             </div>
                         </div>
                     </div>
