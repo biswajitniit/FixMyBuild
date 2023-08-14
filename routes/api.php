@@ -34,7 +34,9 @@ Route::namespace('Api')->group(function() {
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
+      Route::post('save-company-additional-information', 'BuilderController@save_company_additional_information');
       Route::post('save-trader-areas', 'BuilderController@save_trader_areas');
+      Route::post('save-trader-works', 'BuilderController@save_trader_works');
     });
   });
 

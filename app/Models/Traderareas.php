@@ -10,7 +10,9 @@ class Traderareas extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'sub_area_cover_id'
+        'sub_area_cover_id',
+        'county',
+        'town'
     ];
 
     /**

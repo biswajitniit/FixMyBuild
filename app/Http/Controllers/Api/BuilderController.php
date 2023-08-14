@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Models\Buildercategory;
 use App\Models\Traderareas;
+use App\Models\Traderworks;
 use App\Rules\PhoneWithDialCode;
 use Exception;
 use Illuminate\Http\Request;
@@ -188,7 +189,7 @@ class BuilderController extends Controller
             }
             TradespersonFile::whereIn('id', $old_company_addr_proofs)->delete();
 
-            return response()->json($trader, 200);
+            return response()->json(['message' => 'Information saved successfully.'], 200);
         } catch (Exception $e) {
             return response()->json([$e->getMessage()],500);
         }
@@ -196,28 +197,34 @@ class BuilderController extends Controller
 
 
     public function save_company_additional_information(Request $request){
-        $validator = Validator::make($request->all(), [
-            'team_photos'                               => 'required|array',
-            'team_photos.*'                             => 'required|file|mimetypes:'.str_replace(' ', '', config('const.dropzone_accepted_image')),
-            'prev_project_photos'                       => 'required|array',
-            'prev_project_photos.*'                     => 'required|file|mimetypes:'.str_replace(' ', '', config('const.dropzone_accepted_image')),
-        ]);
+        try{
+            $validator = Validator::make($request->all(), [
+                'team_photos'                               => 'required|array',
+                'team_photos.*'                             => 'required|file|mimetypes:'.str_replace(' ', '', config('const.dropzone_accepted_image')),
+                'prev_project_photos'                       => 'required|array',
+                'prev_project_photos.*'                     => 'required|file|mimetypes:'.str_replace(' ', '', config('const.dropzone_accepted_image')),
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
 
-        $old_team_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'team_img'])->pluck('id');
-        foreach($request['team_photos'] as $file) {
-            $this->uploadFileAndCreateRecord($request->user()->id, $file, 'team_img');
-        }
-        TradespersonFile::whereIn('id', $old_team_photos)->delete();
+            $old_team_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'team_img'])->pluck('id');
+            foreach($request['team_photos'] as $file) {
+                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'team_img');
+            }
+            TradespersonFile::whereIn('id', $old_team_photos)->delete();
 
-        $old_prev_project_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'team_img'])->pluck('id');
-        foreach($request['prev_project_photos'] as $file) {
-            $this->uploadFileAndCreateRecord($request->user()->id, $file, 'prev_project_img');
+            $old_prev_project_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'team_img'])->pluck('id');
+            foreach($request['prev_project_photos'] as $file) {
+                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'prev_project_img');
+            }
+            TradespersonFile::whereIn('id', $old_prev_project_photos)->delete();
+
+            return response()->json(['message' => 'Information saved successfully.'], 200);
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
         }
-        TradespersonFile::whereIn('id', $old_prev_project_photos)->delete();
     }
 
 
@@ -269,8 +276,12 @@ class BuilderController extends Controller
             'locationData'                 => 'required|array',
             'locationData.*'               => 'required',
             'locationData.*.county'        => 'required|string',
-            'locationData.*.town'         => 'required|array',
-            'locationData.*.town.*'       => 'nullable|string',
+            'locationData.*.town'          => 'required|array',
+            'locationData.*.town.*'        => 'nullable|string',
+        ], [
+            'locationData.*.county'       => 'Please select the areas you cover.',
+            'locationData.*.town'         => 'Please select the areas you cover.',
+            'locationData.*.town.*'       => 'Please select the areas you cover.',
         ]);
 
         if ($validator->fails()) {
@@ -286,18 +297,44 @@ class BuilderController extends Controller
                     Traderareas::create([
                         'user_id' => $user_id,
                         'county' => $county,
-                        'town' => $town,
+                        'town' => $town ?? 'Others',
                     ]);
                 }
             }
             Traderareas::whereIn('id', $old_trader_areas)->delete();
-        } catch (Exception $e) {
-            return response()->json([$e->getMessage()],500);
+            return response()->json(['message' => 'Information saved successfully.'], 200);
+        } catch(Exception $e) {
+            return response()->json([$e->getMessage()], 500);
         }
     }
 
 
-    public function save_trader_works(){
+    public function save_trader_works(Request $request){
+        $validator = Validator::make($request->all(), [
+            'works'                 => 'required|array',
+            'works.*'               => 'required|integer'
+        ], [
+            'works'                 => 'Please select the works you do.',
+            'works.*.required'      => 'Please select the works you do.',
+            'works.*.integer'       => 'Please send the sub category id.',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try{
+            $old_trader_works = Traderworks::where('user_id', $request->user()->id)->pluck('id');
+            foreach($request['works'] as $work) {
+                Traderworks::create([
+                    'user_id' => $request->user()->id,
+                    'buildersubcategory_id' => $work,
+                ]);
+            }
+            Traderworks::whereIn('id', $old_trader_works)->delete();
+            return response()->json(['message' => 'Information saved successfully.'], 200);
+        } catch(Exception $e) {
+            return response()->json([$e->getMessage()], 500);
+        }
     }
 }
