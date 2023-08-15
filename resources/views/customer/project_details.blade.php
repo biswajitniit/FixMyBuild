@@ -4,7 +4,7 @@
 <!--Code area start-->
 
 <!-- Modal Type 1 START-->
-<div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header pb-0">
@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 <!-- Modal Type 1 END-->
 
      <section>
@@ -441,6 +441,7 @@
 
 
       <!--Code area end-->
+      @include('includes.photoVideoModal')
 @endsection
 
 @push('scripts')

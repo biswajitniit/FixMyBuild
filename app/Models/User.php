@@ -28,6 +28,9 @@ class User extends Authenticatable
         'customer_or_tradesperson',
         'verify',
         'verification_code',
+        'steps_completed',
+        'verified',
+        'locked',
     ];
 
     /**

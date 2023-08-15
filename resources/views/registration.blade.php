@@ -220,7 +220,8 @@
               <div class="form-group col-md-12 mt-5 text-center sign_with">
                 <p>Or register with</p>
                 <ul>
-                    <li><a href="{{ route('google-auth') }}"><i class="fa fa-google"></i></a></li>
+                    {{-- <li><a href="{{ route('google-auth') }}"><i class="fa fa-google"></i></a></li> --}}
+                    <li><a href="javascript:void(0)" onclick="googleAuth()" id="google-auth-btn"><i class="fa fa-google"></i></a></li>
                     <li>
                       <a href="#">
                           <svg width="31" height="32" viewBox="0 0 31 32" xmlns="http://www.w3.org/2000/svg">
@@ -370,6 +371,23 @@
         //     this.submit();
         // });
 
+        $("#google-auth-btn").click(function(e) {
+            e.preventDefault();
+
+            var phoneValid = $("#userregistration").validate().element("#phone");
+            var customerOrTradespersonValid = $("#userregistration").validate().element("[name='customer_or_tradesperson']");
+            var terms_and_condition = $("#userregistration").validate().element("#terms_of_service");
+            if (phoneValid && customerOrTradespersonValid && terms_and_condition) {
+                var queryParams = {
+                    phone: iti.getNumber(),
+                    user_type: $("[name='customer_or_tradesperson']:checked").val(),
+                };
+                var queryString = $.param(queryParams);
+                var redirectUrl = "{{ route('google-auth') }}?" + queryString;
+                window.location.href = redirectUrl;
+            }
+
+        });
 
         $('#name').focus();
 
@@ -512,6 +530,18 @@
         return is_valid;
     }
 
+    function googleAuth() {
+        // e.preventDefault();
+        $("#userregistration").validate().element("#phone");
+        $("#userregistration").validate().element("[name='customer_or_tradesperson']");
+        // $.get({
+        //     url: "{{ route('google-auth') }}",
+        //     data: {
+        //         user_type: $('input[name="customer_or_tradesperson"]').val(),
+        //         phone:,
+        //     }
+        // });
+    }
 
     function checkPasswordStrength() {
         var number = /([0-9])/;

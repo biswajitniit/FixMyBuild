@@ -244,10 +244,10 @@ a.custom-bell-style:hover svg path {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
-#photoVideoModal .modal-content {
+#photoVideoModal .custom-modal-content {
     margin: auto;
     /**display: flex;
     flex-direction: column;
@@ -303,4 +303,30 @@ a.custom-bell-style:hover svg path {
 
 #photoVideoModal .next {
     right: 0;
+}
+
+.semi-transparent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.video-overlay{
+    position: relative;
+    width: 100px;
+    height: 69px;
+    cursor: pointer;
+}
+
+.image-wrapper{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25px !important;
+    aspect-ratio: 1/1;
+    z-index: 1;
 }

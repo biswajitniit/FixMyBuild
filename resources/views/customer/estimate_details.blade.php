@@ -206,7 +206,7 @@
     </div>
 
     {{-- Modal to view Image and Video --}}
-    <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
+    {{-- <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header pb-0">
@@ -232,11 +232,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     {{-- Modal to view Image and Video --}}
 </section>
 <!--Code area end-->
-
+@include('includes.photoVideoModal')
 @endsection
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>

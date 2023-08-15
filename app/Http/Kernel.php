@@ -65,5 +65,7 @@ class Kernel extends HttpKernel
         'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
         'is_verify_email' => \App\Http\Middleware\IsVerifyEmail::class,
         'steps_completed' => \App\Http\Middleware\StepsCompleted::class,
+        'role.customer' => \App\Http\Middleware\RoleCustomer::class,
+        'role.tradesperson' => \App\Http\Middleware\RoleTradesperson::class,
     ];
 }

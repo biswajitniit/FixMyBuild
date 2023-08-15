@@ -17,6 +17,7 @@
                 <h3>UK VAT number</h3>
                 <h4>{{ $trader_detail->vat_no }}</h4>
             @endif
+            @php $count = 0; @endphp
             <div class="row">
              <div class="col-md-6">
                 <h3>Team photo(s)</h3>
@@ -24,9 +25,11 @@
                     <div class="pv_top">
                         @forelse($teams_photos as $teams_photo)
                             <div class="d-inline mr-3">
-                                <a href="{{ $teams_photo->url }}" target="_blank">
-                                    <img src="{{ $teams_photo->url }}" alt="" class="rectangle-img mb-2">
+                                {{-- <a href="{{ $teams_photo->url }}" target="_blank"> --}}
+                                <a href="javascript:void(0)" onclick="openModal({{ $count }}, 'about-company-team-modal-element')">
+                                    <img src="{{ $teams_photo->url }}" alt="" class="rectangle-img mb-2 about-company-team-modal-element">
                                 </a>
+                                @php $count++; @endphp
                             </div>
                         @empty
                             <div>No photo is uploaded.</div>
@@ -34,16 +37,19 @@
                     </div>
                 </div>
              </div>
+            @php $count = 0; @endphp
              <div class="col-md-6">
                 <h3>Photo(s) of previous project(s)</h3>
                 <div class="row">
                     <div class="pv_top">
                         @forelse($prev_project_imgs as $prev_project_img)
                             <div class="d-inline mr-3">
-                                <a href="{{ $prev_project_img->url }}" target="_blank">
-                                    <img src="{{ $prev_project_img->url }}" alt="" class="rectangle-img mb-2">
+                                {{-- <a href="{{ $prev_project_img->url }}" target="_blank"> --}}
+                                <a href="javascript:void(0)" onclick="openModal({{ $count }}, 'about_company_prev_proj_modal_element')">
+                                    <img src="{{ $prev_project_img->url }}" alt="" class="rectangle-img mb-2 about_company_prev_proj_modal_element">
                                 </a>
                             </div>
+                            @php $count++; @endphp
                         @empty
                             <div>No photo is uploaded.</div>
                         @endforelse

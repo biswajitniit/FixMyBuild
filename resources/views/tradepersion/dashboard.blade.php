@@ -164,7 +164,10 @@
 <!--Code area start-->
 <section class="pb-5">
    <div class="container">
-      <div class="row">
+      <div @class([
+        'row',
+        'mt-5' => $trader_details->approval_status == 'Pending' || $trader_details->approval_status == null
+      ])>
          <div class="col-md-3 dashboard_sidebar">
             <ul>
                <li @if(Route::is('tradepersion.dashboard')) class="active" @endif>

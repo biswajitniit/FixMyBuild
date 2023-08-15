@@ -8,17 +8,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use Exception;
+use Illuminate\Support\MessageBag;
 
 class GoogleController extends Controller
 {
 
-    public function redirect(){
+    public function redirect(Request $request){
+        session(['user_type' => $request->user_type, 'phone' => $request->phone]);
         return Socialite::driver('google')->redirect();
     }
 
     public function callbackFromGoogle(){
         try {
-            $user = Socialite::driver('google')->user();
+            $user = Socialite::driver('google')->stateless()->user();
             $is_user = User::where('email',$user->getEmail())->first();
             if(!$is_user){
                 $saveuser = User::updateOrCreate(
@@ -30,6 +32,8 @@ class GoogleController extends Controller
                         'verified'                    => 1,
                         'locked'                      => 1,
                         'is_email_verified'           => 1,
+                        'customer_or_tradesperson'    => session()->get('user_type'),
+                        'phone'                       => session()->get('phone'),
                         'name'             => $user->getName(),
                         'email'            => $user->getEmail(),
                         'password'         => Hash::make($user->getName().'@'.$user->getId())
@@ -48,15 +52,18 @@ class GoogleController extends Controller
                     return redirect()->intended('/');
                 }else{
                     $errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
-                    return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
+                    return redirect()->back()->withErrors($errors);
                 }
             }else{
-                if(Auth::user()->steps_completed == 1){
-                    return redirect()->intended('/tradeperson/company-registration');
-                }else if(Auth::user()->steps_completed == 2){
-                    return redirect()->intended('/tradeperson/bank-registration');
-                }else if(Auth::user()->steps_completed == 3){
-                    return redirect()->intended('/');
+                if(Auth::user()->steps_completed == 1 && Auth::user()->status == 'Active'){
+                    return redirect()->route('tradepersion.compregistration');
+                }else if(Auth::user()->steps_completed == 2 && Auth::user()->status == 'Active'){
+                    return redirect()->route('tradepersion.bankregistration');
+                }else if(Auth::user()->steps_completed == 3 && Auth::user()->status == 'Active'){
+                    return redirect()->route('tradepersion.dashboard');
+                }else{
+                    $errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
+                    return redirect()->back()->withErrors($errors);
                 }
             }
 
@@ -186,7 +193,8 @@ class GoogleController extends Controller
             return redirect()->route('dashboard');
 
         } catch (Exception $e) {
-            dd($e->getMessage());
+            $errors = new MessageBag(['loginerror' => ['Oops! Something went wrong.']]);
+            return redirect()->route('login')->withErrors($errors);
         }
     }
 
