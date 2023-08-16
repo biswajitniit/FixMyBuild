@@ -189,7 +189,7 @@
                                 <h3>Describe the work required clearly so that builders can understand.</h3>
                                 <p>If the style (including colors) are important please mention them explicitly to avoid confusion and
                                     unexpected costs.</p>
-                                <p>If you're unsure of what to write here you might find our advice on this page useful: <a href="#" class="sugg_">Suggestions</a></p>
+                                {{-- <p>If you're unsure of what to write here you might find our advice on this page useful: <a href="#" class="sugg_">Suggestions</a></p> --}}
                             </div>
                             <div class="col-md-12 mb-4">
                                 {{-- <div id="summernote"></div> --}}

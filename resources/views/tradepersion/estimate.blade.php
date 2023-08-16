@@ -245,7 +245,7 @@
                     </div>
                 </section>
                 <div class="row">
-                    <div id="warning" style="color: red; display: none;">Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. </div>
+                    <div id="warning" style="color: red; display: none;"><b>Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. <b></div>
                     <div class="col-md-10 offset-md-1">
                         <div class="white_bg mb-5 create-task-wp">
                                 <div class="col-12">
@@ -285,7 +285,7 @@
                                             </div>
                                             <input type="text" name="amount1" id="amount1" class="form-control task-price" onchange="calculate_amount()" onkeyup="calculate_amount()" placeholder="Type price for task 1">
                                         </div>
-                                        <div id="warning-amount1" style="color: red; display: none;">Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. </div>
+                                        <div id="warning-amount1" style="color: red; display: none;"><b>Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. <b></div>
                                     </div>
                                     <div class="col-md-1">
                                         <!-- <a href="#">
@@ -325,7 +325,7 @@
                                             </div>
                                             <input type="text" class="form-control task-price" id="amount2" name="amount2" onchange="calculate_amount()" onkeyup="calculate_amount()" placeholder="Type price for task 2">
                                         </div>
-                                        <div id="warning-amount2" style="color: red; display: none;">Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. </div>
+                                        <div id="warning-amount2" style="color: red; display: none;"><b>Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. <b></div>
                                     </div>
                                     {{-- <div class="col-md-1">
                                         <span class="remove-row">
@@ -809,7 +809,7 @@
                         </div>
                         <input type="text" name="amount${new_field}" id="amount${new_field}" class="form-control task-price" onchange="calculate_amount()" onkeyup="calculate_amount()" placeholder="Type price for task ${new_field}">
                       </div>
-                      <div id="warning-amount${new_field}" style="color: red; display: none;">Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. </div>
+                      <div id="warning-amount${new_field}" style="color: red; display: none;"><b>Please enter a price with at least one digit before the decimal point and a maximum of two digits after the decimal point. <b></div>
                     </div>
                     <div class="col-md-1">
                       <span class="remove-row">

@@ -54,7 +54,7 @@
         @if($project_reviews && count($project_reviews) > 0)
             <div class="customer-feedback">
                 <h3>Customer feedback</h3>
-                    @foreach($project_reviews->take(5) as $project_review)
+                    @foreach($project_reviews as $project_review)
                         <div class="col-md-12 c_feedback">
                             <div class="row">
                             <div class="col-md-6">
@@ -161,7 +161,7 @@
                             </div>
                         </div>
                     @endforeach
-                <div class="col-md-12 text-center load_more"><a href="javascript:void(0);" id="load_more"> <i class="fa fa-plus"></i> Load more</a></div>
+                {{-- <div class="col-md-12 text-center load_more"><a href="javascript:void(0);" id="load_more"> <i class="fa fa-plus"></i> Load more</a></div> --}}
             </div>
         @endif
        </div>
