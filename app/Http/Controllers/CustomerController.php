@@ -484,7 +484,6 @@ class CustomerController extends Controller
                                     //          ->orWhereNull('status');
                                     //  })
                                      ->with(['tasks', 'tradesperson'])->get();
-                $project_reviews = ProjectReview::where('tradesperson_id', $estimate->tradesperson_id)->get();
 
                 // Trader Counts
                 $trader_who_submitted_estimate = Estimate::where('project_id', $projects->id)->pluck('tradesperson_id');
@@ -507,7 +506,7 @@ class CustomerController extends Controller
                     }
                 };
 
-                return view('customer.project_details',compact('projects','project_reviews','projectaddress','proj_log_for_estimate','proj_log_proj_started','task_miles_completed','proj_log_proj_completed','doc','project_id','estimates', 'trader_count'));
+                return view('customer.project_details',compact('projects','projectaddress','proj_log_for_estimate','proj_log_proj_started','task_miles_completed','proj_log_proj_completed','doc','project_id','estimates', 'trader_count'));
             }
 
             return view('customer.project_details',compact('projects','projectaddress','doc','project_id'));

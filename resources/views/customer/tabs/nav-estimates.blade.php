@@ -71,36 +71,6 @@
                                         @endif
                                     @endforeach
 
-                                    {{-- @foreach ($project_reviews as $project_review)
-                                        @if($project_review->punctuality == 1)
-                                            <span class="cf_rating bg-success">&nbsp;</span>
-                                        @else
-                                            <span class="cf_rating bg-danger">&nbsp;</span>
-                                        @endif
-
-                                        @if($project_review->workmanship == 2)
-                                            <span class="cf_rating bg-success">&nbsp;</span>
-                                        @else
-                                            @if($project_review->workmanship == 1)
-                                                <span class="cf_rating bg-warning">&nbsp;</span>
-                                            @else
-                                                <span class="cf_rating bg-danger">&nbsp;</span>
-                                            @endif
-                                        @endif
-
-                                        @if($project_review->tidiness == 1)
-                                            <span class="cf_rating bg-success">&nbsp;</span>
-                                        @else
-                                            <span class="cf_rating bg-danger">&nbsp;</span>
-                                        @endif
-
-                                        @if($project_review->price_accuracy == 1)
-                                            <span class="cf_rating bg-success">&nbsp;</span>
-                                        @else
-                                            <span class="cf_rating bg-danger">&nbsp;</span>
-                                        @endif
-                                    @endforeach --}}
-
                                 @endif
                             </td>
                             <td><a href="{{ route('Customer.project-estimate', [Hashids_encode($estimate->id)]) }}" class="btn btn-view">View</a></td>
