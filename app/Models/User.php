@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'google_id',
+        'microsoft_id',
         'is_email_verified',
         'phone',
         'customer_or_tradesperson',
@@ -31,6 +32,7 @@ class User extends Authenticatable
         'steps_completed',
         'verified',
         'locked',
+        'status'
     ];
 
     /**

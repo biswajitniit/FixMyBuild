@@ -126,7 +126,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
 
     Route::get('/auth/microsoft', [MicrosoftController::class, 'redirect'])->name('microsoft-auth');
-    Route::get('/microsoft/callback', [GoogleController::class, 'callbackFromMicrosoft'])->name('microsoftcallback');
+    Route::get('/microsoft/callback', [MicrosoftController::class, 'callbackFromMicrosoft'])->name('microsoftcallback');
 
     Route::get('/dashboard', function () {
         return view('Dashboard/dashboard');

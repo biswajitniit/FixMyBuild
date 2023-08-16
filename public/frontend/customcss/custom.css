@@ -244,7 +244,7 @@ a.custom-bell-style:hover svg path {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 #photoVideoModal .custom-modal-content {
