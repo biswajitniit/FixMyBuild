@@ -51,6 +51,8 @@ class StripeController extends Controller
                 "currency" => "gbp",
                 "customer" => $customer->id,
                 "description" => $orderid,
+                "destination" => 'ca_OT73LHoC879s6LUnBpCXSsxHMGTzjhyN',
+                "application_fee" => intval(($request->totalamount * 100) * env('STRIP_APPLICATION_FEE'))
         ]);
         if (!empty($charge) && $charge['status'] == 'succeeded') {
 
