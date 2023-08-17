@@ -312,7 +312,8 @@
                                                     @include('customer.tabs.nav-milestones')
                                                     @include('customer.estimate_tab')
                                                     @include('customer.about-company')
-                                                    @include('customer.tabs.nav-chat')
+                                                    {{-- @include('customer.tabs.nav-chat') --}}
+                                                    @include('customer.chat')
                                                     @break
                                                 @case('project_completed')
                                                     @include('customer.tabs.nav-milestones')

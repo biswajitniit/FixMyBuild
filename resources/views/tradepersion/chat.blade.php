@@ -217,18 +217,25 @@
                         <input type="hidden" id="from_user_id" name="from_user_id" value="{{ Auth::id() }}">
                         <input type="hidden" id="to_user_id" name="to_user_id" value="{{ $estimate->tradesperson_id }}">
                      @else
-                        <input type="hidden" id="to_user_id" name="to_user_id" value="{{ Auth::id() }}">
-                        <input type="hidden" id="from_user_id" name="from_user_id" value="{{ $project->user_id }}">
+                        <input type="hidden" id="from_user_id" name="from_user_id" value="{{ Auth::id() }}">
+                        <input type="hidden" id="to_user_id" name="to_user_id" value="{{ $project->user_id }}">
                     @endif
                     <input type="hidden" id="project_id" name="project_id" value="{{ $project->id }}">
                     <input type="hidden" id="estimate_id" name="estimate_id" value="{{ $estimate->id }}">
 
+                    {{--<div class="input-area">
+                        <input type="text" id="type_msg" name="type_msg" placeholder="Type here...">
+                        <a class="msg-send-icon" type="submit"> --}}
+                            {{-- <img src="{{ asset('images/ion_paper-plane.png') }}" alt="">
+                        </a>
+                        <button type="button" onclick="submitMessage()">Send</button>
+                    </div> --}}
+
                     <div class="input-area">
                         <input type="text" id="type_msg" name="type_msg" placeholder="Type here...">
-                        {{-- <a class="msg-send-icon" type="submit"> --}}
-                            {{-- <img src="{{ asset('images/ion_paper-plane.png') }}" alt="">
-                        </a> --}}
-                        <button type="button" onclick="submitMessage()">Send</button>
+                        <a class="msg-send-icon" href="javascript:void(0)" onclick="submitMessage()">
+                            <img src="{{ asset('images/ion_paper-plane.png') }}" alt="">
+                        </a>
                     </div>
                 </form>
             </div>

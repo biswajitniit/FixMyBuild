@@ -233,3 +233,7 @@ video.customer-video{
 a.custom-bell-style:hover svg path {
     fill: var(--color_orange);
 }
+
+.msg-area .tick img {
+    max-width: 50px;
+}

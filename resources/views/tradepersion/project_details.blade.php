@@ -95,26 +95,26 @@
                                     @include('tradepersion.milestones')
                                     @include('tradepersion.details')
                                     @include('tradepersion.estimate_tab')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'estimate_submitted' || $projectStatus == 'estimate_recalled')
                                     @include('tradepersion.estimate_tab')
                                     @include('tradepersion.details')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'estimate_rejected')
                                     @include('tradepersion.old-estimate-tab')
                                     @include('tradepersion.details')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'estimate_not_accepted')
                                     @include('tradepersion.old-estimate-tab')
                                     @include('tradepersion.details')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'write_estimate' || $projectStatus == 'need_more_info' )
                                     @include('tradepersion.details')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'project_completed' || $projectStatus == 'project_paused' || $projectStatus == 'project_cancelled')
                                     @include('tradepersion.details')
@@ -412,10 +412,13 @@
                 },
                 success: function(response){
                     // $('#outgoing_msg').html(response.message);
-                    $('#last_msg_id').html(response.last_insert_id);
+                    // $('#last_msg_id').html(response.last_insert_id);
+                    $('#last_msg_id').val(response.last_insert_id);
+                    // loadMessagesOfThisConvo();
+                    retrieveMessages();
                 },
-                error: function(response){
-                    console.log(response);
+                error: function(error){
+                    console.log(error);
                 }
             });
         }
@@ -427,47 +430,306 @@
             var lastMessageId = $('#last_msg_id').val();
             $.ajax({
                 method: 'GET',
-                url: '/retrive-new-msg/'+to_user_id+'/'+authUser+'/'+lastMessageId,
+                // url: '/retrive-new-msg/'+to_user_id+'/'+authUser+'/'+lastMessageId,
+                url: '{{ route("tradeperson.retrive-new-msg") }}',
+                data : {
+                    _token: '{{ csrf_token() }}',
+                    from_user_id : $('#from_user_id').val(),
+                    to_user_id : $('#to_user_id').val(),
+                    last_msg_id : $('#last_msg_id').val()
+                },
                 success: function(response){
-                    console.log(response);
-                    console.log(lastMessageId);
                     while(response[i]!=null){
-                        $('#sender_msg').append('<div class="msg" id="outgoing_msg">'+response[i].message +'</div>');
+                        if($('.chat-window > div:last-child').attr('class') == 'user2' && response[i].from_user_id == {{ Auth::id() }}) {
+                            var html = `<div class="msg-area">
+                                        <div class="tick mr-2">
+                                                <img width="22px" src="{{ asset('images/mdi_tick.png') }}" alt="seen message">
+                                            </div>
+                                        <div class="msg">
+                                            ${response[i].message}
+                                        </div>
+                                        <div>
+                                    </div>
+                                </div>`;
+
+                            $('.user2:last-of-type').append(html);
+                        }
+                        else if($('.chat-window > div:last-child').attr('class') == 'user1' && response[i].from_user_id == {{ Auth::id() }}) {
+                            var date = new Date(response[i].created_at);
+                            var options = { timeZone: 'Europe/London', hour12: false, hour: '2-digit', minute:'2-digit' };
+                            var ukTime = date.toLocaleString('en-GB', options);
+                            var html = `<div class="clearfix"></div>
+                                <div class="user2">
+                                    <div class="name-time">
+                                        <span class="time">${ukTime}</span>
+                                        <span class="user-img"><img src="{{ Auth::user()->profile_image }}" class="user-img-chat" alt=""></span>
+                                    </div>
+                                    <div class="msg-area">
+                                        <div class="tick mr-2">
+                                            <img src="{{ asset('images/mdi_tick.png') }}" alt="">
+                                        </div>
+                                        <div class="msg">
+                                            ${response[i].message}
+                                        </div>
+                                        <div></div>
+                                    </div>
+                                </div>`
+                            $('.chat-window').append(html);
+                        } else if($('.chat-window > div:last-child').attr('class') == 'user2' && response[i].from_user_id != {{ Auth::id() }}) {
+                            var date = new Date(response[i].created_at);
+                            var options = { timeZone: 'Europe/London', hour12: false, hour: '2-digit', minute:'2-digit' };
+                            var ukTime = date.toLocaleString('en-GB', options);
+                            var html = `<div class="clearfix"></div>
+                            <div class="user1">
+                                <div class="name-time">
+                                    <span class="user-img"><img src="{{ asset('images/user1.png') }}" class="user-img-chat" alt=""></span>
+                                    <span class="user-name">Jane Cooper</span>
+                                    <span class="time">10:30</span>
+                                </div>
+                                <div class="msg-area">
+                                    <div class="msg">
+                                        ${response[i].message}
+                                    </div>
+                                    <div>
+                                        <div class="dots">
+                                            <a href="#" data-toggle="dropdown" aria-expanded="false">
+                                                <img width="100%" src="{{ asset('images/three-dot.png') }}" alt="">
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/copy.png') }}" alt=""></span><span>Copy</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/reply.png') }}" alt=""></span><span>Reply</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/forward.png') }}" alt=""></span><span>Forward</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/bookmark.png') }}" alt=""></span><span>Bookmark</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/report.png') }}" alt=""></span><span>Report a concern</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                            $('.chat-window').append(html);
+                        } else if($('.chat-window > div:last-child').attr('class') != 'user2' && response[i].from_user_id != {{ Auth::id() }}) {
+                            var html = `<div class="msg-area">
+                                    <div class="msg">
+                                        ${response[i].message}
+                                    </div>
+                                    <div>
+                                        <div class="dots">
+                                            <a href="#" data-toggle="dropdown" aria-expanded="false">
+                                                <img width="100%" src="{{ asset('images/three-dot.png') }}" alt="">
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/copy.png') }}" alt=""></span><span>Copy</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/reply.png') }}" alt=""></span><span>Reply</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/forward.png') }}" alt=""></span><span>Forward</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/bookmark.png') }}" alt=""></span><span>Bookmark</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/report.png') }}" alt=""></span><span>Report a concern</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            $('.user1:last-of-type').append(html);
+                        }
+                        // var html = `<div class="msg-area">
+                        //             <div class="tick mr-2">
+                        //                     <img width="22px" src="{{ asset('images/mdi_tick.png') }}" alt="seen message">
+                        //                 </div>
+                        //             <div class="msg">
+                        //                 ${response[i].message}
+                        //             </div>
+                        //             <div>
+                        //         </div>
+                        //     </div>`;
+
+                        // $('.user2').append(html);
+
+                        // $('.user2').append('<div class="msg" id="outgoing_msg">'+response[i].message +'</div>');
+                        // lastMessageId = response[i].id + 1;
                         lastMessageId = response[i].id + 1;
+                        $('#last_msg_id').val(lastMessageId);
                         i++;
+                        $('#type_msg').val('');
                     }
                     // scrollPaubos();
                 },
-                complete: function(){
-                    retrieveMessages();
+                complete: function(response){
+                    // retrieveMessages();
                 }
             });
         }
 
-        function loadMessagesOfThisConvo(){
+        function loadMessagesOfThisConvo(last_msg_id=$('#last_msg_id').val()){
+            console.log("loding")
             i=0;
             const authUser =  $('#from_user_id').val();
             const to_user_id = $('#to_user_id').val();
+            var last_msg_id = $('#last_msg_id').val();
+            console.log(authUser,to_user_id)
             $.ajax({
                 method: 'GET',
-                url: '/load-msg/'+to_user_id+'/'+authUser,
+                // url: '/load-msg/'+to_user_id+'/'+authUser,
+                url: '{{ route("tradeperson.load-msg")}}',
+                data:{
+                    _token: '{{ csrf_token() }}',
+                    from_user_id : $('#from_user_id').val(),
+                    to_user_id : $('#to_user_id').val(),
+                    last_msg_id : last_msg_id
+                },
                 success: function(response){
-                    $('#messageThread').html('');
-                    //console.log();
-                    while(response[0][i]!=null){
-                        if(response[1][0] == response[0][i].message_users_id ){
-                            $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+response[0][i].message +'</p></div></div>');
-                        }else{
-                            $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[0][i].message +'</p></div></div>');
-                        }
-                        lastMessageId = response[0][i].id + 1;
-                        i++;
-                    }
+                    // $('#sender_msg').html('');
+                    // console.log('from loadMessagesOfThisConvo');
+                    // while(response[0][i]!=null){
+                    //     if(response[1][0] == response[0][i].message_users_id ){
+                    //         $('#sender_msg').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+response[0][i].message +'</p></div></div>');
+                    //     }else{
+                    //         $('#sender_msg').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[0][i].message +'</p></div></div>');
+                    //     }
+                    //     // lastMessageId = response[0][i].id + 1;
+                    //     lastMessageId = response[i].id + 1;
+                    //     $('#last_msg_id').val(lastMessageId);
+                    //     i++;
+                    // }
                     // scrollPaubos();
-                    retrieveMessages();
+                    // retrieveMessages();
+                    while(response[i]!=null){
+                        if($('.chat-window > div:last-child').attr('class') == 'user2' && response[i].from_user_id == {{ Auth::id() }}) {
+                            var html = `<div class="msg-area">
+                                        <div class="tick mr-2">
+                                                <img width="22px" src="{{ asset('images/mdi_tick.png') }}" alt="seen message">
+                                            </div>
+                                        <div class="msg">
+                                            ${response[i].message}
+                                        </div>
+                                        <div>
+                                    </div>
+                                </div>`;
+
+                            $('.user2:last-of-type').append(html);
+                        }
+                        else if($('.chat-window > div:last-child').attr('class') == 'user1' && response[i].from_user_id == {{ Auth::id() }}) {
+                            var date = new Date(response[i].created_at);
+                            var options = { timeZone: 'Europe/London', hour12: false, hour: '2-digit', minute:'2-digit' };
+                            var ukTime = date.toLocaleString('en-GB', options);
+                            var html = `<div class="clearfix"></div>
+                                <div class="user2">
+                                    <div class="name-time">
+                                        <span class="time">${ukTime}</span>
+                                        <span class="user-img"><img src="{{ Auth::user()->profile_image }}" class="user-img-chat" alt=""></span>
+                                    </div>
+                                    <div class="msg-area">
+                                        <div class="tick mr-2">
+                                            <img src="{{ asset('images/mdi_tick.png') }}" alt="">
+                                        </div>
+                                        <div class="msg">
+                                            ${response[i].message}
+                                        </div>
+                                        <div></div>
+                                    </div>
+                                </div>`
+                            $('.chat-window').append(html);
+                        } else if($('.chat-window > div:last-child').attr('class') == 'user2' && response[i].from_user_id != {{ Auth::id() }}) {
+                            var date = new Date(response[i].created_at);
+                            var options = { timeZone: 'Europe/London', hour12: false, hour: '2-digit', minute:'2-digit' };
+                            var ukTime = date.toLocaleString('en-GB', options);
+                            var html = `<div class="clearfix"></div>
+                            <div class="user1">
+                                <div class="name-time">
+                                    <span class="user-img"><img src="{{ asset('images/user1.png') }}" class="user-img-chat" alt=""></span>
+                                    <span class="user-name">Jane Cooper</span>
+                                    <span class="time">${ukTime}</span>
+                                </div>
+                                <div class="msg-area">
+                                    <div class="msg">
+                                        ${response[i].message}
+                                    </div>
+                                    <div>
+                                        <div class="dots">
+                                            <a href="#" data-toggle="dropdown" aria-expanded="false">
+                                                <img width="100%" src="{{ asset('images/three-dot.png') }}" alt="">
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/copy.png') }}" alt=""></span><span>Copy</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/reply.png') }}" alt=""></span><span>Reply</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/forward.png') }}" alt=""></span><span>Forward</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/bookmark.png') }}" alt=""></span><span>Bookmark</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/report.png') }}" alt=""></span><span>Report a concern</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                            $('.chat-window').append(html);
+                        } else if($('.chat-window > div:last-child').attr('class') != 'user2' && response[i].from_user_id != {{ Auth::id() }}) {
+                            var html = `<div class="msg-area">
+                                    <div class="msg">
+                                        ${response[i].message}
+                                    </div>
+                                    <div>
+                                        <div class="dots">
+                                            <a href="#" data-toggle="dropdown" aria-expanded="false">
+                                                <img width="100%" src="{{ asset('images/three-dot.png') }}" alt="">
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/copy.png') }}" alt=""></span><span>Copy</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/reply.png') }}" alt=""></span><span>Reply</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/forward.png') }}" alt=""></span><span>Forward</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/bookmark.png') }}" alt=""></span><span>Bookmark</span>
+                                                </a>
+                                                <a class="m-0 px-3 py-1 d-flex">
+                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/report.png') }}" alt=""></span><span>Report a concern</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            $('.user1:last-of-type').append(html);
+                        }
+                        lastMessageId = response[i].id + 1;
+                        $('#last_msg_id').val(lastMessageId);
+                        i++;
+                        $('#type_msg').val('');
+                    }
                 }
             });
         }
+
+        loadMessagesOfThisConvo(0);
 
         function forOtherReason() {
             let e = document.getElementById('select_reason');

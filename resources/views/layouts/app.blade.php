@@ -346,7 +346,7 @@
         $(document).on("click", function(e) {
             var target = e.target;
 
-            console.log(target);
+            // console.log(target);
             if (!$("#notification-block").is(target) && !$("#notification-block").has(target).length && !$("#dropdown").is(target) && !$("#dropdown").has(target).length) {
                 $("#notification-block").removeClass("display-block");
             }

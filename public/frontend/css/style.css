@@ -15130,6 +15130,8 @@ color: #6D717A !important;
 }
 .user-img-chat{
     width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 .c_logo
 {
