@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Exception;
 use App\Models\User;
+use Illuminate\Support\Str;
+use App\Models\Notification;
+use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
-use Exception;
 
 class MicrosoftController extends Controller
 {
@@ -21,7 +24,8 @@ class MicrosoftController extends Controller
                     return redirect()->route('home');
                 } else {
                     $errors = new MessageBag(['loginerror' => ['This account is blocked.']]);
-                    Auth::logout();
+                    if (Auth::check()) Auth::logout();
+                    Session::flush();
                     return redirect()->route($redirectionRouteNameOnError)->withErrors($errors);
                 }
             } else {
@@ -33,79 +37,133 @@ class MicrosoftController extends Controller
                     return redirect()->route('tradepersion.dashboard');
                 } else if(Auth::user()->status != 'Active') {
                     $errors = new MessageBag(['loginerror' => ['This account is blocked.']]);
-                    Auth::logout();
+                    if (Auth::check()) Auth::logout();
+                    Session::flush();
                     return redirect()->route($redirectionRouteNameOnError)->withErrors($errors);
                 }
             }
         } catch(Exception $e) {
-            $errors = new MessageBag(['loginerror' => ['Oops! Something went wrong.']]);
-            Auth::logout();
+            $errors = new MessageBag(['loginerror' => ['Authentication with Microsoft could not be completed successfully.']]);
+            if (Auth::check()) Auth::logout();
+            Session::flush();
             return redirect()->route($redirectionRouteNameOnError)->withErrors($errors);
         }
 
     }
 
     private function registerWithMicrosoft() {
-        $user = Socialite::with('azure')->stateless()->user();
-
-        if(User::where('email', $user->getEmail())->whereNull('microsoft_id')->first()) {
-            $errors = new MessageBag(['loginerror' => ['This email is registered with us through our native login system.']]);
-            return redirect()->route('user.registration')->withErrors($errors);
-        }
-
-        if(User::where('email', $user->getEmail())->whereNotNull('microsoft_id')->first()) {
-            User::where('email', $user->getEmail())->update(['microsoft_id' => $user->getId()]);
-            Auth::login(User::where('email', $user->getEmail())->first());
-            return $this->roleBasedRedirection('user.registration');
-        }
-
-        $saveuser = User::Create(
-            [
-                'steps_completed'             => 1,
-                'verified'                    => 1,
-                'locked'                      => 1,
-                'is_email_verified'           => 1,
-                'customer_or_tradesperson'    => session()->get('user_type'),
-                'phone'                       => session()->get('phone'),
-                'microsoft_id'                   => $user->getId(),
-                'name'                        => $user->getName(),
-                'email'                       => $user->getEmail(),
-                'status'                      => 'Active',
-                'password'                    => Hash::make($user->getName().'@'.$user->getId())
-            ]
-        );
-
-        Auth::login($saveuser);
-        return $this->roleBasedRedirection('user.registration');
-    }
-
-    private function loginWithMicrosoft() {
-        $user = Socialite::driver('azure')->stateless()->user();
-
-        $get_user = User::where('email',$user->getEmail())->first();
-        if ($get_user && $get_user->status == "Active") {
-            if(User::where('email', $user->getEmail())->whereNotNull('microsoft_id')->first()) {
-                User::where('email', $user->getEmail())->update(['microsoft_id' => $user->getId()]);
-                $get_user = User::where('email',$user->getEmail())->first();
-                Auth::login($get_user);
-                return $this->roleBasedRedirection('login');
-            }
+        try{
+            $user = Socialite::with('azure')->stateless()->user();
 
             if(User::where('email', $user->getEmail())->whereNull('microsoft_id')->first()) {
                 $errors = new MessageBag(['loginerror' => ['This email is registered with us through our native login system.']]);
-                return redirect()->route('login')->withErrors($errors);
+                return redirect()->route('user.registration')->withErrors($errors);
             }
 
-        }
+            if(User::where('email', $user->getEmail())->whereNotNull('microsoft_id')->first()) {
+                User::where('email', $user->getEmail())->update(['microsoft_id' => $user->getId()]);
+                Auth::login(User::where('email', $user->getEmail())->first());
+                session()->regenerate();
+                return $this->roleBasedRedirection('user.registration');
+            }
 
-        if($get_user) {
-            $errors = new MessageBag(['loginerror' => ['This account is blocked.']]);
+            $saveuser = User::Create(
+                [
+                    'steps_completed'             => 1,
+                    'verified'                    => 1,
+                    'locked'                      => 1,
+                    'is_email_verified'           => 1,
+                    'customer_or_tradesperson'    => session()->get('user_type'),
+                    'phone'                       => session()->get('phone'),
+                    'microsoft_id'                   => $user->getId(),
+                    'name'                        => $user->getName(),
+                    'email'                       => $user->getEmail(),
+                    'status'                      => 'Active',
+                    'password'                    => Hash::make($user->getName().'@'.$user->getId())
+                ]
+            );
+
+            $settings = [];
+
+            if (Str::lower(session()->get('user_type')) == 'customer') {
+                $settings = [
+                    'reviewed'                  => config('const.customer_notification_reviewed'),
+                    'paused'                    => config('const.customer_notification_paused'),
+                    'project_milestone_complete'=> config('const.customer_notification_project_milestone_complete'),
+                    'project_complete'          => config('const.customer_notification_project_complete'),
+                    'project_new_message'       => config('const.customer_notification_project_new_message'),
+                ];
+            } else {
+                $settings = [
+                    // Receive these notifications as a Customer
+                    'reviewed'                  => config('const.trader_notification_reviewed'),
+                    'paused'                    => config('const.trader_notification_paused'),
+                    'project_milestone_complete'=> config('const.trader_notification_project_milestone_complete'),
+                    'project_complete'          => config('const.trader_notification_project_complete'),
+                    'project_new_message'       => config('const.trader_notification_project_new_message'),
+
+                    // Receive these notifications as a Tradesperson
+                    'builder_amendment'         => config('const.trader_notification_builder_amendment'),
+                    'noti_new_quotes'           => config('const.trader_notification_new_estimates'),
+                    'noti_quote_accepted'       => config('const.trader_notification_estimate_accepted'),
+                    'noti_project_stopped'      => config('const.trader_notification_project_stopped'),
+                    'noti_quote_rejected'       => config('const.trader_notification_estimate_rejected'),
+                    'noti_project_cancelled'    => config('const.trader_notification_project_cancelled'),
+                    'noti_share_contact_info'   => config('const.trader_notification_share_contact_info'),
+                    'noti_new_message'          => config('const.trader_notification_trader_new_message'),
+                ];
+            }
+
+            Notification::create([
+                'user_id' => $saveuser->id,
+                'settings' => $settings
+            ]);
+
+            Auth::login($saveuser);
+            session()->regenerate();
+            return $this->roleBasedRedirection('user.registration');
+        } catch(Exception $e) {
+            $errors = new MessageBag(['loginerror' => ['Authentication with Microsoft could not be completed successfully.']]);
+            if (Auth::check()) Auth::logout();
+            Session::flush();
             return redirect()->route('user.registration')->withErrors($errors);
         }
+    }
 
-        $errors = new MessageBag(['loginerror' => ['This email is not registered with us. Please register first.']]);
-        return redirect()->route('user.registration')->withErrors($errors);
+    private function loginWithMicrosoft() {
+        try{
+            $user = Socialite::driver('azure')->stateless()->user();
 
+            $get_user = User::where('email',$user->getEmail())->first();
+            if ($get_user && $get_user->status == "Active") {
+                if(User::where('email', $user->getEmail())->whereNotNull('microsoft_id')->first()) {
+                    User::where('email', $user->getEmail())->update(['microsoft_id' => $user->getId()]);
+                    $get_user = User::where('email',$user->getEmail())->first();
+                    Auth::login($get_user);
+                    session()->regenerate();
+                    return $this->roleBasedRedirection('login');
+                }
+
+                if(User::where('email', $user->getEmail())->whereNull('microsoft_id')->first()) {
+                    $errors = new MessageBag(['loginerror' => ['This email is registered with us through our native login system.']]);
+                    return redirect()->route('login')->withErrors($errors);
+                }
+
+            }
+
+            if($get_user) {
+                $errors = new MessageBag(['loginerror' => ['This account is blocked.']]);
+                return redirect()->route('user.registration')->withErrors($errors);
+            }
+
+            $errors = new MessageBag(['loginerror' => ['This email is not registered with us. Please register first.']]);
+            return redirect()->route('user.registration')->withErrors($errors);
+        } catch(Exception $e) {
+            $errors = new MessageBag(['loginerror' => ['Authentication with Microsoft could not be completed successfully.']]);
+            if (Auth::check()) Auth::logout();
+            Session::flush();
+            return redirect()->route('user.registration')->withErrors($errors);
+        }
     }
 
     public function redirect(Request $request){
