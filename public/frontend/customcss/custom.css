@@ -237,3 +237,15 @@ a.custom-bell-style:hover svg path {
 .msg-area .tick img {
     max-width: 50px;
 }
+
+.bookmark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+}
+
+.bookmark svg path {
+    fill: var(--color_orange);
+}

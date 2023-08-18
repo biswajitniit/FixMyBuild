@@ -30,7 +30,7 @@ class ChatController extends Controller
     {
         $project = Project::where('id', $request->project_id)->first();
         $customer = User::where('id', $project->user_id)->first();
-        
+
         $id1 = Chat::where('from_user_id', $request->from_user_id)
                     ->where('to_user_id',$request->to_user_id)
                     ->pluck('id');
@@ -38,12 +38,24 @@ class ChatController extends Controller
                     ->where('from_user_id',$request->from_user_id)
                     ->pluck('id');
 
-        $allMessages = Chat::where('id','>=',$request->last_msg_id)
-                            ->where('from_user_id', $request->from_user_id)
-                            ->where('to_user_id', $request->to_user_id)
-                            ->orderBy('id', 'asc')
-                            ->get();
-
+        // $allMessages = Chat::where('id','>=',$request->last_msg_id)
+        //                     ->where('from_user_id', $request->from_user_id)
+        //                     ->where('to_user_id', $request->to_user_id)
+        //                     ->where('estimate_id', $request->estimate_id)
+        //                     ->orderBy('id', 'asc')
+        //                     ->get();
+        // $sql = Chat::where('id','>=',$request->last_msg_id)
+        // ->where('from_user_id', $request->from_user_id)
+        // ->where('to_user_id', $request->to_user_id)
+        // ->where('estimate_id', $request->estimate_id)
+        // ->orderBy('id', 'asc')->toSql();
+        // return [$sql, $request->last_msg_id, $request->from_user_id, $request->to_user_id, $request->estimate_id];
+        $allMessages = Chat::where(function($query) use ($request) {
+                $query->where('from_user_id', $request->from_user_id)->where('to_user_id', $request->to_user_id)->where('estimate_id', $request->estimate_id)->where('id','>=',$request->last_msg_id);
+            })
+            ->orWhere(function($query) use ($request) {
+                $query->where('to_user_id', $request->from_user_id)->where('from_user_id', $request->to_user_id)->where('estimate_id', $request->estimate_id)->where('id','>=',$request->last_msg_id);
+            })->get();
         return $allMessages;
     }
 
@@ -82,11 +94,20 @@ class ChatController extends Controller
         // return $tobePassed;
 
         $allMessages = Chat::where(function($query) use ($request) {
-            $query->where('from_user_id', $request->from_user_id)->where('to_user_id', $request->to_user_id);
-        })->orWhere(function($query) use ($request) {
-            $query->where('to_user_id', $request->from_user_id)->where('from_user_id', $request->to_user_id);
-        })->get();
+                $query->where('from_user_id', $request->from_user_id)->where('to_user_id', $request->to_user_id)->where('estimate_id', $request->estimate_id);
+            })
+            ->orWhere(function($query) use ($request) {
+                $query->where('to_user_id', $request->from_user_id)->where('from_user_id', $request->to_user_id)->where('estimate_id', $request->estimate_id);
+            })->get();
 
         return $allMessages;
+    }
+
+    public function update_bookmark(Request $request) {
+        Chat::where('id', $request->chat_id)->update(['is_bookmarked' => $request->is_bookmarked]);
+    }
+
+    public function update_read_status(Request $request) {
+        Chat::where('id', $request->chat_id)->update(['read_status' => 1]);
     }
 }

@@ -61,21 +61,29 @@
                                     <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
                                     <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
-                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                    </a>
                                 @endif
                                 @if ($projectStatus == 'estimate_submitted' || $projectStatus == 'estimate_recalled')
                                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
-                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                    </a>
                                 @endif
                                 @if ($projectStatus == 'estimate_rejected')
                                     <a class="nav-item nav-link active" id="nav-old-estimate-tab" data-toggle="tab" href="#nav-old-estimate" role="tab" aria-controls="nav-old-estimate" aria-selected="true">Old estimate</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
-                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                    </a>
                                 @endif
                                 @if ($projectStatus == 'write_estimate' || $projectStatus == 'need_more_info')
                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
-                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                    </a>
                                 @endif
                                 @if ($projectStatus == 'project_completed' || $projectStatus == 'project_paused' || $projectStatus == 'project_cancelled')
                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
@@ -396,351 +404,6 @@
         }
 
 
-        function submitMessage(event){
-            // $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+$('#messsageInput').val()+'</p></div></div>');
-            // SEND MESSAGE TO THE CHOSEN USER
-            $.ajax({
-                method: 'POST',
-                url: '{{ route("tradeperson.chat") }}',
-                data:{
-                    _token: '{{ csrf_token() }}',
-                    from_user_id: $('#from_user_id').val(),
-                    to_user_id: $('#to_user_id').val(),
-                    project_id: $('#project_id').val(),
-                    estimate_id: $('#estimate_id').val(),
-                    message: $('#type_msg').val()
-                },
-                success: function(response){
-                    // $('#outgoing_msg').html(response.message);
-                    // $('#last_msg_id').html(response.last_insert_id);
-                    $('#last_msg_id').val(response.last_insert_id);
-                    // loadMessagesOfThisConvo();
-                    retrieveMessages();
-                },
-                error: function(error){
-                    console.log(error);
-                }
-            });
-        }
-
-        function retrieveMessages(){
-            let i=0;
-            const authUser =  $('#from_user_id').val();
-            const to_user_id = $('#to_user_id').val();
-            var lastMessageId = $('#last_msg_id').val();
-            $.ajax({
-                method: 'GET',
-                // url: '/retrive-new-msg/'+to_user_id+'/'+authUser+'/'+lastMessageId,
-                url: '{{ route("tradeperson.retrive-new-msg") }}',
-                data : {
-                    _token: '{{ csrf_token() }}',
-                    from_user_id : authUser ,
-                    to_user_id : to_user_id,
-                    project_id: $('#project_id').val(),
-                    last_msg_id : lastMessageId
-                },
-                success: function(response){
-                    while(response[i]!=null){
-                        if($('.chat-window > div:last-child').attr('class') == 'user2' && response[i].from_user_id == {{ Auth::id() }}) {
-                            var html = `<div class="msg-area">
-                                        <div class="tick mr-2">
-                                                <img width="22px" src="{{ asset('images/mdi_tick.png') }}" alt="seen message">
-                                            </div>
-                                        <div class="msg">
-                                            ${response[i].message}
-                                        </div>
-                                        <div>
-                                    </div>
-                                </div>`;
-
-                            $('.user2:last-of-type').append(html);
-                        }
-                        else if($('.chat-window > div:last-child').attr('class') == 'user1' && response[i].from_user_id == {{ Auth::id() }}) {
-                            var date = new Date(response[i].created_at);
-                            var options = { timeZone: 'Europe/London', hour12: false, hour: '2-digit', minute:'2-digit' };
-                            var ukTime = date.toLocaleString('en-GB', options);
-                            var html = `<div class="clearfix"></div>
-                                <div class="user2">
-                                    <div class="name-time">
-                                        <span class="time">${ukTime}</span>
-                                        <span class="user-img"><img src="{{ Auth::user()->profile_image }}" class="user-img-chat" alt=""></span>
-                                    </div>
-                                    <div class="msg-area">
-                                        <div class="tick mr-2">
-                                            <img src="{{ asset('images/mdi_tick.png') }}" alt="">
-                                        </div>
-                                        <div class="msg">
-                                            ${response[i].message}
-                                        </div>
-                                        <div></div>
-                                    </div>
-                                </div>`
-                            $('.chat-window').append(html);
-                        } else if($('.chat-window > div:last-child').attr('class') == 'user2' && response[i].from_user_id != {{ Auth::id() }}) {
-                            var date = new Date(response[i].created_at);
-                            var options = { timeZone: 'Europe/London', hour12: false, hour: '2-digit', minute:'2-digit' };
-                            var ukTime = date.toLocaleString('en-GB', options);
-                            var html = `<div class="clearfix"></div>
-                            <div class="user1">
-                                <div class="name-time">
-                                    <span class="user-img"><img src="{{ asset('images/user1.png') }}" class="user-img-chat" alt=""></span>
-                                    <span class="user-name">Jane Cooper</span>
-                                    <span class="time">10:30</span>
-                                </div>
-                                <div class="msg-area">
-                                    <div class="msg">
-                                        ${response[i].message}
-                                    </div>
-                                    <div>
-                                        <div class="dots">
-                                            <a href="#" data-toggle="dropdown" aria-expanded="false">
-                                                <img width="100%" src="{{ asset('images/three-dot.png') }}" alt="">
-                                            </a>
-                                            <div class="dropdown-menu">
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/copy.png') }}" alt=""></span><span>Copy</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/reply.png') }}" alt=""></span><span>Reply</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/forward.png') }}" alt=""></span><span>Forward</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/bookmark.png') }}" alt=""></span><span>Bookmark</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/report.png') }}" alt=""></span><span>Report a concern</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>`;
-                            $('.chat-window').append(html);
-                        } else if($('.chat-window > div:last-child').attr('class') != 'user2' && response[i].from_user_id != {{ Auth::id() }}) {
-                            var html = `<div class="msg-area">
-                                    <div class="msg">
-                                        ${response[i].message}
-                                    </div>
-                                    <div>
-                                        <div class="dots">
-                                            <a href="#" data-toggle="dropdown" aria-expanded="false">
-                                                <img width="100%" src="{{ asset('images/three-dot.png') }}" alt="">
-                                            </a>
-                                            <div class="dropdown-menu">
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/copy.png') }}" alt=""></span><span>Copy</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/reply.png') }}" alt=""></span><span>Reply</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/forward.png') }}" alt=""></span><span>Forward</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/bookmark.png') }}" alt=""></span><span>Bookmark</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/report.png') }}" alt=""></span><span>Report a concern</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            $('.user1:last-of-type').append(html);
-                        }
-                        // var html = `<div class="msg-area">
-                        //             <div class="tick mr-2">
-                        //                     <img width="22px" src="{{ asset('images/mdi_tick.png') }}" alt="seen message">
-                        //                 </div>
-                        //             <div class="msg">
-                        //                 ${response[i].message}
-                        //             </div>
-                        //             <div>
-                        //         </div>
-                        //     </div>`;
-
-                        // $('.user2').append(html);
-
-                        // $('.user2').append('<div class="msg" id="outgoing_msg">'+response[i].message +'</div>');
-                        // lastMessageId = response[i].id + 1;
-                        console.log('hello 1');
-                        lastMessageId = response[i].id + 1;
-                        $('#last_msg_id').val(lastMessageId);
-                        i++;
-                        $('#type_msg').val('');
-                    }
-                    console.log('hello');
-                    // scrollPaubos();
-                },
-                complete: function(response){
-                    // retrieveMessages();
-                }
-            });
-        }
-
-        // function scrollPaubos(){
-        //     console.log('hii');
-        //     var a = document.getElementsByClassName('chat-window');
-        //     a.scrollTop = a.scrollHeight;
-        // }
-
-        function loadMessagesOfThisConvo(last_msg_id=$('#last_msg_id').val()){
-            console.log("loding")
-            i=0;
-            const authUser =  $('#from_user_id').val();
-            const to_user_id = $('#to_user_id').val();
-            var last_msg_id = $('#last_msg_id').val();
-            console.log(authUser,to_user_id)
-            $.ajax({
-                method: 'GET',
-                // url: '/load-msg/'+to_user_id+'/'+authUser,
-                url: '{{ route("tradeperson.load-msg")}}',
-                data:{
-                    _token: '{{ csrf_token() }}',
-                    from_user_id : authUser ,
-                    to_user_id : to_user_id,
-                    project_id: $('#project_id').val(),
-                    last_msg_id : last_msg_id
-                },
-                success: function(response){
-                    // $('#sender_msg').html('');
-                    // console.log('from loadMessagesOfThisConvo');
-                    // while(response[0][i]!=null){
-                    //     if(response[1][0] == response[0][i].message_users_id ){
-                    //         $('#sender_msg').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+response[0][i].message +'</p></div></div>');
-                    //     }else{
-                    //         $('#sender_msg').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[0][i].message +'</p></div></div>');
-                    //     }
-                    //     // lastMessageId = response[0][i].id + 1;
-                    //     lastMessageId = response[i].id + 1;
-                    //     $('#last_msg_id').val(lastMessageId);
-                    //     i++;
-                    // }
-                    // scrollPaubos();
-                    // retrieveMessages();
-                    while(response[i]!=null){
-                        if($('.chat-window > div:last-child').attr('class') == 'user2' && response[i].from_user_id == {{ Auth::id() }}) {
-                            var html = `<div class="msg-area">
-                                        <div class="tick mr-2">
-                                                <img width="22px" src="{{ asset('images/mdi_tick.png') }}" alt="seen message">
-                                            </div>
-                                        <div class="msg">
-                                            ${response[i].message}
-                                        </div>
-                                        <div>
-                                    </div>
-                                </div>`;
-
-                            $('.user2:last-of-type').append(html);
-                        }
-                        else if($('.chat-window > div:last-child').attr('class') == 'user1' && response[i].from_user_id == {{ Auth::id() }}) {
-                            var date = new Date(response[i].created_at);
-                            var options = { timeZone: 'Europe/London', hour12: false, hour: '2-digit', minute:'2-digit' };
-                            var ukTime = date.toLocaleString('en-GB', options);
-                            var html = `<div class="clearfix"></div>
-                                <div class="user2">
-                                    <div class="name-time">
-                                        <span class="time">${ukTime}</span>
-                                        <span class="user-img"><img src="{{ Auth::user()->profile_image }}" class="user-img-chat" alt=""></span>
-                                    </div>
-                                    <div class="msg-area">
-                                        <div class="tick mr-2">
-                                            <img src="{{ asset('images/mdi_tick.png') }}" alt="">
-                                        </div>
-                                        <div class="msg">
-                                            ${response[i].message}
-                                        </div>
-                                        <div></div>
-                                    </div>
-                                </div>`
-                            $('.chat-window').append(html);
-                        } else if($('.chat-window > div:last-child').attr('class') == 'user2' && response[i].from_user_id != {{ Auth::id() }}) {
-                            var date = new Date(response[i].created_at);
-                            var options = { timeZone: 'Europe/London', hour12: false, hour: '2-digit', minute:'2-digit' };
-                            var ukTime = date.toLocaleString('en-GB', options);
-                            var html = `<div class="clearfix"></div>
-                            <div class="user1">
-                                <div class="name-time">
-                                    <span class="user-img"><img src="{{ asset('images/user1.png') }}" class="user-img-chat" alt=""></span>
-                                    <span class="user-name">Jane Cooper</span>
-                                    <span class="time">${ukTime}</span>
-                                </div>
-                                <div class="msg-area">
-                                    <div class="msg">
-                                        ${response[i].message}
-                                    </div>
-                                    <div>
-                                        <div class="dots">
-                                            <a href="#" data-toggle="dropdown" aria-expanded="false">
-                                                <img width="100%" src="{{ asset('images/three-dot.png') }}" alt="">
-                                            </a>
-                                            <div class="dropdown-menu">
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/copy.png') }}" alt=""></span><span>Copy</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/reply.png') }}" alt=""></span><span>Reply</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/forward.png') }}" alt=""></span><span>Forward</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/bookmark.png') }}" alt=""></span><span>Bookmark</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/report.png') }}" alt=""></span><span>Report a concern</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>`;
-                            $('.chat-window').append(html);
-                        } else if($('.chat-window > div:last-child').attr('class') != 'user2' && response[i].from_user_id != {{ Auth::id() }}) {
-                            var html = `<div class="msg-area">
-                                    <div class="msg">
-                                        ${response[i].message}
-                                    </div>
-                                    <div>
-                                        <div class="dots">
-                                            <a href="#" data-toggle="dropdown" aria-expanded="false">
-                                                <img width="100%" src="{{ asset('images/three-dot.png') }}" alt="">
-                                            </a>
-                                            <div class="dropdown-menu">
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/copy.png') }}" alt=""></span><span>Copy</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/reply.png') }}" alt=""></span><span>Reply</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/forward.png') }}" alt=""></span><span>Forward</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/bookmark.png') }}" alt=""></span><span>Bookmark</span>
-                                                </a>
-                                                <a class="m-0 px-3 py-1 d-flex">
-                                                    <span class="mr-2"><img width="100%" src="{{ asset('images/report.png') }}" alt=""></span><span>Report a concern</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            $('.user1:last-of-type').append(html);
-                        }
-                        lastMessageId = response[i].id + 1;
-                        $('#last_msg_id').val(lastMessageId);
-                        i++;
-                        $('#type_msg').val('');
-                    }
-                }
-            });
-        }
-
-        loadMessagesOfThisConvo(0);
-
         function forOtherReason() {
             let e = document.getElementById('select_reason');
             if (e.value === 'other_reasons') {
@@ -821,7 +484,39 @@
 
                 $('#project_media_modal').modal('show');
             });
+
+            // $('#nav-chat-tab').click(function(){
+                // loadMessagesOfThisConvo(0);
+                // var innerDiv = $(".msg-area:last");
+                // var outerDiv = $('.chat-window')
+                // outerDiv.scrollTop(innerDiv.offset().top - outerDiv.offset().top);
+                // loadMessagesOfThisConvo(0).then(function() {
+                //     var innerDiv = $(".msg-area:last");
+                //     var outerDiv = $('.chat-window')
+                //     outerDiv.scrollTop(innerDiv.offset().top - outerDiv.offset().top);
+                // });
+            // });
+
+            // loadMessagesOfThisConvo(0);
+
         });
+
+        // const interval = setInterval(function() {
+        //     console.log("Before Execution");
+        //     loadMessagesOfThisConvo();
+        //     console.log("Executed");
+        //     clearInterval(interval);
+        // }, 1000);
+
+        // const interval = setTimeout((function() {
+        //     loadMessagesOfThisConvo();
+        //     setTimeout((function() {
+        //         loadMessagesOfThisConvo();
+        //         clearInterval(interval);
+        //     }, 1000);
+        // }, 1000);
+
+        // setInterval(retrieveMessages, 5000);
 
     </script>
 @endpush

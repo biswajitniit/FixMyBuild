@@ -297,6 +297,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::post('submit-msg', [ChatController::class, 'submit_msg'])->name('tradeperson.chat');
         Route::get('retrive-new-msg', [ChatController::class, 'retrieveNew'])->name('tradeperson.retrive-new-msg');
         Route::get('load-msg', [ChatController::class, 'load'])->name('tradeperson.load-msg');
-
+        Route::patch('bookmark', [ChatController::class, 'update_bookmark'])->name('bookmark-msg');
+        Route::patch('read-status', [ChatController::class, 'update_read_status'])->name('update.read_status');
     });
 });

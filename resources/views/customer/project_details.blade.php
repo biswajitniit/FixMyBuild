@@ -85,13 +85,9 @@
       <!--Code area start-->
       <section class="pb-5">
          <div class="container">
-            <form action="{{route('customer.project-all-payment')}}" method="post" name="project-all-payment" id="project-all-payment">
-                {{-- <input type="hidden" name="estimates_id" value="{{$estimate->id}}"> --}}
-                @csrf
-                @php
-                    $status=$projects->status;
-                @endphp
-
+            @php
+                $status=$projects->status;
+            @endphp
                 {{-- Project Timeline Widgets Starts --}}
                 @if ($status == 'project_started' || $status == 'project_completed' || $status == 'project_paused' )
                     <div class="row mb-5">
@@ -280,7 +276,9 @@
                                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
                                                     <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
                                                     <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">About company</a>
-                                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                                    </a>
                                                     @break
                                                 @case('project_completed')
                                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
@@ -339,6 +337,9 @@
                             $backRoute = $userType == 'customer' ? route('customer.project') : route('tradepersion.projects');
                         @endphp
                         <div class="form-group col-md-12 mt-5 text-center pre_">
+                            <form action="{{route('customer.project-all-payment')}}" method="post" name="project-all-payment" id="project-all-payment">
+                                {{-- <input type="hidden" name="estimates_id" value="{{$estimate->id}}"> --}}
+                                @csrf
                             @if ($status == 'estimation')
                                 <a href="javascript:void(0);" class="btn btn-light mr-3" data-bs-toggle="modal" data-bs-target="#cancel_project">Cancel project</a>
                             @endif
@@ -349,6 +350,7 @@
                                 {{-- <a href="#" class="btn btn-primary">Pay all</a> --}}
 
                                 {{-- <input type="submit" class="btn btn-primary" value="Pay all" data-key="pk_test_zeGoVEfpYZ93rNF9hwHUVY4r00DWWCoAJT" data-amount="500" data-currency="inr" data-name="Fixmybuild" data-description="" /> --}}
+
 
                                 @php
                                 $total_task_price = 0;
@@ -387,13 +389,14 @@
                             @if ($status == 'project_paused')
                                 <button type="button" class="btn btn-primary" id="start-again-btn">Start Again</button>
                             @endif
+                          </form>
+
                         </div>
                         {{-- Buttons Ends --}}
                     </div>
                 </div>
                {{-- Different Tabs Ends --}}
                <!--// END-->
-            </form>
          </div>
          <!-- Cancel Project Modal -->
         <div class="modal fade select_address" id="cancel_project" tabindex="-1" aria-labelledby="deleteImageModal" aria-hidden="true">
@@ -514,6 +517,15 @@ $(document).ready(function() {
                     window.location.replace(response.redirect_url);
                 }
             });
+        });
+
+        $('#nav-chat-tab').click(function(){
+            // $('#last_msg_id').val()
+            // var last_msg_id = $('#last_msg_id').val();
+            // var innerDiv = $(`.msg[data-id=${last_msg_id-1}"]`);
+            // var outerDiv = $('.chat-window')
+            // outerDiv.scrollTop(innerDiv.offset().top - outerDiv.offset().top);
+            // outerDiv.scrollTop(outerDiv.offset().top);
         });
     });
 
