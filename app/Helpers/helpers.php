@@ -478,8 +478,6 @@ if(!function_exists('lock_trader_dashboard_access')) {
 
     function sendSMS($user,$otp)
     {
-        // $receiverNumber = "+447729905832";
-        // $receiverNumber = "+919832307855";
         $receiverNumber = $user->phone;
         $message = "This is your Fix my build forget password OTP ".$otp;
 
@@ -491,7 +489,5 @@ if(!function_exists('lock_trader_dashboard_access')) {
         $client->messages->create($receiverNumber, [
             'from' => $twilio_number,
             'body' => $message]);
-
-        // dd('SMS Sent Successfully.');
     }
 }

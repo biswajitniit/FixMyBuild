@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{
+    Chat,
     Estimate,
     Notification,
     NotificationDetail,
@@ -59,7 +60,8 @@ class CustomerController extends Controller
         $projecthistory = Project::where('user_id',Auth::user()->id)
                                 ->whereIn('status', ['project_cancelled', 'project_completed','project_paused'])
                                 ->get();
-        return view("customer.project",compact('project','projecthistory'));
+        $msg_chat = Chat::where('read_status', 0)->where('to_user_id', Auth::id())->count();
+        return view("customer.project",compact('project','projecthistory','msg_chat'));
     }
     // public function customer_notifications(Request $request){
     //     return view("customer/notifications");
