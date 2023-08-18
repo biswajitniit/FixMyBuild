@@ -50,7 +50,7 @@
                                 @endswitch
                             </td>
                             <td>
-                                @if ($row->status === 'project_started')
+                                @if ($row->status === 'project_started' && $msg_chat > 0)
                                     <a href="#"><img src="{{ asset('frontend/img/chat-info.svg') }}" alt=""></a>
                                 @endif
                             </td>
