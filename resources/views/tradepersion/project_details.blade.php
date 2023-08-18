@@ -434,9 +434,10 @@
                 url: '{{ route("tradeperson.retrive-new-msg") }}',
                 data : {
                     _token: '{{ csrf_token() }}',
-                    from_user_id : $('#from_user_id').val(),
-                    to_user_id : $('#to_user_id').val(),
-                    last_msg_id : $('#last_msg_id').val()
+                    from_user_id : authUser ,
+                    to_user_id : to_user_id,
+                    project_id: $('#project_id').val(),
+                    last_msg_id : lastMessageId
                 },
                 success: function(response){
                     while(response[i]!=null){
@@ -564,11 +565,13 @@
 
                         // $('.user2').append('<div class="msg" id="outgoing_msg">'+response[i].message +'</div>');
                         // lastMessageId = response[i].id + 1;
+                        console.log('hello 1');
                         lastMessageId = response[i].id + 1;
                         $('#last_msg_id').val(lastMessageId);
                         i++;
                         $('#type_msg').val('');
                     }
+                    console.log('hello');
                     // scrollPaubos();
                 },
                 complete: function(response){
@@ -576,6 +579,12 @@
                 }
             });
         }
+
+        // function scrollPaubos(){
+        //     console.log('hii');
+        //     var a = document.getElementsByClassName('chat-window');
+        //     a.scrollTop = a.scrollHeight;
+        // }
 
         function loadMessagesOfThisConvo(last_msg_id=$('#last_msg_id').val()){
             console.log("loding")
@@ -590,8 +599,9 @@
                 url: '{{ route("tradeperson.load-msg")}}',
                 data:{
                     _token: '{{ csrf_token() }}',
-                    from_user_id : $('#from_user_id').val(),
-                    to_user_id : $('#to_user_id').val(),
+                    from_user_id : authUser ,
+                    to_user_id : to_user_id,
+                    project_id: $('#project_id').val(),
                     last_msg_id : last_msg_id
                 },
                 success: function(response){
