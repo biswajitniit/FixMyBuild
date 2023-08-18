@@ -61,23 +61,27 @@
         </div>
     </div>
 
-    @php $is_media_present = false; @endphp
+    @php $is_media_present = false; $count = 0; @endphp
     <div class="col-md-12">
         <h3>Photo(s)/Video(s)</h3>
         <div class="row">
             <div class="pv_top">
-                @foreach($doc as $docs)
+                @foreach($doc as $key=>$docs)
                     @if (strtolower($docs->file_type) == 'image')
-                        @php $is_media_present = true; @endphp
-                        <a href="javascript:void(0);">
-                            <img src="{{ $docs->url }}" class="rectangle-img"/>
+                        <a href="javascript:void(0);" onclick="openModal({{ $count }})">
+                            <img src="{{ $docs->url }}" class="rectangle-img modal-element"/>
                         </a>
+                        @php $is_media_present = true; $count++; @endphp
                     @endif
                     @if (strtolower($docs->file_type) == 'video')
-                        @php $is_media_present = true; @endphp
-                        <div class="video-mask">
-                            <video width="100" height="69" src="{{ $docs->url }}" class="rectangle-video" >  </video>
+                        <div class="video-mask" onclick="openModal({{ $count }})" title="View video">
+                            <div class="video-overlay">
+                                <img src="{{ asset('adminpanel/assets/images/play_btn.svg') }}" alt="Video" class="image-wrapper">
+                                <video width="100" height="69" src="{{ $docs->url }}" class="rectangle-video modal-element">  </video>
+                                <div class="semi-transparent"></div>
+                            </div>
                         </div>
+                        @php $is_media_present = true; $count++; @endphp
                     @endif
                 @endforeach
 

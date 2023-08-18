@@ -192,7 +192,7 @@
     </div>
 
     {{-- Image/Video Modal --}}
-    <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
+    {{-- <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header pb-0">
@@ -218,7 +218,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
+    @include('includes.photoVideoModal')
  </section>
 
 @if(isset($other_open_projects) && count($other_open_projects) != 0)

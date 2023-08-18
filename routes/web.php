@@ -126,7 +126,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
 
     Route::get('/auth/microsoft', [MicrosoftController::class, 'redirect'])->name('microsoft-auth');
-    Route::get('/microsoft/callback', [GoogleController::class, 'callbackFromMicrosoft'])->name('microsoftcallback');
+    Route::get('/microsoft/callback', [MicrosoftController::class, 'callbackFromMicrosoft'])->name('microsoftcallback');
 
     Route::get('/dashboard', function () {
         return view('Dashboard/dashboard');
@@ -185,8 +185,12 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
         Route::delete('/users/users-delete_account', [UserController::class, 'delete_account'])->name('customer.user-delete-account');
         Route::post('/users/verify-email', [UserController::class, 'resend_verification_email'])->name('customer.resend_verification_email');
 
-        Route::get('profile', [CustomerController::class, 'customer_profile'])->name('customer.profile');
-        Route::get('projects', [CustomerController::class, 'customer_project'])->name('customer.project');
+        Route::group(['middleware' => 'role.customer', 'as' => 'customer.'], function() {
+            Route::get('profile', [CustomerController::class, 'customer_profile'])->name('profile');
+            Route::get('projects', [CustomerController::class, 'customer_project'])->name('project');
+            Route::get('/notification', [NotificationController::class, 'index'])->name('notifications.index');
+        });
+
         Route::get('newproject', [CustomerController::class, 'customer_newproject'])->name('customer.newproject');
         Route::post('storeproject', [CustomerController::class, 'customer_storeproject'])->name('customer.storeproject');
 
@@ -208,7 +212,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
 
 
         // Notification Route
-        Route::get('/notification', [NotificationController::class, 'index'])->name('customer.notifications.index');
+        // Route::get('/notification', [NotificationController::class, 'index'])->name('customer.notifications.index');
         Route::post('/notification/data_store', [NotificationController::class, 'data_store'])->name('notifications.data_store');
         Route::post('/notification/data_fetch', [NotificationController::class, 'get_notification_data'])->name('notifications.data_fetch');
 
@@ -229,7 +233,7 @@ Route::group(['middleware' => 'prevent-back-history'], function () {
     });
     Route::get('review', [CustomerController::class,'review']);
 
-    Route::group(['prefix' => 'tradeperson', 'middleware' => ['auth', 'steps_completed']], function () {
+    Route::group(['prefix' => 'tradeperson', 'middleware' => ['auth', 'role.tradesperson']], function () {
         Route::delete('/users/users-delete_account', [UserController::class, 'delete_account_tradeperson'])->name('tradeperson.user-delete-account');
 
         Route::get('company-registration', [TradepersionDashboardController::class, 'registrationsteptwo'])->name('tradepersion.compregistration');

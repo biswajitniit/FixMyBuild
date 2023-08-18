@@ -233,3 +233,100 @@ video.customer-video{
 a.custom-bell-style:hover svg path {
     fill: var(--color_orange);
 }
+
+
+#photoVideoModal.custom-modal {
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#photoVideoModal .custom-modal-content {
+    margin: auto;
+    /**display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;**/
+    position: relative;
+    width: 80%;
+    max-width: 700px;
+}
+
+#photoVideoModal .close svg {
+    cursor: pointer;
+}
+
+#photoVideoModal .media-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    /* 16:9 aspect ratio */
+    position: relative;
+}
+
+#photoVideoModal .media-container img,
+#photoVideoModal .media-container video {
+    position: absolute;
+    width: 80%;
+    height: 100%;
+    object-fit: contain;
+    top: 0;
+}
+
+#photoVideoModal .prev,
+#photoVideoModal .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+}
+
+#photoVideoModal .prev {
+    left: 0;
+}
+
+#photoVideoModal .next {
+    right: 0;
+}
+
+.semi-transparent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.video-overlay{
+    position: relative;
+    width: 100px;
+    height: 69px;
+    cursor: pointer;
+}
+
+.image-wrapper{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25px !important;
+    aspect-ratio: 1/1;
+    z-index: 1;
+}

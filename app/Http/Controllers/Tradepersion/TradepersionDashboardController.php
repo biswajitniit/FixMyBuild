@@ -45,7 +45,7 @@ class TradepersionDashboardController extends Controller
 {
     public function registrationsteptwo()
     {
-        $works = Buildercategory::where('status', 'Active')->get();
+        $works = Buildercategory::where('status', 'Active')->with('buildersubcategories')->get();
         $areas = AreaCover::where('status', 1)->get();
 
         // If the Form Validation Fails then load the files from temp_media

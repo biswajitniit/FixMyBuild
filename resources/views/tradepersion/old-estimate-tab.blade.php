@@ -21,32 +21,36 @@
                     <p>{{ $task->description }}</p>
                 @endif
             @endforeach
-          <div class="col-md-12 mb-5">
-             <h3>Photo(s)/Video(s)</h3>
+            @php $is_media_present = false; $count = 0; @endphp
+            <div class="col-md-12 mb-5">
+               <h3>Photo(s)/Video(s)</h3>
+               <div class="row">
+                  <div class="pv_top">
+                      @foreach($proj_estimate_files as $doc)
+                          @if (strtolower($doc->file_type) == 'image')
+                              <a class="mb-3" href="javascript:void(0);"  onclick="openModal({{ $count }}, 'old-estimate-modal-element')">
+                                  <img src="{{ $doc->url }}" class="rectangle-img old-estimate-modal-element"/>
+                              </a>
+                              @php $is_media_present = true; $count++; @endphp
+                          @endif
+                          @if (strtolower($doc->file_type) == 'video')
+                              <div class="video-mask" onclick="openModal({{ $count }}, 'old-estimate-modal-element')" title="View video">
+                              <div class="video-overlay">
+                                  <img src="{{ asset('adminpanel/assets/images/play_btn.svg') }}" alt="Video" class="image-wrapper">
+                                  <video width="100" height="69" src="{{ $doc->url }}" class="rectangle-video old-estimate-modal-element">  </video>
+                                  <div class="semi-transparent"></div>
+                              </div>
+                          </div>
+                              @php $is_media_present = true; $count++; @endphp
+                          @endif
+                      @endforeach
 
-             <div class="row">
-                <div class="pv_top">
-                    @forelse($teams_photos as $doc)
-                        @if (strtolower($doc->file_type) == 'image')
-                            <a href="javascript:void(0);">
-                                <img src="{{ $doc->url }}" class="rectangle-img" />
-                            </a>
-                        @endif
-                        @if (strtolower($doc->file_type) == 'video')
-                            <div class="video-mask">
-                                <a href="javascript:void(0);">
-                                    <video width="100" height="69" src="{{ $doc->url }}" class="rectangle-video" >  </video>
-                                </a>
-                            </div>
-                        @endif
-                    @empty
-                        No photo/video is uploaded.
-                    @endforelse
-
-                </div>
-             </div>
-
-          </div>
+                      @if(!$is_media_present)
+                          No photo/video is uploaded.
+                      @endif
+                  </div>
+               </div>
+            </div>
           <h3>
              <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 19.25V16.5938L18.625 9.96875L21.2812 12.625L14.6562 19.25H12ZM0.75 13V10.5H9.5V13H0.75ZM22.1562 11.75L19.5 9.09375L20.4062 8.1875C20.6354 7.95833 20.9271 7.84375 21.2812 7.84375C21.6354 7.84375 21.9271 7.95833 22.1562 8.1875L23.0625 9.09375C23.2917 9.32292 23.4062 9.61458 23.4062 9.96875C23.4062 10.3229 23.2917 10.6146 23.0625 10.8438L22.1562 11.75ZM0.75 8V5.5H14.5V8H0.75ZM0.75 3V0.5H14.5V3H0.75Z" fill="#061A48"/>

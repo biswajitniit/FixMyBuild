@@ -35,25 +35,27 @@
          </div>
      </div>
 
-     @php $is_media_present = false; @endphp
+     @php $is_media_present = false; $count = 0; @endphp
      <div class="col-md-12">
          <h3>Photo(s)/Video(s)</h3>
          <div class="row">
              <div class="pv_top">
                  @foreach($projectfiles as $doc)
                      @if (strtolower($doc->file_type) == 'image')
-                         @php $is_media_present = true; @endphp
-                         <a href="javascript:void(0);">
-                             <img src="{{ $doc->url }}" class="rectangle-img"/>
-                         </a>
+                        <a href="javascript:void(0);"  onclick="openModal({{ $count }}, 'details-modal-element')">
+                            <img src="{{ $doc->url }}" class="rectangle-img details-modal-element"/>
+                        </a>
+                        @php $is_media_present = true; $count++; @endphp
                      @endif
                      @if (strtolower($doc->file_type) == 'video')
-                         @php $is_media_present = true; @endphp
-                         <div class="video-mask">
-                             <a href="javascript:void(0);">
-                                 <video width="100" height="69" src="{{ $doc->url }}" class="rectangle-video" >  </video>
-                             </a>
-                         </div>
+                         <div class="video-mask" onclick="openModal({{ $count }}, 'details-modal-element')" title="View video">
+                            <div class="video-overlay">
+                                <img src="{{ asset('adminpanel/assets/images/play_btn.svg') }}" alt="Video" class="image-wrapper">
+                                <video width="100" height="69" src="{{ $doc->url }}" class="rectangle-video details-modal-element">  </video>
+                                <div class="semi-transparent"></div>
+                            </div>
+                        </div>
+                         @php $is_media_present = true; $count++; @endphp
                      @endif
                  @endforeach
 

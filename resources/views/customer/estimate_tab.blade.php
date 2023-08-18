@@ -25,11 +25,12 @@
                     <p>{{ $task->description }}</p>
                 @endif
             @endforeach
+     @php $is_media_present = false; $count = 0; @endphp
           <div class="col-md-12 mb-5">
              <h3>Photo(s)/Video(s)</h3>
              <div class="row">
                 <div class="pv_top">
-                    @forelse($project_estimate_files as $project_estimate_file)
+                    {{-- @forelse($project_estimate_files as $project_estimate_file)
                         <div class="d-inline mr-3">
                             <a href="{{ $project_estimate_file->url }}" target="_blank">
                                 <img src="{{ $project_estimate_file->url }}" alt="" class="rectangle-img">
@@ -37,7 +38,29 @@
                         </div>
                     @empty
                         <div>No photo/video is uploaded.</div>
-                    @endforelse
+                    @endforelse --}}
+                    @foreach($project_estimate_files as $doc)
+                        @if (strtolower($doc->file_type) == 'image')
+                            <a href="javascript:void(0);" class="mb-2" onclick="openModal({{ $count }}, 'estimate-modal-element')">
+                                <img src="{{ $doc->url }}" class="rectangle-img estimate-modal-element"/>
+                            </a>
+                            @php $is_media_present = true; $count++; @endphp
+                        @endif
+                        @if (strtolower($doc->file_type) == 'video')
+                            <div class="video-mask" onclick="openModal({{ $count }}, 'estimate-modal-element')" title="View video">
+                            <div class="video-overlay">
+                                <img src="{{ asset('adminpanel/assets/images/play_btn.svg') }}" alt="Video" class="image-wrapper">
+                                <video width="100" height="69" src="{{ $doc->url }}" class="rectangle-video estimate-modal-element">  </video>
+                                <div class="semi-transparent"></div>
+                            </div>
+                        </div>
+                            @php $is_media_present = true; $count++; @endphp
+                        @endif
+                    @endforeach
+
+                    @if(!$is_media_present)
+                        No photo/video is uploaded.
+                    @endif
                 </div>
              </div>
           </div>
