@@ -407,14 +407,14 @@
                                </div>
                             </div>
                             {{-- <input type="hidden" name="phone_code" value="" id="phone_code"> --}}
-                            <div class="col-md-4">
+                            <div class="form-group col-md-4">
                                 <input type="text" name="phone_number" class="form-control col-md-10" id="phone" placeholder="Phone*" value="{{ old('phone_number') }}">
-                                <small class="text-danger errors" id="phone_number_errors">Please provide a valid phone number</small>
+                                <label class="error" id="phone_number_errors">Please provide a phone number</label>
                             </div>
                             <div class="col-md-4">
                                <div class="form-group">
                                   <input type="text" name="phone_office" class="form-control" id="phone_office" placeholder="Office number" value="{{ old('phone_office') }}">
-                                  <small class="text-danger errors" id="phone_office_errors">Invalid phone number</small>
+                                  <label class="error" id="phone_office_errors">Invalid phone number</label>
                                </div>
                             </div>
                             <div class="col-md-4">
