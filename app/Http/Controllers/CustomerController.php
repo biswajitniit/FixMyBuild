@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{
+    Chat,
     Estimate,
     Notification,
     NotificationDetail,
@@ -49,6 +50,66 @@ class CustomerController extends Controller
             return view("customer.newproject", compact('last_project'));
         // }
     }
+
+    function project_pay_now(Request $request, $taskid){
+        $task = Task::where('id',Hashids_decode($taskid))->first();
+        return view("customer.pay-now", compact('task'));
+    }
+    function payment_capture(Request $request){
+        echo "<pre>"; print_r($_POST); die;
+    }
+    function project_all_payment(Request $request){
+
+        $orderid= "FIXMYBUILD".date('Ymd').rand();
+
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        $customer = Stripe\Customer::create(array(
+                "email" => Auth::user()->email,
+                "source" => $request->stripeToken
+             ));
+
+        $charge = Stripe\Charge::create ([
+                "amount" => $request->totalamount * 100,
+                "currency" => "gbp",
+                "customer" => $customer->id,
+                "description" => $orderid,
+        ]);
+        if (!empty($charge) && $charge['status'] == 'succeeded') {
+
+
+            $task = Task::where('estimate_id',$request->estimates_id)->where('payment_status',null)->get();
+            foreach ($task as $row){
+                $data = array(
+                    'payment_status'           => $charge['status'],
+                    'status'                   => $charge['status'],
+                    'payment_type'             => 'card',
+                    'payment_transaction_id'   => $charge['balance_transaction'],
+                    'payment_capture_log'      => $charge,
+                    'payment_date'             => date('Y-m-d H:i:s')
+                );
+                Task::where('id', $row->id)->update($data);
+
+                // Transaction history save
+                $th = new Transactionhistory();
+                $th->order_id               = $orderid;
+                $th->user_id                = Auth::user()->id;
+                $th->task_id                = $row->id;
+                $th->totalamount            = $request->totalamount;
+                $th->payment_status         = $charge['status'];
+                $th->payment_type           = 'card';
+                $th->payment_transaction_id = $charge['balance_transaction'];
+                $th->payment_capture_log    = $charge;
+                $th->payment_date           = date('Y-m-d H:i:s');
+                $th->save();
+
+            }
+            $request->session()->flash('message', 'Payment completed.');
+        } else {
+            $request->session()->flash('danger', 'Payment failed.');
+        }
+
+        return back();
+    }
     public function customer_profile(Request $request){
         return view("customer.profile");
     }
@@ -59,7 +120,8 @@ class CustomerController extends Controller
         $projecthistory = Project::where('user_id',Auth::user()->id)
                                 ->whereIn('status', ['project_cancelled', 'project_completed','project_paused'])
                                 ->get();
-        return view("customer.project",compact('project','projecthistory'));
+        $msg_chat = Chat::where('read_status', 0)->where('to_user_id', Auth::id())->count();
+        return view("customer.project",compact('project','projecthistory','msg_chat'));
     }
     // public function customer_notifications(Request $request){
     //     return view("customer/notifications");

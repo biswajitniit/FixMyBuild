@@ -16,6 +16,7 @@ use App\Models\{
   Traderworks,
   User,
   Notification,
+  NotificationDetail,
   tempmedia,
   TradespersonFile,
   Project,
@@ -45,7 +46,7 @@ class TradepersionDashboardController extends Controller
 {
     public function registrationsteptwo()
     {
-        $works = Buildercategory::where('status', 'Active')->get();
+        $works = Buildercategory::where('status', 'Active')->with('buildersubcategories')->get();
         $areas = AreaCover::where('status', 1)->get();
 
         // If the Form Validation Fails then load the files from temp_media
@@ -1288,6 +1289,7 @@ class TradepersionDashboardController extends Controller
 
         try{
             $decoded_project_id = Hashids_decode($id)[0];
+            $project_data = Project::where('id', $decoded_project_id)->first();
             $estimate = Estimate::where('project_id', $decoded_project_id)
                                         ->where('tradesperson_id', Auth::user()->id)
                                         ->forceDelete();
@@ -1307,6 +1309,18 @@ class TradepersionDashboardController extends Controller
                     'more_info'               => Str::lower($request->unable_to_describe_type) == 'need_more_info' ? $request->typeHere : null,
                     'status'                  => Str::lower($request->unable_to_describe_type) == 'need_more_info' ? null : 'trader_rejected',
                 ]);
+
+                //update through notification for customer
+                $new_noti = new NotificationDetail();
+                $new_noti->user_id              = $project_data->user_id;
+                $new_noti->from_user_id         = Auth::user()->id;
+                $new_noti->from_user_type       = Auth::user()->customer_or_tradesperson;
+                $new_noti->related_to           = 'project';
+                $new_noti->related_to_id        = $decoded_project_id;
+                $new_noti->read_status          = 0;
+                $new_noti->notification_text    = 'Msg from tradeperson '.Auth::user()->name.' for project '.$project_data->project_name.' : '.$request->typeHere;
+                $new_noti->reviewer_note        = null;
+                $new_noti->save();
 
                 return redirect()->route('tradepersion.projects');
             }

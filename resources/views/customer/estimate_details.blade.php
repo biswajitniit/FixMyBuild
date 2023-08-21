@@ -67,7 +67,9 @@
                                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
                                     <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">About company</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
-                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                    </a>
                                </div>
                             </nav>
                          </div>
@@ -206,7 +208,7 @@
     </div>
 
     {{-- Modal to view Image and Video --}}
-    <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
+    {{-- <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header pb-0">
@@ -232,11 +234,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     {{-- Modal to view Image and Video --}}
 </section>
 <!--Code area end-->
-
+@include('includes.photoVideoModal')
 @endsection
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>

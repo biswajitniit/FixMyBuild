@@ -41,7 +41,7 @@
                       </div>
                       <div class="col-md-6">
                          <h2>
-                            @if ($project->postcode){{ $project->postcode.', ' }} @endif @if ($project->town){{ $project->town.', ' }}@endif @if ($project->county){{ $project->county }}@endif
+                            @if ($project->postcode){{ \Str::upper($project->postcode).', ' }} @endif @if ($project->town){{ ucwords($project->town).', ' }}@endif @if ($project->county){{ ucwords($project->county) }}@endif
                          </h2>
                       </div>
                    </div>
@@ -61,21 +61,29 @@
                                     <a class="nav-item nav-link active" id="nav-milestones-tab" data-toggle="tab" href="#nav-milestones" role="tab" aria-controls="nav-milestones" aria-selected="true">Milestones</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
                                     <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">Estimate</a>
-                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                    </a>
                                 @endif
                                 @if ($projectStatus == 'estimate_submitted' || $projectStatus == 'estimate_recalled')
                                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Estimate</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
-                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                    </a>
                                 @endif
                                 @if ($projectStatus == 'estimate_rejected')
                                     <a class="nav-item nav-link active" id="nav-old-estimate-tab" data-toggle="tab" href="#nav-old-estimate" role="tab" aria-controls="nav-old-estimate" aria-selected="true">Old estimate</a>
                                     <a class="nav-item nav-link" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="false">Details</a>
-                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                    </a>
                                 @endif
                                 @if ($projectStatus == 'write_estimate' || $projectStatus == 'need_more_info')
                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
-                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat <span class="badge badge-secondary">2</span></a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat
+                                        {{-- <span class="badge badge-secondary">2</span> --}}
+                                    </a>
                                 @endif
                                 @if ($projectStatus == 'project_completed' || $projectStatus == 'project_paused' || $projectStatus == 'project_cancelled')
                                     <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
@@ -95,26 +103,26 @@
                                     @include('tradepersion.milestones')
                                     @include('tradepersion.details')
                                     @include('tradepersion.estimate_tab')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'estimate_submitted' || $projectStatus == 'estimate_recalled')
                                     @include('tradepersion.estimate_tab')
                                     @include('tradepersion.details')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'estimate_rejected')
                                     @include('tradepersion.old-estimate-tab')
                                     @include('tradepersion.details')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'estimate_not_accepted')
                                     @include('tradepersion.old-estimate-tab')
                                     @include('tradepersion.details')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'write_estimate' || $projectStatus == 'need_more_info' )
                                     @include('tradepersion.details')
-                                    {{-- @include('tradepersion.chat') --}}
+                                    @include('tradepersion.chat')
                                 @endif
                                 @if ($projectStatus == 'project_completed' || $projectStatus == 'project_paused' || $projectStatus == 'project_cancelled')
                                     @include('tradepersion.details')
@@ -192,7 +200,7 @@
     </div>
 
     {{-- Image/Video Modal --}}
-    <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
+    {{-- <div class="modal fade select_address" id="project_media_modal" tabindex="-1" aria-labelledby="project_media_modal_label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header pb-0">
@@ -218,7 +226,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
+    @include('includes.photoVideoModal')
  </section>
 
 @if(isset($other_open_projects) && count($other_open_projects) != 0)
@@ -396,79 +405,6 @@
         }
 
 
-        function submitMessage(event){
-            // $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+$('#messsageInput').val()+'</p></div></div>');
-            // SEND MESSAGE TO THE CHOSEN USER
-            $.ajax({
-                method: 'POST',
-                url: '{{ route("tradeperson.chat") }}',
-                data:{
-                    _token: '{{ csrf_token() }}',
-                    from_user_id: $('#from_user_id').val(),
-                    to_user_id: $('#to_user_id').val(),
-                    project_id: $('#project_id').val(),
-                    estimate_id: $('#estimate_id').val(),
-                    message: $('#type_msg').val()
-                },
-                success: function(response){
-                    // $('#outgoing_msg').html(response.message);
-                    $('#last_msg_id').html(response.last_insert_id);
-                },
-                error: function(response){
-                    console.log(response);
-                }
-            });
-        }
-
-        function retrieveMessages(){
-            let i=0;
-            const authUser =  $('#from_user_id').val();
-            const to_user_id = $('#to_user_id').val();
-            var lastMessageId = $('#last_msg_id').val();
-            $.ajax({
-                method: 'GET',
-                url: '/retrive-new-msg/'+to_user_id+'/'+authUser+'/'+lastMessageId,
-                success: function(response){
-                    console.log(response);
-                    console.log(lastMessageId);
-                    while(response[i]!=null){
-                        $('#sender_msg').append('<div class="msg" id="outgoing_msg">'+response[i].message +'</div>');
-                        lastMessageId = response[i].id + 1;
-                        i++;
-                    }
-                    // scrollPaubos();
-                },
-                complete: function(){
-                    retrieveMessages();
-                }
-            });
-        }
-
-        function loadMessagesOfThisConvo(){
-            i=0;
-            const authUser =  $('#from_user_id').val();
-            const to_user_id = $('#to_user_id').val();
-            $.ajax({
-                method: 'GET',
-                url: '/load-msg/'+to_user_id+'/'+authUser,
-                success: function(response){
-                    $('#messageThread').html('');
-                    //console.log();
-                    while(response[0][i]!=null){
-                        if(response[1][0] == response[0][i].message_users_id ){
-                            $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 recieverBox ml-auto"><p>'+response[0][i].message +'</p></div></div>');
-                        }else{
-                            $('#messageThread').append('<div class="p-2 d-flex"><div class="p-2 float-left senderBox"><p>'+response[0][i].message +'</p></div></div>');
-                        }
-                        lastMessageId = response[0][i].id + 1;
-                        i++;
-                    }
-                    // scrollPaubos();
-                    retrieveMessages();
-                }
-            });
-        }
-
         function forOtherReason() {
             let e = document.getElementById('select_reason');
             if (e.value === 'other_reasons') {
@@ -549,7 +485,39 @@
 
                 $('#project_media_modal').modal('show');
             });
+
+            // $('#nav-chat-tab').click(function(){
+                // loadMessagesOfThisConvo(0);
+                // var innerDiv = $(".msg-area:last");
+                // var outerDiv = $('.chat-window')
+                // outerDiv.scrollTop(innerDiv.offset().top - outerDiv.offset().top);
+                // loadMessagesOfThisConvo(0).then(function() {
+                //     var innerDiv = $(".msg-area:last");
+                //     var outerDiv = $('.chat-window')
+                //     outerDiv.scrollTop(innerDiv.offset().top - outerDiv.offset().top);
+                // });
+            // });
+
+            // loadMessagesOfThisConvo(0);
+
         });
+
+        // const interval = setInterval(function() {
+        //     console.log("Before Execution");
+        //     loadMessagesOfThisConvo();
+        //     console.log("Executed");
+        //     clearInterval(interval);
+        // }, 1000);
+
+        // const interval = setTimeout((function() {
+        //     loadMessagesOfThisConvo();
+        //     setTimeout((function() {
+        //         loadMessagesOfThisConvo();
+        //         clearInterval(interval);
+        //     }, 1000);
+        // }, 1000);
+
+        // setInterval(retrieveMessages, 5000);
 
     </script>
 @endpush

@@ -18,5 +18,6 @@ class Chat extends Model
         'message',
         'project_id',
         'estimate_id',
+        'is_bookmarked'
     ];
 }

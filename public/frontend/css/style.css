@@ -14535,6 +14535,7 @@ h2.company-name a:hover svg path {
     opacity:0.7;
 }
 
+#nav-old-estimate .pv_top,
 #nav-home .pv_top,
 #nav-details .pv_top{
     display: flex;
@@ -14542,6 +14543,7 @@ h2.company-name a:hover svg path {
     flex-wrap: wrap;
 }
 
+#nav-old-estimate .pv_top img,
 #nav-home .pv_top img,
 #nav-details .pv_top img{
     width: 100px;
@@ -14549,6 +14551,7 @@ h2.company-name a:hover svg path {
     border-radius: 10px;
 }
 
+#nav-old-estimate .pv_top .video-mask,
 #nav-home .pv_top .video-mask,
 #nav-details .pv_top .video-mask{
     width: 100px;
@@ -15008,6 +15011,7 @@ font-style: normal;
 font-weight: 400;
 font-size: 16px;
 line-height: 19px;
+position: relative;
 }
 .user1 .msg-area .dots{
 width: 32px;
@@ -15095,7 +15099,7 @@ color: #6D717A !important;
     background: #E0E0E0;
     border-radius: 0px 0px 5px 5px;
     padding:20px 45px;
-    display: flex;
+    display: block;
     justify-content: space-between;
 }
 .chat-footer .icon-set
@@ -15130,6 +15134,9 @@ color: #6D717A !important;
 }
 .user-img-chat{
     width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color_orange);
 }
 .c_logo
 {
