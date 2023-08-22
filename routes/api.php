@@ -37,6 +37,9 @@ Route::namespace('Api')->group(function() {
       Route::post('save-company-additional-information', 'BuilderController@save_company_additional_information');
       Route::post('save-trader-areas', 'BuilderController@save_trader_areas');
       Route::post('save-trader-works', 'BuilderController@save_trader_works');
+      Route::post('save-bank-details', 'BuilderController@save_bank_details');
+      Route::post('save-notification-settings', 'BuilderController@save_notification_settings');
+      Route::post('save-default-contingency', 'BuilderController@save_default_contingency');
     });
   });
 

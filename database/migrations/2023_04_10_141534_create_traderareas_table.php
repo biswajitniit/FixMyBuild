@@ -17,7 +17,10 @@ class CreateTraderareasTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('sub_area_cover_id')->constrained('sub_area_covers');
+            $table->string('county')->comment('areas');
+            $table->string('town')->comment('sub_areas');
             $table->timestamps();
+            $table->index(['county', 'town']);
         });
     }
 

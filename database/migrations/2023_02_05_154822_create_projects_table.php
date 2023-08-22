@@ -26,9 +26,16 @@ class CreateProjectsTable extends Migration
             $table->string('contact_mobile_no')->nullable();
             $table->string('contact_home_phone')->nullable();
             $table->string('contact_email')->nullable();
+            $table->string('postcode', 10)->nullable();
+            $table->string('county', 20)->nullable();
+            $table->string('town', 20)->nullable();
             $table->string('categories')->nullable();
             $table->string('subcategories')->nullable();
-            $table->enum('status',['submitted_for_review','returned_for_review','estimation','project_started','awaiting_your_review'])->default('submitted_for_review');
+            $table->text('customer_note')->nullable();
+            $table->text('tradeperson_note')->nullable();
+            $table->text('internal_note')->nullable();
+            $table->string('status', 30)->comment('submitted_for_review, returned_for_review, estimation, project_started, awaiting_your_review')->default('submitted_for_review');
+            $table->unsignedBigInteger('reviewer_id')->nullable();
             $table->string('reviewer_status')->nullable();
             $table->dateTime('reviewer_status_updated_at')->nullable();
             $table->longText('notes')->nullable();

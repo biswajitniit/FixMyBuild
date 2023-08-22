@@ -16,10 +16,12 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Models\Notification;
+use App\Models\User;
 
 class BuilderController extends Controller
 {
-    private function uploadFileAndCreateRecord($user_id, $file, $relatedTo, $updateOrCreate = false){
+    private function upload_file_and_create_record($user_id, $file, $relatedTo, $updateOrCreate = false){
         $fileName = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
         $s3FileName = Str::uuid().'.'.$extension;
@@ -165,27 +167,27 @@ class BuilderController extends Controller
             // Company Logo Upload
             if ($request['company_logo']) {
                 $file = $request['company_logo'];
-                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'company_logo', true);
+                $this->upload_file_and_create_record($request->user()->id, $file, 'company_logo', true);
             }
 
             // Public Liability Insurance Upload
             $old_public_liability_insurances = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'public_liability_insurance'])->pluck('id');
             foreach ($request['public_liability_insurance_files'] as $file) {
-                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'public_liability_insurance');
+                $this->upload_file_and_create_record($request->user()->id, $file, 'public_liability_insurance');
             }
             TradespersonFile::whereIn('id', $old_public_liability_insurances)->delete();
 
             // Photo ID Proof Upload
             $old_photo_id_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'trader_img'])->pluck('id');
             foreach ($request['photo_id_proof_files'] as $file) {
-                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'trader_img');
+                $this->upload_file_and_create_record($request->user()->id, $file, 'trader_img');
             }
             TradespersonFile::whereIn('id', $old_photo_id_proofs)->delete();
 
             // Company Address Proof Upload
             $old_company_addr_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_address'])->pluck('id');
             foreach($request['company_addr_id_proof_files'] as $file) {
-                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'company_address');
+                $this->upload_file_and_create_record($request->user()->id, $file, 'company_address');
             }
             TradespersonFile::whereIn('id', $old_company_addr_proofs)->delete();
 
@@ -211,13 +213,13 @@ class BuilderController extends Controller
 
             $old_team_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'team_img'])->pluck('id');
             foreach($request['team_photos'] as $file) {
-                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'team_img');
+                $this->upload_file_and_create_record($request->user()->id, $file, 'team_img');
             }
             TradespersonFile::whereIn('id', $old_team_photos)->delete();
 
             $old_prev_project_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'team_img'])->pluck('id');
             foreach($request['prev_project_photos'] as $file) {
-                $this->uploadFileAndCreateRecord($request->user()->id, $file, 'prev_project_img');
+                $this->upload_file_and_create_record($request->user()->id, $file, 'prev_project_img');
             }
             TradespersonFile::whereIn('id', $old_prev_project_photos)->delete();
 
@@ -302,6 +304,8 @@ class BuilderController extends Controller
                 }
             }
             Traderareas::whereIn('id', $old_trader_areas)->delete();
+            User::where('id', $request->user()->id)->update(['steps_completed' => "2"]);
+
             return response()->json(['message' => 'Information saved successfully.'], 200);
         } catch(Exception $e) {
             return response()->json([$e->getMessage()], 500);
@@ -337,4 +341,110 @@ class BuilderController extends Controller
             return response()->json([$e->getMessage()], 500);
         }
     }
+
+
+    public function save_default_contingency(Request $request) {
+        $validator = Validator::make($request->all(),[
+			'contingency'           => 'required|numeric|between:0,100',
+        ],[
+            'contingency.required'      => 'Please enter contingency.',
+            'contingency.between'       => 'The amount of contingency can be between 0% and 100%.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            TraderDetail::where('user_id', $request->user()->id)->update(['contingency' => $request->contingency]);
+
+            return response()->json(['message' => 'Information saved successfully.'], 200);
+        } catch (Exception $e) {
+            return response()->json([$e->getMessage()], 500);
+        }
+    }
+
+
+    public function save_bank_details(Request $request) {
+
+        $validator = Validator::make($request->all(),[
+			'bnk_account_type'      => 'required|string',
+			'bnk_account_name'      => 'required|string',
+			'bnk_sort_code'         => 'required|integer|digits:6',
+			'bnk_account_number'    => 'required|integer|digits:8',
+            'builder_amendment'     => 'required|boolean'
+        ],[
+            'bnk_account_type.required'     => 'Please select your bank account type.',
+            'bnk_account_name.required'     => 'Please enter your account holder name.',
+            'bnk_sort_code.required'        => 'Please enter your bank sort code.',
+            'bnk_sort_code.integer'         => 'Invalid bank sort code.',
+            'bnk_sort_code.digits'          => 'Bank sort code must be 6 digits in length.',
+            'bnk_account_number.required'   => 'Please enter your bank account number.',
+            'bnk_account_number.digits'     => 'We support UK bank account numbers that are 8 digits in length. If you have a shorter account number, please check with your bank if the number can be padded with 0s in front and be 8 digits in length.',
+            'bnk_account_number.integer'    => 'We support UK bank account numbers that are 8 digits in length. If you have a shorter account number, please check with your bank if the number can be padded with 0s in front and be 8 digits in length.',
+            'builder_amendment.required'    => 'Please confirm that the account belongs to you / your company and the details provided are correct.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $traderdetails = TraderDetail::where('user_id', $request->user()->id)->first();
+            $traderdetails->bnk_account_type = $request->bnk_account_type;
+            $traderdetails->bnk_account_name = $request->bnk_account_name;
+            $traderdetails->bnk_sort_code = $request->bnk_sort_code;
+            $traderdetails->bnk_account_number = $request->bnk_account_number;
+            $traderdetails->builder_amendment = $request->builder_amendment ?? 0;
+            $traderdetails->save();
+
+            return response()->json(['message' => 'Information saved successfully.'], 200);
+        } catch (Exception $e) {
+            return response()->json([$e->getMessage()], 500);
+        }
+
+    }
+
+
+    public function save_notification_settings(Request $request) {
+        $validator = Validator::make($request->all(),[
+			'noti_new_quotes'       => 'required|boolean',
+			'noti_quote_accepted'   => 'required|boolean',
+			'noti_project_stopped'  => 'required|boolean',
+			'noti_quote_rejected'   => 'required|boolean',
+			'noti_project_cancelled'=> 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $notification = [
+                // Receive these notifications as a Tradesperson
+                'noti_new_quotes'           => $request->noti_new_quotes,
+                'noti_quote_accepted'       => $request->noti_quote_accepted,
+                'noti_project_stopped'      => $request->noti_project_stopped,
+                'noti_quote_rejected'       => $request->noti_quote_rejected,
+                'noti_project_cancelled'    => $request->noti_project_cancelled,
+                'noti_share_contact_info'   => config('const.trader_notification_share_contact_info'),
+                'noti_new_message'          => config('const.trader_notification_trader_new_message'),
+
+                // Receive these notifications as a Customer
+                'reviewed'                  => config('const.trader_notification_reviewed'),
+                'paused'                    => config('const.trader_notification_paused'),
+                'project_milestone_complete'=> config('const.trader_notification_project_milestone_complete'),
+                'project_complete'          => config('const.trader_notification_project_complete'),
+                'project_new_message'       => config('const.trader_notification_project_new_message'),
+            ];
+            Notification::updateOrCreate(['user_id' => $request->user()->id], ['settings' => $notification]);
+
+            User::where('id', $request->user()->id)->update(['steps_completed' => "3"]);
+
+            return response()->json(['message' => 'Information saved successfully.'], 200);
+        } catch(Exception $e) {
+            return response()->json([$e->getMessage()], 500);
+        }
+    }
+
 }
