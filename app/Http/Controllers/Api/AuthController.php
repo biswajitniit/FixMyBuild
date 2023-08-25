@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
+use App\Models\Notification;
 
 class AuthController extends Controller
 {
@@ -62,7 +64,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'user_type'=>$request->user_type,
+            'customer_or_tradesperson'=>$request->user_type,
             'verification_code'=>strval($random)
         ]);
 
@@ -70,7 +72,38 @@ class AuthController extends Controller
             throw ValidationException::withMessages(['message' => 'Something went wrong, please try again!'], 400);
         }
 
-        if($user->customer_or_tradesperson == 'tradesperson')
+        if (Str::lower($request->customer_or_tradesperson) == 'customer') {
+            $settings = [
+                'reviewed'                  => config('const.customer_notification_reviewed'),
+                'paused'                    => config('const.customer_notification_paused'),
+                'project_milestone_complete'=> config('const.customer_notification_project_milestone_complete'),
+                'project_complete'          => config('const.customer_notification_project_complete'),
+                'project_new_message'       => config('const.customer_notification_project_new_message'),
+            ];
+        } else {
+            $settings = [
+                // Receive these notifications as a Customer
+                'reviewed'                  => config('const.trader_notification_reviewed'),
+                'paused'                    => config('const.trader_notification_paused'),
+                'project_milestone_complete'=> config('const.trader_notification_project_milestone_complete'),
+                'project_complete'          => config('const.trader_notification_project_complete'),
+                'project_new_message'       => config('const.trader_notification_project_new_message'),
+
+                // Receive these notifications as a Tradesperson
+                'builder_amendment'         => config('const.trader_notification_builder_amendment'),
+                'noti_new_quotes'           => config('const.trader_notification_new_estimates'),
+                'noti_quote_accepted'       => config('const.trader_notification_estimate_accepted'),
+                'noti_project_stopped'      => config('const.trader_notification_project_stopped'),
+                'noti_quote_rejected'       => config('const.trader_notification_estimate_rejected'),
+                'noti_project_cancelled'    => config('const.trader_notification_project_cancelled'),
+                'noti_share_contact_info'   => config('const.trader_notification_share_contact_info'),
+                'noti_new_message'          => config('const.trader_notification_trader_new_message'),
+            ];
+        }
+
+        Notification::create(['user_id' => $user->id,'settings' => $settings]);
+
+        if(strtolower($user->customer_or_tradesperson) == 'tradesperson')
         {
             $token = $user->createToken("asdshjfhsdkjgda.lk,hjmgnhbgfd")->plainTextToken;
             return response()->json([

@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
@@ -14,12 +16,23 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        Admin::create([
-            'name'           => 'admin',
-            'email'          => 'admin@gmail.com',
-            'password'       => '$2y$10$9c4/3snzvsSVT.IuMbddLe0IoCf2JCt8kXCpxh..DwPcqnNNmqjLW',
-            'is_super'       => '0',
-            'remember_token' => 'nZSz8mqVzR4CeCpal6vzw0lnqOO1sYvMayKgItHI7e9RfavsBAs2PcWvUtDb',
+        DB::table('admins')->insert([
+            [
+                'name' => 'reviewer',
+                'email' => 'reviewer@gmail.com',
+                'password' => Hash::make(123456),
+                'type' => 'reviewer',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'admin',
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make(123456),
+                'type' => 'superadmin',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
