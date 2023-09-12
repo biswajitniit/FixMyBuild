@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::namespace('Api')->group(function() {
     Route::post('/login', 'AuthController@login');
     Route::post('/signup', 'AuthController@signup');
+    Route::post('/third-party-signup', 'AuthController@authenticate_with_third_party');
     Route::post('/verify-email', 'AuthController@verify_email');
     Route::post('/forgot-password', 'PasswordController@forgot_password');
     Route::post('/verify-otp', 'PasswordController@verify_otp');

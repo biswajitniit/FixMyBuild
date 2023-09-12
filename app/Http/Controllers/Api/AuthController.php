@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Exception;
+use App\Models\User;
+use Illuminate\Support\Str;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Str;
-use App\Models\Notification;
+// use App\Http\Requests\ThirdPartyAuthRequest;
 
 class AuthController extends Controller
 {
@@ -168,6 +170,55 @@ class AuthController extends Controller
 
         return response()->json(['otp' => $random,"message"=>'Otp sent to your email'], 201);
     }
+
+
+    public function authenticate_with_third_party(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'user_type' => ['required', 'string', Rule::in(config('const.user_types'))],
+            'provider' => ['required', 'string', Rule::in(config('const.providers'))],
+            'provider_id' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email:rfc,dns', 'unique:users'],
+            'terms_of_service' => ['nullable', 'boolean']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $provider_column = $request->provider . "_id";
+            $email_verified = 0;
+            $email_verified_at = null;
+
+            if ($request->email) {
+                $email_verified = 1;
+                $email_verified_at = now();
+            }
+
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'email_verified_at' => $email_verified_at,
+                'password' => Hash::make(Str::random(16)),
+                'customer_or_tradesperson' => $request->user_type,
+                $provider_column => $request->provider_id,
+                'verified' => $email_verified,
+                'locked' => $email_verified,
+                'status' => config('const.status.ACTIVE'),
+                'is_email_verified' => $email_verified,
+                'steps_completed' => 1,
+                'terms_of_service' => $request->terms_of_service,
+            ]);
+
+            return response()->json(['message' => 'User registered successfully!'], 201);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(),500);
+        }
+    }
+
+
     public function verify_email(Request $request){
         $validator = Validator::make($request->all(), [
             'otp' => 'required|string',

@@ -38,4 +38,17 @@ return [
     'customer_feedback_parallel_file_upload'            => env('CUSTOMER_FEEDBACK_PARALLEL_FILE_UPLOAD', 6),
     'customer_feedback_max_file_upload'                 => env('CUSTOMER_FEEDBACK_MAX_FILE_UPLOAD', 6),
 
+    'providers'=> [
+        'GOOGLE' => 'google',
+        'MICROSOFT' => 'microsoft',
+        'FACEBOOK' => 'facebook',
+        'APPLE' => 'apple'
+    ],
+
+    'user_types'                                        => ['Customer', 'Tradesperson'],
+
+    'status' => [
+        'ACTIVE' => 'Active',
+        'INACTIVE' => 'Inactive'
+    ],
 ];

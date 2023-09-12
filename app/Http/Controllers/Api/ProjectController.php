@@ -26,7 +26,7 @@ class ProjectController extends Controller
             return response()->json($e, 500);
         }
     }
-    
+
     public function add_project(Request $request){
         $validator = Validator::make($request->all(), [
             'project_address_id' => 'required|string',
@@ -121,7 +121,7 @@ class ProjectController extends Controller
             $projectFile->filename = $request->file_name;
             $projectFile->file_extention = $request->file_extention;
             $projectFile->url = $request->url;
-    
+
             if(!$projectFile->save()){
                 return response()->json(['message'=>'Unexpected error, please try after sometimes'],400);
             }
