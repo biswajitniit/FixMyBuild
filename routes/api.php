@@ -41,10 +41,17 @@ Route::namespace('Api')->group(function() {
       Route::post('save-bank-details', 'BuilderController@save_bank_details');
       Route::post('save-notification-settings', 'BuilderController@save_notification_settings');
       Route::post('save-default-contingency', 'BuilderController@save_default_contingency');
+
+      // Trader Specific routes
+      Route::get('/trader/projects/', 'TradespersonProjectController@index');
     });
   });
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::fallback(function () {
+    return response()->json(['error' => '404 - Not found!'], 404);
 });

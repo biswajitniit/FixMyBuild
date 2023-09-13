@@ -45,10 +45,25 @@ return [
         'APPLE' => 'apple'
     ],
 
-    'user_types'                                        => ['Customer', 'Tradesperson'],
+    'user_types' => [
+        'CUSTOMER' => 'Customer',
+        'TRADESPERSON' => 'Tradesperson'
+    ],
 
     'status' => [
         'ACTIVE' => 'Active',
         'INACTIVE' => 'Inactive'
     ],
+
+    'project_status' => [
+        'AWAITING_YOUR_REVIEW' => 'awaiting_your_review',
+        'SUBMITTED_FOR_REVIEW' => 'submitted_for_review',
+        'RETURNED_FOR_REVIEW' => 'returned_for_review',
+        'ESTIMATION' => 'estimation',
+        'PROJECT_STARTED' => 'project_started',
+        'PROJECT_CANCELLED' => 'project_cancelled',
+        'PROJECT_PAUSED' => 'project_paused',
+        'PROJECT_COMPLETED' => 'project_completed',
+    ],
+
 ];

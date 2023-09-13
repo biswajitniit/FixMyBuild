@@ -490,4 +490,33 @@ if(!function_exists('lock_trader_dashboard_access')) {
             'from' => $twilio_number,
             'body' => $message]);
     }
+
+    if (! function_exists('prepareMetaData')) {
+        function prepareMetaData($collection) {
+            return [
+                'current_page' => (int) @$collection->currentPage(),
+                'last_page' => (int) @$collection->lastPage(),
+                'from' => (int) @$collection->firstItem(),
+                'to' => (int) @$collection->lastItem(),
+                'total' => (int) @$collection->total(),
+            ];
+        }
+    }
+
+    if (! function_exists('parseOrderByColumn')) {
+        function parseOrderByColumn($field)
+        {
+            $direction = 'asc';
+
+            if (strpos($field, '-') !== false) {
+                $field = substr($field, 1);
+                $direction = 'desc';
+            }
+
+            return [
+                'field' => $field,
+                'direction' => $direction
+            ];
+        }
+    }
 }
