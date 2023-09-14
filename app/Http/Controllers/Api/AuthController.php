@@ -30,18 +30,18 @@ class AuthController extends Controller
         try{
             $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages(['errors' => ['email' => ['The provided credentials are incorrect!']]], 422);
-        }
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages(['errors' => ['email' => ['The provided credentials are incorrect!']]], 422);
+            }
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
+            $token = $user->createToken($request->device_name)->plainTextToken;
 
-        return response()->json([
-            'access_token' => $token,
-            'user_type'=> $user->customer_or_tradesperson,
-            'user'=>$user,
-            'token_type' => 'Bearer',
-        ], 200);
+            return response()->json([
+                'access_token' => $token,
+                'user_type'=> $user->customer_or_tradesperson,
+                'user'=>$user,
+                'token_type' => 'Bearer',
+            ], 200);
         } catch(Exception $e){
             return response()->json($e->getMessage(),500);
         }
@@ -66,8 +66,9 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'customer_or_tradesperson'=>$request->user_type,
-            'verification_code'=>strval($random)
+            'customer_or_tradesperson' => $request->user_type,
+            'steps_completed' => 1,
+            'verification_code' => strval($random)
         ]);
 
         if (!$user) {
@@ -213,6 +214,41 @@ class AuthController extends Controller
             ]);
 
             return response()->json(['message' => 'User registered successfully!'], 201);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(),500);
+        }
+    }
+
+
+    public function login_with_third_party(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'provider' => ['required', 'string', Rule::in(config('const.providers'))],
+            'provider_id' => ['required', 'string'],
+            'email' => ['required', 'email:rfc,dns'],
+            'device_name' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $provider_column = $request->provider . "_id";
+
+            $user = User::where([
+                'email' => $request->email,
+                $provider_column => $request->provider_id,
+            ])->firstOrFail();
+
+            $token = $user->createToken($request->device_name)->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'user_type'=> $user->customer_or_tradesperson,
+                'user'=>$user,
+                'token_type' => 'Bearer',
+            ], 200);
         } catch (Exception $e) {
             return response()->json($e->getMessage(),500);
         }
