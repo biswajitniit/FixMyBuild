@@ -175,13 +175,19 @@ class AuthController extends Controller
 
 
     public function authenticate_with_third_party(Request $request) {
-
         $validator = Validator::make($request->all(), [
             'user_type' => ['required', 'string', Rule::in(config('const.user_types'))],
             'provider' => ['required', 'string', Rule::in(config('const.providers'))],
             'provider_id' => ['required', 'string'],
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email:rfc,dns', 'unique:users'],
+            'email' => [
+                Rule::requiredIf(
+                    in_array($request->provider, [config('const.providers.GOOGLE'), config('const.providers.MICROSOFT')])
+                    // Email is optional for Facebook, Apple Signup
+                ),
+                'email:rfc,dns',
+                'unique:users'
+            ],
             'terms_of_service' => ['nullable', 'boolean']
         ]);
 
@@ -191,31 +197,26 @@ class AuthController extends Controller
 
         try {
             $provider_column = $request->provider . "_id";
-            $email_verified = 0;
-            $email_verified_at = null;
-            $settings = null;
+            $settings = [];
 
-            if ($request->email) {
-                $email_verified = 1;
-                $email_verified_at = now();
-            }
-
-            DB::beginTransaction();
-
-            $user = User::create([
+            $userData = [
                 'name' => $request->name,
-                'email' => $request->email,
-                'email_verified_at' => $email_verified_at,
                 'password' => Hash::make(Str::random(16)),
                 'customer_or_tradesperson' => $request->user_type,
                 $provider_column => $request->provider_id,
-                'verified' => $email_verified,
-                'locked' => $email_verified,
                 'status' => config('const.status.ACTIVE'),
-                'is_email_verified' => $email_verified,
                 'steps_completed' => 1,
-                'terms_of_service' => $request->terms_of_service,
-            ]);
+                'terms_of_service' => $request->terms_of_service
+            ];
+
+            if ($request->email) {
+                $email_verified = 1;
+                $userData['email'] = $request->email;
+                $userData['email_verified_at'] = now();
+                $userData['verified'] = 1;
+                $userData['locked'] = 1;
+                $userData['is_email_verified'] = 1;
+            }
 
             if (Str::lower($request->customer_or_tradesperson) == 'customer') {
                 $settings = [
@@ -246,26 +247,23 @@ class AuthController extends Controller
                 ];
             }
 
+            DB::beginTransaction();
+            $user = User::create($userData);
             Notification::create(['user_id' => $user->id,'settings' => $settings]);
-
             DB::commit();
 
-            if(strtolower($user->customer_or_tradesperson) == 'tradesperson')
-            {
-                $token = $user->createToken("asdshjfhsdkjgda.lk,hjmgnhbgfd")->plainTextToken;
-                return response()->json([
-                    'access_token' => $token,
-                    'user_type'=> $user->customer_or_tradesperson,
-                    'user'=> $user,
-                    'token_type' => 'Bearer',
-                ], 200);
-            }
+            $token = $user->createToken(Str::random())->plainTextToken;
 
-            return response()->json(['message' => 'User registered successfully!'], 200);
+            return response()->json([
+                'access_token' => $token,
+                'user_type'=> $user->customer_or_tradesperson,
+                'user'=> $user,
+                'token_type' => 'Bearer',
+            ], 200);
         } catch (Exception $e) {
             DB::rollBack();
 
-            return response()->json($e->getMessage(),500);
+            return response()->json($e->getMessage(), 500);
         }
     }
 
