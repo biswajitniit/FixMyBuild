@@ -22,13 +22,10 @@ class EstimateController extends BaseController
         //
     }
 
+
+    // Trader Write Estimate
     public function store(Request $request, int $project_id)
     {
-
-        if (!isTrader($request->user()->customer_or_tradesperson)) {
-            return $this->error('Forbidden!', 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'describe_mode' => ['required', 'string', Rule::in(config('const.describe_mode'))],
             'unable_to_describe_type' => [
@@ -86,12 +83,21 @@ class EstimateController extends BaseController
             'images.*' => ['nullable', 'image', 'mimetypes:'.str_replace(" ", "", config('const.dropzone_accepted_image'))]
         ]);
 
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
         try {
+            if (!isTrader($request->user()->customer_or_tradesperson)) {
+                return $this->error('Forbidden!', 403);
+            }
+
+            $estimate_previously_submitted = Estimate::where('tradesperson_id', $request->user()->id)->count() > 0 ? true : false;
+
+            if ($estimate_previously_submitted) {
+                return $this->error('Forbidden! You have previously submitted estimate for this project.', 403);
+            }
+
             DB::beginTransaction();
 
             $project = Project::findOrFail($project_id);
@@ -151,7 +157,6 @@ class EstimateController extends BaseController
                     ]);
                 }
             }
-
 
             DB::commit();
 
