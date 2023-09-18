@@ -25,9 +25,6 @@ class EstimateController extends BaseController
     public function store(Request $request, int $project_id)
     {
 
-        // dd($request->data);
-        // dd(gettype($request->data));
-
         if (!isTrader($request->user()->customer_or_tradesperson)) {
             return $this->error('Forbidden!', 403);
         }
@@ -137,8 +134,8 @@ class EstimateController extends BaseController
                 ]);
             }
 
-            if ($request->input('images')) {
-                foreach ($request->input('images') as $image) {
+            if ($request->file('images')) {
+                foreach ($request->file('images') as $image) {
                     $extension = $image->getClientOriginalExtension();
                     $s3FileName = Str::uuid().'.'.$extension;
                     Storage::disk('s3')->put(config('const.s3FolderName').$s3FileName, file_get_contents($image->getRealPath()));
@@ -154,6 +151,7 @@ class EstimateController extends BaseController
                     ]);
                 }
             }
+
 
             DB::commit();
 
