@@ -50,7 +50,13 @@ class TradespersonProjectController extends BaseController
                     })
                     ->paginate($request->limit ?? 10);
             } else if ($request->filled('new') && $request->new == 1) {
-                $projects = recommended_projects($trader_areas, $trader_works)->paginate($request->limit ?? 10);
+                $projects = recommended_projects($trader_areas, $trader_works)
+                    ->when($request->filled('order_by'), function ($query) use ($request) {
+                        $query->orderBy($request->order_by, $request->order_by_type ?? 'desc');
+                    }, function ($query) {
+                        $query->orderBy('created_at', 'desc');
+                    })
+                    ->paginate($request->limit ?? 10);
             } else if ($request->filled('ongoing') && $request->ongoing == 1) {
                 $projects = Project::where(function ($query) use ($request) {
                     $query->where(function($q) use($request) {
