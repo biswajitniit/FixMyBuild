@@ -29,7 +29,24 @@ class TraderProjectRequest extends BaseRequest
             'limit' => 'nullable|numeric',
             'page' => 'nullable|numeric',
             'new' => 'nullable|boolean',
-            'history' => 'nullable|boolean'
+            'history' => 'nullable|boolean',
+            'ongoing' => 'nullable|boolean'
         ];
+    }
+
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $count = collect([
+                $this->input('new'),
+                $this->input('ongoing'),
+                $this->input('history')
+            ])->filter()->count();
+
+            if ($count > 1) {
+                $validator->errors()->add('field_count', 'Only one field among new, ongoing, history can be true.');
+            }
+        });
     }
 }
