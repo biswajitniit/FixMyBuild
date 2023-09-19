@@ -47,6 +47,7 @@ Route::namespace('Api')->group(function() {
       Route::prefix('trader/')->group(function() {
         Route::get('projects/', 'TradespersonProjectController@index');
         Route::post('projects/{project_id}/write-estimate', 'EstimateController@store');
+        Route::put('projects/{project_id}/write-estimate/update', 'EstimateController@update');
       });
 
     });

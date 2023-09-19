@@ -102,5 +102,6 @@ return [
     ],
     // Estimate Const Ends
 
-    's3FolderName' => 'TestFolder/'
+    's3FolderName' => 'TestFolder/',
+    's3ProjectFolderName' => 'project_files/'
 ];
