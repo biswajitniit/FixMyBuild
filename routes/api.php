@@ -32,6 +32,8 @@ Route::namespace('Api')->group(function() {
       Route::apiResource('projects', 'ProjectController',);
       Route::post('projects','ProjectController@add_project');
       Route::put('projects','ProjectController@update_project');
+      Route::post('cancel-project','ProjectController@cancel_project');
+      Route::post('paused-project','ProjectController@paused_project');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
@@ -42,7 +44,7 @@ Route::namespace('Api')->group(function() {
       Route::post('save-notification-settings', 'BuilderController@save_notification_settings');
       Route::post('save-default-contingency', 'BuilderController@save_default_contingency');
     });
-  });
+});
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
