@@ -92,7 +92,7 @@ class EstimateController extends BaseController
                 return $this->error('Forbidden!', 403);
             }
 
-            $estimate_previously_submitted = Estimate::where('tradesperson_id', $request->user()->id)->count() > 0 ? true : false;
+            $estimate_previously_submitted = Estimate::where(['tradesperson_id'=> $request->user()->id, 'project_id' => $project_id])->count() > 0 ? true : false;
 
             if ($estimate_previously_submitted) {
                 return $this->error('Forbidden! You have previously submitted estimate for this project.', 403);
