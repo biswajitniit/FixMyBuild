@@ -43,7 +43,7 @@ class MicrosoftController extends Controller
                 }
             }
         } catch(Exception $e) {
-            $errors = new MessageBag(['loginerror' => ['Authentication with Microsoft could not be completed successfully.']]);
+            $errors = new MessageBag(['loginerror' => ['Authentication with Microsoft could not be completed successfully.+']]);
             if (Auth::check()) Auth::logout();
             Session::flush();
             return redirect()->route($redirectionRouteNameOnError)->withErrors($errors);
@@ -179,118 +179,6 @@ class MicrosoftController extends Controller
         if(session()->get('action_type') == 'register')
             return $this->registerWithMicrosoft();
         return $this->loginWithMicrosoft();
-
-        // try {
-            // $user = Socialite::driver('azure')->user();
-            // $is_user = User::where('email',$user->getEmail())->first();
-            // if(!$is_user){
-            //     $saveuser = User::updateOrCreate(
-            //         [
-            //             'microsoft_id' => $user->getId()
-            //         ],
-            //         [
-            //             'name'     => $user->getName(),
-            //             'email'    => $user->getEmail(),
-            //             'password' => Hash::make($user->getName().'@'.$user->getId())
-            //         ]
-            //     );
-            // }else{
-            //     $saveuser = User::where('email',$user->getEmail())->update([
-            //         'microsoft_id' => $user->getId()
-            //     ]);
-            //     $saveuser = User::where('email',$user->getEmail())->first();
-            // }
-            // Auth::loginUsingId($saveuser->id);
-            // if (Auth::user()->customer_or_tradesperson == "Customer")
-            // {
-            //     if(Auth::user()->status == 'Active'){
-            //         return redirect()->intended('/');
-            //     }else{
-            //         $errors = new MessageBag(['loginerror' => ['Email and/or password invalid.']]);
-            //         return Redirect::back()->withErrors($errors)->withInput($request->only('email'));
-            //     }
-            // }else{
-            //     if(Auth::user()->steps_completed == 1){
-            //         return redirect()->intended('/tradeperson/company-registration');
-            //     }else if(Auth::user()->steps_completed == 2){
-            //         return redirect()->intended('/tradeperson/bank-registration');
-            //     }else if(Auth::user()->steps_completed == 3){
-            //         return redirect()->intended('/');
-            //     }
-            // }
-
-            // return redirect()->route('dashboard');
-
-
-
-
-
-
-            // $azureUser = Socialite::with('azure')->user();
-            // $user = User::where('email', $azureUser->email)->first();
-            // if(!$user){
-            //     // dd($azureUser->getName());
-            //     $saveuser = User::updateOrCreate(
-            //         [
-            //             'microsoft_id' => $azureUser->getId()
-            //         ],
-            //         [
-            //             'steps_completed'             => 1,
-            //             'verified'                    => 1,
-            //             'locked'                      => 1,
-            //             'is_email_verified'           => 1,
-            //             'name'                        => $azureUser->getName(),
-            //             'email'                       => $azureUser->getEmail(),
-            //             'password'                    => Hash::make($azureUser->getName().'@'.$azureUser->getId())
-            //         ]
-            //     );
-            //     Auth::login($saveuser);
-            //     return redirect()->route('home');
-            // }
-
-            // if($user){
-            //     if(Auth::loginUsingId($user->id)){
-            //         return redirect()->route('home');
-            //     }
-            // }
-
-
-            // if(!$is_user){
-            //     $saveuser = User::updateOrCreate(
-            //         [
-            //             'microsoft_id' => $user->getId()
-            //         ],
-            //         [
-            //             'steps_completed'             => 1,
-            //             'verified'                    => 1,
-            //             'locked'                      => 1,
-            //             'is_email_verified'           => 1,
-            //             'customer_or_tradesperson'    => session()->get('user_type'),
-            //             'phone'                       => session()->get('phone'),
-            //             'name'             => $user->getName(),
-            //             'email'            => $user->getEmail(),
-            //             'password'         => Hash::make($user->getName().'@'.$user->getId())
-            //         ]
-            //     );
-            // }else{
-            //     $saveuser = User::where('email',$user->getEmail())->update([
-            //         'microsoft_id' => $user->getId()
-            //     ]);
-            //     $saveuser = User::where('email',$user->getEmail())->first();
-            // }
-
-
-
-
-
-
-
-
-
-
-        // } catch (\Throwable $th) {
-        //     //throw $th;
-        // }
     }
 
 }

@@ -76,3 +76,8 @@ ALTER TABLE `traderareas` CHANGE `sub_area_cover_id` `sub_area_cover_id` BIGINT(
 --
 --ALTER TABLE `users` DROP INDEX `users_email_unique`;
 --ALTER TABLE users ADD CONSTRAINT unique_email_deleted_at UNIQUE (email, deleted_at);
+
+--
+-- 13-09-2023
+--
+ALTER TABLE `project_status_change_log` CHANGE `action_by_type` `action_by_type` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;

@@ -356,10 +356,20 @@ class BuilderController extends Controller
         }
 
         try {
+            DB::beginTransaction();
+
             TraderDetail::where('user_id', $request->user()->id)->update(['contingency' => $request->contingency]);
+
+            $user = User::where('id', $request->user()->id)->firstOrFail();
+            $user->steps_completed = 2;
+            $user->save();
+
+            DB::commit();
 
             return response()->json(['message' => 'Information saved successfully.'], 200);
         } catch (Exception $e) {
+            DB::rollBack();
+
             return response()->json([$e->getMessage()], 500);
         }
     }
@@ -390,6 +400,8 @@ class BuilderController extends Controller
         }
 
         try {
+            DB::beginTransaction();
+
             $traderdetails = TraderDetail::where('user_id', $request->user()->id)->first();
             $traderdetails->bnk_account_type = $request->bnk_account_type;
             $traderdetails->bnk_account_name = $request->bnk_account_name;
@@ -398,8 +410,16 @@ class BuilderController extends Controller
             $traderdetails->builder_amendment = $request->builder_amendment ?? 0;
             $traderdetails->save();
 
+            $user = User::where('id', $request->user()->id)->firstOrFail();
+            $user->steps_completed = 3;
+            $user->save();
+
+            DB::commit();
+
             return response()->json(['message' => 'Information saved successfully.'], 200);
         } catch (Exception $e) {
+            DB::rollBack();
+
             return response()->json([$e->getMessage()], 500);
         }
 

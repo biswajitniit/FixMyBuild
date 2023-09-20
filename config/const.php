@@ -45,10 +45,63 @@ return [
         'APPLE' => 'apple'
     ],
 
-    'user_types'                                        => ['Customer', 'Tradesperson'],
+    'user_types' => [
+        'ADMIN' => 'Admin',
+        'REVIEWER' => 'Reviewer',
+        'HELPDESK' => 'Helpdesk',
+        'CUSTOMER' => 'Customer',
+        'TRADESPERSON' => 'Tradesperson',
+    ],
 
     'status' => [
         'ACTIVE' => 'Active',
         'INACTIVE' => 'Inactive'
     ],
+
+    'project_status' => [
+        'AWAITING_YOUR_REVIEW' => 'awaiting_your_review',
+        'SUBMITTED_FOR_REVIEW' => 'submitted_for_review',
+        'RETURNED_FOR_REVIEW' => 'returned_for_review',
+        'ESTIMATION' => 'estimation',
+        'PROJECT_STARTED' => 'project_started',
+        'PROJECT_CANCELLED' => 'project_cancelled',
+        'PROJECT_PAUSED' => 'project_paused',
+        'PROJECT_COMPLETED' => 'project_completed',
+    ],
+
+    // Estimates Const Starts
+    'unable_to_describe_type' => [
+        'NEED_MORE_INFO' => 'Need_more_info',
+        'DO_NOT_UNDERTAKE_PROJECT_TYPE' => 'Do_not_undertake_project_type',
+        'DO_NOT_COVER_LOCATION' => 'Do_not_cover_location'
+    ],
+
+    'describe_mode' => [
+        'FULLY_DESCRIBE' => 'Fully_describe',
+        'UNABLE_TO_DESCRIBE' => 'Unable_to_describe'
+    ],
+
+    'initial_payment_type' => [
+        'FIXED' => 'Fixed',
+        'PERCENTAGE' => 'Percentage'
+    ],
+
+    'time_unit' => [
+        'MINUTES' => 'minutes',
+        'HOURS' => 'Hours',
+        'DAYS' => 'days',
+        'WEEKS' => 'weeks',
+        'MONTHS' => 'months',
+    ],
+
+    'start_date_type' => [
+        'NOW' => 'now',
+        'ONE_WEEK' => 'one_week',
+        'TWO_THREE_WEEKS' => 'two_three_weeks',
+        'SPECIFIC_DATE' => 'specific_date',
+    ],
+    // Estimate Const Ends
+
+    's3FolderName' => 'TestFolder/',
+    's3ProjectFolderName' => 'project_files/'
 ];

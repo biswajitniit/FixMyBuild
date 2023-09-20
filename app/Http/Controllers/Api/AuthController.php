@@ -12,6 +12,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 // use App\Http\Requests\ThirdPartyAuthRequest;
 
 class AuthController extends Controller
@@ -30,18 +32,18 @@ class AuthController extends Controller
         try{
             $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages(['errors' => ['email' => ['The provided credentials are incorrect!']]], 422);
-        }
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages(['errors' => ['email' => ['The provided credentials are incorrect!']]], 422);
+            }
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
+            $token = $user->createToken($request->device_name)->plainTextToken;
 
-        return response()->json([
-            'access_token' => $token,
-            'user_type'=> $user->customer_or_tradesperson,
-            'user'=>$user,
-            'token_type' => 'Bearer',
-        ], 200);
+            return response()->json([
+                'access_token' => $token,
+                'user_type'=> $user->customer_or_tradesperson,
+                'user'=>$user,
+                'token_type' => 'Bearer',
+            ], 200);
         } catch(Exception $e){
             return response()->json($e->getMessage(),500);
         }
@@ -66,8 +68,9 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'customer_or_tradesperson'=>$request->user_type,
-            'verification_code'=>strval($random)
+            'customer_or_tradesperson' => $request->user_type,
+            'steps_completed' => 1,
+            'verification_code' => strval($random)
         ]);
 
         if (!$user) {
@@ -173,13 +176,19 @@ class AuthController extends Controller
 
 
     public function authenticate_with_third_party(Request $request) {
-
         $validator = Validator::make($request->all(), [
             'user_type' => ['required', 'string', Rule::in(config('const.user_types'))],
             'provider' => ['required', 'string', Rule::in(config('const.providers'))],
             'provider_id' => ['required', 'string'],
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email:rfc,dns', 'unique:users'],
+            'email' => [
+                Rule::requiredIf(
+                    in_array($request->provider, [config('const.providers.GOOGLE'), config('const.providers.MICROSOFT')])
+                    // Email is optional for Facebook, Apple Signup
+                ),
+                'email:rfc,dns',
+                'unique:users'
+            ],
             'terms_of_service' => ['nullable', 'boolean']
         ]);
 
@@ -189,32 +198,110 @@ class AuthController extends Controller
 
         try {
             $provider_column = $request->provider . "_id";
-            $email_verified = 0;
-            $email_verified_at = null;
+            $settings = [];
 
-            if ($request->email) {
-                $email_verified = 1;
-                $email_verified_at = now();
-            }
-
-            User::create([
+            $userData = [
                 'name' => $request->name,
-                'email' => $request->email,
-                'email_verified_at' => $email_verified_at,
                 'password' => Hash::make(Str::random(16)),
                 'customer_or_tradesperson' => $request->user_type,
                 $provider_column => $request->provider_id,
-                'verified' => $email_verified,
-                'locked' => $email_verified,
                 'status' => config('const.status.ACTIVE'),
-                'is_email_verified' => $email_verified,
                 'steps_completed' => 1,
-                'terms_of_service' => $request->terms_of_service,
-            ]);
+                'terms_of_service' => $request->terms_of_service
+            ];
 
-            return response()->json(['message' => 'User registered successfully!'], 201);
+            if ($request->email) {
+                $email_verified = 1;
+                $userData['email'] = $request->email;
+                $userData['email_verified_at'] = now();
+                $userData['verified'] = 1;
+                $userData['locked'] = 1;
+                $userData['is_email_verified'] = 1;
+            }
+
+            if (Str::lower($request->customer_or_tradesperson) == 'customer') {
+                $settings = [
+                    'reviewed'                  => config('const.customer_notification_reviewed'),
+                    'paused'                    => config('const.customer_notification_paused'),
+                    'project_milestone_complete'=> config('const.customer_notification_project_milestone_complete'),
+                    'project_complete'          => config('const.customer_notification_project_complete'),
+                    'project_new_message'       => config('const.customer_notification_project_new_message'),
+                ];
+            } else {
+                $settings = [
+                    // Receive these notifications as a Customer
+                    'reviewed'                  => config('const.trader_notification_reviewed'),
+                    'paused'                    => config('const.trader_notification_paused'),
+                    'project_milestone_complete'=> config('const.trader_notification_project_milestone_complete'),
+                    'project_complete'          => config('const.trader_notification_project_complete'),
+                    'project_new_message'       => config('const.trader_notification_project_new_message'),
+
+                    // Receive these notifications as a Tradesperson
+                    'builder_amendment'         => config('const.trader_notification_builder_amendment'),
+                    'noti_new_quotes'           => config('const.trader_notification_new_estimates'),
+                    'noti_quote_accepted'       => config('const.trader_notification_estimate_accepted'),
+                    'noti_project_stopped'      => config('const.trader_notification_project_stopped'),
+                    'noti_quote_rejected'       => config('const.trader_notification_estimate_rejected'),
+                    'noti_project_cancelled'    => config('const.trader_notification_project_cancelled'),
+                    'noti_share_contact_info'   => config('const.trader_notification_share_contact_info'),
+                    'noti_new_message'          => config('const.trader_notification_trader_new_message'),
+                ];
+            }
+
+            DB::beginTransaction();
+            $user = User::create($userData);
+            Notification::create(['user_id' => $user->id,'settings' => $settings]);
+            DB::commit();
+
+            $token = $user->createToken(Str::random())->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'user_type'=> $user->customer_or_tradesperson,
+                'user'=> $user,
+                'token_type' => 'Bearer',
+            ], 200);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(),500);
+            DB::rollBack();
+
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function login_with_third_party(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'provider' => ['required', 'string', Rule::in(config('const.providers'))],
+            'provider_id' => ['required', 'string'],
+            'email' => ['required', 'email:rfc,dns'],
+            'device_name' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $provider_column = $request->provider . "_id";
+
+            $user = User::where([
+                'email' => $request->email,
+                $provider_column => $request->provider_id,
+            ])->firstOrFail();
+
+            $token = $user->createToken($request->device_name)->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'user_type'=> $user->customer_or_tradesperson,
+                'user'=>$user,
+                'token_type' => 'Bearer',
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'User not found'], 404);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()],500);
         }
     }
 

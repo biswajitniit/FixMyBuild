@@ -53,7 +53,7 @@
                         <input type="hidden" id="to_user_id" name="to_user_id" value="{{ $project->user_id }}">
                     @endif
                     <input type="hidden" id="project_id" name="project_id" value="{{ $project->id }}">
-                    <input type="hidden" id="estimate_id" name="estimate_id" value="{{ $estimate->id }}">
+                    <input type="hidden" id="estimate_id" name="estimate_id" value="{{ @$estimate->id }}">
 
                     {{--<div class="input-area">
                         <input type="text" id="type_msg" name="type_msg" placeholder="Type here...">
@@ -123,7 +123,7 @@
                     to_user_id : to_user_id,
                     project_id: $('#project_id').val(),
                     last_msg_id: lastMessageId,
-                    estimate_id: {{ $estimate->id }}
+                    estimate_id: {{ @$estimate->id }}
                 },
                 success: function(response){
                     console.log(response);
@@ -290,7 +290,7 @@
                     to_user_id : to_user_id,
                     project_id: $('#project_id').val(),
                     last_msg_id: last_msg_id,
-                    estimate_id: {{ $estimate->id }}
+                    estimate_id: {{ @$estimate->id }}
                 },
                 success: function(response){
                     // $('#sender_msg').html('');
