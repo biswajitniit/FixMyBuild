@@ -16,7 +16,7 @@ class CreateTraderDetailsTable extends Migration
         Schema::create('trader_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->unique();
-            $table->string('comp_reg_no')->nullable()->unique();
+            $table->string('comp_reg_no')->nullable();
             $table->string('txt_comp_name')->nullable();
             $table->string('comp_name')->nullable();
             $table->text('comp_address')->nullable();
@@ -42,9 +42,8 @@ class CreateTraderDetailsTable extends Migration
             $table->json('email_notification')->nullable();
             $table->string('insurance_policy_name')->nullable();
             $table->date('insurance_policy_exp_date')->nullable();
-            $table->boolean('insurance_status')->default(0)->change();
+            $table->string('approval_status', 20)->default('Pending')->comment('Pending, Rejected, Approved');
             $table->timestamps();
-            // $table->unique(['user_id', 'comp_reg_no']);
         });
     }
 

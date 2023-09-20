@@ -19,7 +19,8 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('google_id')->nullable();
-            $table->string('email')->unique();
+            $table->string('microsoft_id')->nullable();
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone')->nullable();
@@ -29,7 +30,6 @@ class CreateUsersTable extends Migration
             $table->enum('customer_or_tradesperson', ['Customer', 'Tradesperson'])->comment('Customer,Tradesperson');
             $table->enum('terms_of_service', ['0', '1'])->default('0')->comment('0=not read,1=Read');
             $table->string('profile_image')->nullable();
-            //$table->tinyInteger('steps_completed');
             $table->string('account_deletion_reason')->nullable();
             $table->tinyInteger('delete_permanently')->default('0');
             //$table->tinyInteger('is_email_verified');
@@ -37,6 +37,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
+            $table->unique(['email', 'deleted_at']);
         });
     }
 

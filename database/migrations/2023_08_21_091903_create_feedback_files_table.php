@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProjectEstimateFilesTable extends Migration
+class CreateFeedbackFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateProjectEstimateFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_estimate_files', function (Blueprint $table) {
+        Schema::create('feedback_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('estimate_id')->constrained('estimates')->onDelete('cascade');
-            $table->string('file_type');
-            $table->string('file_name');
-            $table->string('file_original_name')->nullable();
+            $table->unsignedBigInteger('project_id');
+            $table->string('file_type', 255);
+            $table->string('file_name', 255);
+            $table->string('file_original_name', 255)->nullable();
             $table->string('file_extension', 10);
-            $table->string('url');
+            $table->string('url', 255);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +33,6 @@ class CreateProjectEstimateFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_estimate_files');
+        Schema::dropIfExists('feedback_files');
     }
 }

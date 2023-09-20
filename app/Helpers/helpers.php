@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Hashids\Hashids;
 use Carbon\Carbon;
 use Twilio\Rest\Client;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 
 if (! function_exists('Hashids_encode')) {
@@ -424,7 +426,7 @@ if(!function_exists('recommended_projects')) {
             $query->where('reviewer_status', 'approved')
                     ->distinct('projects.id')
                     ->whereHas('subCategories', function($query) use($trader_works) {
-                        $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
+                        $query->whereIn('buildersubcategories.id', Arr::pluck($trader_works, 'buildersubcategory_id'));
                     })
                     ->whereDoesntHave('estimates', function ($query) {
                         $query->where('project_awarded', 1)
@@ -461,7 +463,7 @@ if(!function_exists('lock_trader_dashboard_access')) {
 
     function lock_trader_dashboard_access() {
         $user = User::where('id', Auth::id())->first();
-        if (\Str::lower($user->customer_or_tradesperson) == 'customer')
+        if (Str::lower($user->customer_or_tradesperson) == 'customer')
             return redirect()->route('customer.profile');
         if ($user->steps_completed == 1)
             return redirect()->route('tradepersion.compregistration');
@@ -489,5 +491,221 @@ if(!function_exists('lock_trader_dashboard_access')) {
         $client->messages->create($receiverNumber, [
             'from' => $twilio_number,
             'body' => $message]);
+    }
+
+    if (! function_exists('prepareMetaData')) {
+        function prepareMetaData($collection) {
+            return [
+                'current_page' => (int) @$collection->currentPage(),
+                'last_page' => (int) @$collection->lastPage(),
+                'from' => (int) @$collection->firstItem(),
+                'to' => (int) @$collection->lastItem(),
+                'total' => (int) @$collection->total(),
+            ];
+        }
+    }
+
+    if (! function_exists('parseOrderByColumn')) {
+        function parseOrderByColumn($field)
+        {
+            $direction = 'asc';
+
+            if (strpos($field, '-') !== false) {
+                $field = substr($field, 1);
+                $direction = 'desc';
+            }
+
+            return [
+                'field' => $field,
+                'direction' => $direction
+            ];
+        }
+    }
+
+
+    if (! function_exists('isCustomer')) {
+        function isCustomer(string $userType) {
+            return $userType == config('const.user_types.CUSTOMER');
+        }
+    }
+
+    if (! function_exists('isTrader')) {
+        function isTrader(string $userType) {
+            return $userType == config('const.user_types.TRADESPERSON');
+        }
+    }
+
+    if (! function_exists('getMediaType')) {
+        function getMediaType(string $extension) {
+            $image_ext = [
+                "ase",
+                "art",
+                "bmp",
+                "blp",
+                "cd5",
+                "cit",
+                "cpt",
+                "cr2",
+                "cut",
+                "dds",
+                "dib",
+                "djvu",
+                "egt",
+                "exif",
+                "gif",
+                "gpl",
+                "grf",
+                "icns",
+                "ico",
+                "iff",
+                "jng",
+                "jpeg",
+                "jpg",
+                "jfif",
+                "jp2",
+                "jps",
+                "lbm",
+                "max",
+                "miff",
+                "mng",
+                "msp",
+                "nef",
+                "nitf",
+                "ota",
+                "pbm",
+                "pc1",
+                "pc2",
+                "pc3",
+                "pcf",
+                "pcx",
+                "pdn",
+                "pgm",
+                "PI1",
+                "PI2",
+                "PI3",
+                "pict",
+                "pct",
+                "pnm",
+                "pns",
+                "ppm",
+                "psb",
+                "psd",
+                "pdd",
+                "psp",
+                "px",
+                "pxm",
+                "pxr",
+                "qfx",
+                "raw",
+                "rle",
+                "sct",
+                "sgi",
+                "rgb",
+                "int",
+                "bw",
+                "tga",
+                "tiff",
+                "tif",
+                "vtf",
+                "xbm",
+                "xcf",
+                "xpm",
+                "3dv",
+                "amf",
+                "ai",
+                "awg",
+                "cgm",
+                "cdr",
+                "cmx",
+                "dxf",
+                "e2d",
+                "egt",
+                "eps",
+                "fs",
+                "gbr",
+                "odg",
+                "svg",
+                "stl",
+                "vrml",
+                "x3d",
+                "sxd",
+                "v2d",
+                "vnd",
+                "wmf",
+                "emf",
+                "art",
+                "xar",
+                "png",
+                "webp",
+                "jxr",
+                "hdp",
+                "wdp",
+                "cur",
+                "ecw",
+                "iff",
+                "lbm",
+                "liff",
+                "nrrd",
+                "pam",
+                "pcx",
+                "pgf",
+                "sgi",
+                "rgb",
+                "rgba",
+                "bw",
+                "int",
+                "inta",
+                "sid",
+                "ras",
+                "sun",
+                "tga",
+                "heic",
+                "heif"
+            ];
+
+            $video_ext = [
+                "3g2",
+                "3gp",
+                "aaf",
+                "asf",
+                "avchd",
+                "avi",
+                "drc",
+                "flv",
+                "m2v",
+                "m3u8",
+                "m4p",
+                "m4v",
+                "mkv",
+                "mng",
+                "mov",
+                "mp2",
+                "mp4",
+                "mpe",
+                "mpeg",
+                "mpg",
+                "mpv",
+                "mxf",
+                "nsv",
+                "ogg",
+                "ogv",
+                "qt",
+                "rm",
+                "rmvb",
+                "roq",
+                "svi",
+                "vob",
+                "webm",
+                "wmv",
+                "yuv"
+            ];
+
+            if ( in_array($extension, $image_ext) )
+                return 'image';
+            elseif ( in_array($extension, $video_ext) )
+                return 'video';
+
+            return 'document';
+        }
     }
 }

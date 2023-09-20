@@ -24,6 +24,7 @@ class CreateProjectReviewsTable extends Migration
             $table->tinyInteger('price_accuracy');
             $table->tinyInteger('detailed_review');
             $table->text('description')->nullable();
+            $table->boolean('verified')->default(false);
             $table->timestamps();
         });
     }
