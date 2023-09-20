@@ -26,8 +26,8 @@ class BuilderController extends Controller
         $extension = $file->getClientOriginalExtension();
         $s3FileName = Str::uuid().'.'.$extension;
         $file_type = explode('/', mime_content_type($file->getRealPath()))[0];
-        Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
-        $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+        Storage::disk('s3')->put(config('const.s3FolderName').$s3FileName, file_get_contents($file->getRealPath()));
+        $path = Storage::disk('s3')->url(config('const.s3FolderName').$s3FileName);
 
         $data = [
             'tradesperson_id' => $user_id,
@@ -139,7 +139,9 @@ class BuilderController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        try{
+        try {
+            DB::beginTransaction();
+
             $trader = TraderDetail::updateOrCreate(
                 [
                     'user_id' => $request->user()->id,
@@ -156,7 +158,7 @@ class BuilderController extends Controller
                     'phone_office'      => $request['phone_office'],
                     'email'             => $request['email'],
                     'company_role'      => $request['company_role'],
-                    'designation'       => $request['designation'],
+                    'designation'       => $request['company_role'] == 'Other' ? $request['designation'] : null,
                     'vat_reg'           => $request['vat_reg'],
                     'vat_no'            => $request['vat_reg'] ? $request['vat_no'] : null,
                     'vat_comp_name'     => $request['vat_reg'] ? $request['vat_comp_name'] : null,
@@ -166,34 +168,52 @@ class BuilderController extends Controller
 
             // Company Logo Upload
             if ($request['company_logo']) {
+                $old_company_logo_url = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_logo'])->pluck('url')->first();
                 $file = $request['company_logo'];
                 $this->upload_file_and_create_record($request->user()->id, $file, 'company_logo', true);
+                Storage::disk('s3')->delete(parse_url($old_company_logo_url, PHP_URL_PATH));
             }
 
             // Public Liability Insurance Upload
-            $old_public_liability_insurances = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'public_liability_insurance'])->pluck('id');
+            $old_public_liability_insurances = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'public_liability_insurance'])->pluck('id', 'url');
             foreach ($request['public_liability_insurance_files'] as $file) {
                 $this->upload_file_and_create_record($request->user()->id, $file, 'public_liability_insurance');
             }
-            TradespersonFile::whereIn('id', $old_public_liability_insurances)->delete();
+            $old_pli_media_paths = $old_public_liability_insurances->map(function ($id, $url) {
+                return parse_url($url, PHP_URL_PATH);
+            })->toArray();
+            Storage::disk('s3')->delete($old_pli_media_paths);
+            TradespersonFile::whereIn('id', $old_public_liability_insurances->values())->delete();
 
             // Photo ID Proof Upload
-            $old_photo_id_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'trader_img'])->pluck('id');
+            $old_photo_id_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'trader_img'])->pluck('id', 'url');
             foreach ($request['photo_id_proof_files'] as $file) {
                 $this->upload_file_and_create_record($request->user()->id, $file, 'trader_img');
             }
-            TradespersonFile::whereIn('id', $old_photo_id_proofs)->delete();
+            $old_photo_id_media_paths = $old_photo_id_proofs->map(function ($id, $url) {
+                return parse_url($url, PHP_URL_PATH);
+            })->toArray();
+            Storage::disk('s3')->delete($old_photo_id_media_paths);
+            TradespersonFile::whereIn('id', $old_photo_id_proofs->values())->delete();
 
             // Company Address Proof Upload
-            $old_company_addr_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_address'])->pluck('id');
+            $old_company_addr_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_address'])->pluck('id', 'url');
             foreach($request['company_addr_id_proof_files'] as $file) {
                 $this->upload_file_and_create_record($request->user()->id, $file, 'company_address');
             }
-            TradespersonFile::whereIn('id', $old_company_addr_proofs)->delete();
+            $old_company_addr_media_paths = $old_company_addr_proofs->map(function ($id, $url) {
+                return parse_url($url, PHP_URL_PATH);
+            })->toArray();
+            Storage::disk('s3')->delete($old_company_addr_media_paths);
+            TradespersonFile::whereIn('id', $old_company_addr_proofs->values())->delete();
+
+            DB::commit();
 
             return response()->json(['message' => 'Information saved successfully.'], 200);
         } catch (Exception $e) {
-            return response()->json([$e->getMessage()],500);
+            DB::rollBack();
+
+            return response()->json(['error' => $e->getMessage()],500);
         }
     }
 
