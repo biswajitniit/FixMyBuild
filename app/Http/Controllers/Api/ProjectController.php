@@ -9,6 +9,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -33,17 +34,23 @@ class ProjectController extends Controller
 
     public function add_project(Request $request){
         $validator = Validator::make($request->all(), [
+            'user_id'=> 'required|bigint',
+            'builder_category_id' => 'required|string',
             'forename' => 'required|string',
             'surname' => 'required|string',
             'project_name' => 'required|string',
             'description' => 'required|string',
             'contact_mobile_no' => 'required|string',
+            'contact_home_phone' => 'required|string',
             'contact_email' => 'required|string',
+            'postcode' => 'required|string',
+            'county' => 'required|string',
+            'town' => 'required|string',
+            'categories' => 'required|string',
+            'subcategories' => 'required|string',
+            'status' => 'required|string',
             'images' => 'required|array',
             'images.*' => 'required|max:'.(config('const.dropzone_max_file_size')*1024).'|mimetypes:'.config('const.dropzone_accepted_image'),
-        ],$messages = [
-            'mimes' => 'Please insert image only',
-            'max'   => 'Image should be less than 5 MB'
         ]);
 
         if ($validator->fails()) {
@@ -78,28 +85,27 @@ class ProjectController extends Controller
             if (!$result) {
                 throw ValidationException::withMessages(['message' => 'Something went wrong, please try again!'], 400);
             }
-            if ($result) {
-                foreach ($request->images as $file) {
-                    $fileName = $file->getClientOriginalName();
-                    $extension = $file->getClientOriginalExtension();
-                    $s3FileName = Str::uuid().'.'.$extension;
-                    $file_type = explode('/', mime_content_type($file->getRealPath()))[0];
-                    Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
-                    $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+            foreach ($request->images as $file) {
+                $fileName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $s3FileName = Str::uuid().'.'.$extension;
+                $file_type = explode('/', mime_content_type($file->getRealPath()))[0];
+                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
 
-                    $projectfile_entry = Projectfile::create([
-                        'project_id'=> $result->id,
-                        'file_type' => $file_type,
-                        'filename' => $s3FileName,
-                        'file_original_name' => $fileName,
-                        'file_extension' => $extension,
-                        'url' => $path
-                    ]);
-                }
+                $projectfile_entry = Projectfile::create([
+                    'project_id'=> $result->id,
+                    'file_type' => $file_type,
+                    'filename' => $s3FileName,
+                    'file_original_name' => $fileName,
+                    'file_extension' => $extension,
+                    'url' => $path
+                ]);
             }
 
             return response()->json(['message'=>'Project saved successfully'],200);
         } catch(Exception $e){
+            DB::rollback();
             return response()->json($e->getMessage(),500);
         }
     }
@@ -109,9 +115,6 @@ class ProjectController extends Controller
             'project_id' => 'required',
             'images' => 'required|array',
             'images.*' => 'required|max:'.(config('const.dropzone_max_file_size')*1024).'|mimetypes:'.config('const.dropzone_accepted_image'),
-        ],$messages = [
-            'mimes' => 'Please insert image only',
-            'max'   => 'Image should be less than 5 MB'
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -167,53 +170,10 @@ class ProjectController extends Controller
             }
             return response()->json(['message'=>"Project updated successfully"], 200);
         } catch(Exception $e){
+            DB::rollback();
             return response()->json($e->getMessage(), 500);
         }
     }
-
-    // public function get_file(Request $request){
-    //     $validator = Validator::make($request->all(), [
-    //         'project_id' => 'required|Project',
-    //     ]);
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
-    //     try{
-    //         $files = Projectfile::where('project_id',$request->project_id)->get();
-    //         if(!$files){
-    //             return response()->json(['message'=>'Unexpected error, please try after sometimes'],400);
-    //         }
-    //         return response()->json($files, 200);
-    //     }catch(Exception $e){
-    //         return response()->json($e->getMessage(), 500);
-    //     }
-    // }
-
-    // public function add_file(Request $request){
-    //     $validator = Validator::make($request->all(), [
-    //         'project_id' => 'required|Project',
-    //         'file_name' => 'required',
-    //         'file_extention' => 'required',
-    //         'url' => 'required',
-    //     ]);
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
-    //     try{
-    //         $projectFile = new Projectfile();
-    //         $projectFile->project_id = $request->project_id;
-    //         $projectFile->filename = $request->file_name;
-    //         $projectFile->file_extention = $request->file_extention;
-    //         $projectFile->url = $request->url;
-
-    //         if(!$projectFile->save()){
-    //             return response()->json(['message'=>'Unexpected error, please try after sometimes'],400);
-    //         }
-    //         return response()->json(['message'=>"File uploaded successfully"], 200);
-    //     } catch(Exception $e){
-    //         return response()->json($e->getMessage(), 500);
-    //     }
-    // }
 
     public function cancel_project(Request $request){
         $validator = Validator::make($request->all(), [
