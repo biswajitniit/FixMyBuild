@@ -168,8 +168,10 @@ class BuilderController extends Controller
 
             // Company Logo Upload
             if ($request['company_logo']) {
+                $old_company_logo_url = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_logo'])->pluck('url')->first();
                 $file = $request['company_logo'];
                 $this->upload_file_and_create_record($request->user()->id, $file, 'company_logo', true);
+                Storage::disk('s3')->delete(parse_url($old_company_logo_url, PHP_URL_PATH));
             }
 
             // Public Liability Insurance Upload
