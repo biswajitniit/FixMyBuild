@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 // use App\Http\Requests\ThirdPartyAuthRequest;
 
 class AuthController extends Controller
@@ -263,7 +264,7 @@ class AuthController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
 
-            return response()->json($e->getMessage(), 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -297,8 +298,10 @@ class AuthController extends Controller
                 'user'=>$user,
                 'token_type' => 'Bearer',
             ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'User not found'], 404);
         } catch (Exception $e) {
-            return response()->json($e->getMessage(),500);
+            return response()->json(['error' => $e->getMessage()],500);
         }
     }
 
