@@ -28,6 +28,7 @@ Route::namespace('Api')->group(function() {
 
 
     Route::middleware('auth:sanctum')->group(function() {
+      Route::patch('/terms-of-service/update', 'AuthController@update_terms_of_service_acceptance');
       Route::post('/change-password', 'UserController@change_password');
       Route::get('/profile', 'UserController@get_profile');
       Route::apiResource('projects', 'ProjectController',);

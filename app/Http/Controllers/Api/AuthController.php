@@ -306,6 +306,29 @@ class AuthController extends Controller
     }
 
 
+    public function update_terms_of_service_acceptance(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'terms_of_service' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $user = User::where('id', $request->user()->id)->firstOrFail();
+            $user->terms_of_service = $request->terms_of_service;
+            $user->save();
+
+            return response()->json(['message' => 'Terms of service updated successfully!'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'User not found'], 404);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
     public function verify_email(Request $request){
         $validator = Validator::make($request->all(), [
             'otp' => 'required|string',
