@@ -30,6 +30,7 @@ class User extends Authenticatable
         'email_verified_at',
         'phone',
         'customer_or_tradesperson',
+        'terms_of_service',
         'verify',
         'verification_code',
         'steps_completed',
