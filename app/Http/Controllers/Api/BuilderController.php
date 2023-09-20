@@ -158,9 +158,9 @@ class BuilderController extends Controller
                     'company_role'      => $request['company_role'],
                     'designation'       => $request['designation'],
                     'vat_reg'           => $request['vat_reg'],
-                    'vat_no'            => $request['vat_no'],
-                    'vat_comp_name'     => $request['vat_comp_name'],
-                    'vat_comp_address'  => $request['vat_comp_address'],
+                    'vat_no'            => $request['vat_reg'] ? $request['vat_no'] : null,
+                    'vat_comp_name'     => $request['vat_reg'] ? $request['vat_comp_name'] : null,
+                    'vat_comp_address'  => $request['vat_reg'] ? $request['vat_comp_address'] : null,
                 ]
             );
 
