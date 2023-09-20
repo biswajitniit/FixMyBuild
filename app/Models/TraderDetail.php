@@ -21,6 +21,7 @@ class TraderDetail extends Model
         'phone_number',
         'phone_office',
         'email',
+        'company_role',
         'designation',
         'vat_reg',
         'vat_no',
