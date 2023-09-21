@@ -12,6 +12,7 @@ use App\Models\Project;
 use App\Models\Estimate;
 use App\Models\Task;
 use App\Models\ProjectEstimateFile;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -169,9 +170,20 @@ class EstimateController extends BaseController
     }
 
 
-    public function show($id)
+    public function show(int $id)
     {
-        //
+        try {
+            $estimate = Estimate::where('id', $id)->with('tasks')->firstOrFail();
+            if ($estimate->tradesperson_id == request()->user()->id || @$estimate->project->user_id == request()->user()->id) {
+                return $this->success($estimate);
+            }
+
+            return $this->error('Forbidden', 403);
+        } catch (ModelNotFoundException $e) {
+            return $this->error('Estimate not found.', 404);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
     }
 
 
