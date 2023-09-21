@@ -173,7 +173,7 @@ class EstimateController extends BaseController
     public function show(int $id)
     {
         try {
-            $estimate = Estimate::where('id', $id)->with('tasks')->firstOrFail();
+            $estimate = Estimate::where('id', $id)->with('tasks', 'files')->firstOrFail();
             if ($estimate->tradesperson_id == request()->user()->id || @$estimate->project->user_id == request()->user()->id) {
                 return $this->success($estimate);
             }
