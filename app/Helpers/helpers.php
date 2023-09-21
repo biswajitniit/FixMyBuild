@@ -222,7 +222,7 @@ function milestone_completion_notification($task_id){
 function project_paused_notification($project_id){
     $project = Project::where('id', $project_id)->first();
     $estimate = Estimate::where('project_id', $project_id)
-                        ->where('status', 'project_started')
+                        ->where('project_awarded', 1)
                         ->first();
     $customer = Auth::user();
     $tradeperson = User::where('id', $estimate->tradesperson_id)->first();

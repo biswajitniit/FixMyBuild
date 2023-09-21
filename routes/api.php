@@ -36,6 +36,7 @@ Route::namespace('Api')->group(function() {
       Route::put('projects','ProjectController@update_project');
       Route::post('cancel-project','ProjectController@cancel_project');
       Route::post('paused-project','ProjectController@paused_project');
+      Route::post('resume-project','ProjectController@resumeProject');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');

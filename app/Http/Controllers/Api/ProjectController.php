@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Estimate;
 use App\Models\Project;
 use App\Models\Projectfile;
+use App\Models\ProjectStatusChangeLog;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Str;
@@ -34,8 +35,7 @@ class ProjectController extends Controller
 
     public function add_project(Request $request){
         $validator = Validator::make($request->all(), [
-            'user_id'=> 'required|bigint',
-            'builder_category_id' => 'required|string',
+            'user_id'=> 'required|integer',
             'forename' => 'required|string',
             'surname' => 'required|string',
             'project_name' => 'required|string',
@@ -83,15 +83,16 @@ class ProjectController extends Controller
                 'notes'=> $request->notes
             ]);
             if (!$result) {
-                throw ValidationException::withMessages(['message' => 'Something went wrong, please try again!'], 400);
+                throw ValidationException::withMessages(['message' => 'Something went wrong, please try again!'], 500);
             }
             foreach ($request->images as $file) {
+                $testFolderName = config('const.s3FolderName');
                 $fileName = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension();
                 $s3FileName = Str::uuid().'.'.$extension;
                 $file_type = explode('/', mime_content_type($file->getRealPath()))[0];
-                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
-                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+                Storage::disk('s3')->put($testFolderName.'/'.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url($testFolderName.'/'.$s3FileName);
 
                 $projectfile_entry = Projectfile::create([
                     'project_id'=> $result->id,
@@ -138,24 +139,31 @@ class ProjectController extends Controller
             $project->subcategories = $request->subcategories;
             $project->notes = $request->notes;
             if(!$project->save()){
-                return response()->json(['message'=>'Unexpected error, please try after sometimes'],400);
+                return response()->json(['message'=>'Unexpected error, please try after sometimes'],500);
             }
             //delete images
             $previousFiles = Projectfile::where('project_id', $project->id)->get();
 
             foreach ($previousFiles as $previousFile) {
-                $s3Path = 'Testfolder/' . $previousFile->filename;
-                Storage::disk('s3')->delete($s3Path);
-                $previousFile->delete();
+                $testFolderName = config('const.s3FolderName');
+                $parsedUrl = parse_url($previousFile);
+                if ($parsedUrl !== false) {
+                    $s3Path = $parsedUrl['path'];
+                    Storage::disk('s3')->delete($s3Path);
+                    $previousFile->delete();
+                } else {
+                    echo "Invalid URL";
+                }
             }
             //update images
             foreach ($request->images as $file) {
+                $testFolderName = config('const.s3FolderName');
                 $fileName = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension();
                 $s3FileName = Str::uuid().'.'.$extension;
                 $file_type = explode('/', mime_content_type($file->getRealPath()))[0];
-                Storage::disk('s3')->put('Testfolder/'.$s3FileName, file_get_contents($file->getRealPath()));
-                $path = Storage::disk('s3')->url('Testfolder/'.$s3FileName);
+                Storage::disk('s3')->put($testFolderName.'/'.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url($testFolderName.'/'.$s3FileName);
 
                 $projectfile_entry = Projectfile::updateOrCreate(
                     ['project_id' => $project->id],
@@ -182,9 +190,9 @@ class ProjectController extends Controller
         ]);
 
         try{
-            Project::where('id', $request->project_id)->update(['status' => $request->status]);
+            Project::where('id', $request->project_id)->update(['status' => 'project_cancelled']);
 
-            cancel_project_notification($request->project_id);
+            // cancel_project_notification($request->project_id); //ToDo
 
             return response()->json(['message'=>"The project has been canceled successfully."], 200);
         } catch(Exception $e){
@@ -200,11 +208,32 @@ class ProjectController extends Controller
         ]);
 
         try {
-            Project::where('id', $request->project_id)->update(['status' => $request->status]);
+            Project::where('id', $request->project_id)->update(['status' => 'project_paused']);
 
-            project_paused_notification($request->project_id);
+            // project_paused_notification($request->project_id); //ToDo
 
             return response()->json(['message'=>"The project has been paused successfully."], 200);
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function resumeProject(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required'
+        ]);
+
+        try {
+            $user = $request->user()->id;
+            Project::where('id', $request->id)->update(['status' => 'project_started']);
+            ProjectStatusChangeLog::create([
+                'project_id'        => $request->id,
+                'action_by_id'      => $user,
+                'action_by_type'    => 'user',
+                'status'            => 'project_started',
+                'status_changed_at' => now(),
+            ]);
+            return response()->json(['message'=>"The project has been resumed successfully."], 200);
         } catch(Exception $e){
             return response()->json($e->getMessage(), 500);
         }
