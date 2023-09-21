@@ -91,13 +91,13 @@ class ProjectController extends Controller
                 $extension = $file->getClientOriginalExtension();
                 $s3FileName = Str::uuid().'.'.$extension;
                 $file_type = explode('/', mime_content_type($file->getRealPath()))[0];
-                Storage::disk('s3')->put($testFolderName.'/'.$s3FileName, file_get_contents($file->getRealPath()));
-                $path = Storage::disk('s3')->url($testFolderName.'/'.$s3FileName);
+                Storage::disk('s3')->put($testFolderName.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url($testFolderName.$s3FileName);
 
                 $projectfile_entry = Projectfile::create([
                     'project_id'=> $result->id,
                     'file_type' => $file_type,
-                    'filename' => $s3FileName,
+                    'filename' => $fileName,
                     'file_original_name' => $fileName,
                     'file_extension' => $extension,
                     'url' => $path
@@ -145,7 +145,6 @@ class ProjectController extends Controller
             $previousFiles = Projectfile::where('project_id', $project->id)->get();
 
             foreach ($previousFiles as $previousFile) {
-                $testFolderName = config('const.s3FolderName');
                 $parsedUrl = parse_url($previousFile);
                 if ($parsedUrl !== false) {
                     $s3Path = $parsedUrl['path'];
@@ -162,14 +161,14 @@ class ProjectController extends Controller
                 $extension = $file->getClientOriginalExtension();
                 $s3FileName = Str::uuid().'.'.$extension;
                 $file_type = explode('/', mime_content_type($file->getRealPath()))[0];
-                Storage::disk('s3')->put($testFolderName.'/'.$s3FileName, file_get_contents($file->getRealPath()));
-                $path = Storage::disk('s3')->url($testFolderName.'/'.$s3FileName);
+                Storage::disk('s3')->put($testFolderName.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url($testFolderName.$s3FileName);
 
                 $projectfile_entry = Projectfile::updateOrCreate(
                     ['project_id' => $project->id],
                     [
                         'file_type' => $file_type,
-                        'filename' => $s3FileName,
+                        'filename' => $fileName,
                         'file_original_name' => $fileName,
                         'file_extension' => $extension,
                         'url' => $path
