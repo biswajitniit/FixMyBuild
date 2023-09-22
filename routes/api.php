@@ -33,10 +33,12 @@ Route::namespace('Api')->group(function() {
       Route::get('/profile', 'UserController@get_profile');
       Route::apiResource('projects', 'ProjectController',);
       Route::post('projects','ProjectController@add_project');
+      Route::get('last-used-address','AddressController@last_used_address');
+      Route::get('address-from-postcode','AddressController@get_area_from_postcode');
       Route::put('projects','ProjectController@update_project');
-      Route::post('cancel-project','ProjectController@cancel_project');
-      Route::post('paused-project','ProjectController@paused_project');
-      Route::post('resume-project','ProjectController@resumeProject');
+      Route::patch('projects/{project_id}/cancel','ProjectController@cancel_project');
+      Route::patch('projects/{project_id}/pause','ProjectController@pause_project');
+      Route::patch('projects/{project_id}/resume','ProjectController@resume_project');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');

@@ -428,7 +428,7 @@ if(!function_exists('recommended_projects')) {
             $query->where('reviewer_status', 'approved')
                     ->distinct('projects.id')
                     ->whereHas('subCategories', function($query) use($trader_works) {
-                        $query->whereIn('buildersubcategories.id', \Arr::pluck($trader_works, 'buildersubcategory_id'));
+                        $query->whereIn('buildersubcategories.id', Arr::pluck($trader_works, 'buildersubcategory_id'));
                     })
                     ->whereDoesntHave('estimates', function ($query) {
                         $query->where('project_awarded', 1)
@@ -465,7 +465,7 @@ if(!function_exists('lock_trader_dashboard_access')) {
 
     function lock_trader_dashboard_access() {
         $user = User::where('id', Auth::id())->first();
-        if (\Str::lower($user->customer_or_tradesperson) == 'customer')
+        if (Str::lower($user->customer_or_tradesperson) == 'customer')
             return redirect()->route('customer.profile');
         if ($user->steps_completed == 1)
             return redirect()->route('tradepersion.compregistration');

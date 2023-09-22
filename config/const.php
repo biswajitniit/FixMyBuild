@@ -102,6 +102,14 @@ return [
     ],
     // Estimate Const Ends
 
+    // Add Project Const
+    'address_types' => [
+        'POSTCODE' => 'postcode',
+        'LAST_USED_ADDRESS' => 'last_used_address',
+        'TYPE_ADDRESS' => 'type_address',
+    ],
+    // Project Const Ends
+
     's3FolderName' => 'TestFolder/',
     's3ProjectFolderName' => 'project_files/'
 ];

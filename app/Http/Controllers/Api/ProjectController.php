@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Estimate;
 use App\Models\Project;
+use App\Models\Projectaddresses;
 use App\Models\Projectfile;
 use App\Models\ProjectStatusChangeLog;
 use App\Models\User;
@@ -14,53 +15,64 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
+use App\Rules\PhoneWithDialCode;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ProjectController extends Controller
+class ProjectController extends BaseController
 {
-    public function index(Request $request){
+    public function index(Request $request) {
         $projects = Project::with('projectaddress')->where('user_id','=',$request->user()->id)->get();
         return response()->json($projects, 200);
     }
-    public function show(Request $request, Project $project){
+
+
+    public function show(Request $request, Project $project) {
         try{
             $data = Project::with('projectaddress')
                    ->with('projectfiles')
                    ->with('projectnotesandcommends')
                    ->where('id','=',$project->id)->get();
-        return response()->json($data, 200);
+            return response()->json($data, 200);
         } catch(Exception $e){
             return response()->json($e, 500);
         }
     }
 
-    public function add_project(Request $request){
+
+    public function add_project(Request $request) {
         $validator = Validator::make($request->all(), [
-            'user_id'=> 'required|integer',
-            'forename' => 'required|string',
-            'surname' => 'required|string',
-            'project_name' => 'required|string',
+            'forename' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'project_name' => 'required|string|max:255',
             'description' => 'required|string',
-            'contact_mobile_no' => 'required|string',
-            'contact_home_phone' => 'required|string',
-            'contact_email' => 'required|string',
-            'postcode' => 'required|string',
-            'county' => 'required|string',
-            'town' => 'required|string',
-            'categories' => 'required|string',
-            'subcategories' => 'required|string',
-            'status' => 'required|string',
+            'contact_mobile_no' => ['required', new PhoneWithDialCode()],
+            'contact_home_phone' => ['required', new PhoneWithDialCode()],
+            'contact_email' => ['required', 'email:rfc,dns'],
+
+            'address_type' => ['required', Rule::in(config('const.address_types'))],
+            'postcode' => ['required', 'string', 'max:10'],
+            'county' => ['required', 'string', 'max:20'],
+            'town' => ['required', 'string', 'max:20'],
+            'address_line_one' => [
+                Rule::requiredIf($request->address_types == config('const.address_types.TYPE_ADDRESS')),
+                'string', 'max:255'
+            ],
+            'address_line_two' => ['nullable', 'string', 'max:255'],
+
             'images' => 'required|array',
-            'images.*' => 'required|max:'.(config('const.dropzone_max_file_size')*1024).'|mimetypes:'.config('const.dropzone_accepted_image'),
+            'images.*' => 'required|file|max:'.(config('const.dropzone_max_file_size')*1024).'|mimetypes:'.Str::replace(' ', '', config('const.dropzone_accepted_image')),
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+
         try{
+            DB::beginTransaction();
+
             $result = Project::create([
                 'user_id'=> $request->user()->id,
-                'builder_category_id' => null,
-                'builder_subcategory_id' => null,
                 'forename' => $request->forename,
                 'surname' => $request->surname,
                 'project_name' => $request->project_name,
@@ -71,28 +83,23 @@ class ProjectController extends Controller
                 'postcode' => $request->postcode,
                 'county' => $request->county,
                 'town' => $request->town,
-                'categories' => $request->categories,
-                'subcategories' => $request->subcategories,
-                'customer_note' => null,
-                'tradeperson_note' => null,
-                'internal_note' => null,
-                'status' => $request->status,
-                'reviewer_id' => null,
-                'reviewer_status' => null,
-                'reviewer_status_updated_at' => null,
-                'notes'=> $request->notes
             ]);
-            if (!$result) {
-                throw ValidationException::withMessages(['message' => 'Something went wrong, please try again!'], 500);
-            }
-            foreach ($request->images as $file) {
-                $testFolderName = config('const.s3FolderName');
+
+            Projectaddresses::create([
+                'project_id' => $result->id,
+                'address_line_one' => $request->address_line_one,
+                'address_line_two' => $request->address_line_two,
+                'town_city' => $request->town,
+                'postcode' => $request->postcode,
+            ]);
+
+            foreach ($request->file('images') as $file) {
                 $fileName = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension();
                 $s3FileName = Str::uuid().'.'.$extension;
                 $file_type = explode('/', mime_content_type($file->getRealPath()))[0];
-                Storage::disk('s3')->put($testFolderName.$s3FileName, file_get_contents($file->getRealPath()));
-                $path = Storage::disk('s3')->url($testFolderName.$s3FileName);
+                Storage::disk('s3')->put(config('const.s3FolderName').$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url(config('const.s3FolderName').$s3FileName);
 
                 $projectfile_entry = Projectfile::create([
                     'project_id'=> $result->id,
@@ -104,14 +111,18 @@ class ProjectController extends Controller
                 ]);
             }
 
-            return response()->json(['message'=>'Project saved successfully'],200);
+            DB::commit();
+
+            return $this->success('Project added successfully!',200);
         } catch(Exception $e){
             DB::rollback();
-            return response()->json($e->getMessage(),500);
+
+            return $this->error(['error' => $e->getMessage()],500);
         }
     }
 
-    public function update_project(Request $request){
+
+    public function update_project(Request $request) {
         $validator = Validator::make($request->all(), [
             'project_id' => 'required',
             'images' => 'required|array',
@@ -121,9 +132,11 @@ class ProjectController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
         try{
-            $project =Project::where('id',$request->project_id)->first();
+            DB::beginTransaction();
+
+            $project = Project::where('id',$request->project_id)->first();
             if (!$project) {
-                return response()->json(['message' => 'Project not found'], 404);
+                return $this->error('Project not found!', 404);
             }
             $project->forename = $request->forename;
             $project->surname = $request->surname;
@@ -175,66 +188,79 @@ class ProjectController extends Controller
                     ]
                 );
             }
+
+            DB::commit();
+
             return response()->json(['message'=>"Project updated successfully"], 200);
         } catch(Exception $e){
             DB::rollback();
-            return response()->json($e->getMessage(), 500);
+
+            return $this->error(['error' => $e->getMessage()], 500);
         }
     }
 
-    public function cancel_project(Request $request){
-        $validator = Validator::make($request->all(), [
-            'project_id' => 'required',
-            'status' => 'required'
-        ]);
 
+    public function cancel_project(Request $request, int $project_id) {
         try{
-            Project::where('id', $request->project_id)->update(['status' => 'project_cancelled']);
+            $project = Project::findOrFail($project_id);
+            $project->status = config('const.project_status.PROJECT_CANCELLED');
+            $project->save();
 
-            // cancel_project_notification($request->project_id); //ToDo
+            // ToDo: Send email notification to traders and customers
+            // cancel_project_notification($project_id);
 
-            return response()->json(['message'=>"The project has been canceled successfully."], 200);
+            return $this->success("The project has been canceled successfully.", 200);
+        } catch(ModelNotFoundException $e){
+            return $this->error('Project Not Found.', 404);
         } catch(Exception $e){
             return response()->json($e->getMessage(), 500);
         }
     }
 
 
-    public function paused_project(Request $request){
-        $validator = Validator::make($request->all(), [
-            'project_id' => 'required',
-            'status' => 'required'
-        ]);
-
+    public function pause_project(Request $request, $project_id) {
         try {
-            Project::where('id', $request->project_id)->update(['status' => 'project_paused']);
+            $project = Project::findOrFail($project_id);
+            $project->status = config('const.project_status.PROJECT_PAUSED');
+            $project->save();
 
-            // project_paused_notification($request->project_id); //ToDo
+            // ToDo: Send email notification to traders and customers
+            // project_paused_notification($request->project_id);
 
-            return response()->json(['message'=>"The project has been paused successfully."], 200);
+            return $this->success("The project has been paused successfully.", 200);
+        } catch(ModelNotFoundException $e){
+            return $this->error('Project Not Found.', 404);
         } catch(Exception $e){
-            return response()->json($e->getMessage(), 500);
+            return $this->error(['error' => $e->getMessage()], 500);
         }
     }
 
-    public function resumeProject(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'status' => 'required'
-        ]);
+
+    public function resume_project(Request $request, $project_id) {
 
         try {
-            $user = $request->user()->id;
-            Project::where('id', $request->id)->update(['status' => 'project_started']);
+            DB::beginTransaction();
+
+            // TODO: If customer pause the project then only they can resume the project and if trader pause the project then only they can resume the project.
+            $project = Project::findOrFail($project_id);
+            $project->status = config('const.project_status.PROJECT_STARTED');
+            $project->save();
+
             ProjectStatusChangeLog::create([
-                'project_id'        => $request->id,
-                'action_by_id'      => $user,
+                'project_id'        => $project_id,
+                'action_by_id'      => request()->user()->id,
                 'action_by_type'    => 'user',
-                'status'            => 'project_started',
+                'status'            => config('const.project_status.PROJECT_STARTED'),
                 'status_changed_at' => now(),
             ]);
-            return response()->json(['message'=>"The project has been resumed successfully."], 200);
+
+            DB::commit();
+
+            return $this->success("The project has been resumed successfully.", 200);
         } catch(Exception $e){
-            return response()->json($e->getMessage(), 500);
+            DB::rollBack();
+
+            return $this->error(['error' => $e->getMessage()], 500);
         }
     }
 }
