@@ -221,7 +221,9 @@ function milestone_completion_notification($task_id){
 
 function project_paused_notification($project_id){
     $project = Project::where('id', $project_id)->first();
-    $estimate = Estimate::where('project_id', $project_id)->first();
+    $estimate = Estimate::where('project_id', $project_id)
+                        ->where('project_awarded', 1)
+                        ->first();
     $customer = Auth::user();
     $tradeperson = User::where('id', $estimate->tradesperson_id)->first();
     $notify_settings_customer = Notification::where('user_id', Auth::user()->id)->first();
@@ -342,7 +344,7 @@ function cancel_project_notification($projectId){
     $notify_settings = Notification::where('user_id', $user->id)->first();
     if($notify_settings) {
         if($notify_settings->settings != null){
-            $noti_cancelled = $notify_settings->settings['noti_quote_rejected'];
+            $noti_cancelled = $notify_settings->settings['noti_project_cancelled'];
         } else {
             $noti_cancelled = 1;
         }
@@ -364,7 +366,7 @@ function cancel_project_notification($projectId){
         );
         $email_sent = send_email($emaildata);
 
-        // Notificatin Insert in DB
+        // Notification Insert in DB
         $notificationDetail = new NotificationDetail();
         $notificationDetail->user_id = $user->id;
         $notificationDetail->from_user_id = Auth::user()->id;

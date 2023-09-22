@@ -10,13 +10,27 @@ class Project extends Model
     use HasFactory;
     protected $fillable =[
         'user_id',
-        'project_address_id',
+        'builder_category_id',
+        'builder_subcategory_id',
         'forename',
         'surname',
         'project_name',
         'description',
         'contact_mobile_no',
+        'contact_home_phone',
         'contact_email',
+        'postcode',
+        'county',
+        'town',
+        'categories',
+        'subcategories',
+        'customer_note',
+        'tradeperson_note',
+        'internal_note',
+        'status',
+        'reviewer_id',
+        'reviewer_status',
+        'reviewer_status_updated_at',
         'notes'
     ];
 
