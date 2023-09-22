@@ -52,7 +52,14 @@ class AddressController extends BaseController
 
         try {
             $last_used_project = Project::where('user_id', request()->user()->id)->latest()->first();
+            if (!$last_used_project) {
+                return $this->error("No project found.", 500);
+            }
+
             $last_used_address = Projectaddresses::where('project_id', $last_used_project->id)->first();
+            if (!$last_used_address) {
+                return $this->error("No project address found.", 500);
+            }
 
             $resultant_data = [
                 'county' => $last_used_project->county,
