@@ -31,11 +31,11 @@ Route::namespace('Api')->group(function() {
       Route::patch('/terms-of-service/update', 'AuthController@update_terms_of_service_acceptance');
       Route::post('/change-password', 'UserController@change_password');
       Route::get('/profile', 'UserController@get_profile');
-      Route::apiResource('projects', 'ProjectController',);
-      Route::post('projects','ProjectController@add_project');
       Route::get('last-used-address','AddressController@last_used_address');
       Route::get('address-from-postcode','AddressController@get_area_from_postcode');
-      Route::put('projects','ProjectController@update_project');
+      Route::apiResource('projects', 'ProjectController',);
+      Route::post('projects','ProjectController@add_project');
+      Route::put('projects/{project_id}/update','ProjectController@update_project');
       Route::patch('projects/{project_id}/cancel','ProjectController@cancel_project');
       Route::patch('projects/{project_id}/pause','ProjectController@pause_project');
       Route::patch('projects/{project_id}/resume','ProjectController@resume_project');

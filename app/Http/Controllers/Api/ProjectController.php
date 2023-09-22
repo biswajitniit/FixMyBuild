@@ -122,22 +122,45 @@ class ProjectController extends BaseController
     }
 
 
-    public function update_project(Request $request) {
+    public function update_project(Request $request, $project_id) {
         $validator = Validator::make($request->all(), [
-            'project_id' => 'required',
+            'forename' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'project_name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'contact_mobile_no' => ['required', new PhoneWithDialCode()],
+            'contact_home_phone' => ['required', new PhoneWithDialCode()],
+            'contact_email' => ['required', 'email:rfc,dns'],
+            'address_type' => ['required', Rule::in(config('const.address_types'))],
+            'postcode' => ['required', 'string', 'max:10'],
+            'county' => ['required', 'string', 'max:20'],
+            'town' => ['required', 'string', 'max:20'],
+            'address_line_one' => [
+                Rule::requiredIf($request->address_types == config('const.address_types.TYPE_ADDRESS')),
+                'string', 'max:255'
+            ],
+            'address_line_two' => ['nullable', 'string', 'max:255'],
             'images' => 'required|array',
-            'images.*' => 'required|max:'.(config('const.dropzone_max_file_size')*1024).'|mimetypes:'.config('const.dropzone_accepted_image'),
+            'images.*' => 'required|file|max:'.(config('const.dropzone_max_file_size')*1024).'|mimetypes:'.Str::replace(' ', '', config('const.dropzone_accepted_image')),
         ]);
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+
         try{
             DB::beginTransaction();
 
-            $project = Project::where('id',$request->project_id)->first();
+            $project = Project::where('id', $project_id)->first();
+
             if (!$project) {
                 return $this->error('Project not found!', 404);
             }
+
+            if($project->user_id != request()->user()->id) {
+                return $this->error('You are not authorized to update this project!', 403);
+            }
+
             $project->forename = $request->forename;
             $project->surname = $request->surname;
             $project->project_name = $request->project_name;
@@ -148,27 +171,21 @@ class ProjectController extends BaseController
             $project->postcode = $request->postcode;
             $project->county = $request->county;
             $project->town = $request->town;
-            $project->categories = $request->categories;
-            $project->subcategories = $request->subcategories;
-            $project->notes = $request->notes;
             if(!$project->save()){
-                return response()->json(['message'=>'Unexpected error, please try after sometimes'],500);
+                return response()->json(['error'=>'Unexpected error, please try after sometimes'],500);
             }
-            //delete images
-            $previousFiles = Projectfile::where('project_id', $project->id)->get();
 
-            foreach ($previousFiles as $previousFile) {
-                $parsedUrl = parse_url($previousFile);
-                if ($parsedUrl !== false) {
-                    $s3Path = $parsedUrl['path'];
-                    Storage::disk('s3')->delete($s3Path);
-                    $previousFile->delete();
-                } else {
-                    echo "Invalid URL";
-                }
-            }
+            Projectaddresses::where('project_id', $project->id)->update([
+                'address_line_one' => $request->address_line_one,
+                'address_line_two' => $request->address_line_two,
+                'town_city' => $request->town,
+                'postcode' => $request->postcode,
+            ]);
+
+            $old_project_files = Projectfile::where('project_id', $project->id)->select('id','url')->get()->toArray();
+
             //update images
-            foreach ($request->images as $file) {
+            foreach ($request->file('images') as $file) {
                 $testFolderName = config('const.s3FolderName');
                 $fileName = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension();
@@ -177,17 +194,30 @@ class ProjectController extends BaseController
                 Storage::disk('s3')->put($testFolderName.$s3FileName, file_get_contents($file->getRealPath()));
                 $path = Storage::disk('s3')->url($testFolderName.$s3FileName);
 
-                $projectfile_entry = Projectfile::updateOrCreate(
-                    ['project_id' => $project->id],
-                    [
-                        'file_type' => $file_type,
-                        'filename' => $fileName,
-                        'file_original_name' => $fileName,
-                        'file_extension' => $extension,
-                        'url' => $path
-                    ]
-                );
+                Projectfile::create([
+                    'project_id' => $project->id,
+                    'file_type' => $file_type,
+                    'filename' => $fileName,
+                    'file_original_name' => $fileName,
+                    'file_extension' => $extension,
+                    'url' => $path
+                ]);
             }
+
+            $old_media_paths = array_map(function($file) {
+                return parse_url($file['url'], PHP_URL_PATH);
+            }, $old_project_files);
+
+            $successfully_deleted = Storage::disk('s3')->delete($old_media_paths);
+            if(!$successfully_deleted){
+                throw new Exception('Something went wrong, please try again later.');
+            }
+
+            $old_media_ids = array_map(function($file) {
+                return parse_url($file['id'], PHP_URL_PATH);
+            }, $old_project_files);
+
+            ProjectFile::whereIn('id', $old_media_ids)->delete();
 
             DB::commit();
 
