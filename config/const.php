@@ -78,6 +78,13 @@ return [
         'trader_project_paused',
     ],
 
+    'project_history_statuses' => [
+        'project_cancelled',
+        'project_paused',
+        'project_completed',
+        'trader_project_paused',
+    ],
+
     // Estimates Const Starts
     'unable_to_describe_type' => [
         'NEED_MORE_INFO' => 'Need_more_info',

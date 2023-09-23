@@ -31,8 +31,30 @@ class ProjectController extends BaseController
 
 
     public function index(Request $request) {
-        $projects = Project::with('projectaddress')->where('user_id','=',$request->user()->id)->get();
-        return response()->json($projects, 200);
+        $validator = Validator::make(request()->all(), [
+            'history' => 'nullable|boolean',
+            'new' => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $projects = Project::with('projectaddress')
+                ->where('user_id', $request->user()->id)
+                ->when(($request->filled('history') && $request->history == 1) && !($request->filled('new') && $request->new == 1), function ($query) {
+                    return $query->whereIn('status', config('const.project_history_statuses'));
+                })
+                ->when(($request->filled('new') && $request->new == 1) && !($request->filled('history') && $request->history == 1), function ($query) {
+                    return $query->whereNotIn('status', config('const.project_history_statuses'));
+                })
+                ->get();
+
+            return response()->json($projects, 200);
+        } catch (Exception $e) {
+            return $this->error(['errors' => $e->getMessage()], 500);
+        }
     }
 
 
