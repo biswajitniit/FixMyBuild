@@ -18,6 +18,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
 use App\Rules\PhoneWithDialCode;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Resources\CustomerProjectCollection;
 
 class ProjectController extends BaseController
 {
@@ -34,6 +35,10 @@ class ProjectController extends BaseController
         $validator = Validator::make(request()->all(), [
             'history' => 'nullable|boolean',
             'new' => 'nullable|boolean',
+            'order_by' => 'nullable|string|max:191',
+            'order_by_type' => 'nullable|string|in:desc,asc',
+            'limit' => 'nullable|numeric',
+            'page' => 'nullable|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -49,9 +54,14 @@ class ProjectController extends BaseController
                 ->when(($request->filled('new') && $request->new == 1) && !($request->filled('history') && $request->history == 1), function ($query) {
                     return $query->whereNotIn('status', config('const.project_history_statuses'));
                 })
-                ->get();
+                ->when($request->filled('order_by'), function ($query) use ($request) {
+                    $query->orderBy('projects.'.$request->order_by, $request->order_by_type ?? 'desc');
+                }, function ($query) {
+                    $query->orderBy('projects.created_at', 'desc');
+                })
+                ->paginate($request->limit ?? Project::count());
 
-            return response()->json($projects, 200);
+            return $this->success((new CustomerProjectCollection($projects))->additional($projects));
         } catch (Exception $e) {
             return $this->error(['errors' => $e->getMessage()], 500);
         }
