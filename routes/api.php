@@ -28,17 +28,17 @@ Route::namespace('Api')->group(function() {
 
 
     Route::middleware('auth:sanctum')->group(function() {
-      Route::patch('/terms-of-service/update', 'AuthController@update_terms_of_service_acceptance');
+      Route::post('/terms-of-service/update', 'AuthController@update_terms_of_service_acceptance');
       Route::post('/change-password', 'UserController@change_password');
       Route::get('/profile', 'UserController@get_profile');
       Route::get('last-used-address','AddressController@last_used_address');
       Route::get('address-from-postcode','AddressController@get_area_from_postcode');
       Route::apiResource('projects', 'ProjectController',);
       Route::post('projects','ProjectController@add_project');
-      Route::put('projects/{project_id}/update','ProjectController@update_project');
-      Route::patch('projects/{project_id}/cancel','ProjectController@cancel_project');
-      Route::patch('projects/{project_id}/pause','ProjectController@pause_project');
-      Route::patch('projects/{project_id}/resume','ProjectController@resume_project');
+      Route::post('projects/{project_id}/update','ProjectController@update_project');
+      Route::post('projects/{project_id}/cancel','ProjectController@cancel_project');
+      Route::post('projects/{project_id}/pause','ProjectController@pause_project');
+      Route::post('projects/{project_id}/resume','ProjectController@resume_project');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
@@ -54,7 +54,7 @@ Route::namespace('Api')->group(function() {
         Route::get('projects/', 'TradespersonProjectController@index');
         Route::get('estimate/{id}', 'EstimateController@show');
         Route::post('projects/{project_id}/write-estimate', 'EstimateController@store');
-        Route::put('projects/{project_id}/write-estimate/update', 'EstimateController@update');
+        Route::post('projects/{project_id}/write-estimate/update', 'EstimateController@update');
       });
 
     });
