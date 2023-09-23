@@ -27,21 +27,22 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+
         try{
             $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages(['errors' => ['email' => ['The provided credentials are incorrect!']]], 422);
-        }
+            if (! $user || ! Hash::check($request->password, @$user->password)) {
+                return response()->json(['errors' => ['email' => ['The provided credentials are incorrect!']]], 422);
+            }
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
+            $token = $user->createToken($request->device_name)->plainTextToken;
 
-        return response()->json([
-            'access_token' => $token,
-            'user_type'=> $user->customer_or_tradesperson,
-            'user'=>$user,
-            'token_type' => 'Bearer',
-        ], 200);
+            return response()->json([
+                'access_token' => $token,
+                'user_type'=> $user->customer_or_tradesperson,
+                'user'=>$user,
+                'token_type' => 'Bearer',
+            ], 200);
         } catch(Exception $e){
             return response()->json($e->getMessage(),500);
         }

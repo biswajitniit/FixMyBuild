@@ -38,6 +38,9 @@ return [
     'customer_feedback_parallel_file_upload'            => env('CUSTOMER_FEEDBACK_PARALLEL_FILE_UPLOAD', 6),
     'customer_feedback_max_file_upload'                 => env('CUSTOMER_FEEDBACK_MAX_FILE_UPLOAD', 6),
 
+    'customer_profile_image_size'                       => env('CUSTOMER_PROFILE_IMAGE_SIZE', 5),
+    'customer_profile_image_accepted_file_types'        => env('CUSTOMER_PROFILE_IMAGE_ACCEPTED_FILE_TYPES', "image/heic,image/heif,image/jpeg,image/png,image/svg+xml,image/webp"),
+
     'providers'=> [
         'GOOGLE' => 'google',
         'MICROSOFT' => 'microsoft',

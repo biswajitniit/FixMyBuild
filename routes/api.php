@@ -32,6 +32,7 @@ Route::namespace('Api')->group(function() {
       Route::apiResource('projects', 'ProjectController',);
       Route::post('projects','ProjectController@add_project');
       Route::put('projects','ProjectController@update_project');
+      Route::put('profile-update','CustomerController@update_customer_profile');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
