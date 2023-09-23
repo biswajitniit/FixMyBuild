@@ -183,9 +183,9 @@ class BuilderController extends Controller
             foreach ($request['public_liability_insurance_files'] as $file) {
                 $this->upload_file_and_create_record($request->user()->id, $file, 'public_liability_insurance');
             }
-        $old_pli_media_paths = $old_public_liability_insurances->map(function ($id, $url) {
-            return parse_url($url, PHP_URL_PATH);
-        })->toArray();
+            $old_pli_media_paths = $old_public_liability_insurances->map(function ($id, $url) {
+                return parse_url($url, PHP_URL_PATH);
+            })->toArray();
             Storage::disk('s3')->delete($old_pli_media_paths);
             TradespersonFile::whereIn('id', $old_public_liability_insurances->values())->delete();
 

@@ -29,7 +29,7 @@ class TradespersonProjectController extends BaseController
             if ($request->filled('history') && $request->history == 1) {
                 $projects = Project::where('reviewer_status', 'approved')
                     ->where(function ($query) use ($request) {
-                        $query->whereIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
+                        $query->whereIn('status', config('const.trader_project_history_statuses'))
                             ->whereIn('id', Estimate::where(['tradesperson_id' => $request->user()->id, 'project_awarded' => 1])
                                 ->pluck('project_id')
                                 ->toArray()
@@ -56,7 +56,7 @@ class TradespersonProjectController extends BaseController
                             $sub_q->where('estimates.status', '<>', 'trader_rejected')->orWhereNull('estimates.status');
                         })->pluck('project_id'))
                         ->where('reviewer_status', 'approved')
-                        ->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review']);
+                        ->whereNotIn('status', config('const.trader_project_history_statuses'));
                     })
                     ->when($request->filled('order_by'), function ($query) use ($request) {
                         $query->orderBy($request->order_by, $request->order_by_type ?? 'desc');
@@ -67,7 +67,7 @@ class TradespersonProjectController extends BaseController
             } else if ($request->filled('ongoing') && $request->ongoing == 1) {
                 $projects = Project::where(function ($query) use ($request) {
                     $query->where('reviewer_status', 'approved')
-                        ->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
+                        ->whereNotIn('status', config('const.trader_project_history_statuses'))
                         ->whereIn('projects.id', Estimate::where([
                             'tradesperson_id'=> $request->user()->id,
                             'project_awarded'=> 1,
@@ -88,11 +88,11 @@ class TradespersonProjectController extends BaseController
                                 $sub_q->where('estimates.status', '<>', 'trader_rejected')->orWhereNull('estimates.status');
                             })->pluck('project_id'))
                             ->where('reviewer_status', 'approved')
-                            ->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review']);
+                            ->whereNotIn('status', config('const.trader_project_history_statuses'));
                         })
                         ->orWhere(function ($q) use ($request) {
                             $q->where('reviewer_status', 'approved')
-                                ->whereNotIn('status', ['project_cancelled', 'project_paused', 'project_completed', 'awaiting_your_review'])
+                                ->whereNotIn('status', config('const.trader_project_history_statuses'))
                                 ->whereIn('projects.id', Estimate::where([
                                     'tradesperson_id'=> $request->user()->id,
                                     'project_awarded'=> 1,

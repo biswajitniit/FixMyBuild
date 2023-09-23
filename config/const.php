@@ -66,7 +66,16 @@ return [
         'PROJECT_STARTED' => 'project_started',
         'PROJECT_CANCELLED' => 'project_cancelled',
         'PROJECT_PAUSED' => 'project_paused',
+        'TRADER_PROJECT_PAUSED' => 'trader_project_paused',
         'PROJECT_COMPLETED' => 'project_completed',
+    ],
+
+    'trader_project_history_statuses' => [
+        'project_cancelled',
+        'project_paused',
+        'project_completed',
+        'awaiting_your_review',
+        'trader_project_paused',
     ],
 
     // Estimates Const Starts
