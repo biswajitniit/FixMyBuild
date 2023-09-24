@@ -15,12 +15,35 @@ use App\Models\ProjectEstimateFile;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Traderareas;
+use App\Models\ProjectCategory;
+use App\Models\Traderworks;
 
 class EstimateController extends BaseController
 {
-    public function index()
+    // Customer Estimate Listing API
+    public function index($project)
     {
-        //
+        try {
+            $project = Project::findorFail($project);
+            $estimate = Estimate::where('project_id', $project->id)->get()->toArray();
+
+            // Trader Counts
+            $trader_who_submitted_estimate = array_column($estimate, 'tradesperson_id');
+            $trader_id_matched_areas = Traderareas::where(['county' => $project->county, 'town' => $project->town])->whereNotIn('user_id', $trader_who_submitted_estimate)->pluck('user_id');
+            $project_categories = ProjectCategory::where('project_id', $project->id)->pluck('sub_category_id');
+            $estimate['remaining_trader_count'] = Traderworks::whereIn('buildersubcategory_id', $project_categories)->whereIn('user_id', $trader_id_matched_areas)->count();
+
+            if ($project->user_id == request()->user()->id) {
+                return $this->success($estimate);
+            }
+
+            return $this->error('You are not authorized to view the estimates of this project.', 403);
+        } catch (ModelNotFoundException $e) {
+            return $this->error('Project not found.', 404);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
     }
 
 

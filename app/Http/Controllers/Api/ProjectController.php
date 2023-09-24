@@ -68,15 +68,19 @@ class ProjectController extends BaseController
     }
 
 
-    public function show(Request $request, Project $project) {
+    public function show(Request $request, $project) {
         try{
             $data = Project::with('projectaddress')
                    ->with('projectfiles')
                    ->with('projectnotesandcommends')
-                   ->where('id','=',$project->id)->get();
+                   ->where('id',$project)
+                   ->get();
+
             return response()->json($data, 200);
+        } catch(ModelNotFoundException $e){
+            return response()->json("Project not found!", 500);
         } catch(Exception $e){
-            return response()->json($e, 500);
+            return response()->json($e->getMessage(), 500);
         }
     }
 
