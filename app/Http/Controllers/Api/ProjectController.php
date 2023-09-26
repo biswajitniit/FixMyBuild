@@ -286,7 +286,8 @@ class ProjectController extends BaseController
             $project->status = config('const.project_status.PROJECT_CANCELLED');
             $project->save();
 
-            cancel_project_notification($project_id);
+            // TODO: Send email notification to traders and customers
+            // cancel_project_notification($project_id);
 
             return $this->success("The project has been cancelled successfully.", 200);
         } catch(ModelNotFoundException $e){
@@ -300,8 +301,11 @@ class ProjectController extends BaseController
     public function pause_project(Request $request, $project_id) {
         try {
             $project = Project::findOrFail($project_id);
-            $old_project_status = $project->status;
             $estimate = Estimate::where(['project_id' => $project->id, 'project_awarded' => 1])->first();
+
+            if (!$estimate || $project->status != config('const.project_status.PROJECT_STARTED')) {
+                return $this->error('You can only pause a project which has been started! ', 400);
+            }
 
             if ($project->user_id == request()->user()->id) {
                 $project->status = config('const.project_status.PROJECT_PAUSED');
@@ -309,10 +313,6 @@ class ProjectController extends BaseController
                 $project->status = config('const.project_status.TRADER_PROJECT_PAUSED');
             } else {
                 return $this->error('You are not authorized to pause this project!', 403);
-            }
-
-            if (!$estimate || $old_project_status != config('const.project_status.PROJECT_STARTED')) {
-                return $this->error('You can only pause a project which has been started! ', 400);
             }
 
             $project->save();
@@ -336,6 +336,10 @@ class ProjectController extends BaseController
 
             $project = Project::findOrFail($project_id);
             $estimate = $project->estimates()->where('project_awarded', 1)->first();
+
+            if (!($project->status == config('const.project_status.PROJECT_PAUSED') || $project->status == config('const.project_status.TRADER_PROJECT_PAUSED'))) {
+                return $this->error('Only paused project can be resumed!', 400);
+            }
 
             if (! $this->can_resume_project($project, $estimate)) {
                 return $this->error('You are not authorized to resume this project!', 403);
