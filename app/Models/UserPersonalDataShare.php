@@ -12,4 +12,11 @@ class UserPersonalDataShare extends Model
     protected $casts = [
         'settings' => 'json'
     ];
+
+    protected $fillable = [
+        'user_id',
+        'project_id',
+        'tradeperson_id',
+        'settings',
+    ];
 }

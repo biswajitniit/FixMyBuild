@@ -55,12 +55,16 @@ Route::namespace('Api')->group(function() {
         Route::get('estimate/{id}', 'EstimateController@show');
         Route::post('projects/{project_id}/write-estimate', 'EstimateController@store');
         Route::post('projects/{project_id}/write-estimate/update', 'EstimateController@update');
+        Route::post('projects/{project_id}/reject', 'TradespersonProjectController@reject');
+        Route::post('estimates/{estimate}/recall', 'EstimateController@recall');
       });
 
-    // Trader Specific routes
-    Route::prefix('customer/')->group(function() {
+      // Customer Specific routes
+      Route::prefix('customer/')->group(function() {
         Route::get('projects/{project}/estimates', 'EstimateController@index');
-    });
+        Route::post('estimates/{estimate}/accept', 'EstimateController@accept');
+        Route::post('estimates/{estimate}/reject', 'EstimateController@reject');
+      });
 
     });
 });

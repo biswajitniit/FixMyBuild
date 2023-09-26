@@ -71,11 +71,11 @@ return [
     ],
 
     'trader_project_history_statuses' => [
-        'project_cancelled',
-        'project_paused',
-        'project_completed',
-        'awaiting_your_review',
-        'trader_project_paused',
+        'PROJECT_CANCELLED' => 'project_cancelled',
+        'PROJECT_PAUSED' => 'project_paused',
+        'PROJECT_COMPLETED' => 'project_completed',
+        'AWAITING_YOUR_REVIEW' => 'awaiting_your_review',
+        'TRADER_PROJECT_PAUSED' => 'trader_project_paused',
     ],
 
     'project_history_statuses' => [
