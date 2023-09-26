@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Estimate;
+use App\Models\Notification;
+use App\Models\NotificationDetail;
 use App\Models\Project;
 use App\Models\Projectfile;
 use App\Models\ProjectStatusChangeLog;
 use App\Models\User;
+use App\Models\UserPersonalDataShare;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -233,6 +237,188 @@ class ProjectController extends Controller
                 'status_changed_at' => now(),
             ]);
             return response()->json(['message'=>"The project has been resumed successfully."], 200);
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function view_all_estimates(Request $request){
+        try{
+            $estimates = Estimate::where('project_id', $request->id)->get();
+            if(!$estimates) {
+                return response()->json(['message'=>"You have no estimate."]);
+            }
+            return response()->json($estimates,200);
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function accept_estimate(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tradesperson_id' => 'required|integer',
+            'status' => 'required|string',
+            'settings' => 'required|json',
+            'project_awarded' => 'required|integer|max:1',
+            'project_id' => 'required|integer',
+            'action_by_id' => 'required|integer',
+            'action_by_type' => 'required|string',
+            'status_changed_at' => 'required|date|date_format:Y-m-d H:i:s',
+            'read_status' => 'required|integer|max:1',
+            'notification_text' => 'required|string',
+            'related_to_id' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $estimate = Estimate::where('id', $request->estimate_id)->first();
+            $tradeperson = User::where('id', $estimate->tradesperson_id)->first();
+            $project = Project::where('id', $estimate->project_id)->first();
+            $user_personal_data = UserPersonalDataShare::where('project_id', $estimate->project_id)->first();
+
+            // Update project table
+            Project::where('id', $estimate->project_id)
+                    ->update([
+                        'status' => 'project_started'
+                    ]);
+            // Update estimate table
+            Estimate::where('id', $estimate->id)
+                    ->update([
+                        'project_awarded' => 1,
+                        'status' => 'awarded'
+                    ]);
+            //Insert data into project_status_change_log table
+            $projStatusChangeLog = new ProjectStatusChangeLog();
+            $projStatusChangeLog->project_id = $project->id;
+            $projStatusChangeLog->action_by_id = $request->user()->id;
+            $projStatusChangeLog->action_by_type = 'user';
+            $projStatusChangeLog->status = 'project_started';
+            $projStatusChangeLog->status_changed_at = Carbon::now();
+            $projStatusChangeLog->save();
+            //Insert data into user_personal_data_shares table
+            if ($user_personal_data) {
+                UserPersonalDataShare::where('project_id', $project->id)
+                                        ->update([
+                                            'settings' => $request->settings
+                                        ]);
+            } else {
+                $userPersonalData = new UserPersonalDataShare();
+                $userPersonalData->user_id = $request->user()->id;
+                $userPersonalData->project_id = $project->id;
+                $userPersonalData->tradeperson_id = $tradeperson->id;
+                $userPersonalData->settings = $request->settings;
+                $userPersonalData->save();
+            }
+
+            // Check Notification settings
+            $notify_settings = Notification::where('user_id', $tradeperson->id)->first();
+            if($notify_settings) {
+                if($notify_settings->settings != null){
+                    $noti_accepted = $notify_settings->settings['noti_quote_accepted'];
+                } else {
+                    $noti_accepted = 1;
+                }
+            }
+            // Notification
+            if($noti_accepted == 1){
+                $html = view('email.estimate-accepted-email')
+                        ->with('data', [
+                        'project_name'       => $project->project_name,
+                        'user_name'          => $tradeperson->name
+                        ])
+                        ->render();
+                $emaildata = array(
+                    'From'          =>  env('MAIL_FROM_ADDRESS'),
+                    'To'            =>  $tradeperson->email,
+                    'Subject'       => 'Your given estimate has been accepted',
+                    'HtmlBody'      =>  $html,
+                    'MessageStream' => 'outbound'
+                );
+                $email_sent = send_email($emaildata);
+
+                // Insert data into Notification_details table
+                $notificationDetail = new NotificationDetail();
+                $notificationDetail->user_id = $tradeperson->id;
+                $notificationDetail->from_user_id = $request->user()->id;
+                $notificationDetail->from_user_type = 'customer';
+                $notificationDetail->related_to = 'project';
+                $notificationDetail->related_to_id = $project->id;
+                $notificationDetail->read_status = 0;
+                $notificationDetail->notification_text = 'Your given estimate has been accepted';
+                $notificationDetail->reviewer_note = null;
+                $notificationDetail->save();
+            }
+
+            return response()->json(['message'=>"You have accepted the estimate."]);
+
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function reject_estimate(Request $request){
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|string',
+            'related_to_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $estimate = Estimate::where('id', $request->estimate_id)->first();
+            $tradeperson = User::where('id', $estimate->tradesperson_id)->first();
+            $project = Project::where('id', $estimate->project_id)->first();
+
+            Estimate::where('id', $estimate->id)
+                    ->update([
+                        'status' => 'rejected'
+                    ]);
+
+            // Check Notification settings
+            $notify_settings = Notification::where('user_id', $tradeperson->id)->first();
+            if($notify_settings) {
+                if($notify_settings->settings != null){
+                    $noti_rejected = $notify_settings->settings['noti_quote_rejected'];
+                } else {
+                    $noti_rejected = 1;
+                }
+            }
+            // mail
+            if($noti_rejected == 1){
+                $html = view('email.estimate-rejected-email')
+                                ->with('data', [
+                                'project_name'       => $project->project_name,
+                                'user_name'          => $tradeperson->name
+                                ])
+                                ->render();
+                $emaildata = array(
+                    'From'          =>  env('MAIL_FROM_ADDRESS'),
+                    'To'            =>  $tradeperson->email,
+                    'Subject'       => 'Your given estimate has been rejected',
+                    'HtmlBody'      =>  $html,
+                    'MessageStream' => 'outbound'
+                );
+                $email_sent = send_email($emaildata);
+
+                // new entry in notification_details table
+                $notificationDetail = new NotificationDetail();
+                $notificationDetail->user_id = $tradeperson->id;
+                $notificationDetail->from_user_id = $request->user()->id;
+                $notificationDetail->from_user_type = $request->user()->customer_or_tradesperson;
+                $notificationDetail->related_to = 'project';
+                $notificationDetail->related_to_id = $project->id;
+                $notificationDetail->read_status = 0;
+                $notificationDetail->notification_text = 'Your given estimate for '.$project->project_name.' has been rejected';
+                $notificationDetail->reviewer_note = null;
+                $notificationDetail->save();
+            }
+
+            return response()->json(['message'=>"You have successfully rejected the estimate."]);
         } catch(Exception $e){
             return response()->json($e->getMessage(), 500);
         }
