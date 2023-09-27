@@ -39,6 +39,7 @@ Route::namespace('Api')->group(function() {
       Route::post('projects/{project_id}/cancel','ProjectController@cancel_project');
       Route::post('projects/{project_id}/pause','ProjectController@pause_project');
       Route::post('projects/{project_id}/resume','ProjectController@resume_project');
+      Route::get('projects/{project_id}/milestones','ProjectController@milestone_wizard');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
@@ -48,6 +49,7 @@ Route::namespace('Api')->group(function() {
       Route::post('save-bank-details', 'BuilderController@save_bank_details');
       Route::post('save-notification-settings', 'BuilderController@save_notification_settings');
       Route::post('save-default-contingency', 'BuilderController@save_default_contingency');
+      Route::get('settings', 'UserController@get_settings');
 
       // Trader Specific routes
       Route::prefix('trader/')->group(function() {
@@ -56,7 +58,9 @@ Route::namespace('Api')->group(function() {
         Route::post('projects/{project_id}/write-estimate', 'EstimateController@store');
         Route::post('projects/{project_id}/write-estimate/update', 'EstimateController@update');
         Route::post('projects/{project_id}/reject', 'TradespersonProjectController@reject');
+        Route::get('projects/{project_id}/recommendation', 'TradespersonProjectController@recommendation');
         Route::post('estimates/{estimate}/recall', 'EstimateController@recall');
+        Route::post('settings', 'BuilderController@save_settings');
       });
 
       // Customer Specific routes
@@ -64,6 +68,8 @@ Route::namespace('Api')->group(function() {
         Route::get('projects/{project}/estimates', 'EstimateController@index');
         Route::post('estimates/{estimate}/accept', 'EstimateController@accept');
         Route::post('estimates/{estimate}/reject', 'EstimateController@reject');
+        Route::post('projects/{project}/review/submit', 'ProjectController@submit_review');
+        Route::post('settings', 'CustomerController@email_notifications');
       });
 
     });

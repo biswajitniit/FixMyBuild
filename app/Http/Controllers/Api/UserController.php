@@ -8,8 +8,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Notification;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     public function change_password(Request $request){
         $validator = Validator::make($request->all(), [
@@ -25,7 +26,7 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['message'=>'Worng password'],400);
         }
-        
+
         return response()->json(['message'=>'Otp verified'],200);
     }
     public function get_profile(Request $request){
@@ -34,6 +35,14 @@ class UserController extends Controller
         return response()->json($user,200);
         }catch(Exception $e){
         return response()->json($e->getMessage(),500);
+        }
+    }
+
+    public function get_settings(Request $request){
+        try {
+            return $this->success(Notification::where('user_id', $request->user()->id)->pluck('settings'));
+        } catch(Exception $e) {
+            return $this->error($e->getMessage());
         }
     }
 }

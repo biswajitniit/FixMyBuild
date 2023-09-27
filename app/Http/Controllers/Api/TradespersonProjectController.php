@@ -67,9 +67,9 @@ class TradespersonProjectController extends BaseController
                     ->orWhere(function ($query) use ($request) {
                         // Get the projects for which the estimates has been rejected by the customer or the customer has cancelled the project
                         $query->whereIn('id', Estimate::where(['tradesperson_id' => $request->user()->id, 'project_awarded' => 0])
-                                ->pluck('project_id')
-                                ->toArray()
-                            );
+                            ->pluck('project_id')
+                            ->toArray()
+                        );
                     })
                     ->when($request->filled('order_by'), function ($query) use ($request) {
                         $query->orderBy($request->order_by, $request->order_by_type ?? 'desc');
@@ -137,6 +137,26 @@ class TradespersonProjectController extends BaseController
             }
 
             return $this->success((new TraderProjectCollection($projects))->additional($projects));
+        } catch (Exception $e) {
+            return $this->error($e->getMessage());
+        }
+    }
+
+
+    public function recommendation(Request $request, $project) {
+        try {
+            $trader_areas = Traderareas::where(['user_id' => $request->user()->id])->get();
+            $trader_works = Traderworks::where('user_id', $request->user()->id)->get();
+
+            $other_open_projects = recommended_projects($trader_areas, $trader_works)
+                ->where('id', '<>', $project)
+                ->whereDoesntHave('estimates', function ($query) {
+                    $query->where('tradesperson_id', request()->user()->id);
+                })
+                ->limit(5)
+                ->get();
+
+            return $this->success($other_open_projects);
         } catch (Exception $e) {
             return $this->error($e->getMessage());
         }
