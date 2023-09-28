@@ -48,6 +48,11 @@ Route::namespace('Api')->group(function() {
       Route::post('save-bank-details', 'BuilderController@save_bank_details');
       Route::post('save-notification-settings', 'BuilderController@save_notification_settings');
       Route::post('save-default-contingency', 'BuilderController@save_default_contingency');
+      Route::get('settings', 'UserController@get_settings');
+      Route::get('projects/{project_id}/milestones', 'MilestoneController@index');
+      Route::get('milestone/{milestone}', 'MilestoneController@show');
+      Route::post('milestone/{milestone}/update', 'MilestoneController@update');
+      Route::get('projects/{project_id}/milestone-wizard','MilestoneController@milestone_wizard');
 
       // Trader Specific routes
       Route::prefix('trader/')->group(function() {
@@ -55,12 +60,20 @@ Route::namespace('Api')->group(function() {
         Route::get('estimate/{id}', 'EstimateController@show');
         Route::post('projects/{project_id}/write-estimate', 'EstimateController@store');
         Route::post('projects/{project_id}/write-estimate/update', 'EstimateController@update');
-      });
-
-    // Trader Specific routes
-    Route::prefix('customer/')->group(function() {
-        Route::get('projects/{project}/estimates', 'EstimateController@index');
+        Route::post('projects/{project_id}/reject', 'TradespersonProjectController@reject');
+        Route::get('projects/{project_id}/recommendation', 'TradespersonProjectController@recommendation');
+        Route::post('estimates/{estimate}/recall', 'EstimateController@recall');
+        Route::post('settings', 'BuilderController@save_settings');
     });
+
+      // Customer Specific routes
+      Route::prefix('customer/')->group(function() {
+        Route::get('projects/{project}/estimates', 'EstimateController@index');
+        Route::post('estimates/{estimate}/accept', 'EstimateController@accept');
+        Route::post('estimates/{estimate}/reject', 'EstimateController@reject');
+        Route::post('projects/{project}/review/submit', 'ProjectController@submit_review');
+        Route::post('settings', 'CustomerController@email_notifications');
+      });
 
     });
 });

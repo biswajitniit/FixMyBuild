@@ -19,6 +19,10 @@ use Illuminate\Validation\Rule;
 use App\Rules\PhoneWithDialCode;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\CustomerProjectCollection;
+use App\Models\ProjectReview;
+use App\Models\Task;
+use App\Models\NotificationDetail;
+use App\Models\Notification;
 
 class ProjectController extends BaseController
 {
@@ -70,11 +74,13 @@ class ProjectController extends BaseController
 
     public function show(Request $request, $project) {
         try{
-            $data = Project::with('projectaddress')
+            $project = Project::with('projectaddress')
                    ->with('projectfiles')
                    ->with('projectnotesandcommends')
                    ->where('id',$project)
-                   ->get();
+                   ->first();
+            $estimate = Estimate::where(['project_id' => $project->id, 'project_awarded' => 1])->with('tradesperson')->first();
+            $data = ['project' => $project, 'estimate' => $estimate];
 
             return response()->json($data, 200);
         } catch(ModelNotFoundException $e){
@@ -283,16 +289,31 @@ class ProjectController extends BaseController
                 return $this->error('You are not authorized to cancel this project!', 403);
             }
 
+            DB::beginTransaction();
+
             $project->status = config('const.project_status.PROJECT_CANCELLED');
             $project->save();
 
             // TODO: Send email notification to traders and customers
             // cancel_project_notification($project_id);
+            ProjectStatusChangeLog::create([
+                'project_id'        => $project_id,
+                'action_by_id'      => request()->user()->id,
+                'action_by_type'    => 'user',
+                'status'            => config('const.project_status.PROJECT_CANCELLED'),
+                'status_changed_at' => now(),
+            ]);
+
+            DB::commit();
 
             return $this->success("The project has been cancelled successfully.", 200);
         } catch(ModelNotFoundException $e){
+            DB::rollBack();
+
             return $this->error('Project Not Found.', 404);
         } catch(Exception $e){
+            DB::rollBack();
+
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -307,6 +328,8 @@ class ProjectController extends BaseController
                 return $this->error('You can only pause a project which has been started! ', 400);
             }
 
+            DB::beginTransaction();
+
             if ($project->user_id == request()->user()->id) {
                 $project->status = config('const.project_status.PROJECT_PAUSED');
             } else if ($estimate->tradesperson_id == request()->user()->id) {
@@ -316,14 +339,26 @@ class ProjectController extends BaseController
             }
 
             $project->save();
+            ProjectStatusChangeLog::create([
+                'project_id'        => $project_id,
+                'action_by_id'      => request()->user()->id,
+                'action_by_type'    => 'user',
+                'status'            => config('const.project_status.PROJECT_PAUSED'),
+                'status_changed_at' => now(),
+            ]);
 
             // TODO: Implement different mail templates for trader and customer when trader pause the project
             // pause_project_notification($request->project_id);
+            DB::commit();
 
             return $this->success("The project has been paused successfully.", 200);
         } catch(ModelNotFoundException $e){
+            DB::rollBack();
+
             return $this->error('Project Not Found.', 404);
         } catch(Exception $e){
+            DB::rollBack();
+
             return $this->error(['error' => $e->getMessage()], 500);
         }
     }
@@ -363,6 +398,72 @@ class ProjectController extends BaseController
             DB::rollBack();
 
             return $this->error(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function submit_review(Request $request, int $project_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'punctuality' => ['required', 'boolean'],
+            'workmanship' => ['required', 'boolean'],
+            'tidiness' => ['required', 'boolean'],
+            'price_accuracy' => ['required', 'boolean'],
+            'detailed_review' => ['required', 'boolean'],
+            'detailed_review_description' => ['nullable', 'required_if:detailed_review,true', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $project = Project::find($project_id);
+            $tradeperson_id = Estimate::where(['project_id' => $project_id, 'project_awarded' => 1, 'status' => 'awarded'])->value('tradesperson_id');
+            $project_review = ProjectReview::where(['project_id' => $project_id])->first();
+
+            if (!$project) {
+                return $this->error('Project not found', 404);
+            }
+
+            if ($project->user_id != $request->user()->id) {
+                return $this->error('You are not authorized to review this project!', 403);
+            }
+
+            if (!$tradeperson_id) {
+                return $this->error('No tradesperson found for this project', 404);
+            }
+
+            if ($project_review) {
+                return $this->error('You have already submitted a review for this project', 400);
+            }
+
+            DB::beginTransaction();
+
+            $review = new ProjectReview();
+            $review->user_id = $request->user()->id;
+            $review->project_id = $project_id;
+            $review->tradesperson_id = $tradeperson_id;
+            $review->punctuality = $request->punctuality;
+            $review->workmanship = $request->workmanship;
+            $review->tidiness = $request->tidiness;
+            $review->price_accuracy = $request->price_accuracy;
+            $review->detailed_review = $request->detailed_review;
+            $review->description = $request->detailed_review ? $request->detailed_review_description : null;
+            $review->save();
+
+            $project->status = config('const.project_status.PROJECT_COMPLETED');
+            $project->save();
+
+            project_completed_notification($project_id);
+
+            DB::commit();
+
+            return $this->success("Review submitted successfully.", 200);
+        } catch(Exception $e) {
+            DB::rollBack();
+
+            return $this->error(['errors' => $e->getMessage()], 500);
         }
     }
 }

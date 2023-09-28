@@ -9,7 +9,7 @@ use App\Models\Projectaddresses;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use App\Models\Postcode;
+use App\Models\PostcodeInfo;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AddressController extends BaseController
@@ -87,7 +87,9 @@ class AddressController extends BaseController
         }
 
         try {
-            return Postcode::where('Postcode', 'like', '%'.$request->postcode.'%')->get();
+            return PostcodeInfo::select('Postcode', 'County2 AS county', 'Middle layer super output area AS town')
+                ->where('Postcode', 'like', '%'.str_replace(' ', '', $request->postcode).'%')
+                ->get();
         } catch (ModelNotFoundException $e) {
             return $this->error('Postcode not found.', 404);
         } catch (Exception $e) {
