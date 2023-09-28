@@ -466,10 +466,4 @@ class ProjectController extends BaseController
             return $this->error(['errors' => $e->getMessage()], 500);
         }
     }
-
-
-    public function milestone_wizard(Request $request, int $project)
-    {
-        return ProjectStatusChangeLog::where('project_id', $project)->get();
-    }
 }

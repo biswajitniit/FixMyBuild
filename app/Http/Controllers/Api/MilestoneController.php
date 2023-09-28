@@ -8,6 +8,7 @@ use App\Models\Estimate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ProjectStatusChangeLog;
 
 class MilestoneController extends BaseController
 {
@@ -83,5 +84,11 @@ class MilestoneController extends BaseController
         } catch (Exception $e) {
             return $this->error(['error' => $e->getMessage()], 500);
         }
+    }
+
+
+    public function milestone_wizard(Request $request, int $project)
+    {
+        return ProjectStatusChangeLog::where('project_id', $project)->get();
     }
 }
