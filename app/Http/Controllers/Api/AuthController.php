@@ -45,7 +45,7 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
             ], 200);
         } catch(Exception $e){
-            return response()->json($e->getMessage(),500);
+            return response()->json(["errors"=>$e->getMessage()],500);
         }
     }
 
