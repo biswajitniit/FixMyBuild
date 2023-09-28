@@ -20,6 +20,9 @@ use App\Rules\PhoneWithDialCode;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\CustomerProjectCollection;
 use App\Models\ProjectReview;
+use App\Models\Task;
+use App\Models\NotificationDetail;
+use App\Models\Notification;
 
 class ProjectController extends BaseController
 {
