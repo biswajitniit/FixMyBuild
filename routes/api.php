@@ -72,6 +72,10 @@ Route::namespace('Api')->group(function() {
         Route::post('settings', 'CustomerController@email_notifications');
       });
 
+      Route::prefix('chat/')->group(function() {
+        Route::post('get_user_list_by_session_user', 'ChatController@index');
+      });
+
     });
 });
 
