@@ -155,6 +155,8 @@ class EstimateController extends BaseController
                     'description' => 'initial payment',
                     'price'       => $request->input('initial_payment.value'),
                     'is_initial'  => true,
+                    'contingency' => $request->input('contingency'),
+                    'max_contingency' => $request->input('contingency'),
                 ]);
             }
 

@@ -39,7 +39,6 @@ Route::namespace('Api')->group(function() {
       Route::post('projects/{project_id}/cancel','ProjectController@cancel_project');
       Route::post('projects/{project_id}/pause','ProjectController@pause_project');
       Route::post('projects/{project_id}/resume','ProjectController@resume_project');
-      Route::get('projects/{project_id}/milestones','ProjectController@milestone_wizard');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
@@ -50,6 +49,10 @@ Route::namespace('Api')->group(function() {
       Route::post('save-notification-settings', 'BuilderController@save_notification_settings');
       Route::post('save-default-contingency', 'BuilderController@save_default_contingency');
       Route::get('settings', 'UserController@get_settings');
+      Route::get('projects/{project_id}/milestones', 'MilestoneController@index');
+      Route::get('milestone/{milestone}', 'MilestoneController@show');
+      Route::post('milestone/{milestone}/update', 'MilestoneController@update');
+      Route::get('projects/{project_id}/milestone-wizard','MilestoneController@milestone_wizard');
 
       // Trader Specific routes
       Route::prefix('trader/')->group(function() {
@@ -61,7 +64,7 @@ Route::namespace('Api')->group(function() {
         Route::get('projects/{project_id}/recommendation', 'TradespersonProjectController@recommendation');
         Route::post('estimates/{estimate}/recall', 'EstimateController@recall');
         Route::post('settings', 'BuilderController@save_settings');
-      });
+    });
 
       // Customer Specific routes
       Route::prefix('customer/')->group(function() {

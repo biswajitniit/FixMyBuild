@@ -20,6 +20,9 @@ use App\Rules\PhoneWithDialCode;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\CustomerProjectCollection;
 use App\Models\ProjectReview;
+use App\Models\Task;
+use App\Models\NotificationDetail;
+use App\Models\Notification;
 
 class ProjectController extends BaseController
 {
@@ -462,11 +465,5 @@ class ProjectController extends BaseController
 
             return $this->error(['errors' => $e->getMessage()], 500);
         }
-    }
-
-
-    public function milestone_wizard(Request $request, int $project)
-    {
-        return ProjectStatusChangeLog::where('project_id', $project)->get();
     }
 }
