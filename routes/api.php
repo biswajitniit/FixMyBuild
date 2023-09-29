@@ -25,6 +25,12 @@ Route::namespace('Api')->group(function() {
     Route::post('/create-password', 'PasswordController@create_password');
     Route::get('get-categories-and-sub-categories', 'BuilderController@get_categories_and_sub_categories');
     Route::get('get-areas', 'BuilderController@get_areas');
+    Route::post('forget-password-with-mail', 'AuthController@forget_password_with_mail');
+    Route::post('verify-otp-with-mail', 'AuthController@verify_otp_with_mail');
+    Route::post('generate-otp', 'AuthController@generate_otp');
+    Route::post('resend-otp', 'AuthController@resend_otp');
+    Route::post('verify-otp', 'AuthController@verify_otp');
+    Route::post('reset-password-with-sms', 'AuthController@reset_password_with_sms');
 
 
     Route::middleware('auth:sanctum')->group(function() {
@@ -40,6 +46,7 @@ Route::namespace('Api')->group(function() {
       Route::get('view-all-estimates/{id}','ProjectController@view_all_estimates');
       Route::post('accept-estimate/{estimate_id}','ProjectController@accept_estimate');
       Route::post('reject-estimate/{estimate_id}','ProjectController@reject_estimate');
+      Route::post('delete-account','UserController@delete_account');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
