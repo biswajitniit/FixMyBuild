@@ -10,11 +10,16 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\Models\OtpPasswordResets;
+use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Carbon\Carbon;
+use Twilio\Rest\Client;
+
 // use App\Http\Requests\ThirdPartyAuthRequest;
 
 class AuthController extends Controller
@@ -347,5 +352,195 @@ class AuthController extends Controller
         }
 
         return response()->json(['message'=>'User registered successfully'],200);
+    }
+
+    public function forget_password_with_mail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try{
+            $otp = mt_rand(100000, 999999);
+
+            DB::table('password_resets')->insert([
+                'email' => $request->email,
+                'token' => $otp,
+                'created_at' => Carbon::now()
+                ]);
+
+            $html = view('email.reset-pswd-email-api')->with('otp', $otp)->render();
+
+            $postdata = array(
+                            'From'          => env('MAIL_FROM_ADDRESS'),
+                            'To'            => $request['email'],
+                            'Subject'       => 'Password Reset',
+                            'HtmlBody'      => $html,
+                            'MessageStream' => 'outbound'
+                        );
+            $email_sent = send_email($postdata);
+
+            return response()->json(['message'=>"We have e-mailed your password reset link!"]);
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function verify_otp_with_mail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $data = PasswordReset::where('email', $request->email)
+                                ->where('token', $request->otp)
+                                ->first();
+            if(!$data){
+                return response()->json(['message'=>"Wrong OTP."]);
+            }
+
+            return response()->json(['message'=>"OTP verified"]);
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function generate_otp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try{
+            $user = User::where('phone', $request->phone)->first();
+            if($user){
+                $otp = mt_rand(100000, 999999);
+                $data = new OtpPasswordResets();
+                $data->user_id = $user->id;
+                $data->otp = $otp;
+                $data->used = 0;
+                $data->created_at = now()->addMinutes(5);
+
+                // send otp
+                $receiverNumber = $user->phone;
+                $message = "This is your Fix my build forget password OTP ".$otp;
+
+                $account_sid = "AC15e8da3b8870bb7ab73cab93cbe287b9";
+                $auth_token = "9c2809e405ec441547bf89f95e3c6def";
+                $twilio_number = "+447360267868";
+                $client = new Client($account_sid, $auth_token);
+                $client->messages->create($receiverNumber, [
+                    'from' => $twilio_number,
+                    'body' => $message]);
+
+                if(strtotime($data->created_at) < strtotime(now()))
+                {
+                    return response()->json(['message'=>"Time Out"]);
+                }
+                $data->save();
+                return response()->json([
+                    'message' => 'OTP has been sent on Your Mobile Number.',
+                    'otp' => $otp,
+                ]);
+            } else {
+                return response()->json(['message'=>"We cannot locate your account."]);
+            }
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function resend_otp(Request $request)
+    {
+        try{
+            $user = User::where('id', $request->user_id)->first();
+
+            if($user){
+                $otp = mt_rand(100000, 999999);
+                $data = new OtpPasswordResets();
+                $data->user_id = $user->id;
+                $data->otp = $otp;
+                $data->used = 0;
+                $data->created_at = now()->addMinutes(5);
+
+                // send otp
+                $receiverNumber = $user->phone;
+                $message = "This is your Fix my build forget password OTP ".$otp;
+
+                $account_sid = "AC15e8da3b8870bb7ab73cab93cbe287b9";
+                $auth_token = "9c2809e405ec441547bf89f95e3c6def";
+                $twilio_number = "+447360267868";
+                $client = new Client($account_sid, $auth_token);
+                $client->messages->create($receiverNumber, [
+                    'from' => $twilio_number,
+                    'body' => $message]);
+
+                if(strtotime($data->created_at) < strtotime(now()))
+                {
+                    return response()->json(['message'=>"Time out."]);
+                }
+                $data->save();
+                return response()->json(['message'=>"OTP has been resent on Your Mobile Number."]);
+            } else {
+                return response()->json(['message'=>"Something went wrong."]);
+            }
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function verify_otp(Request $request)
+    {
+        try {
+            $user = OtpPasswordResets::where('user_id', $request->id)
+                                    ->where('otp', $request->otp)
+                                    ->first();
+
+            if($user) {
+                $user->used = 1;
+                $user->update();
+            }
+
+            if(!$user){
+                return response()->json(['message'=>"Wrong OTP."]);
+            }
+
+            return response()->json(['message'=>"OTP verified"]);
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function reset_password_with_sms(Request $request){
+        try{
+            $user = User::where('id', $request->id)->first();
+            if(!$user){
+                return response()->json(['message' => 'We can not locate your account.']);
+            }
+            if($request->password == $request->password2) {
+                $user = User::where('id', $user->id)
+                            ->update(['password' => Hash::make($request->password)]);
+
+                return response()->json(['message' => 'Your password has been changed!']);
+            } else {
+                return response()->json(['message' => 'Your password has not been changed!']);
+            }
+
+        } catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
     }
 }
