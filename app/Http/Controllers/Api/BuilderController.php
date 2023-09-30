@@ -546,4 +546,30 @@ class BuilderController extends BaseController
             return response()->json([$e->getMessage()], 500);
         }
     }
+
+
+    public function get_company_details(Request $request, $trader_id) {
+        try {
+            $trader = User::find($trader_id);
+            if (!$trader) {
+                return $this->error(['message' => 'Trader not found'], 404);
+            }
+
+            if (!isTrader($trader->customer_or_tradesperson)) {
+                return $this->error(['message' => 'This is not a trader account'], 403);
+            }
+
+            $trader_details = TraderDetail::where('user_id', $trader_id)->first();
+            $trader_files = TradespersonFile::where('tradesperson_id', $trader_id)->whereIn('file_related_to', ['team_img', 'prev_project_img'])->get();
+
+            return $this->success([
+                'trader' => $trader,
+                'trader_details' => $trader_details,
+                'trader_files' => $trader_files
+            ]);
+
+        } catch(Exception $e) {
+            return $this->error(['errors' => $e->getMessage()], 500);
+        }
+    }
 }

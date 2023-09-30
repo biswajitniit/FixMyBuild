@@ -31,16 +31,22 @@ class EstimateController extends BaseController
     {
         try {
             $project = Project::findorFail($project);
-            $estimate = Estimate::where('project_id', $project->id)->get()->toArray();
+            $estimates = Estimate::where('project_id', $project->id)->with('tradesperson.traderDetail')->get();
 
             // Trader Counts
-            $trader_who_submitted_estimate = array_column($estimate, 'tradesperson_id');
+            // $trader_who_submitted_estimate = array_column($estimates, 'tradesperson_id');
+            $trader_who_submitted_estimate = $estimates->pluck('tradesperson_id');
             $trader_id_matched_areas = Traderareas::where(['county' => $project->county, 'town' => $project->town])->whereNotIn('user_id', $trader_who_submitted_estimate)->pluck('user_id');
             $project_categories = ProjectCategory::where('project_id', $project->id)->pluck('sub_category_id');
-            $estimate['remaining_trader_count'] = Traderworks::whereIn('buildersubcategory_id', $project_categories)->whereIn('user_id', $trader_id_matched_areas)->count();
+            $remainingTraderCount = Traderworks::whereIn('buildersubcategory_id', $project_categories)->whereIn('user_id', $trader_id_matched_areas)->count();
+
+            $combinedData = [
+                'remaining_trader_count' => $remainingTraderCount,
+                'estimates' => $estimates
+            ];
 
             if ($project->user_id == request()->user()->id) {
-                return $this->success($estimate);
+                return $this->success($combinedData);
             }
 
             return $this->error('You are not authorized to view the estimates of this project.', 403);
@@ -203,7 +209,7 @@ class EstimateController extends BaseController
     public function show(int $id)
     {
         try {
-            $estimate = Estimate::where('id', $id)->with('tasks', 'files')->firstOrFail();
+            $estimate = Estimate::where('id', $id)->with('tasks', 'files', 'tradesperson.traderDetail')->firstOrFail();
             if ($estimate->tradesperson_id == request()->user()->id || @$estimate->project->user_id == request()->user()->id) {
                 return $this->success($estimate);
             }
