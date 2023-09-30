@@ -43,9 +43,6 @@ Route::namespace('Api')->group(function() {
       Route::post('cancel-project','ProjectController@cancel_project');
       Route::post('paused-project','ProjectController@paused_project');
       Route::post('resume-project','ProjectController@resumeProject');
-      Route::get('view-all-estimates/{id}','ProjectController@view_all_estimates');
-      Route::post('accept-estimate/{estimate_id}','ProjectController@accept_estimate');
-      Route::post('reject-estimate/{estimate_id}','ProjectController@reject_estimate');
       Route::post('delete-account','UserController@delete_account');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
