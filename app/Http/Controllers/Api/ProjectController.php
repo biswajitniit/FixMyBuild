@@ -23,6 +23,8 @@ use App\Models\ProjectReview;
 use App\Models\Task;
 use App\Models\NotificationDetail;
 use App\Models\Notification;
+use App\Models\FeedbackFile;
+use App\Http\Resources\ProjectReviewCollection;
 
 class ProjectController extends BaseController
 {
@@ -402,6 +404,17 @@ class ProjectController extends BaseController
     }
 
 
+    public function get_reviews(Request $request, $trader_id) {
+        try {
+            $reviews = ProjectReview::where('tradesperson_id', $trader_id)->with('files')->paginate($request->limit ?? ProjectReview::count());
+
+            return $this->success((new ProjectReviewCollection($reviews))->additional($reviews));
+        } catch(Exception $exception) {
+            return $this->error(['error' => $exception->getMessage()], 500);
+        }
+    }
+
+
     public function submit_review(Request $request, int $project_id)
     {
         $validator = Validator::make($request->all(), [
@@ -411,6 +424,8 @@ class ProjectController extends BaseController
             'price_accuracy' => ['required', 'boolean'],
             'detailed_review' => ['required', 'boolean'],
             'detailed_review_description' => ['nullable', 'required_if:detailed_review,true', 'string'],
+            'images' => ['nullable', 'array'],
+            'images.*' => ['required', 'image'],
         ]);
 
         if ($validator->fails()) {
@@ -451,6 +466,27 @@ class ProjectController extends BaseController
             $review->detailed_review = $request->detailed_review;
             $review->description = $request->detailed_review ? $request->detailed_review_description : null;
             $review->save();
+
+            if($request->file('images')) {
+                foreach($request->file('images') as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $extension = $file->getClientOriginalExtension();
+                    $s3FileName = Str::uuid().'.'.$extension;
+                    Storage::disk('s3')->put(config('const.s3FolderName').$s3FileName, file_get_contents($file->getRealPath()));
+                    $path = Storage::disk('s3')->url(config('const.s3FolderName').$s3FileName);
+                    $fileType  = getMediaType($extension);
+
+                    $feedback_file = new FeedbackFile();
+                    $feedback_file->project_id                = $project_id;
+                    $feedback_file->file_type                 = $fileType;
+                    $feedback_file->file_name                 = $fileName;
+                    $feedback_file->file_original_name        = $fileName;
+                    $feedback_file->file_extension            = $extension;
+                    $feedback_file->url                       = $path;
+                    $feedback_file->save();
+                }
+            }
+
 
             $project->status = config('const.project_status.PROJECT_COMPLETED');
             $project->save();
