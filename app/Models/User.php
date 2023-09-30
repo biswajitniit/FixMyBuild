@@ -88,6 +88,11 @@ class User extends Authenticatable
         return $this->hasMany(TradespersonFile::class);
     }
 
+
+    public function traderDetail() {
+        return $this->hasOne(TraderDetail::class, 'user_id', 'id');
+    }
+
     /**
      * @description get the total number of reviews obtained by a Tradesperson
      */

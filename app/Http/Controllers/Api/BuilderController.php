@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
 use App\Models\User;
 
-class BuilderController extends Controller
+class BuilderController extends BaseController
 {
     private function upload_file_and_create_record($user_id, $file, $relatedTo, $updateOrCreate = false){
         $fileName = $file->getClientOriginalName();
@@ -177,6 +177,11 @@ class BuilderController extends Controller
                 Storage::disk('s3')->delete(parse_url($old_company_logo->url, PHP_URL_PATH));
                 TradespersonFile::where('id', $old_company_logo->id)->delete();
             }
+
+            $company_logo = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_logo'])->value('url');
+            $user = User::find($request->user()->id);
+            $user->profile_image = $company_logo;
+            $user->save();
 
             // Public Liability Insurance Upload
             $old_public_liability_insurances = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'public_liability_insurance'])->pluck('id', 'url');
@@ -491,4 +496,80 @@ class BuilderController extends Controller
         }
     }
 
+
+    public function save_settings(Request $request) {
+        $validator = Validator::make($request->all(),[
+			'noti_new_quotes' => 'required|boolean',
+			'noti_quote_accepted' => 'required|boolean',
+			'noti_project_stopped' => 'required|boolean',
+			'noti_quote_rejected' => 'required|boolean',
+			'noti_project_cancelled' => 'required|boolean',
+            'reviewed' => 'required|boolean',
+            'paused' => 'required|boolean',
+            'project_milestone_complete' => 'required|boolean',
+            'project_complete' => 'required|boolean',
+            'project_new_message' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            if (!isTrader($request->user()->customer_or_tradesperson)) {
+                return $this->error(['message' => 'You are not a trader'], 403);
+            }
+
+            $notification = [
+                // Receive these notifications as a Tradesperson
+                'noti_new_quotes'           => $request->noti_new_quotes,
+                'noti_quote_accepted'       => $request->noti_quote_accepted,
+                'noti_project_stopped'      => $request->noti_project_stopped,
+                'noti_quote_rejected'       => $request->noti_quote_rejected,
+                'noti_project_cancelled'    => $request->noti_project_cancelled,
+                'noti_share_contact_info'   => $request->noti_share_contact_info,
+                'noti_new_message'          => $request->noti_new_message,
+
+                // Receive these notifications as a Customer
+                'reviewed'                  => $request->reviewed,
+                'paused'                    => $request->paused,
+                'project_milestone_complete'=> $request->project_milestone_complete,
+                'project_complete'          => $request->project_complete,
+                'project_new_message'       => $request->project_new_message,
+            ];
+            Notification::updateOrCreate(['user_id' => $request->user()->id], ['settings' => $notification]);
+
+            User::where('id', $request->user()->id)->update(['steps_completed' => "3"]);
+
+            return response()->json(['message' => 'Settings saved successfully.'], 200);
+        } catch(Exception $e) {
+            return response()->json([$e->getMessage()], 500);
+        }
+    }
+
+
+    public function get_company_details(Request $request, $trader_id) {
+        try {
+            $trader = User::find($trader_id);
+            if (!$trader) {
+                return $this->error(['message' => 'Trader not found'], 404);
+            }
+
+            if (!isTrader($trader->customer_or_tradesperson)) {
+                return $this->error(['message' => 'This is not a trader account'], 403);
+            }
+
+            $trader_details = TraderDetail::where('user_id', $trader_id)->first();
+            $trader_files = TradespersonFile::where('tradesperson_id', $trader_id)->whereIn('file_related_to', ['team_img', 'prev_project_img'])->get();
+
+            return $this->success([
+                'trader' => $trader,
+                'trader_details' => $trader_details,
+                'trader_files' => $trader_files
+            ]);
+
+        } catch(Exception $e) {
+            return $this->error(['errors' => $e->getMessage()], 500);
+        }
+    }
 }

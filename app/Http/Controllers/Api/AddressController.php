@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\Projectaddresses;
 use Exception;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use App\Models\Projectaddresses;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Models\PostcodeInfo;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class AddressController extends Controller
+class AddressController extends BaseController
 {
     public function index(Request $request){
         $address = Projectaddresses::where('user_id',$request->user()->id)->get();
@@ -43,5 +46,54 @@ class AddressController extends Controller
             return response()->json(['error'=>$e],500);
         }
     }
-    
+
+
+    public function last_used_address() {
+
+        try {
+            $last_used_project = Project::where('user_id', request()->user()->id)->latest()->first();
+            if (!$last_used_project) {
+                return $this->error("No project found.", 500);
+            }
+
+            $last_used_address = Projectaddresses::where('project_id', $last_used_project->id)->first();
+            if (!$last_used_address) {
+                return $this->error("No project address found.", 500);
+            }
+
+            $resultant_data = [
+                'county' => $last_used_project->county,
+                'town' => $last_used_project->town,
+                'postcode' => $last_used_project->postcode,
+                'address_line_one' => $last_used_address->address_line_one,
+                'address_line_two' => $last_used_address->address_line_two,
+            ];
+
+            return $this->success($resultant_data, 200);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+
+    }
+
+
+    public function get_area_from_postcode(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'postcode' =>'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            return PostcodeInfo::select('Postcode', 'County2 AS county', 'Middle layer super output area AS town')
+                ->where('Postcode', 'like', '%'.str_replace(' ', '', $request->postcode).'%')
+                ->get();
+        } catch (ModelNotFoundException $e) {
+            return $this->error('Postcode not found.', 404);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
 }

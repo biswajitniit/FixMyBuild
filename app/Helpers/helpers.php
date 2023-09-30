@@ -50,6 +50,7 @@ if (! function_exists('GetBuildersubcategory')) {
        //dd($query);
     }
 }
+
 if (! function_exists('getRemoteFileSize')) {
     function getRemoteFileSize($url) {
         $parse = parse_url($url);
@@ -90,6 +91,7 @@ if (! function_exists('getRemoteFileSize')) {
         }
     }
 }
+
 function send_email($postdata){
     $curl = curl_init();
     curl_setopt_array($curl, array(
@@ -111,6 +113,7 @@ function send_email($postdata){
     curl_close($curl);
     return $response;
 }
+
 if (!function_exists('tradesperson_project_status')) {
     function tradesperson_project_status($project_id)
     {
@@ -118,7 +121,7 @@ if (!function_exists('tradesperson_project_status')) {
         if ($project->status === 'project_cancelled') {
             return 'project_cancelled';
         }
-        if ($project->status === 'project_paused') {
+        if ($project->status === 'project_paused' || $project->status === config('const.project_status.TRADER_PROJECT_PAUSED')) {
             return 'project_paused';
         }
         if ($project->status === 'project_completed' || $project->status === 'awaiting_your_review') {
@@ -164,6 +167,7 @@ if (!function_exists('tradesperson_project_status')) {
 
     }
 }
+
 function time_diff($created_at){
     $now = Carbon::now();
     $created = Carbon::parse($created_at);
@@ -177,6 +181,7 @@ function time_diff($created_at){
         return date('F j, Y', strtotime($created));
     }
 }
+
 function milestone_completion_notification($task_id){
     $task = Task::where('id', $task_id)->first();
     $estimate = Estimate::where('id', $task->estimate_id)->first();
@@ -221,7 +226,9 @@ function milestone_completion_notification($task_id){
 
 function project_paused_notification($project_id){
     $project = Project::where('id', $project_id)->first();
-    $estimate = Estimate::where('project_id', $project_id)->first();
+    $estimate = Estimate::where('project_id', $project_id)
+                        ->where('project_awarded', 1)
+                        ->first();
     $customer = Auth::user();
     $tradeperson = User::where('id', $estimate->tradesperson_id)->first();
     $notify_settings_customer = Notification::where('user_id', Auth::user()->id)->first();
@@ -294,6 +301,7 @@ function project_paused_notification($project_id){
         $notificationDetail->save();
     }
 }
+
 function estimate_rejected_notification($tradeperson, $project){
     // Check Notification settings
     $notify_settings = Notification::where('user_id', $tradeperson->id)->first();
@@ -334,6 +342,7 @@ function estimate_rejected_notification($tradeperson, $project){
         $notificationDetail->save();
     }
 }
+
 function cancel_project_notification($projectId){
     $project = Project::where('id', $projectId)->first();
     $estimate = Estimate::where('project_id', $projectId)->first();
@@ -342,7 +351,7 @@ function cancel_project_notification($projectId){
     $notify_settings = Notification::where('user_id', $user->id)->first();
     if($notify_settings) {
         if($notify_settings->settings != null){
-            $noti_cancelled = $notify_settings->settings['noti_quote_rejected'];
+            $noti_cancelled = $notify_settings->settings['noti_project_cancelled'];
         } else {
             $noti_cancelled = 1;
         }
@@ -364,7 +373,7 @@ function cancel_project_notification($projectId){
         );
         $email_sent = send_email($emaildata);
 
-        // Notificatin Insert in DB
+        // Notification Insert in DB
         $notificationDetail = new NotificationDetail();
         $notificationDetail->user_id = $user->id;
         $notificationDetail->from_user_id = Auth::user()->id;
@@ -377,6 +386,7 @@ function cancel_project_notification($projectId){
         $notificationDetail->save();
     }
 }
+
 function project_completed_notification($projectId){
     $project = Project::where('id', $projectId)->first();
     $user = User::where('id', $project->user_id)->first();
@@ -449,7 +459,6 @@ if(!function_exists('recommended_projects')) {
         return $recommended_proj;
     }
 }
-
 
 if(!function_exists('lock_trader_dashboard_access')) {
     // function lock_trader_dashboard_access() {
@@ -709,3 +718,86 @@ if(!function_exists('lock_trader_dashboard_access')) {
         }
     }
 }
+
+// TODO: Implement different mail templates for trader and customer when trader pause the project
+// if (!function_exists('pause_project_notification')) {
+//     function pause_project_notification($project_id) {
+//         try {
+//             $project = Project::findOrFail($project_id);
+//             $estimate = Estimate::where(['project_id' => $project_id, 'project_awarded' => 1])->firstOrFail();
+//             $customer = $project->user;
+//             $tradeperson = User::where('id', $estimate->tradesperson_id)->firstOrFail();
+//             $notify_settings_customer = Notification::where('user_id', $project->user->id)->firstOrFail();
+//             $notify_settings_trader = Notification::where('user_id', $estimate->tradesperson_id)->firstOrFail();
+//             $project_paused = 0;
+//             // For customer
+//             if($notify_settings_customer)
+//                 $project_paused = $notify_settings_customer->settings['paused'];
+
+//             if($project_paused == 1){
+//                 $html = view('email.project-paused-customer')
+//                     ->with('data', [
+//                     'project_name'       => $project->project_name,
+//                     'user_name'          => $customer->name
+//                     ])
+//                     ->render();
+//                 $emaildata = array(
+//                     'From'          =>  env('MAIL_FROM_ADDRESS'),
+//                     'To'            =>  $customer->email,
+//                     'Subject'       => 'Project Paused',
+//                     'HtmlBody'      =>  $html,
+//                     'MessageStream' => 'outbound'
+//                 );
+//                 $email_sent = send_email($emaildata);
+
+//                 $notificationDetail = new NotificationDetail();
+//                 $notificationDetail->user_id = $customer->id;
+//                 $notificationDetail->from_user_id = Auth::user()->id;
+//                 $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
+//                 $notificationDetail->related_to = 'project';
+//                 $notificationDetail->related_to_id = $project->id;
+//                 $notificationDetail->read_status = 0;
+//                 $notificationDetail->notification_text = 'Your '.$project->project_name.' has been paused';
+//                 $notificationDetail->reviewer_note = null;
+//                 $notificationDetail->save();
+//             }
+
+//             // For tradeperson
+//             if($notify_settings_trader) {
+//                 if($notify_settings_trader->settings != null){
+//                     $project_paused_trader = $notify_settings_trader->settings['noti_project_stopped'];
+//                 }
+//             }
+
+//             if($project_paused_trader == 1){
+//                 $html = view('email.project-paused-trader')
+//                     ->with('data', [
+//                     'project_name'       => $project->project_name,
+//                     'user_name'          => $tradeperson->name
+//                     ])
+//                     ->render();
+//                 $emaildata = array(
+//                     'From'          =>  env('MAIL_FROM_ADDRESS'),
+//                     'To'            =>  $tradeperson->email,
+//                     'Subject'       => 'Paused Project',
+//                     'HtmlBody'      =>  $html,
+//                     'MessageStream' => 'outbound'
+//                 );
+//                 $email_sent = send_email($emaildata);
+
+//                 $notificationDetail = new NotificationDetail();
+//                 $notificationDetail->user_id = $tradeperson->id;
+//                 $notificationDetail->from_user_id = Auth::user()->id;
+//                 $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
+//                 $notificationDetail->related_to = 'project';
+//                 $notificationDetail->related_to_id = $project->id;
+//                 $notificationDetail->read_status = 0;
+//                 $notificationDetail->notification_text = 'Customer has paused the project '.$project->project_name;
+//                 $notificationDetail->reviewer_note = null;
+//                 $notificationDetail->save();
+//             }
+//         } catch (\Exception $e) {
+//             return $e->getMessage();
+//         }
+//     }
+// }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Rules\CustomPasswordRule;
 use Exception;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -45,7 +46,7 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
             ], 200);
         } catch(Exception $e){
-            return response()->json($e->getMessage(),500);
+            return response()->json(["errors"=>$e->getMessage()],500);
         }
     }
 
@@ -55,7 +56,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'required|string|max:50|unique:users',
-            'password' => 'required|string|min:5|confirmed',
+            'password' => ['required' ,'string', 'min:8', 'max:32', 'confirmed', new CustomPasswordRule()],
             'user_type' => 'required|string',
         ]);
 

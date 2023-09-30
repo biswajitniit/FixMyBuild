@@ -10,7 +10,7 @@ class Projectaddresses extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'project_id',
         'address_line_one',
         'address_line_two',
         'town_city',

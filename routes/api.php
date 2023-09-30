@@ -28,12 +28,17 @@ Route::namespace('Api')->group(function() {
 
 
     Route::middleware('auth:sanctum')->group(function() {
-      Route::patch('/terms-of-service/update', 'AuthController@update_terms_of_service_acceptance');
+      Route::post('/terms-of-service/update', 'AuthController@update_terms_of_service_acceptance');
       Route::post('/change-password', 'UserController@change_password');
       Route::get('/profile', 'UserController@get_profile');
+      Route::get('last-used-address','AddressController@last_used_address');
+      Route::get('address-from-postcode','AddressController@get_area_from_postcode');
       Route::apiResource('projects', 'ProjectController',);
       Route::post('projects','ProjectController@add_project');
-      Route::put('projects','ProjectController@update_project');
+      Route::post('projects/{project_id}/update','ProjectController@update_project');
+      Route::post('projects/{project_id}/cancel','ProjectController@cancel_project');
+      Route::post('projects/{project_id}/pause','ProjectController@pause_project');
+      Route::post('projects/{project_id}/resume','ProjectController@resume_project');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
@@ -43,16 +48,37 @@ Route::namespace('Api')->group(function() {
       Route::post('save-bank-details', 'BuilderController@save_bank_details');
       Route::post('save-notification-settings', 'BuilderController@save_notification_settings');
       Route::post('save-default-contingency', 'BuilderController@save_default_contingency');
+      Route::get('settings', 'UserController@get_settings');
+      Route::get('projects/{project_id}/milestones', 'MilestoneController@index');
+      Route::get('milestone/{milestone}', 'MilestoneController@show');
+      Route::post('milestone/{milestone}/update', 'MilestoneController@update');
+      Route::get('projects/{project_id}/milestone-wizard','MilestoneController@milestone_wizard');
+      Route::get('company/{trader_id}/','BuilderController@get_company_details');
+      Route::get('company/{trader_id}/reviews','ProjectController@get_reviews');
 
       // Trader Specific routes
       Route::prefix('trader/')->group(function() {
         Route::get('projects/', 'TradespersonProjectController@index');
+        Route::get('estimate/{id}', 'EstimateController@show');
         Route::post('projects/{project_id}/write-estimate', 'EstimateController@store');
-        Route::put('projects/{project_id}/write-estimate/update', 'EstimateController@update');
+        Route::post('projects/{project_id}/write-estimate/update', 'EstimateController@update');
+        Route::post('projects/{project_id}/reject', 'TradespersonProjectController@reject');
+        Route::get('projects/{project_id}/recommendation', 'TradespersonProjectController@recommendation');
+        Route::post('estimates/{estimate}/recall', 'EstimateController@recall');
+        Route::post('settings', 'BuilderController@save_settings');
+    });
+
+      // Customer Specific routes
+      Route::prefix('customer/')->group(function() {
+        Route::get('projects/{project}/estimates', 'EstimateController@index');
+        Route::post('estimates/{estimate}/accept', 'EstimateController@accept');
+        Route::post('estimates/{estimate}/reject', 'EstimateController@reject');
+        Route::post('projects/{project}/review/submit', 'ProjectController@submit_review');
+        Route::post('settings', 'CustomerController@email_notifications');
       });
 
     });
-  });
+});
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

@@ -19,4 +19,7 @@ class ProjectEstimateFile extends Model
         'file_type',
     ];
 
+    public function estimate() {
+        return $this->belongsTo(Estimate::class);
+    }
 }

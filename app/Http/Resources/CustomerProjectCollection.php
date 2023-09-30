@@ -2,22 +2,26 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Task;
-use App\Models\Estimate;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Models\Estimate;
+use App\Models\Task;
 
-class TraderProjectCollection extends BaseCollection
+class CustomerProjectCollection extends BaseCollection
 {
+    /**
+     * Transform the resource collection into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     */
     public function toArray($request = null)
     {
         $this->collection->transform(function ($project) use ($request) {
             $projectArray = is_array($project) ? $project : $project->toArray();
-            $projectArray['trader_project_status'] = tradesperson_project_status($project->id);
             $projectArray['project_completed_percent'] = null;
 
             $estimate = Estimate::where([
                 'project_id' => $project->id,
-                'tradesperson_id' => request()->user()->id,
                 'project_awarded' => 1
             ])->first();
             if ($estimate) {
