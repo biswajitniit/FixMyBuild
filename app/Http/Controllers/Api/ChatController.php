@@ -44,4 +44,32 @@ class ChatController extends BaseController
             return response()->json($e->getMessage(),500);
         }
     }
+
+    /********************************************************
+    *
+    **************** Get User Chat List **********
+    *
+    *********************************************************/
+    public function get_chat_details_by_two_user(Request $request){
+        try{
+            $chat =  DB::select('select * FROM chat where from_user_id = '.$request->from_user_id.' and to_user_id = '.$request->to_user_id.' union select * FROM chat where from_user_id = '.$request->to_user_id.' and to_user_id = '.$request->from_user_id.' Order by id asc');
+            return response()->json($chat,200);
+        }catch(Exception $e){
+            return response()->json($e->getMessage(),500);
+        }
+    }
+    /********************************************************
+    *
+    **************** Get User Unread chat count **********
+    *
+    *********************************************************/
+    public function get_unread_chat_count_two_user(Request $request){
+        try{
+            $chat =  DB::select('SELECT COUNT(*) unread FROM chat WHERE (from_user_id = '.$request->from_user_id.' AND to_user_id = '.$request->to_user_id.' AND read_status = 0) OR (from_user_id = '.$request->to_user_id.' AND to_user_id = '.$request->from_user_id.' AND read_status = 0)');
+            return response()->json($chat,200);
+        }catch(Exception $e){
+            return response()->json($e->getMessage(),500);
+        }
+    }
+
 }
