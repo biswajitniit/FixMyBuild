@@ -408,7 +408,7 @@ class ProjectController extends BaseController
 
     public function get_reviews(Request $request, $trader_id) {
         try {
-            $reviews = ProjectReview::where('tradesperson_id', $trader_id)->with('files')->paginate($request->limit ?? ProjectReview::count());
+            $reviews = ProjectReview::where('tradesperson_id', $trader_id)->with('files', 'user')->paginate($request->limit ?? ProjectReview::count());
 
             return $this->success((new ProjectReviewCollection($reviews))->additional($reviews));
         } catch(Exception $exception) {
