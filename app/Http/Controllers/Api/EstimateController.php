@@ -70,17 +70,7 @@ class EstimateController extends BaseController
             ],
             'tasks' => [
                 'required_if:describe_mode,'.config('const.describe_mode.FULLY_DESCRIBE'),
-                'array'
-            ],
-            'tasks.*' => [
-                'required_if:describe_mode,'.config('const.describe_mode.FULLY_DESCRIBE'),
-                'array'
-            ],
-            'tasks.*.description' => [
-                'required_if:describe_mode,'.config('const.describe_mode.FULLY_DESCRIBE'), 'string'
-            ],
-            'tasks.*.price' => [
-                'required_if:describe_mode,'.config('const.describe_mode.FULLY_DESCRIBE'), 'numeric'
+                'string'
             ],
             'more_info' => [
                 'required_if:unable_to_describe_type,'.config('const.unable_to_describe_type.NEED_MORE_INFO'),
@@ -120,6 +110,13 @@ class EstimateController extends BaseController
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $tasks = json_decode($request->input('tasks'));
+        } catch (Exception $e) {
+            return $this->error('Decode error!', 403);
+                //throw $th;
         }
 
         try {
@@ -166,7 +163,7 @@ class EstimateController extends BaseController
                 ]);
             }
 
-            foreach ($request->input('tasks') as $task) {
+            foreach ($tasks as $task) {
                 Task::create([
                     'description' => $task['description'],
                     'price' => $task['price'],
