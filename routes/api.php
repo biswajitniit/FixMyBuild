@@ -89,6 +89,7 @@ Route::namespace('Api')->group(function() {
         Route::post('get_user_list_by_session_user', 'ChatController@index');
         Route::post('get_unread_chat_count_two_user', 'ChatController@get_unread_chat_count_two_user');
         Route::post('get_chat_details_by_two_user', 'ChatController@get_chat_details_by_two_user');
+        Route::post('send_messages', 'ChatController@send_messages');
       });
 
     });

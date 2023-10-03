@@ -10,7 +10,9 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use DB;
-
+use Illuminate\Support\Facades\Storage;
+use Aws\S3\Exception\S3Exception;
+use Illuminate\Support\Str;
 class ChatController extends BaseController
 {
     /********************************************************
@@ -71,5 +73,39 @@ class ChatController extends BaseController
             return response()->json($e->getMessage(),500);
         }
     }
+    /********************************************************
+    *
+    **************** Get User Unread chat count **********
+    *
+    *********************************************************/
+    public function send_messages(Request $request){
+        try{
+
+            if($request->hasFile('document')){
+                $file = $request->file('document');
+                $fileName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $s3FileName = \Str::uuid().'.'.$extension;
+                Storage::disk('s3')->put('chats/'.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url('chats/'.$s3FileName);
+            }else{
+                $path = '';
+            }
+
+            $insert_msg = new Chat();
+            $insert_msg->from_user_id = $request->input('from_user_id');
+            $insert_msg->to_user_id = $request->input('to_user_id');
+            $insert_msg->project_id = $request->input('project_id');
+            $insert_msg->estimate_id = $request->input('estimate_id');
+            $insert_msg->message = $request->message;
+            $insert_msg->documents_url =  $path;
+            $insert_msg->save();
+
+            return response()->json(['message' => 'Message Send Successfully.', 'last_insert_id' => $insert_msg->id]);
+        }catch(Exception $e){
+            return response()->json($e->getMessage(),500);
+        }
+    }
+
 
 }
