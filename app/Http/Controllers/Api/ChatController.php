@@ -22,8 +22,8 @@ class ChatController extends BaseController
     *********************************************************/
     public function index(Request $request){
         try{
-            $chat =  DB::select('
-                    SELECT t1.*
+           /* $chat =  DB::select('
+                    SELECT t1.*, u.name
                     FROM chat AS t1
                     INNER JOIN
                     (
@@ -41,7 +41,11 @@ class ChatController extends BaseController
                         t1.id = t2.max_id
                         WHERE t1.from_user_id = ? OR t1.to_user_id = ?
                     ', [$request->userid, $request->userid]);
+            return response()->json($chat,200); */
+
+            $chat = DB::select('select c.id, c.created_at, c.message, u.name, u.profile_image, c.from_user_id, c.to_user_id FROM users AS u LEFT JOIN chat AS c ON c.from_user_id = u.id WHERE c.id IN ( SELECT MAX(id) FROM chat WHERE (from_user_id = '.$request->userid.' OR to_user_id = '.$request->userid.') OR (from_user_id = '.$request->userid.' OR to_user_id = '.$request->userid.') GROUP BY LEAST(from_user_id, to_user_id), GREATEST(from_user_id, to_user_id))');
             return response()->json($chat,200);
+
         }catch(Exception $e){
             return response()->json($e->getMessage(),500);
         }
