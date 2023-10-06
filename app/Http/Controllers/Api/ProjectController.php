@@ -170,7 +170,7 @@ class ProjectController extends BaseController
                 'project_id'        => $result->id,
                 'action_by_id'      => request()->user()->id,
                 'action_by_type'    => 'user',
-                'status'            => config('const.project_status.PROJECT_STARTED'),
+                'status'            => config('const.project_status.SUBMITTED_FOR_REVIEW'),
                 'status_changed_at' => now(),
             ]);
 
