@@ -113,10 +113,9 @@ class EstimateController extends BaseController
         }
 
         try {
-            $tasks = json_decode($request->input('tasks'));
+            $tasks = json_decode($request->input('tasks'), true);
         } catch (Exception $e) {
             return $this->error('Decode error!', 403);
-                //throw $th;
         }
 
         try {
