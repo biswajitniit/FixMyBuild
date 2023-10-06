@@ -166,6 +166,14 @@ class ProjectController extends BaseController
                 ]);
             }
 
+            ProjectStatusChangeLog::create([
+                'project_id'        => $result->id,
+                'action_by_id'      => request()->user()->id,
+                'action_by_type'    => 'user',
+                'status'            => config('const.project_status.PROJECT_STARTED'),
+                'status_changed_at' => now(),
+            ]);
+
             DB::commit();
 
             return $this->success('Project added successfully!',200);
