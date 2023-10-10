@@ -31,7 +31,7 @@ class EstimateController extends BaseController
     {
         try {
             $project = Project::findorFail($project);
-            $estimates = Estimate::where('project_id', $project->id)->with('tradesperson.traderDetail')->get();
+            $estimates = Estimate::where('project_id', $project->id)->where('status', '<>', 'estimate_recalled')->with('tradesperson.traderDetail')->get();
 
             // Trader Counts
             // $trader_who_submitted_estimate = array_column($estimates, 'tradesperson_id');
@@ -113,10 +113,9 @@ class EstimateController extends BaseController
         }
 
         try {
-            $tasks = json_decode($request->input('tasks'));
+            $tasks = json_decode($request->input('tasks'), true);
         } catch (Exception $e) {
             return $this->error('Decode error!', 403);
-                //throw $th;
         }
 
         try {

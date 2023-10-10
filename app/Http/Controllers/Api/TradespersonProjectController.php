@@ -29,33 +29,6 @@ class TradespersonProjectController extends BaseController
             $projects = null;
 
             if ($request->filled('history') && $request->history == 1) {
-                // $projects = Project::where('reviewer_status', 'approved')
-                //     ->where(function ($query) use ($request) {
-                //         $query->whereIn('status', config('const.trader_project_history_statuses'))
-                //             ->whereIn('id', Estimate::where(['tradesperson_id' => $request->user()->id, 'project_awarded' => 1])
-                //                 ->pluck('project_id')
-                //                 ->toArray()
-                //             );
-                //     })
-                    // // ->orWhere(function($query) use ($request) {
-                    // //     // Cancelled projects for which the trader has submitted an estimate and none of the estimate has been accepted by customer
-                    // //     $query->where('status', config('const.trader_project_history_statuses.PROJECT_CANCELLED'))
-                    // //         ->whereDoesntHave('estimates', function ($query) {
-                    // //             $query->where('project_awarded', 1);
-                    // //         })
-                    // //         ->whereIn('id', Estimate::where('tradesperson_id', $request->user()->id)
-                    // //             ->pluck('project_id')
-                    // //             ->toArray()
-                    // //         );
-                    // // })
-                    // ->orWhere(function($query) use ($request) {
-                    //     $query->where('status', 'project_started')
-                    //         ->whereIn('id', Estimate::where(['tradesperson_id' => $request->user()->id, 'project_awarded' => 1])
-                    //             ->where('project_awarded', 0)
-                    //             ->pluck('project_id')
-                    //             ->toArray()
-                    //         );
-                    // })
                 $projects = Project::where('reviewer_status', 'approved')
                     ->where(function ($query) use ($request) {
                         $query->whereIn('status', config('const.trader_project_history_statuses'))
@@ -66,10 +39,11 @@ class TradespersonProjectController extends BaseController
                     })
                     ->orWhere(function ($query) use ($request) {
                         // Get the projects for which the estimates has been rejected by the customer or the customer has cancelled the project
-                        $query->whereIn('id', Estimate::where(['tradesperson_id' => $request->user()->id, 'project_awarded' => 0])
-                            ->pluck('project_id')
-                            ->toArray()
-                        );
+                        $query->where('status', '<>', config('const.project_status.ESTIMATION'))
+                            ->whereIn('id', Estimate::where(['tradesperson_id' => $request->user()->id, 'project_awarded' => 0])
+                                ->pluck('project_id')
+                                ->toArray()
+                            );
                     })
                     ->when($request->filled('order_by'), function ($query) use ($request) {
                         $query->orderBy($request->order_by, $request->order_by_type ?? 'desc');

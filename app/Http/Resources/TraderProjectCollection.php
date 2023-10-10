@@ -14,7 +14,10 @@ class TraderProjectCollection extends BaseCollection
             $projectArray = is_array($project) ? $project : $project->toArray();
             $projectArray['trader_project_status'] = tradesperson_project_status($project->id);
             $projectArray['project_completed_percent'] = null;
-
+            $projectArray['estimate_id'] = Estimate::where([
+                'project_id' => $project->id,
+                'tradesperson_id' => request()->user()->id,
+            ])->value('id');
             $estimate = Estimate::where([
                 'project_id' => $project->id,
                 'tradesperson_id' => request()->user()->id,
