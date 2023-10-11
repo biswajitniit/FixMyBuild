@@ -63,6 +63,8 @@ Route::namespace('Api')->group(function() {
       Route::get('projects/{project_id}/milestone-wizard','MilestoneController@milestone_wizard');
       Route::get('company/{trader_id}/','BuilderController@get_company_details');
       Route::get('company/{trader_id}/reviews','ProjectController@get_reviews');
+      Route::get('has-unread-notifications','NotificationController@has_unread_notifications');
+      Route::get('notifications','NotificationController@index');
 
       // Trader Specific routes
       Route::prefix('trader/')->group(function() {
