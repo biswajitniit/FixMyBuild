@@ -11,12 +11,20 @@ class NotificationDetail extends Model
 {
     use HasFactory;
 
-    // public function count_all()
-    // {
-    //     return DB::table('notification_details')
-    //                                 ->where('read_status', 0)
-    //                                 ->where('user_id', Auth::user()->id)
-    //                                 ->count();
+    protected $fillable = [
+        'user_id',
+        'from_user_id',
+        'from_user_type',
+        'related_to',
+        'related_to_id',
+        'read_status',
+        'notification_text',
+        'reviewer_note',
+    ];
 
-    // }
+
+    public function from_user_details()
+    {
+        return $this->belongsTo(User::class, 'from_user_id', 'id');
+    }
 }
