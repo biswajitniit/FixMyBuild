@@ -44,7 +44,33 @@ class ChatController extends BaseController
             return response()->json($chat,200); */
 
             $chat = DB::select('select c.id, c.created_at, c.message, u.name, u.profile_image, c.from_user_id, c.to_user_id FROM users AS u LEFT JOIN chat AS c ON c.from_user_id = u.id WHERE c.id IN ( SELECT MAX(id) FROM chat WHERE (from_user_id = '.$request->userid.' OR to_user_id = '.$request->userid.') OR (from_user_id = '.$request->userid.' OR to_user_id = '.$request->userid.') GROUP BY LEAST(from_user_id, to_user_id), GREATEST(from_user_id, to_user_id))');
-            return response()->json($chat,200);
+            //return response()->json($chat,200);
+            if($chat){
+                foreach($chat as $row){
+
+                    if($row->from_user_id == $request->userid){
+                        $fromuser = $row->to_user_id;
+                    }else{
+                        $fromuser = $row->from_user_id;
+                    }
+
+                    //Get unread chat count
+                    $chatunreadcount =  DB::select('SELECT count(id) as unread FROM chat WHERE from_user_id = '.$fromuser.' AND to_user_id = '.$request->userid.' AND from_user_id != '.$request->userid.' AND read_status = "0"');
+
+
+                    $data[] = array(
+                                    "id" => $row->id,
+                                    "created_at" => $row->created_at,
+                                    "message" => $row->message,
+                                    "name" => $row->name,
+                                    "profile_image" => $row->profile_image,
+                                    "from_user_id" => $row->from_user_id,
+                                    "to_user_id" => $row->to_user_id,
+                                    "unread_chat_count" => $chatunreadcount[0]->unread
+                                );
+                }
+                return response()->json($data,200);
+            }
 
         }catch(Exception $e){
             return response()->json($e->getMessage(),500);
