@@ -20,6 +20,10 @@
             a {
                 font-family: "Roboto", sans-serif;
             }
+
+            .active-link, .active-link:active{
+                color: #EE5719;
+            }
         </style>
     </head>
     <body>
@@ -60,7 +64,18 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
-                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">We paused your project as requested and have let your tradesperson know.</h5>
+                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">
+                                            @if (@$data && @$data['trader_paused'])
+                                                <p style="margin-bottom: 40px;">
+                                                    Your project @if(@$data && @$data['project_name'])titled "{{ @$data && @$data['project_name'] }}" @endif has been paused by your tradesperson.
+                                                </p>
+                                                <p>
+                                                    If you're unsure why please contact your tradesperson through our <a href="{{ route('home') }}" class="active-link">website</a>.
+                                                </p>
+                                            @else
+                                                We paused your project as requested and have let your tradesperson know.
+                                            @endif
+                                        </h5>
 
                                         <h5 style="color: #061a48; font-size: 16px; line-height: 23px; text-align: center; margin-bottom: 10px;">Team Fix My Build</h5>
                                         {{-- <a href="#" style="margin-right: 10px; text-decoration: none;">

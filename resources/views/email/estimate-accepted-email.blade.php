@@ -48,7 +48,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <h2 style="font-size: 32px;">Estimate(s) received</h2>
+                                                        <h2 style="font-size: 32px;">Estimate accepted</h2>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -60,9 +60,8 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center; background: #fff; padding: 20px 30px; border-radius: 10px;">
-                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">Congratulations! You have received estimate(s) from one or more tradespeople.</h5>
-                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">
-                                            To view them please click on the "{{ ucwords($data['project_name']) }}" link on our <a href="#" style='color:#EE5719;'>website.</a>
+                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">Congratulations! Your estimate for your customer's project{{ @$data && @$data['project_name'] ? ' named " '. htmlspecialchars_decode(trim($data['project_name'])).' "' : ''}} has been accepted.</h5>
+                                        <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;"> If you had requested for an initial payment this should have been sent to you too. We wish you good luck with your project.
                                         </h5>
 
                                         <h5 style="color: #061a48; font-size: 16px; line-height: 23px; text-align: center; margin-bottom: 10px;">Team Fix My Build</h5>

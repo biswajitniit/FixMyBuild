@@ -49,6 +49,7 @@ Route::get('/clear-cache', function () {
     return "Cache is cleared";
 });
 Route::get('/get-video', [MediaController::class,'get_video'])->name('get-video');
+Route::view('/pause-template-check', 'email.project-paused-customer')->name('admin.login');
 
 Route::post('/capture-video-streaming', [MediaController::class,'capture_video_streaming'])->name('capture-video-streaming');
 Route::post('/capture-video-streaming-project-return-for-review', [MediaController::class,'capture_video_streaming_project_return_for_review'])->name('capture-video-streaming-project-return-for-review');

@@ -15,6 +15,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::namespace('Api')->group(function() {
+    // Route::get('/check-mail', function(Request $request){
+    //     try {
+    //         $html = view('email.project-paused-trader')
+    //         ->with('data', [
+    //             'project_name'       => 'Demo',
+    //             'user_name'          => 'Sankalan'
+    //         ])
+    //         ->render();
+    //         $emaildata = array(
+    //             'From'          =>  env('MAIL_FROM_ADDRESS'),
+    //             'To'            =>  'sankalan.saha@ebestsolutions.net',
+    //             'Subject'       => 'Paused Project',
+    //             'HtmlBody'      =>  $html,
+    //             'MessageStream' => 'outbound'
+    //         );
+    //         send_email($emaildata);
+    //         return response()->json("Done", 200);
+    //     } catch (Exception $e) {
+    //         return $e->getMessage();
+    //     }
+    // });
+
     Route::post('/login', 'AuthController@login');
     Route::post('/signup', 'AuthController@signup');
     Route::post('/third-party-login', 'AuthController@login_with_third_party');
@@ -31,7 +53,7 @@ Route::namespace('Api')->group(function() {
     Route::post('resend-otp', 'AuthController@resend_otp');
     Route::post('verify-otp', 'AuthController@verify_otp');
     Route::post('reset-password-with-sms', 'AuthController@reset_password_with_sms');
-
+    Route::get('user-onboarding', 'PaymentController@onboard_user')->name('stripe.user-onboarding');
 
     Route::middleware('auth:sanctum')->group(function() {
       Route::post('/terms-of-service/update', 'AuthController@update_terms_of_service_acceptance');
@@ -43,7 +65,7 @@ Route::namespace('Api')->group(function() {
       Route::post('projects','ProjectController@add_project');
       Route::post('projects/{project_id}/update','ProjectController@update_project');
       Route::post('projects/{project_id}/cancel','ProjectController@cancel_project');
-      Route::post('projects/{project_id}/pause','ProjectController@pause_project');
+    Route::post('projects/{project_id}/pause','ProjectController@pause_project');
       Route::post('projects/{project_id}/resume','ProjectController@resume_project');
       Route::post('delete-account','UserController@delete_account');
       Route::put('profile-update','CustomerController@update_customer_profile');

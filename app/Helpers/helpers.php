@@ -108,11 +108,17 @@ function send_email($postdata){
         'X-Postmark-Server-Token: '.env('POSTMARKTOKEN'),
         'Content-Type: application/json'
       ),
+      CURLOPT_VERBOSE => true,
     ));
     $response = curl_exec($curl);
+    if ($response === FALSE) {
+        // printf("cUrl error (#%d): %s<br>\n", curl_errno($curl), htmlspecialchars(curl_error($curl)));
+        dd(sprintf("cUrl error (#%d): %s", curl_errno($curl), htmlspecialchars(curl_error($curl))));
+    }
     curl_close($curl);
     return $response;
 }
+
 
 if (!function_exists('tradesperson_project_status')) {
     function tradesperson_project_status($project_id)
@@ -719,85 +725,3 @@ if(!function_exists('lock_trader_dashboard_access')) {
     }
 }
 
-// TODO: Implement different mail templates for trader and customer when trader pause the project
-// if (!function_exists('pause_project_notification')) {
-//     function pause_project_notification($project_id) {
-//         try {
-//             $project = Project::findOrFail($project_id);
-//             $estimate = Estimate::where(['project_id' => $project_id, 'project_awarded' => 1])->firstOrFail();
-//             $customer = $project->user;
-//             $tradeperson = User::where('id', $estimate->tradesperson_id)->firstOrFail();
-//             $notify_settings_customer = Notification::where('user_id', $project->user->id)->firstOrFail();
-//             $notify_settings_trader = Notification::where('user_id', $estimate->tradesperson_id)->firstOrFail();
-//             $project_paused = 0;
-//             // For customer
-//             if($notify_settings_customer)
-//                 $project_paused = $notify_settings_customer->settings['paused'];
-
-//             if($project_paused == 1){
-//                 $html = view('email.project-paused-customer')
-//                     ->with('data', [
-//                     'project_name'       => $project->project_name,
-//                     'user_name'          => $customer->name
-//                     ])
-//                     ->render();
-//                 $emaildata = array(
-//                     'From'          =>  env('MAIL_FROM_ADDRESS'),
-//                     'To'            =>  $customer->email,
-//                     'Subject'       => 'Project Paused',
-//                     'HtmlBody'      =>  $html,
-//                     'MessageStream' => 'outbound'
-//                 );
-//                 $email_sent = send_email($emaildata);
-
-//                 $notificationDetail = new NotificationDetail();
-//                 $notificationDetail->user_id = $customer->id;
-//                 $notificationDetail->from_user_id = Auth::user()->id;
-//                 $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
-//                 $notificationDetail->related_to = 'project';
-//                 $notificationDetail->related_to_id = $project->id;
-//                 $notificationDetail->read_status = 0;
-//                 $notificationDetail->notification_text = 'Your '.$project->project_name.' has been paused';
-//                 $notificationDetail->reviewer_note = null;
-//                 $notificationDetail->save();
-//             }
-
-//             // For tradeperson
-//             if($notify_settings_trader) {
-//                 if($notify_settings_trader->settings != null){
-//                     $project_paused_trader = $notify_settings_trader->settings['noti_project_stopped'];
-//                 }
-//             }
-
-//             if($project_paused_trader == 1){
-//                 $html = view('email.project-paused-trader')
-//                     ->with('data', [
-//                     'project_name'       => $project->project_name,
-//                     'user_name'          => $tradeperson->name
-//                     ])
-//                     ->render();
-//                 $emaildata = array(
-//                     'From'          =>  env('MAIL_FROM_ADDRESS'),
-//                     'To'            =>  $tradeperson->email,
-//                     'Subject'       => 'Paused Project',
-//                     'HtmlBody'      =>  $html,
-//                     'MessageStream' => 'outbound'
-//                 );
-//                 $email_sent = send_email($emaildata);
-
-//                 $notificationDetail = new NotificationDetail();
-//                 $notificationDetail->user_id = $tradeperson->id;
-//                 $notificationDetail->from_user_id = Auth::user()->id;
-//                 $notificationDetail->from_user_type = Auth::user()->customer_or_tradesperson;
-//                 $notificationDetail->related_to = 'project';
-//                 $notificationDetail->related_to_id = $project->id;
-//                 $notificationDetail->read_status = 0;
-//                 $notificationDetail->notification_text = 'Customer has paused the project '.$project->project_name;
-//                 $notificationDetail->reviewer_note = null;
-//                 $notificationDetail->save();
-//             }
-//         } catch (\Exception $e) {
-//             return $e->getMessage();
-//         }
-//     }
-// }

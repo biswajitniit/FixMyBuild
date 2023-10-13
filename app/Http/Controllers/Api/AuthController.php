@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
 use Twilio\Rest\Client;
+use App\Models\UserVerify;
 
 // use App\Http\Requests\ThirdPartyAuthRequest;
 
@@ -115,6 +116,19 @@ class AuthController extends Controller
 
         Notification::create(['user_id' => $user->id,'settings' => $settings]);
 
+        $token = Str::random(64);
+        $data = UserVerify::updateOrCreate(['user_id' => $user->id],['token' => $token]);
+        $html = view('email.email-verification-mail')->with('token', $token)->render();
+        $emaildata = array(
+          'From'          =>  env('MAIL_FROM_ADDRESS'),
+          'To'            => $user->email,
+          'Subject'       => 'Verify Email',
+          'HtmlBody'      =>  $html,
+          'MessageStream' => 'outbound'
+        );
+
+        send_email($emaildata);
+
         if(strtolower($user->customer_or_tradesperson) == 'tradesperson')
         {
             $token = $user->createToken("asdshjfhsdkjgda.lk,hjmgnhbgfd")->plainTextToken;
@@ -125,58 +139,6 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
             ], 200);
         }
-
-        $html = "<!doctype html>
-        <html class='no-js' lang='en'>
-           <head>
-              <meta charset='utf-8'>
-              <meta http-equiv='x-ua-compatible' content='ie=edge'>
-              <title>FixMyBuild</title>
-              <meta name='description' content=''>
-              <link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap' rel='stylesheet'>
-              <style>
-                 body{
-                    font-family: 'Roboto', sans-serif;
-                 }
-                 h1, h2, h3, h4, h5, h6, p, a{
-                    font-family: 'Roboto', sans-serif;
-                 }
-              </style>
-           </head>
-           <body>
-           <p>Your otp is .$random</p>
-           </body>
-        </html>";
-
-
-        $postdata = array(
-                        'From'          => env('MAIL_FROM_ADDRESS'),
-                        'To'            => $request['email'],
-                        'Subject'       => 'Fixmybuild',
-                        'HtmlBody'      => $html,
-                        'MessageStream' => 'outbound'
-                    );
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://api.postmarkapp.com/email',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>json_encode($postdata),
-          CURLOPT_HTTPHEADER => array(
-            'X-Postmark-Server-Token: 397dcd71-2e20-4a1d-b1fd-24bac29255dc',
-            'Content-Type: application/json'
-          ),
-        ));
-
-        $response = curl_exec($curl);
-        curl_close($curl);
 
         return response()->json(['otp' => $random,"message"=>'Otp sent to your email'], 201);
     }

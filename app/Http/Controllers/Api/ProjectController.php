@@ -39,6 +39,113 @@ class ProjectController extends BaseController
     }
 
 
+    // TODO: Implement different mail templates for trader and customer when trader pause the project
+    private function pause_project_notification($project_id, $trader_paused_project = false) {
+        try {
+            $project = Project::findOrFail($project_id);
+            $estimate = Estimate::where(['project_id' => $project_id, 'project_awarded' => 1])->firstOrFail();
+            $customer = $project->user;
+            $tradesperson = User::findOrFail($estimate->tradesperson_id);
+            $notify_settings_customer = Notification::where('user_id', $customer->id)->firstOrFail();
+            $notify_settings_trader = Notification::where('user_id', $tradesperson->id)->firstOrFail();
+            $customer_project_paused = 0;
+
+            if($notify_settings_customer)
+                $customer_project_paused = $notify_settings_customer->settings['paused'];
+
+            // Mail and notification send to customer
+            if($customer_project_paused == 1) {
+                $html = view('email.project-paused')
+                    ->with('data', [
+                        'project_name'       => $project->project_name,
+                        'user_name'          => $customer->name,
+                        'trader_paused'      => $trader_paused_project
+                    ])
+                    ->render();
+
+                $emaildata = array(
+                    'From'          =>  env('MAIL_FROM_ADDRESS'),
+                    'To'            =>  $customer->email,
+                    'Subject'       => 'Project Paused',
+                    'HtmlBody'      =>  $html,
+                    'MessageStream' => 'outbound'
+                );
+
+                send_email($emaildata);
+
+                // Customer Paused the project And Customer receives the notification
+                $notification_data = [
+                    'user_id' => $customer->id,
+                    'from_user_id' => $customer->id,
+                    'from_user_type' => $customer->customer_or_tradesperson,
+                    'related_to' => 'project',
+                    'related_to_id' => $project->id,
+                    'read_status' => 0,
+                    'notification_text' => 'Your '.$project->project_name.' has been paused',
+                ];
+
+                // Tradesperson paused the project And Customer receives the notification
+                if ($trader_paused_project) {
+                    $notification_data['user_id'] = $customer->id;
+                    $notification_data['from_user_id'] = $tradesperson->id;
+                    $notification_data['from_user_type'] = $tradesperson->customer_or_tradesperson;
+                    $notification_data['notification_text'] = 'Your project titled '. $project->project_name .'" has been paused by your tradesperson.';
+                }
+
+                NotificationDetail::create($notification_data);
+            }
+
+            if($notify_settings_trader) {
+                if($notify_settings_trader->settings != null){
+                    $project_paused_trader = $notify_settings_trader->settings['noti_project_stopped'];
+                }
+            }
+
+            // Mail and notification send to tradesperson
+            if($project_paused_trader == 1) {
+                $html = view('email.project-paused')
+                    ->with('data', [
+                        'project_name'       => $project->project_name,
+                        'user_name'          => $tradesperson->name
+                    ])
+                    ->render();
+
+                $emaildata = array(
+                    'From'          =>  env('MAIL_FROM_ADDRESS'),
+                    'To'            =>  $tradesperson->email,
+                    'Subject'       => 'Paused Project',
+                    'HtmlBody'      =>  $html,
+                    'MessageStream' => 'outbound'
+                );
+                send_email($emaildata);
+
+                // Customer Paused the project And Tradesperson receives the notification
+                $notification_data = [
+                    'related_to' => 'project',
+                    'related_to_id' => $project->id,
+                    'read_status' => 0,
+                    'user_id' => $tradesperson->id,
+                    'from_user_id' => $customer->id,
+                    'from_user_type' => $customer->customer_or_tradesperson,
+                    'notification_text' => 'Customer has paused the project '.$project->project_name,
+                ];
+
+                // Tradesperson paused the project And Tradesperson receives the notification
+                if ($trader_paused_project) {
+                    $notification_data['user_id'] = $tradesperson->id;
+                    $notification_data['from_user_id'] = $tradesperson->id;
+                    $notification_data['from_user_type'] = $tradesperson->customer_or_tradesperson;
+                    $notification_data['notification_text'] = 'Your '.$project->project_name.' has been paused';
+                }
+
+                NotificationDetail::create($notification_data);
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+
     public function index(Request $request) {
         $validator = Validator::make(request()->all(), [
             'history' => 'nullable|boolean',
@@ -307,7 +414,8 @@ class ProjectController extends BaseController
             $project->save();
 
             // TODO: Send email notification to traders and customers
-            // cancel_project_notification($project_id);
+            $this->cancel_project_notification($project_id);
+
             ProjectStatusChangeLog::create([
                 'project_id'        => $project_id,
                 'action_by_id'      => request()->user()->id,
@@ -335,16 +443,18 @@ class ProjectController extends BaseController
         try {
             $project = Project::findOrFail($project_id);
             $estimate = Estimate::where(['project_id' => $project->id, 'project_awarded' => 1])->first();
+            $trader_paused_project = false;
 
-            if (!$estimate || $project->status != config('const.project_status.PROJECT_STARTED')) {
-                return $this->error('You can only pause a project which has been started! ', 400);
-            }
+            // if (!$estimate || $project->status != config('const.project_status.PROJECT_STARTED')) {
+            //     return $this->error('You can only pause a project which has been started! ', 400);
+            // }
 
             DB::beginTransaction();
 
             if ($project->user_id == request()->user()->id) {
                 $project->status = config('const.project_status.PROJECT_PAUSED');
             } else if ($estimate->tradesperson_id == request()->user()->id) {
+                $trader_paused_project = true;
                 $project->status = config('const.project_status.TRADER_PROJECT_PAUSED');
             } else {
                 return $this->error('You are not authorized to pause this project!', 403);
@@ -360,7 +470,7 @@ class ProjectController extends BaseController
             ]);
 
             // TODO: Implement different mail templates for trader and customer when trader pause the project
-            // pause_project_notification($request->project_id);
+            $this->pause_project_notification($request->project_id, $trader_paused_project);
             DB::commit();
 
             return $this->success("The project has been paused successfully.", 200);

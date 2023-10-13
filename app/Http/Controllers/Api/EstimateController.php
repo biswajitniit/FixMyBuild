@@ -23,9 +23,60 @@ use App\Models\UserPersonalDataShare;
 use App\Models\ProjectStatusChangeLog;
 use App\Models\Notification;
 use App\Models\NotificationDetail;
+use App\Http\Resources\EstimateCollection;
 
 class EstimateController extends BaseController
 {
+    private function reject_estimate_notification($estimate_id)
+    {
+        try {
+            $estimate = Estimate::findOrFail('id', $estimate_id);
+            $project = $estimate->project;
+            $user = User::findOrFail('id', $estimate->tradesperson_id);
+
+            // Check Notification settings
+            $notify_settings = Notification::where('user_id', $user->id)->first();
+            $noti_cancelled = 1;
+
+            if ($notify_settings && $notify_settings->settings != null) {
+                $noti_cancelled = $notify_settings->settings['noti_project_cancelled'];
+            }
+
+            // Notification
+            if ($noti_cancelled == 1) {
+                $html = view('email.project-cancelled')
+                        ->with('data', [
+                            'project_name'       => $project->project_name,
+                            'user_name'          => $user->name
+                        ])
+                        ->render();
+
+                $emaildata = array(
+                    'From'          =>  env('MAIL_FROM_ADDRESS'),
+                    'To'            =>  $user->email,
+                    'Subject'       => 'Your project has been cancelled',
+                    'HtmlBody'      =>  $html,
+                    'MessageStream' => 'outbound'
+                );
+                send_email($emaildata);
+
+                $notificationDetail = new NotificationDetail();
+                $notificationDetail->user_id = $user->id;
+                $notificationDetail->from_user_id = request()->user()->id;
+                $notificationDetail->from_user_type = request()->user()->customer_or_tradesperson;
+                $notificationDetail->related_to = 'project';
+                $notificationDetail->related_to_id = $project->id;
+                $notificationDetail->read_status = 0;
+                $notificationDetail->notification_text = 'Your project '.$project->project_name.' has been cancelled';
+                $notificationDetail->reviewer_note = null;
+                $notificationDetail->save();
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+
     // Customer Estimate Listing API
     public function index($project)
     {
@@ -42,7 +93,7 @@ class EstimateController extends BaseController
 
             $combinedData = [
                 'remaining_trader_count' => $remainingTraderCount,
-                'estimates' => $estimates
+                'estimates' => new EstimateCollection($estimates)
             ];
 
             if ($project->user_id == request()->user()->id) {
@@ -389,10 +440,6 @@ class EstimateController extends BaseController
                 return $this->error('Estimate not found.', 404);
             }
 
-            if (!isCustomer($request->user()->customer_or_tradesperson)) {
-                return $this->error('Forbidden!', 403);
-            }
-
             $tradesperson = $estimate->tradesperson;
             $project = $estimate->project;
             $user_personal_data = UserPersonalDataShare::where('project_id', $project->id)->first();
@@ -441,7 +488,7 @@ class EstimateController extends BaseController
             }
 
             // Check Notification settings
-            $notify_settings = Notification::where('user_id', $request->tradesperson_id)->first();
+            $notify_settings = Notification::where('user_id', $tradesperson->id)->first();
             $noti_accepted = 1;
             if ($notify_settings && $notify_settings->settings) {
                 $noti_accepted = $notify_settings->settings['noti_quote_accepted'];
@@ -464,12 +511,12 @@ class EstimateController extends BaseController
                     'MessageStream' => 'outbound'
                 );
 
-                $email_sent = send_email($emaildata);
+                send_email($emaildata);
 
                 $notificationDetail = new NotificationDetail();
                 $notificationDetail->user_id = $tradesperson->id;
                 $notificationDetail->from_user_id = $request->user()->id;
-                $notificationDetail->from_user_type = 'customer';
+                $notificationDetail->from_user_type = $request->user()->customer_or_tradesperson;
                 $notificationDetail->related_to = 'project';
                 $notificationDetail->related_to_id = $project->id;
                 $notificationDetail->read_status = 0;
@@ -513,7 +560,7 @@ class EstimateController extends BaseController
             DB::beginTransaction();
             $estimate->status = 'rejected';
             $estimate->save();
-            estimate_rejected_notification($tradesperson, $project);
+            $this->reject_estimate_notification($estimate->id);
             DB::commit();
 
             return $this->success('Estimate has been successfully rejected.');
@@ -526,7 +573,8 @@ class EstimateController extends BaseController
 
 
     // Trader recalls an estimate
-    public function recall(Request $request, $estimate) {
+    public function recall(Request $request, $estimate)
+    {
         try {
             $estimate = Estimate::find($estimate);
 
