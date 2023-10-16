@@ -32,6 +32,7 @@ class TraderDetail extends Model
         'bnk_account_name',
         'bnk_sort_code',
         'bnk_account_number',
+        'stripe_account_id',
         'builder_amendment',
         'noti_new_quotes',
         'noti_quote_accepted',

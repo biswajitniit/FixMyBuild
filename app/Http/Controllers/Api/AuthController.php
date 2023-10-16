@@ -320,7 +320,9 @@ class AuthController extends Controller
     public function forget_password_with_mail(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users'
+            'email' => 'required|email:rfc,dns|exists:users'
+        ], [
+            'email.exists' => 'The email address you entered is not registered with us. Please create an account or try a different email address.',
         ]);
 
         if ($validator->fails()) {
@@ -328,15 +330,22 @@ class AuthController extends Controller
         }
 
         try{
-            $otp = mt_rand(100000, 999999);
+            $token = Str::random(64);
 
-            DB::table('password_resets')->insert([
-                'email' => $request->email,
-                'token' => $otp,
-                'created_at' => Carbon::now()
+            $old_token = DB::table('password_resets')->where('email', $request->email)->first();
+            if ($old_token) {
+                DB::table('password_resets')
+                    ->where('email', $request->email)
+                    ->update(['token' => $token, 'created_at' => now()]);
+            } else {
+                DB::table('password_resets')->insert([
+                    'email' => $request->email,
+                    'token' => $token,
+                    'created_at' => now(),
                 ]);
+            }
 
-            $html = view('email.reset-pswd-email-api')->with('otp', $otp)->render();
+            $html = view('email.reset-password')->with('token', $token)->render();
 
             $postdata = array(
                             'From'          => env('MAIL_FROM_ADDRESS'),
@@ -353,34 +362,13 @@ class AuthController extends Controller
         }
     }
 
-    public function verify_otp_with_mail(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        try {
-            $data = PasswordReset::where('email', $request->email)
-                                ->where('token', $request->otp)
-                                ->first();
-            if(!$data){
-                return response()->json(['message'=>"Wrong OTP."]);
-            }
-
-            return response()->json(['message'=>"OTP verified"]);
-        } catch(Exception $e){
-            return response()->json($e->getMessage(), 500);
-        }
-    }
 
     public function generate_otp(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|string'
+            'phone' => 'required|string|exists:users'
+        ], [
+            'phone.exists'  => 'The mobile number you entered is not registered with us. Please create an account or try a different phone number.'
         ]);
 
         if ($validator->fails()) {
@@ -401,13 +389,15 @@ class AuthController extends Controller
                 $receiverNumber = $user->phone;
                 $message = "This is your Fix my build forget password OTP ".$otp;
 
-                $account_sid = "AC15e8da3b8870bb7ab73cab93cbe287b9";
-                $auth_token = "9c2809e405ec441547bf89f95e3c6def";
-                $twilio_number = "+447360267868";
+                $account_sid = env('TWILIO_SID');
+                $auth_token = env('TWILIO_TOKEN');
+                $twilio_number = env('TWILIO_FROM');
                 $client = new Client($account_sid, $auth_token);
+
                 $client->messages->create($receiverNumber, [
                     'from' => $twilio_number,
-                    'body' => $message]);
+                    'body' => $message
+                ]);
 
                 if(strtotime($data->created_at) < strtotime(now()))
                 {

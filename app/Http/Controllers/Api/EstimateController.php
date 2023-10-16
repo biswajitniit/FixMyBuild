@@ -29,50 +29,46 @@ class EstimateController extends BaseController
 {
     private function reject_estimate_notification($estimate_id)
     {
-        try {
-            $estimate = Estimate::findOrFail('id', $estimate_id);
-            $project = $estimate->project;
-            $user = User::findOrFail('id', $estimate->tradesperson_id);
+        $estimate = Estimate::findOrFail($estimate_id);
+        $project = $estimate->project;
+        $user = User::findOrFail($estimate->tradesperson_id);
 
-            // Check Notification settings
-            $notify_settings = Notification::where('user_id', $user->id)->first();
-            $noti_cancelled = 1;
+        // Check Notification settings
+        $notify_settings = Notification::where('user_id', $user->id)->first();
+        $noti_cancelled = 1;
 
-            if ($notify_settings && $notify_settings->settings != null) {
-                $noti_cancelled = $notify_settings->settings['noti_project_cancelled'];
-            }
+        if ($notify_settings && $notify_settings->settings != null) {
+            $noti_cancelled = $notify_settings->settings['noti_project_cancelled'];
+        }
 
-            // Notification
-            if ($noti_cancelled == 1) {
-                $html = view('email.project-cancelled')
-                        ->with('data', [
-                            'project_name'       => $project->project_name,
-                            'user_name'          => $user->name
-                        ])
-                        ->render();
+        // Notification
+        if ($noti_cancelled == 1) {
+            $html = view('email.project-cancelled')
+                    ->with('data', [
+                        'project_name'       => $project->project_name,
+                        'user_name'          => $user->name
+                    ])
+                    ->render();
 
-                $emaildata = array(
-                    'From'          =>  env('MAIL_FROM_ADDRESS'),
-                    'To'            =>  $user->email,
-                    'Subject'       => 'Your project has been cancelled',
-                    'HtmlBody'      =>  $html,
-                    'MessageStream' => 'outbound'
-                );
-                send_email($emaildata);
+            $emaildata = array(
+                'From'          =>  env('MAIL_FROM_ADDRESS'),
+                'To'            =>  $user->email,
+                'Subject'       => 'Your project has been cancelled',
+                'HtmlBody'      =>  $html,
+                'MessageStream' => 'outbound'
+            );
+            send_email($emaildata);
 
-                $notificationDetail = new NotificationDetail();
-                $notificationDetail->user_id = $user->id;
-                $notificationDetail->from_user_id = request()->user()->id;
-                $notificationDetail->from_user_type = request()->user()->customer_or_tradesperson;
-                $notificationDetail->related_to = 'project';
-                $notificationDetail->related_to_id = $project->id;
-                $notificationDetail->read_status = 0;
-                $notificationDetail->notification_text = 'Your project '.$project->project_name.' has been cancelled';
-                $notificationDetail->reviewer_note = null;
-                $notificationDetail->save();
-            }
-        } catch (Exception $e) {
-            return $e->getMessage();
+            $notificationDetail = new NotificationDetail();
+            $notificationDetail->user_id = $user->id;
+            $notificationDetail->from_user_id = request()->user()->id;
+            $notificationDetail->from_user_type = request()->user()->customer_or_tradesperson;
+            $notificationDetail->related_to = 'project';
+            $notificationDetail->related_to_id = $project->id;
+            $notificationDetail->read_status = 0;
+            $notificationDetail->notification_text = 'Your project '.$project->project_name.' has been cancelled';
+            $notificationDetail->reviewer_note = null;
+            $notificationDetail->save();
         }
     }
 
@@ -523,6 +519,33 @@ class EstimateController extends BaseController
                 $notificationDetail->notification_text = 'Your given estimate has been accepted';
                 $notificationDetail->reviewer_note = null;
                 $notificationDetail->save();
+            }
+
+            // Send mails to the traders whose estimates were not accepted
+            $unsuccessful_traders = Estimate::where('tradesperson_id', '<>', $tradesperson->id)
+                ->where('project_id', $project->id)
+                ->select('tradesperson_id')
+                ->get();
+            $unsuccessful_traders_mail = User::whereIn('id', array_column($unsuccessful_traders->toArray(), 'tradesperson_id'))->pluck('email');
+
+            foreach ($unsuccessful_traders_mail as $mail) {
+                $html = view('email.project-unsuccessful')
+                    ->with('data', [
+                        'logo' => asset('frontend/emailtemplateimage/project-unsuccessful.svg'),
+                        'heading' => 'Project unsuccessful',
+                        'project_name' => $project->project_name,
+                    ])
+                    ->render();
+
+                $emaildata = array(
+                    'From'          =>  env('MAIL_FROM_ADDRESS'),
+                    'To'            =>  $mail,
+                    'Subject'       => 'Your given estimate has been unsuccessful',
+                    'HtmlBody'      =>  $html,
+                    'MessageStream' => 'outbound'
+                );
+
+                send_email($emaildata);
             }
 
             DB::commit();

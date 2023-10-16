@@ -67,13 +67,13 @@
                                         <h5 style="color: #6d717a; font-size: 20px; font-weight: 100; line-height: 23px;">
                                             @if (@$data && @$data['trader_paused'])
                                                 <p style="margin-bottom: 40px;">
-                                                    Your project @if(@$data && @$data['project_name'])titled "{{ @$data && @$data['project_name'] }}" @endif has been paused by your tradesperson.
+                                                    Your project @if(@$data && @$data['project_name'])titled "{{ $data['project_name'] }}" @endif has been paused by your tradesperson.
                                                 </p>
                                                 <p>
                                                     If you're unsure why please contact your tradesperson through our <a href="{{ route('home') }}" class="active-link">website</a>.
                                                 </p>
                                             @else
-                                                We paused your project as requested and have let your tradesperson know.
+                                                We paused your project @if(@$data && @$data['project_name'])titled "{{ $data['project_name'] }}" @endif as requested and have let your tradesperson know.
                                             @endif
                                         </h5>
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,12 +49,12 @@ Route::namespace('Api')->group(function() {
     Route::get('get-categories-and-sub-categories', 'BuilderController@get_categories_and_sub_categories');
     Route::get('get-areas', 'BuilderController@get_areas');
     Route::post('forget-password-with-mail', 'AuthController@forget_password_with_mail');
-    Route::post('verify-otp-with-mail', 'AuthController@verify_otp_with_mail');
     Route::post('generate-otp', 'AuthController@generate_otp');
     Route::post('resend-otp', 'AuthController@resend_otp');
     Route::post('verify-otp', 'AuthController@verify_otp');
     Route::post('reset-password-with-sms', 'AuthController@reset_password_with_sms');
-    Route::get('user-onboarding', 'PaymentController@onboard_user')->name('stripe.user-onboarding');
+    Route::get('stripe/reauth', [PaymentController::class, 'stripe_reauth'])->name('stripe.reauth');
+
 
     Route::middleware('auth:sanctum')->group(function() {
       Route::post('/terms-of-service/update', 'AuthController@update_terms_of_service_acceptance');
@@ -65,7 +66,7 @@ Route::namespace('Api')->group(function() {
       Route::post('projects','ProjectController@add_project');
       Route::post('projects/{project_id}/update','ProjectController@update_project');
       Route::post('projects/{project_id}/cancel','ProjectController@cancel_project');
-    Route::post('projects/{project_id}/pause','ProjectController@pause_project');
+      Route::post('projects/{project_id}/pause','ProjectController@pause_project');
       Route::post('projects/{project_id}/resume','ProjectController@resume_project');
       Route::post('delete-account','UserController@delete_account');
       Route::put('profile-update','CustomerController@update_customer_profile');
@@ -81,12 +82,15 @@ Route::namespace('Api')->group(function() {
       Route::get('settings', 'UserController@get_settings');
       Route::get('projects/{project_id}/milestones', 'MilestoneController@index');
       Route::get('milestone/{milestone}', 'MilestoneController@show');
+      Route::get('milestone/{milestone}/payment', [PaymentController::class, 'milestone_payment']);
       Route::post('milestone/{milestone}/update', 'MilestoneController@update');
       Route::get('projects/{project_id}/milestone-wizard','MilestoneController@milestone_wizard');
       Route::get('company/{trader_id}/','BuilderController@get_company_details');
       Route::get('company/{trader_id}/reviews','ProjectController@get_reviews');
       Route::get('has-unread-notifications','NotificationController@has_unread_notifications');
       Route::get('notifications','NotificationController@index');
+      Route::get('user-onboarding', [PaymentController::class, 'onboard_user'])->name('stripe.user-onboarding');
+      // Route::post('stripe/store-account-id', [PaymentController::class, 'stripe_store_account_id']);
 
       // Trader Specific routes
       Route::prefix('trader/')->group(function() {

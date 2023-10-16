@@ -55,7 +55,7 @@ class ProjectController extends BaseController
 
             // Mail and notification send to customer
             if($customer_project_paused == 1) {
-                $html = view('email.project-paused')
+                $html = view('email.project-paused-customer')
                     ->with('data', [
                         'project_name'       => $project->project_name,
                         'user_name'          => $customer->name,
@@ -103,10 +103,11 @@ class ProjectController extends BaseController
 
             // Mail and notification send to tradesperson
             if($project_paused_trader == 1) {
-                $html = view('email.project-paused')
+                $html = view('email.project-paused-trader')
                     ->with('data', [
                         'project_name'       => $project->project_name,
-                        'user_name'          => $tradesperson->name
+                        'user_name'          => $tradesperson->name,
+                        'trader_paused'      => $trader_paused_project
                     ])
                     ->render();
 
@@ -281,6 +282,24 @@ class ProjectController extends BaseController
                 'status_changed_at' => now(),
             ]);
 
+            $html = view('email.project-paused-customer')
+            ->with('data', [
+                'project_name'       => $project->project_name,
+                'user_name'          => $customer->name,
+                'trader_paused'      => $trader_paused_project
+            ])
+            ->render();
+
+            $emaildata = array(
+                'From'          =>  env('MAIL_FROM_ADDRESS'),
+                'To'            =>  $customer->email,
+                'Subject'       => 'Project Paused',
+                'HtmlBody'      =>  $html,
+                'MessageStream' => 'outbound'
+            );
+
+            send_email($emaildata);
+
             DB::commit();
 
             return $this->success('Project added successfully!',200);
@@ -445,9 +464,9 @@ class ProjectController extends BaseController
             $estimate = Estimate::where(['project_id' => $project->id, 'project_awarded' => 1])->first();
             $trader_paused_project = false;
 
-            // if (!$estimate || $project->status != config('const.project_status.PROJECT_STARTED')) {
-            //     return $this->error('You can only pause a project which has been started! ', 400);
-            // }
+            if (!$estimate || $project->status != config('const.project_status.PROJECT_STARTED')) {
+                return $this->error('You can only pause a project which has been started! ', 400);
+            }
 
             DB::beginTransaction();
 
