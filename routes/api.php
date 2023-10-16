@@ -84,6 +84,7 @@ Route::namespace('Api')->group(function() {
       Route::get('milestone/{milestone}', 'MilestoneController@show');
       Route::post('milestone/{milestone}/payment', [PaymentController::class, 'milestone_payment']);
       Route::post('milestone/{milestone}/update', 'MilestoneController@update');
+      Route::post('milestone/{milestone}/trader-complete', 'MilestoneController@milestone_completed');
       Route::get('projects/{project_id}/milestone-wizard','MilestoneController@milestone_wizard');
       Route::get('company/{trader_id}/','BuilderController@get_company_details');
       Route::get('company/{trader_id}/reviews','ProjectController@get_reviews');

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ProjectStatusChangeLog;
+use App\Models\Project;
+use Illuminate\Support\Facades\DB;
 
 class MilestoneController extends BaseController
 {
@@ -90,5 +92,30 @@ class MilestoneController extends BaseController
     public function milestone_wizard(Request $request, int $project)
     {
         return ProjectStatusChangeLog::where('project_id', $project)->get();
+    }
+
+
+    public function milestone_completed(Request $request, $milestone)
+    {
+        try {
+            DB::beginTransaction();
+            $task = Task::findOrFail($milestone);
+            $task->status = 'completed';
+            $task->save();
+
+            milestone_completion_notification($milestone);
+
+            $unpaid_tasks = Task::where(['estimate_id' => $task->estimate_id, 'status' => null])->count();
+            if ($unpaid_tasks == 0) {
+                Project::where('id', $task->estimate->project_id)->update(['status' => config('const.project_status.AWAITING_YOUR_REVIEW')]);
+            }
+            DB::commit();
+
+            return $this->success("Milestone completed successfully");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return $this->error($e->getMessage());
+        }
     }
 }

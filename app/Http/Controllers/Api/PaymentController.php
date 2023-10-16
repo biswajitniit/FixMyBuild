@@ -88,7 +88,7 @@ class PaymentController extends BaseController
     public function milestone_payment(Request $request, int $milestone)
     {
         $validator = Validator::make($request->all(), [
-            'status' => 'required',
+            // 'status' => 'required',
             'payment_status' => 'required',
             'payment_transaction_id' => 'required',
             'payment_capture_log' => 'required',
@@ -117,7 +117,7 @@ class PaymentController extends BaseController
 
             $data = array(
                 'payment_status' => $request['payment_status'],
-                'status' => $request['status'],
+                // 'status' => $request['status'],
                 'payment_type' => 'card',
                 'payment_transaction_id' => $request['payment_transaction_id'],
                 'payment_capture_log' => $request['payment_capture_log'],
