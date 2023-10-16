@@ -112,8 +112,8 @@ function send_email($postdata){
     ));
     $response = curl_exec($curl);
     if ($response === FALSE) {
-        // printf("cUrl error (#%d): %s<br>\n", curl_errno($curl), htmlspecialchars(curl_error($curl)));
-        dd(sprintf("cUrl error (#%d): %s", curl_errno($curl), htmlspecialchars(curl_error($curl))));
+        printf("cUrl error (#%d): %s<br>\n", curl_errno($curl), htmlspecialchars(curl_error($curl)));
+        // dd(sprintf("cUrl error (#%d): %s", curl_errno($curl), htmlspecialchars(curl_error($curl))));
     }
     curl_close($curl);
     return $response;

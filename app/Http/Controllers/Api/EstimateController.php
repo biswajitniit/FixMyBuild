@@ -254,6 +254,8 @@ class EstimateController extends BaseController
         try {
             $estimate = Estimate::where('id', $id)->with('tasks', 'files', 'tradesperson.traderDetail')->firstOrFail();
             if ($estimate->tradesperson_id == request()->user()->id || @$estimate->project->user_id == request()->user()->id) {
+                $estimate->stripe_account_id = $estimate->tradesperson->traderDetail->stripe_account_id;
+
                 return $this->success($estimate);
             }
 
