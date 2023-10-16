@@ -82,7 +82,7 @@ Route::namespace('Api')->group(function() {
       Route::get('settings', 'UserController@get_settings');
       Route::get('projects/{project_id}/milestones', 'MilestoneController@index');
       Route::get('milestone/{milestone}', 'MilestoneController@show');
-      Route::get('milestone/{milestone}/payment', [PaymentController::class, 'milestone_payment']);
+      Route::post('milestone/{milestone}/payment', [PaymentController::class, 'milestone_payment']);
       Route::post('milestone/{milestone}/update', 'MilestoneController@update');
       Route::get('projects/{project_id}/milestone-wizard','MilestoneController@milestone_wizard');
       Route::get('company/{trader_id}/','BuilderController@get_company_details');

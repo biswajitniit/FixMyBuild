@@ -92,7 +92,7 @@ class PaymentController extends BaseController
             'payment_status' => 'required',
             'payment_transaction_id' => 'required',
             'payment_capture_log' => 'required',
-            'totalamount' => 'required',
+            'totalamount' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -105,6 +105,14 @@ class PaymentController extends BaseController
 
             if (!$task) {
                 return $this->error('Task Not Found');
+            }
+
+            if (@$task->estimate->project->user_id != $request->user()->id) {
+                return $this->error('You are not allowed to pay for this project', 403);
+            }
+
+            if (! @$task->estimate->project_awarded) {
+                return $this->error('You are not allowed to pay for this project', 403);
             }
 
             $data = array(
