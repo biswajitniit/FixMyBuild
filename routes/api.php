@@ -69,7 +69,7 @@ Route::namespace('Api')->group(function() {
       Route::post('projects/{project_id}/pause','ProjectController@pause_project');
       Route::post('projects/{project_id}/resume','ProjectController@resume_project');
       Route::post('delete-account','UserController@delete_account');
-      Route::put('profile-update','CustomerController@update_customer_profile');
+      Route::put('profile/update','UserController@updateProfile');
       Route::apiResource('address', 'AddressController',);
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');

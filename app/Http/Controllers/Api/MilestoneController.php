@@ -25,6 +25,9 @@ class MilestoneController extends BaseController
 
             if ($estimate->tradesperson_id == $request->user()->id || $estimate->project->user_id == $request->user()->id) {
                 $milestones = Task::where(['estimate_id' => $estimate->id])->get();
+                foreach ($milestones as $milestone) {
+                    $milestone->stripe_account_id = @$milestone->estimate->tradesperson->traderDetail->stripe_account_id;
+                }
 
                 return $milestones;
             } else {

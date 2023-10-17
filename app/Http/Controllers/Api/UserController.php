@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use Illuminate\Support\Str;
 use App\Models\Notification;
+use Illuminate\Http\Request;
+use App\Models\TradespersonFile;
+use App\Rules\CustomPasswordRule;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends BaseController
 {
@@ -81,4 +86,91 @@ class UserController extends BaseController
             return response()->json($e->getMessage(), 500);
         }
       }
+
+
+    public function updateProfile(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'mobile' => 'required|min:10',
+            'password' => ['required' ,'string', 'min:8', 'max:32', new CustomPasswordRule()],
+            'profile_image' => 'nullable|max:'.(config('const.customer_profile_image_size')*1024).'|mimetypes:'.str_replace(' ', '', config('const.customer_profile_image_accepted_file_types')),
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $user = $request->user();
+
+            //delete previous image
+            $old_pic = $user->profile_image;
+            if ($old_pic) {
+                $s3Path = parse_url($old_pic, PHP_URL_PATH);
+                Storage::disk('s3')->delete($s3Path);
+            }
+
+            // update profile
+            $file = $request->file('profile_image');
+            $fileName = null;
+            $extension = null;
+            $file_type = null;
+            $path = null;
+
+            if ($file) {
+                $testFolderName = config('const.s3FolderName');
+                $fileName = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $s3FileName = Str::uuid().'.'.$extension;
+                $file_type = getMediaType($extension) != 'image' ? 'document' : 'image';
+
+                Storage::disk('s3')->put($testFolderName.$s3FileName, file_get_contents($file->getRealPath()));
+                $path = Storage::disk('s3')->url($testFolderName.$s3FileName);
+            }
+
+            $profileData = [
+                'name' => $request->name,
+                'phone' => $request->mobile,
+                'profile_image' => $path
+            ];
+
+            if ($request->has('password')) {
+                $pswd = $request->password;
+                $password = Hash::make($pswd);
+                $profileData['password'] = $password;
+            }
+
+            DB::beginTransaction();
+
+            DB::table('users')->where('id', $user->id)->update($profileData);
+
+            if (isTrader($user->customer_or_tradesperson)) {
+                if ($file) {
+                    TradespersonFile::updateOrCreate(
+                        [
+                            'tradesperson_id' => $user->id,
+                            'file_related_to' => 'company_logo'
+                        ],
+                        [
+                            'file_name' => $fileName,
+                            'file_extension' => $extension,
+                            'file_type' => $file_type,
+                            'url' => $path,
+                        ]
+                    );
+                } else {
+                    TradespersonFile::where(['tradesperson_id' => $user->id, 'file_related_to' => 'company_logo'])->delete();
+                }
+
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => "Profile Update has been done successfully."], 200);
+        } catch(Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['errors' => $e->getMessage()], 500);
+        }
+    }
 }
