@@ -88,11 +88,11 @@ class UserController extends BaseController
       }
 
 
-    public function updateProfile(Request $request){
+    public function updateProfile(Request $request) {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'mobile' => 'required|min:10',
-            'password' => ['required' ,'string', 'min:8', 'max:32', new CustomPasswordRule()],
+            'password' => ['nullable' ,'string', 'min:8', 'max:32', new CustomPasswordRule()],
             'profile_image' => 'nullable|max:'.(config('const.customer_profile_image_size')*1024).'|mimetypes:'.str_replace(' ', '', config('const.customer_profile_image_accepted_file_types')),
         ]);
 
