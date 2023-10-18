@@ -49,9 +49,8 @@ Route::namespace('Api')->group(function() {
     Route::get('get-categories-and-sub-categories', 'BuilderController@get_categories_and_sub_categories');
     Route::get('get-areas', 'BuilderController@get_areas');
     Route::post('forget-password-with-mail', 'AuthController@forget_password_with_mail');
-    Route::post('generate-otp', 'AuthController@generate_otp');
-    Route::post('resend-otp', 'AuthController@resend_otp');
-    Route::post('verify-otp', 'AuthController@verify_otp');
+    Route::post('sms/generate-otp', 'AuthController@generate_otp');
+    Route::post('sms/verify-otp', 'AuthController@verify_otp');
     Route::post('reset-password-with-sms', 'AuthController@reset_password_with_sms');
     Route::get('stripe/reauth', [PaymentController::class, 'stripe_reauth'])->name('stripe.reauth');
 

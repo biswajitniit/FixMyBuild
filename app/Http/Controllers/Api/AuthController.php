@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
 use Twilio\Rest\Client;
 use App\Models\UserVerify;
+use App\Rules\PhoneWithDialCode;
 
 // use App\Http\Requests\ThirdPartyAuthRequest;
 
@@ -62,7 +63,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:50|unique:users',
+            'phone' => ['required', 'string', 'unique:users', new PhoneWithDialCode()],
             'password' => ['required' ,'string', 'min:8', 'max:32', 'confirmed', new CustomPasswordRule()],
             'user_type' => 'required|string',
         ]);
@@ -416,66 +417,46 @@ class AuthController extends Controller
         }
     }
 
-    public function resend_otp(Request $request)
-    {
-        try{
-            $user = User::where('id', $request->user_id)->first();
-
-            if($user){
-                $otp = mt_rand(100000, 999999);
-                $data = new OtpPasswordResets();
-                $data->user_id = $user->id;
-                $data->otp = $otp;
-                $data->used = 0;
-                $data->created_at = now()->addMinutes(5);
-
-                // send otp
-                $receiverNumber = $user->phone;
-                $message = "This is your Fix my build forget password OTP ".$otp;
-
-                $account_sid = "AC15e8da3b8870bb7ab73cab93cbe287b9";
-                $auth_token = "9c2809e405ec441547bf89f95e3c6def";
-                $twilio_number = "+447360267868";
-                $client = new Client($account_sid, $auth_token);
-                $client->messages->create($receiverNumber, [
-                    'from' => $twilio_number,
-                    'body' => $message]);
-
-                if(strtotime($data->created_at) < strtotime(now()))
-                {
-                    return response()->json(['message'=>"Time out."]);
-                }
-                $data->save();
-                return response()->json(['message'=>"OTP has been resent on Your Mobile Number."]);
-            } else {
-                return response()->json(['message'=>"Something went wrong."]);
-            }
-        } catch(Exception $e){
-            return response()->json($e->getMessage(), 500);
-        }
-    }
 
     public function verify_otp(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required|integer',
+            'phone' => ['required', 'string', 'exists:users', new PhoneWithDialCode()],
+            'password' => ['required', 'confirmed', new CustomPasswordRule()],
+        ], [
+            'phone.exists'  => 'The mobile number you entered is not registered with us. Please create an account or try a different phone number.'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         try {
-            $user = OtpPasswordResets::where('user_id', $request->id)
-                                    ->where('otp', $request->otp)
-                                    ->first();
+            $user = User::where(['phone' => $request->phone])->first();
 
-            if($user) {
-                $user->used = 1;
-                $user->update();
+            $otp_pswd = OtpPasswordResets::where(['user_id' => $user->id, 'otp' => $request->otp, 'used' => 0])->first();
+
+            if (!$otp_pswd) {
+                return response()->json(['error' => "Wrong OTP."]);
             }
 
-            if(!$user){
-                return response()->json(['message'=>"Wrong OTP."]);
-            }
+            DB::beginTransaction();
+            $otp_pswd->used = 1;
+            $otp_pswd->save();
 
-            return response()->json(['message'=>"OTP verified"]);
+            $user->password = Hash::make($request->password);
+            $user->save();
+            DB::commit();
+
+            return response()->json(['message' => "Password updated successfully."]);
         } catch(Exception $e){
+            DB::rollBack();
+
             return response()->json($e->getMessage(), 500);
         }
     }
+
 
     public function reset_password_with_sms(Request $request){
         try{
