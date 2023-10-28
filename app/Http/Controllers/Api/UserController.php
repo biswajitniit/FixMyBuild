@@ -174,4 +174,18 @@ class UserController extends BaseController
             return response()->json(['errors' => $e->getMessage()], 500);
         }
     }
+
+
+
+
+    public function get_notification_settings(Request $request)
+    {
+        try {
+            $response = Notification::where(['user_id' => $request->user()->id])->value('settings');
+
+            return response()->json($response, 200);
+        } catch (Exception $e) {
+            return response()->json([$e->getMessage()], 500);
+        }
+    }
 }
