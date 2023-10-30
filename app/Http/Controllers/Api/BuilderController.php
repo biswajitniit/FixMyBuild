@@ -252,6 +252,165 @@ class BuilderController extends BaseController
         }
     }
 
+
+    public function update_company_general_information(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'comp_reg_no' => 'required',
+            'comp_name' => 'required|string',
+            'comp_address' => 'required|string',
+            'trader_name' => 'required|string',
+            'comp_description' => 'required|string',
+            'company_logo' => 'sometimes|nullable|file|mimetypes:' . str_replace(' ', '', config('const.dropzone_accepted_image')),
+            'public_liability_insurance_files' => 'sometimes|nullable|array',
+            'public_liability_insurance_files.*' => 'sometimes|nullable|file|mimetypes:' . str_replace(' ', '', config('const.trader_public_liability')),
+            'photo_id_proof_files' => 'sometimes|nullable|array',
+            'photo_id_proof_files.*' => 'sometimes|nullable|file|mimetypes:' . str_replace(' ', '', config('const.dropzone_accepted_image')),
+            'company_addr_id_proof_files' => 'sometimes|nullable|array',
+            'company_addr_id_proof_files.*' => 'sometimes|nullable|file|mimetypes:' . str_replace(' ', '', config('const.company_address_proof')),
+            'name' => 'required|string',
+            'phone_code' => 'required|string',
+            'phone_number' => 'required',
+            'phone_office' => ['sometimes', 'nullable', new PhoneWithDialCode()],
+            'email' => 'required|email:rfc,dns',
+            'company_role' => 'required|in:Director,Tradesperson,Secretary,Other',
+            'designation' => 'nullable|required_if:company_role,Other|string|max:255',
+            'vat_reg' => 'required|boolean',
+            'vat_no' => 'nullable|required_if:vat_reg,1|integer',
+            'vat_comp_name' => 'nullable|required_if:vat_reg,1|string',
+            'vat_comp_address' => 'nullable|required_if:vat_reg,1|string',
+            'delete_image_ids' => 'nullable|string',
+        ], [
+            'comp_reg_no.required' => 'Please provide your company registration number and press the “Find” button.',
+            'comp_name.required' => 'Please provide your company registration number and press the “Find” button.',
+            'trader_name.required' => 'Please provide your trading name.',
+            'comp_description.required' => 'Please provide a description about your company.',
+            'company_role.required' => 'Please select your role in company.',
+            'name.required' => 'Please enter your name.',
+            'phone_code.required' => 'Please select your phone code.',
+            'phone_number.required' => 'Please enter your phone number.',
+            'email.required' => 'Please provide the email address to which customers can contact you.',
+            'designation.required' => 'Please enter your designation.',
+            'designation.max' => 'Designation shouldn\'t be longer than 255 characters.',
+            'vat_reg.required' => 'Please enter your vat number and validate.',
+            'vat_no.required' => 'If your company is VAT registered please provide the VAT number. If not, please click “No” on that option below.'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+
+        try {
+            $delete_image_ids = $request->delete_image_ids;
+            if (gettype($delete_image_ids) != 'array') {
+                $delete_image_ids = json_decode($delete_image_ids);
+            }
+
+            DB::beginTransaction();
+
+            $trader = TraderDetail::updateOrCreate(
+                [
+                    'user_id' => $request->user()->id,
+                ],
+                [
+                    'comp_reg_no' => $request['comp_reg_no'],
+                    'comp_name' => $request['comp_name'],
+                    'comp_address' => $request['comp_address'],
+                    'trader_name' => $request['trader_name'],
+                    'comp_description' => $request['comp_description'],
+                    'name' => $request['name'],
+                    'phone_code' => $request['phone_code'],
+                    'phone_number' => $request['phone_number'],
+                    'phone_office' => $request['phone_office'],
+                    'email' => $request['email'],
+                    'company_role' => $request['company_role'],
+                    'designation' => $request['company_role'] == 'Other' ? $request['designation'] : null,
+                    'vat_reg' => $request['vat_reg'],
+                    'vat_no' => $request['vat_reg'] ? $request['vat_no'] : null,
+                    'vat_comp_name' => $request['vat_reg'] ? $request['vat_comp_name'] : null,
+                    'vat_comp_address' => $request['vat_reg'] ? $request['vat_comp_address'] : null,
+                ]
+            );
+
+            // Company Logo Upload
+            $old_company_logo = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_logo'])->select('id', 'url')->first();
+            $file = $request['company_logo'];
+            if ($file) {
+                $this->upload_file_and_create_record($request->user()->id, $file, 'company_logo', true);
+            }
+
+            if ($old_company_logo) {
+                Storage::disk('s3')->delete(parse_url($old_company_logo->url, PHP_URL_PATH));
+                TradespersonFile::where('id', $old_company_logo->id)->delete();
+            }
+
+            $company_logo = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_logo'])->value('url');
+            $user = User::find($request->user()->id);
+            $user->profile_image = $company_logo;
+            $user->save();
+
+            // Public Liability Insurance Upload
+            $old_public_liability_insurances = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'public_liability_insurance'])->pluck('id', 'url');
+            if ($request['public_liability_insurance_files']) {
+                foreach ($request['public_liability_insurance_files'] as $file) {
+                    $this->upload_file_and_create_record($request->user()->id, $file, 'public_liability_insurance');
+                }
+            }
+            if ($old_public_liability_insurances && $delete_image_ids) {
+                $old_pli_media_paths = $old_public_liability_insurances->map(function ($id, $url) use ($delete_image_ids) {
+                    if (in_array($id, $delete_image_ids))
+                        return parse_url($url, PHP_URL_PATH);
+                })->toArray();
+                Storage::disk('s3')->delete($old_pli_media_paths);
+                TradespersonFile::whereIn('id', $delete_image_ids)->where('file_related_to', 'public_liability_insurance')->delete();
+            }
+
+            // Photo ID Proof Upload
+            $old_photo_id_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'trader_img'])->pluck('id', 'url');
+            if ($request['photo_id_proof_files']) {
+                foreach ($request['photo_id_proof_files'] as $file) {
+                    $this->upload_file_and_create_record($request->user()->id, $file, 'trader_img');
+                }
+            }
+
+            if ($old_photo_id_proofs && $delete_image_ids) {
+                $old_photo_id_media_paths = $old_photo_id_proofs->map(function ($id, $url) use ($delete_image_ids) {
+                    if (in_array($id, $delete_image_ids))
+                        return parse_url($url, PHP_URL_PATH);
+                })->toArray();
+                Storage::disk('s3')->delete($old_photo_id_media_paths);
+                TradespersonFile::whereIn('id', $delete_image_ids)->where('file_related_to', 'trader_img')->delete();
+            }
+
+            // Company Address Proof Upload
+            $old_company_addr_proofs = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'company_address'])->pluck('id', 'url');
+            if ($request['company_addr_id_proof_files']) {
+                foreach ($request['company_addr_id_proof_files'] as $file) {
+                    $this->upload_file_and_create_record($request->user()->id, $file, 'company_address');
+                }
+            }
+
+            if ($old_company_addr_proofs && $delete_image_ids) {
+                $old_company_addr_media_paths = $old_company_addr_proofs->map(function ($id, $url) use ($delete_image_ids) {
+                    if (in_array($id, $delete_image_ids))
+                        return parse_url($url, PHP_URL_PATH);
+                })->toArray();
+                Storage::disk('s3')->delete($old_company_addr_media_paths);
+                TradespersonFile::whereIn('id', $delete_image_ids)->where('file_related_to', 'company_address')->delete();
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Information saved successfully.'], 200);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
     public function get_company_additional_information(Request $request)
     {
         try {
@@ -295,6 +454,65 @@ class BuilderController extends BaseController
                 $this->upload_file_and_create_record($request->user()->id, $file, 'prev_project_img');
             }
             TradespersonFile::whereIn('id', $old_prev_project_photos)->delete();
+
+            return response()->json(['message' => 'Information saved successfully.'], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function update_company_additional_information(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'team_photos' => 'nullable|array',
+                'team_photos.*' => 'nullable|file|mimetypes:' . str_replace(' ', '', config('const.dropzone_accepted_image')),
+                'prev_project_photos' => 'nullable|array',
+                'prev_project_photos.*' => 'nullable|file|mimetypes:' . str_replace(' ', '', config('const.dropzone_accepted_image')),
+                'delete_image_ids' => 'nullable|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            $delete_image_ids = $request->delete_image_ids;
+            if (gettype($delete_image_ids) != 'array') {
+                $delete_image_ids = json_decode($request->delete_image_ids);
+            }
+
+            $old_team_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'team_img'])->pluck('id');
+
+            if ($request['team_photos']) {
+                foreach ($request['team_photos'] as $file) {
+                    $this->upload_file_and_create_record($request->user()->id, $file, 'team_img');
+                }
+            }
+
+            if ($old_team_photos && $delete_image_ids) {
+                $old_team_media_paths = $old_team_photos->map(function ($id, $url) use ($delete_image_ids) {
+                    if (in_array($id, $delete_image_ids))
+                        return parse_url($url, PHP_URL_PATH);
+                })->toArray();
+                Storage::disk('s3')->delete($old_team_media_paths);
+                TradespersonFile::whereIn('id', $delete_image_ids)->where('file_related_to', 'team_img')->delete();
+            }
+
+            $old_prev_project_photos = TradespersonFile::where(['tradesperson_id' => $request->user()->id, 'file_related_to' => 'prev_project_img'])->pluck('id');
+            if ($request['prev_project_photos']) {
+                foreach ($request['prev_project_photos'] as $file) {
+                    $this->upload_file_and_create_record($request->user()->id, $file, 'prev_project_img');
+                }
+            }
+
+            if ($old_prev_project_photos && $delete_image_ids) {
+                $old_prev_project_media_paths = $old_prev_project_photos->map(function ($id, $url) use ($delete_image_ids) {
+                    if (in_array($id, $delete_image_ids))
+                        return parse_url($url, PHP_URL_PATH);
+                })->toArray();
+                Storage::disk('s3')->delete($old_prev_project_media_paths);
+                TradespersonFile::whereIn('id', $delete_image_ids)->where('file_related_to', 'prev_project_img')->delete();
+            }
 
             return response()->json(['message' => 'Information saved successfully.'], 200);
         } catch (Exception $e) {

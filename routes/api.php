@@ -73,8 +73,10 @@ Route::namespace('Api')->group(function() {
       Route::get('/builder-category', 'BuilderController@get_builders');
       Route::get('get-company-general-information', 'BuilderController@get_company_general_information');
       Route::post('save-company-general-information', 'BuilderController@save_company_general_information');
+      Route::post('update-company-general-information', 'BuilderController@update_company_general_information');
       Route::get('get-company-additional-information', 'BuilderController@get_company_additional_information');
       Route::post('save-company-additional-information', 'BuilderController@save_company_additional_information');
+      Route::post('update-company-additional-information', 'BuilderController@update_company_additional_information');
       Route::post('save-trader-areas', 'BuilderController@save_trader_areas');
       Route::get('get-trader-areas', 'BuilderController@get_trader_areas');
       Route::post('save-trader-works', 'BuilderController@save_trader_works');
