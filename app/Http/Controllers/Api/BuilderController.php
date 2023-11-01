@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
 use App\Models\User;
+use App\Models\Buildersubcategory;
 
 class BuilderController extends BaseController
 {
@@ -580,7 +581,7 @@ class BuilderController extends BaseController
                 ->get()
                 ->groupBy('county')
                 ->map(function ($items) {
-                    return $items->pluck('town')->toArray();
+                    return ["towns" => $items->pluck('town')->toArray(), "town_count" => $items->count()];
                 });
 
             return response()->json($response, 200);
@@ -639,9 +640,17 @@ class BuilderController extends BaseController
             }
 
             $sub_category_id = Traderworks::where('user_id', $request->user()->id)->pluck('buildersubcategory_id');
-            $response = ['sub_work_id' => $sub_category_id];
 
-            return response()->json($response, 200);
+            $categories_list = Buildersubcategory::select('builder_category_id', DB::raw('GROUP_CONCAT(id) as builder_subcategory_ids'), DB::raw('COUNT(id) as builder_subcategory_id_count'))
+            ->whereIn('id', $sub_category_id)
+            ->groupBy('builder_category_id')
+            ->get();
+
+            foreach ($categories_list as $item) {
+                $item->builder_subcategory_ids = array_map('intval', explode(',', $item->builder_subcategory_ids));
+            }
+
+            return response()->json($categories_list, 200);
         } catch (Exception $e) {
             return response()->json([$e->getMessage()], 500);
         }
