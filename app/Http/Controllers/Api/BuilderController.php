@@ -578,8 +578,11 @@ class BuilderController extends BaseController
 
             $response = Traderareas::where('user_id', $request->user()->id)
                     ->select('county', 'town')
+                    ->orderBy('county', 'asc')
+                    ->orderBy('town', 'asc')
                     ->get()
                     ->groupBy('county')
+
                     ->map(function ($items, $county) {
                         return [
                             "county" => $county,
