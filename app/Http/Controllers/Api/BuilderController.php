@@ -577,12 +577,16 @@ class BuilderController extends BaseController
             }
 
             $response = Traderareas::where('user_id', $request->user()->id)
-                ->select('county', 'town')
-                ->get()
-                ->groupBy('county')
-                ->map(function ($items) {
-                    return ["towns" => $items->pluck('town')->toArray(), "town_count" => $items->count()];
-                });
+                    ->select('county', 'town')
+                    ->get()
+                    ->groupBy('county')
+                    ->map(function ($items, $county) {
+                        return [
+                            "county" => $county,
+                            "towns" => $items->pluck('town')->toArray(),
+                            "town_count" => $items->count()
+                        ];
+                    })->values();
 
             return response()->json($response, 200);
         } catch (Exception $e) {
