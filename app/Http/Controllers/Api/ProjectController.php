@@ -282,24 +282,6 @@ class ProjectController extends BaseController
                 'status_changed_at' => now(),
             ]);
 
-            $html = view('email.project-paused-customer')
-            ->with('data', [
-                'project_name'       => $project->project_name,
-                'user_name'          => $customer->name,
-                'trader_paused'      => $trader_paused_project
-            ])
-            ->render();
-
-            $emaildata = array(
-                'From'          =>  env('MAIL_FROM_ADDRESS'),
-                'To'            =>  $customer->email,
-                'Subject'       => 'Project Paused',
-                'HtmlBody'      =>  $html,
-                'MessageStream' => 'outbound'
-            );
-
-            send_email($emaildata);
-
             DB::commit();
 
             return $this->success('Project added successfully!',200);
